@@ -14,8 +14,8 @@ class BaseRepositorySequelize {
         });
     }
 
-    update(object, callback) {
-        this.modelType.update(object).then(function(result) {
+    update(object, options, callback) {
+        this.modelType.update(object, options).then(function(result) {
             callback(null, result);
         }).catch(function(exception) {
             callback(exception);
@@ -46,8 +46,12 @@ class BaseRepositorySequelize {
         });
     }
 
-    remove(id) {
-        this.modelType.destroy(id).then(this.handleSuccessResponse).catch(handleException);
+    remove(options, callback) {
+        this.modelType.destroy(options).then(function(result) {
+            callback(null, result);
+        }).catch(function(exception) {
+            callback(exception);
+        });
     }
 
 }
