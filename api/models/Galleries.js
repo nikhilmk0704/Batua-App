@@ -25,12 +25,12 @@ module.exports = {
             defaultValue: 'image',
         }
     },
-    associations: function() {
-        Galleries.belongsTo(Merchants, {
-            foreignKey: {
-                name: 'merchantId',
-                allowNull: false,
-            }
-        });
-    }
+    // associations: function() {
+    //     Galleries.belongsTo(Merchants, {
+    //         foreignKey: {
+    //             name: 'merchantId',
+    //             allowNull: false,
+    //         }
+    //     });
+    // }
 };

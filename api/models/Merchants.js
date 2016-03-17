@@ -15,14 +15,14 @@ module.exports = {
         },
         name: {
             type: Sequelize.STRING,
-            // required: true,
-            // allowNull: false
+            required: true,
+            allowNull: false
         },
         shortCode: {
             type: Sequelize.STRING,
-            // required: true,
-            // allowNull: false,
-            // unique:true
+            required: true,
+            allowNull: false,
+            unique: true
         },
         profileImageUrl: {
             type: Sequelize.STRING,
@@ -31,20 +31,20 @@ module.exports = {
         },
         phone: {
             type: Sequelize.INTEGER(10).UNSIGNED,
-            // required: true,
-            // unique: true,
-            // allowNull: false
+            required: true,
+            unique: true,
+            allowNull: false
         },
         pincode: {
             type: Sequelize.INTEGER(6),
-            // required: true,
-            // allowNull: false
+            required: true,
+            allowNull: false
         },
         email: {
             type: Sequelize.STRING,
-            // validate: {
-            //     isEmail: true
-            // }
+            validate: {
+                isEmail: true
+            }
         },
         address: {
             type: Sequelize.TEXT,
@@ -64,12 +64,36 @@ module.exports = {
         },
         fees: {
             type: Sequelize.INTEGER(3),
-            // required: true,
-            // allowNull: false,
+            required: true,
+            allowNull: false,
             validate: {
                 min: 0,
                 max: 100
             }
+        },
+        bankName: {
+            type: Sequelize.STRING,
+            // required: true,
+            // allowNull: false,
+        },
+        branchName: {
+            type: Sequelize.STRING,
+            defaultValue: null,
+        },
+        accountHolder: {
+            type: Sequelize.STRING,
+            // required: true,
+            // allowNull: false,
+        },
+        accountNumber: {
+            type: Sequelize.BIGINT(20),
+            // required: true,
+            // allowNull: false
+        },
+        ifscCode: {
+            type: Sequelize.STRING,
+            // required: true,
+            // allowNull: false,
         },
     },
     validate: {
@@ -99,25 +123,30 @@ module.exports = {
         Merchants.belongsTo(Statuses, {
             foreignKey: {
                 name: 'statusId',
-                // allowNull: false,
-                // onDelete: 'RESTRICT',
-                // onUpdate: 'CASCADE'
+                defaultValue:1,
+                allowNull: false,
+                onDelete: 'RESTRICT',
+                onUpdate: 'CASCADE'
             }
         });
         Merchants.belongsTo(Categories, {
             foreignKey: {
                 name: 'categoryId',
-                // allowNull: false,
-                // onDelete: 'RESTRICT',
-                // onUpdate: 'CASCADE'
+                allowNull: false,
+                onDelete: 'RESTRICT',
+                onUpdate: 'CASCADE'
             }
         });
-        Merchants.belongsTo(BankDetails, {
-            foreignKey: {
-                name: 'bankDetailsId',
-                // allowNull: false,
-                // onDelete: 'RESTRICT',
-                // onUpdate: 'CASCADE'
+        Merchants.belongsToMany(Galleries,{
+            through:'MerchantsGalleries',
+            foreignKey:{
+                name:'galleryId',
+            }
+        });
+        Galleries.belongsToMany(Merchants,{
+            through:'MerchantsGalleries',
+            foreignKey:{
+                name:'merchantId'
             }
         });
     }

@@ -14,11 +14,11 @@ module.exports = {
         var params = req.body;
 
         var merchantService = new MerchantService();
-        merchantService.save(params, function(err, result) {
+        merchantService.validateAndSave(params, function(err, result) {
             if (err) {
                 return res.badRequest(err);
             } else {
-                return res.json(201, { result: result });
+                return res.json(201, result);
             }
         });
     },
@@ -26,7 +26,29 @@ module.exports = {
     find: function(req, res) {
 
         var _id = req.param('id');
+        var salesAgentId = req.param('salesAgentId');
         var params = {};
+        var include = [{
+            model: Cities,
+            required: false
+        }, {
+            model: Users,
+            required: false
+        }, {
+            model: Galleries,
+            required: false
+        }, {
+            model: Statuses,
+            required: false
+        }, {
+            model: Categories,
+            required: false
+        }, {
+            model: BankDetails,
+            required: false
+        }];
+        params.include = include;
+
         if (_id) {
             params.where = {};
             params.where.id = _id;
@@ -39,27 +61,42 @@ module.exports = {
                 }
             });
         } else {
-            var merchantService = new MerchantService();
-            merchantService.findAll(params, function(err, result) {
-                if (err) {
-                    return res.badRequest(err);
-                } else {
-                    return res.json(200, { result: result });
-                }
-            });
+            if (salesAgentId) {
+                params.where = {};
+                params.where.createdSalesId = salesAgentId;
+
+                var merchantService = new MerchantService();
+                merchantService.findAll(params, function(err, result) {
+                    if (err) {
+                        return res.badRequest(err);
+                    } else {
+                        return res.json(200, { result: result });
+                    }
+                });
+            } else {
+                var merchantService = new MerchantService();
+                merchantService.findAll(params, function(err, result) {
+                    if (err) {
+                        return res.badRequest(err);
+                    } else {
+                        return res.json(200, { result: result });
+                    }
+                });
+            }
+
         }
     },
 
     update: function(req, res) {
 
         var params = {};
+        params = req.body;
         var options = {};
-        params.name = req.body.name;
         options.where = {};
         options.where.id = req.body.id;
 
         var merchantService = new MerchantService();
-        merchantService.update(params, options, function(err, result) {
+        merchantService.validateAndUpdate(params, options, function(err, result) {
             if (err) {
                 return res.badRequest(err);
             } else {
