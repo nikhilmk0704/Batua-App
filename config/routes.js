@@ -40,5 +40,10 @@ module.exports.routes = {
     'delete /api/merchant/:id?': 'MerchantsController.delete',
     'put /api/merchant/setstatus': 'MerchantsController.Setstatus',
 
+    // 'post /api/promocode': 'PromocodesController.create',
+    // 'get /api/promocode/:id?': 'PromocodesController.find',
+    // 'put /api/promocode': 'PromocodesController.update',
+    // 'delete /api/promocode/:id?': 'PromocodesController.delete',
+    // 'put /api/promocode/setstatus': 'PromocodesController.Setstatus',
 
 }

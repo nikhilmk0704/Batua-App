@@ -12,7 +12,6 @@ module.exports = {
     create: function(req, res) {
 
         var params = req.body;
-        console.log("gud");
         var cityService = new CityService();
         cityService.save(params, function(err, result) {
             if (err) {
