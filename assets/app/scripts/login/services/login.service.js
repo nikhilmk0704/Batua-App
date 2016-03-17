@@ -1,26 +1,33 @@
 (function () {    
-    'use strict';
+ 'use strict';
 
-    angular.module('app').factory('loginService', loginService);
+ angular.module('app').factory('loginService', loginService);
 
-    loginService.$inject = ['$http', 'API'];
+ loginService.$inject = ['$http', 'API', '$localStorage', '$cookieStore', '$state'];
 
-    function loginService($http, API) {
+ function loginService($http, API, $localStorage, $cookieStore, $state) {
 
-        var service = {};
+  var service = {};
 
-        service.Login = Login;
+  service.Login = Login;
+  service.isAuthenticated = isAuthenticated;
 
-        return service;
+  return service;
 
-        function Login(data, callback) {
+  function Login(data, callback) {
+   $http.post(API.login, data).then(function (response) {
+    callback(response);
+   }, function (err) {
+    callback(err);
+   });
+  }
 
-            $http.post(API.login, data).then(function (response) {
-                callback(response);
-            }, function (response) {
-                callback(response);
-            });
-        }
+  function isAuthenticated() {
+   if ($localStorage.getObject('admin')) {
+    $state.go('addCategory');
+   }
+  }
 
-    }
+ }
+
 })();

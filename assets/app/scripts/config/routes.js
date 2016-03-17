@@ -5,7 +5,8 @@
     function routes() {
 
         return {
-            login: "/login"
+            login: "/user/login",
+            addCategory: "/category"
         }
 
     }

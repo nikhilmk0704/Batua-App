@@ -1,4 +1,4 @@
-WATRO WEB SERVER
+BATUA WEB SERVER
 ----------------
 
 License

@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+  <head>
+    <meta charset="utf-8" />
+    <title>Edit Merchant</title>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta content="width=device-width, initial-scale=1" name="viewport"/>
+
+
+    <link rel="stylesheet" type="text/css" href="font-awesome-4.5.0/css/font-awesome.css" />
+
+    <link href="line-icons/simple-line-icons.min.css" rel="stylesheet" type="text/css" />
+    <link rel="stylesheet" href="css/bootstrap.min.css" />
+
+
+    <link href="css/components.min.css" rel="stylesheet" type="text/css" /> 
+    <link href="css/layout.min.css" rel="stylesheet" type="text/css" /> 
+    <link href="css/plugins.min.css" rel="stylesheet" type="text/css" />  
+    <link href="css/darkblue.min.css" rel="stylesheet" type="text/css" id="style_color" />
+
+    <link rel="stylesheet" href="css/bootstrap-select.min.css" />
+    <link rel="stylesheet" href="css/bootstrap-datepicker3.min.css" />
+
+
+
+    <link href="css/style.css" rel="stylesheet" type="text/css" /> 
+    <link href="css/jquery-fileupload.css" rel="stylesheet" type="text/css" />
+  </head>
+
+
+  <body class="page-header-fixed page-sidebar-closed-hide-logo page-content-white">
+
+    <header class="page-header navbar navbar-fixed-top" style="border:5px solid transparent; border-bottom-color:#FF4081;">
+      <!-- HEADER BEGIN -->
+      <div class="page-header-inner">
+        <div class="page-logo">
+          <a href="User_List.html">
+            <img src="images/comp-logo.png" alt="logo" class="logo-default" width="200" height="50px"  style="top:0;padding-bottom:5px;"/> 
+          </a>   
+        </div>
+        <!-- RESPONSIVE TOGGLER -->
+        <a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse" data-target=".navbar-collapse" style="margin-top:25px;"> </a>
+        <!-- END RESPONSIVE MENU TOGGLER -->
+        <!-- BEGIN TOP NAVIGATION MENU -->
+        <div class="top-menu"  style="padding-top:15px;">
+          <!-- User Profile -->
+          <ul class="nav navbar-nav pull-right">
+            <li class="dropdown dropdown-user">
+              <a href="javascript:;" class="dropdown-toggle customedropdown" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                <img alt="" class="img-circle" src="images/avatar3_small.jpg" />
+                <span class="username username-hide-on-mobile black"><strong> Nick as <label> Admin</label></strong></span>
+                <i class="fa fa-angle-down"></i>
+              </a>
+              <ul class="dropdown-menu dropdown-menu-default">
+                <li>
+                  <a href="Change_Password.html">
+                    <i class="fa-calendar"></i> Change Password 
+                  </a>
+                </li>
+                <li>
+                  <a href="Login.html">
+                    <i class="fa-key"></i> Log Out 
+                  </a>
+                </li>
+              </ul>
+            </li> 
+          </ul>
+        </div>
+        <!-- END TOP NAVIGATION MENU -->
+      </div>
+      <!-- END HEADER INNER -->
+    </header>
+       
+    <div class="clearfix clearfixcol" > </div>
+
+    <div class="page-container" >
+      <!-- sidebar begins -->
+      <aside class="page-sidebar-wrapper">         
+        <div class="page-sidebar navbar-collapse collapse">
+          <ul class="page-sidebar-menu  page-header-fixed" data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200" style="padding-top:80px;"> 
+            <li class="sidebar-toggler-wrapper hide">
+              <!-- BEGIN SIDEBAR TOGGLER BUTTON -->
+              <div class="sidebar-toggler"> </div>
+              <!-- END SIDEBAR TOGGLER BUTTON -->
+            </li> 
+
+            <li class="nav-item start marginnav" style="padding-bottom:10px;">
+              <a href="User_List.html" class="nav-link nav-toggle">
+                <i class="fa fa-user"></i>
+                <span class="title">User</span>
+                <span class="selected"></span>
+              </a>  
+            </li>
+                  
+            <li class="nav-item" style="padding-bottom:10px;">
+              <a href="Merchant_List.html" class="nav-link nav-toggle">
+                <i class="fa fa-user"></i>
+                <span class="title">Merchant</span>           
+              </a>
+            </li>
+
+            <li class="nav-item" style="padding-bottom:10px;">
+              <a href="Category_List.html" class="nav-link nav-toggle">
+                <i class="fa fa-clone"></i>
+                <span class="title">Category</span>
+              </a>
+            </li>
+
+            <li class="nav-item" style="padding-bottom:10px;">
+              <a href="Offer_List.html" class="nav-link nav-toggle">
+                <i class="fa fa-clone"></i>
+                <span class="title">Offer</span>   
+              </a>         
+            </li>
+
+            <li class="nav-item" style="padding-bottom:10px;">
+              <a href="Promo_List.html" class="nav-link nav-toggle">
+                <i class="fa fa-clone"></i>
+                <span class="title">Promocode</span>
+              </a>    
+            </li>
+
+            <li class="nav-item" style="padding-bottom:10px;">
+              <a href="Report_View.html" class="nav-link nav-toggle">
+                <i class="fa fa-clone"></i>
+                <span class="title">Report</span>
+              </a>
+            </li>
+
+            <li class="nav-item" style="padding-bottom:10px;">
+              <a href="Notification.html" class="nav-link nav-toggle">
+                <i class="fa fa-clone"></i>
+                <span class="title">Notification</span>
+              </a>
+            </li> 
+          </ul>
+            <!-- END SIDEBAR MENU -->
+        </div>      
+      </aside>
+      <!-- sidebar ends -->
+      
+      <!-- BEGIN CONTENT -->
+      <section class="page-content-wrapper">
+        <!-- BEGIN CONTENT BODY -->
+        <div class="page-content">
+
+          <div class="row">
+
+            <div class="col-md-10 margincontent">
+              <!-- BEGIN SAMPLE FORM PORTLET-->
+              <section class="portlet box purple portletcustom" style="overflow:auto;">
+                <section class="portlet-title">
+                  <div class="caption font-dark">
+                    <span class="caption-subject bold uppercase"> Edit Merchant </span>
+                  </div> 
+                </section>
+                <section class="col-md-3 col-xs-3">
+                  <div class="dpholder col-md-12 col-xs-12">
+                  </div>
+                  <div class="form-actions formactioncustom" style="border-top-width:0px;">
+                    <button type="button" class="btn red delete deletebtn" style="margin-top:25px;" >
+                      <span> Remove </span>
+                    </button>
+                    <button class="btn green fileinput-button uploadbtn"  style="margin-top:25px;">
+                      <i class="fa fa-plus"></i>
+                      <span> Upload </span>
+                      <input type="file" name="files[]" id="files[]" multiple=""> 
+                    </button>
+                  </div>
+                </section>
+                <section class="col-md-9 col-xs-9">
+                  <div class="portlet-body form">
+                    <form class="form-horizontal" role="form">
+                      <div class="form-body">
+                        <form class="merchant-form" action="" method=""> 
+
+                          <section class="form-group">
+                            <label class="control-label col-xs-3"> Name:
+                              <span class="required"> * </span>
+                            </label>
+                            <div class="col-xs-8">
+                              <input  type="text" class="form-control input-circle" id="Merchantname" name="Merchantname"  placeholder="Enter the Merchant Name" style="margin-bottom:10px;" required /> 
+                              <span class="help-block text-danger">Please enter a valid name </span>
+                            </div>
+                          </section>
+
+                          <section class="form-group">
+                            <label class="control-label col-xs-3">Short Code:
+                              <span class="required"> * </span>
+                            </label>
+                            <div class="col-xs-8">
+                              <input  type="text" class="form-control input-circle" id="Shortcode" name="Shortcode"  placeholder="enter the Shortcode" style="margin-bottom:10px;" readonly/> 
+                              <span class="help-block text-danger">Please enter a valid short code</span>
+                            </div>
+                          </section>
+
+                          <section class="form-group">
+                            <label class="control-label col-xs-3">Email:
+                              <span class="required"> * </span>
+                            </label>
+                            <div class="col-xs-8">
+                              <input  type="email" class="form-control input-circle" id="email" name="email"  placeholder="enter the email" style="margin-bottom:10px;" required /> 
+                              <span class="help-block text-danger">Please enter a valid email</span>
+                            </div>
+                          </section>
+
+                          <section class="form-group">
+                            <label class="control-label col-xs-3">Phone number:
+                              <span class="required"> * </span>
+                            </label>
+                            <div class="col-xs-8">
+                              <input  type="tel" class="form-control input-circle" id="phonenumber" name="phonenumber"  placeholder="enter the phone number" style="margin-bottom:10px;" required /> 
+                              <span class="help-block text-danger">Please enter a valid phonenumber</span>
+                            </div>
+                          </section>
+
+                          <section class="form-group">
+                            <label class="control-label col-xs-3">City:
+                              <span class="required"> * </span>
+                            </label>
+                            <div class="col-xs-8">
+                              <input type="text" class="form-control input-circle" id="city" name="city"  placeholder="enter the city" style="margin-bottom:10px;" required /> 
+                              <span class="help-block text-danger">Please enter a valid city</span>
+                            </div>
+                          </section>
+
+                          <section class="form-group">
+                            <label class="control-label col-xs-3">pincode:
+                              <span class="required"> * </span>
+                            </label>
+                            <div class="col-xs-8">
+                              <input  type="text" class="form-control input-circle" id="pincode" name="pincode"  placeholder="enter the pincode" style="margin-bottom:10px;" required /> 
+                              <span class="help-block text-danger">Please enter a valid pincode</span>
+                            </div>
+                          </section>
+
+                          <section class="form-group">
+                            <label class="control-label col-xs-3">Location:
+                              <span class="required"> * </span>
+                            </label>
+                            <div class="col-xs-8">
+                              <div class="portlet light portlet-fit bordered" >
+                                <div class="portlet-body">
+                                  <div id="gmap_marker" class="gmaps" style="position: relative; overflow: hidden; transform: translateZ(0px); background-color: rgb(229, 227, 223);"><div class="gm-style" style="position: absolute; left: 0px; top: 0px; overflow: hidden; width: 100%; height: 100%; z-index: 0;"><div style="position: absolute; left: 0px; top: 0px; overflow: hidden; width: 100%; height: 100%; z-index: 0; cursor: url(&quot;http://maps.gstatic.com/mapfiles/openhand_8_8.cur&quot;) 8 8, default;"><div style="position: absolute; left: 0px; top: 0px; z-index: 1; width: 100%; transform-origin: 0px 0px 0px; transform: matrix(1, 0, 0, 1, -172, 318);"><div style="transform: translateZ(0px); position: absolute; left: 0px; top: 0px; z-index: 100; width: 100%;"><div style="position: absolute; left: 0px; top: 0px; z-index: 0;"><div aria-hidden="true" style="position: absolute; left: 0px; top: 0px; z-index: 1; visibility: inherit;"><div style="width: 256px; height: 256px; transform: translateZ(0px); position: absolute; left: 197px; top: -92px;"></div><div style="width: 256px; height: 256px; transform: translateZ(0px); position: absolute; left: -59px; top: -92px;"></div><div style="width: 256px; height: 256px; transform: translateZ(0px); position: absolute; left: -59px; top: -348px;"></div><div style="width: 256px; height: 256px; transform: translateZ(0px); position: absolute; left: 197px; top: -348px;"></div><div style="width: 256px; height: 256px; transform: translateZ(0px); position: absolute; left: 453px; top: -348px;"></div><div style="width: 256px; height: 256px; transform: translateZ(0px); position: absolute; left: 453px; top: -92px;"></div></div></div></div><div style="transform: translateZ(0px); position: absolute; left: 0px; top: 0px; z-index: 101; width: 100%;"></div><div style="transform: translateZ(0px); position: absolute; left: 0px; top: 0px; z-index: 102; width: 100%;"></div><div style="transform: translateZ(0px); position: absolute; left: 0px; top: 0px; z-index: 103; width: 100%;"><div style="position: absolute; left: 0px; top: 0px; z-index: -1;"><div aria-hidden="true" style="position: absolute; left: 0px; top: 0px; z-index: 1; visibility: inherit;"><div style="width: 256px; height: 256px; overflow: hidden; transform: translateZ(0px); position: absolute; left: 197px; top: -92px;"></div><div style="width: 256px; height: 256px; overflow: hidden; transform: translateZ(0px); position: absolute; left: -59px; top: -92px;"><canvas draggable="false" height="256" width="256" style="-webkit-user-select: none; position: absolute; left: 0px; top: 0px; height: 256px; width: 256px;"></canvas></div><div style="width: 256px; height: 256px; overflow: hidden; transform: translateZ(0px); position: absolute; left: -59px; top: -348px;"><canvas draggable="false" height="256" width="256" style="-webkit-user-select: none; position: absolute; left: 0px; top: 0px; height: 256px; width: 256px;"></canvas></div><div style="width: 256px; height: 256px; overflow: hidden; transform: translateZ(0px); position: absolute; left: 197px; top: -348px;"></div><div style="width: 256px; height: 256px; overflow: hidden; transform: translateZ(0px); position: absolute; left: 453px; top: -348px;"></div><div style="width: 256px; height: 256px; overflow: hidden; transform: translateZ(0px); position: absolute; left: 453px; top: -92px;"></div></div></div></div><div style="position: absolute; z-index: 0; transform: translateZ(0px); left: 0px; top: 0px;"><div style="overflow: hidden; width: 480px; height: 300px;"><img src="http://maps.googleapis.com/maps/api/js/StaticMapService.GetMapImage?1m2&amp;1i315&amp;2i604&amp;2e1&amp;3u2&amp;4m2&amp;1u480&amp;2u300&amp;5m5&amp;1e0&amp;5sen-US&amp;6sus&amp;10b1&amp;12b1&amp;token=125199" style="width: 480px; height: 300px;"></div></div><div style="position: absolute; left: 0px; top: 0px; z-index: 0;"><div aria-hidden="true" style="position: absolute; left: 0px; top: 0px; z-index: 1; visibility: inherit;"><div style="transform: translateZ(0px); position: absolute; left: 197px; top: -92px; transition: opacity 200ms ease-out;"><img src="http://maps.googleapis.com/maps/vt?pb=!1m5!1m4!1i2!2i2!3i2!4i256!2m3!1e0!2sm!3i339006955!3m9!2sen-US!3sUS!5e18!12m1!1e47!12m3!1e37!2m1!1ssmartmaps!4e0&amp;token=49518" draggable="false" alt="" style="position: absolute; left: 0px; top: 0px; width: 256px; height: 256px; -webkit-user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;"></div><div style="transform: translateZ(0px); position: absolute; left: -59px; top: -92px; transition: opacity 200ms ease-out;"><img src="http://maps.googleapis.com/maps/vt?pb=!1m5!1m4!1i2!2i1!3i2!4i256!2m3!1e0!2sm!3i339006955!3m9!2sen-US!3sUS!5e18!12m1!1e47!12m3!1e37!2m1!1ssmartmaps!4e0&amp;token=29775" draggable="false" alt="" style="position: absolute; left: 0px; top: 0px; width: 256px; height: 256px; -webkit-user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;"></div><div style="transform: translateZ(0px); position: absolute; left: -59px; top: -348px; transition: opacity 200ms ease-out;"><img src="http://maps.googleapis.com/maps/vt?pb=!1m5!1m4!1i2!2i1!3i1!4i256!2m3!1e0!2sm!3i339006955!3m9!2sen-US!3sUS!5e18!12m1!1e47!12m3!1e37!2m1!1ssmartmaps!4e0&amp;token=124825" draggable="false" alt="" style="position: absolute; left: 0px; top: 0px; width: 256px; height: 256px; -webkit-user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;"></div><div style="transform: translateZ(0px); position: absolute; left: 197px; top: -348px; transition: opacity 200ms ease-out;"><img src="http://maps.googleapis.com/maps/vt?pb=!1m5!1m4!1i2!2i2!3i1!4i256!2m3!1e0!2sm!3i339006955!3m9!2sen-US!3sUS!5e18!12m1!1e47!12m3!1e37!2m1!1ssmartmaps!4e0&amp;token=13497" draggable="false" alt="" style="position: absolute; left: 0px; top: 0px; width: 256px; height: 256px; -webkit-user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;"></div><div style="transform: translateZ(0px); position: absolute; left: 453px; top: -92px; transition: opacity 200ms ease-out;"><img src="http://maps.googleapis.com/maps/vt?pb=!1m5!1m4!1i2!2i3!3i2!4i256!2m3!1e0!2sm!3i339006955!3m9!2sen-US!3sUS!5e18!12m1!1e47!12m3!1e37!2m1!1ssmartmaps!4e0&amp;token=69261" draggable="false" alt="" style="position: absolute; left: 0px; top: 0px; width: 256px; height: 256px; -webkit-user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;"></div><div style="transform: translateZ(0px); position: absolute; left: 453px; top: -348px; transition: opacity 200ms ease-out;"><img src="http://maps.googleapis.com/maps/vt?pb=!1m5!1m4!1i2!2i3!3i1!4i256!2m3!1e0!2sm!3i339006955!3m9!2sen-US!3sUS!5e18!12m1!1e47!12m3!1e37!2m1!1ssmartmaps!4e0&amp;token=33240" draggable="false" alt="" style="position: absolute; left: 0px; top: 0px; width: 256px; height: 256px; -webkit-user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;"></div></div></div></div><div style="position: absolute; left: 0px; top: 0px; z-index: 2; width: 100%; height: 100%;"></div><div style="position: absolute; left: 0px; top: 0px; z-index: 3; width: 100%; height: 100%;"></div><div style="position: absolute; left: 0px; top: 0px; z-index: 4; width: 100%; transform-origin: 0px 0px 0px; transform: matrix(1, 0, 0, 1, -172, 318);"><div style="transform: translateZ(0px); position: absolute; left: 0px; top: 0px; z-index: 104; width: 100%;"></div><div style="transform: translateZ(0px); position: absolute; left: 0px; top: 0px; z-index: 105; width: 100%;"></div><div style="transform: translateZ(0px); position: absolute; left: 0px; top: 0px; z-index: 106; width: 100%;"></div><div style="transform: translateZ(0px); position: absolute; left: 0px; top: 0px; z-index: 107; width: 100%;"></div></div></div><div style="padding: 15px 21px; border: 1px solid rgb(171, 171, 171); font-family: Roboto, Arial, sans-serif; color: rgb(34, 34, 34); box-shadow: rgba(0, 0, 0, 0.2) 0px 4px 16px; z-index: 10000002; display: none; width: 256px; height: 148px; position: absolute; left: 65px; top: 60px; background-color: white;"><div style="padding: 0px 0px 10px; font-size: 16px;">Map Data</div><div style="font-size: 13px;">Map data ©2016</div><div style="width: 13px; height: 13px; overflow: hidden; position: absolute; opacity: 0.7; right: 12px; top: 12px; z-index: 10000; cursor: pointer;"><img src="http://maps.gstatic.com/mapfiles/api-3/images/mapcnt6.png" draggable="false" style="position: absolute; left: -2px; top: -336px; width: 59px; height: 492px; -webkit-user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;"></div></div><div class="gmnoprint" style="z-index: 1000001; position: absolute; right: 182px; bottom: 0px; width: 87px;"><div draggable="false" class="gm-style-cc" style="-webkit-user-select: none; height: 14px; line-height: 14px;"><div style="opacity: 0.7; width: 100%; height: 100%; position: absolute;"><div style="width: 1px;"></div><div style="width: auto; height: 100%; margin-left: 1px; background-color: rgb(245, 245, 245);"></div></div><div style="position: relative; padding-right: 6px; padding-left: 6px; font-family: Roboto, Arial, sans-serif; font-size: 10px; color: rgb(68, 68, 68); white-space: nowrap; direction: ltr; text-align: right; vertical-align: middle; display: inline-block;"><a style="color: rgb(68, 68, 68); text-decoration: none; cursor: pointer; display: none;">Map Data</a><span>Map data ©2016</span></div></div></div><div class="gmnoscreen" style="position: absolute; right: 0px; bottom: 0px;"><div style="font-family: Roboto, Arial, sans-serif; font-size: 11px; color: rgb(68, 68, 68); direction: ltr; text-align: right; background-color: rgb(245, 245, 245);">Map data ©2016</div></div><div class="gmnoprint gm-style-cc" draggable="false" style="z-index: 1000001; -webkit-user-select: none; height: 14px; line-height: 14px; position: absolute; right: 0px; bottom: 0px;"><div style="opacity: 0.7; width: 100%; height: 100%; position: absolute;"><div style="width: 1px;"></div><div style="width: auto; height: 100%; margin-left: 1px; background-color: rgb(245, 245, 245);"></div></div><div style="position: relative; padding-right: 6px; padding-left: 6px; font-family: Roboto, Arial, sans-serif; font-size: 10px; color: rgb(68, 68, 68); white-space: nowrap; direction: ltr; text-align: right; vertical-align: middle; display: inline-block;"><a href="https://www.google.com/intl/en-US_US/help/terms_maps.html" target="_blank" style="text-decoration: none; cursor: pointer; color: rgb(68, 68, 68);">Terms of Use</a></div></div><div style="width: 25px; height: 25px; overflow: hidden; display: none; margin: 10px 14px; position: absolute; top: 0px; right: 0px;"><img src="http://maps.gstatic.com/mapfiles/api-3/images/sv5.png" draggable="false" class="gm-fullscreen-control" style="position: absolute; left: -52px; top: -86px; width: 164px; height: 112px; -webkit-user-select: none; border: 0px; padding: 0px; margin: 0px;"></div><div draggable="false" class="gm-style-cc" style="-webkit-user-select: none; height: 14px; line-height: 14px; display: none; position: absolute; right: 0px; bottom: 0px;"><div style="opacity: 0.7; width: 100%; height: 100%; position: absolute;"><div style="width: 1px;"></div><div style="width: auto; height: 100%; margin-left: 1px; background-color: rgb(245, 245, 245);"></div></div><div style="position: relative; padding-right: 6px; padding-left: 6px; font-family: Roboto, Arial, sans-serif; font-size: 10px; color: rgb(68, 68, 68); white-space: nowrap; direction: ltr; text-align: right; vertical-align: middle; display: inline-block;"><a target="_new" title="Report errors in the road map or imagery to Google" href="https://www.google.com/maps/@25.9355565,66.5423112,2z/data=!10m1!1e1!12b1?source=apiv3&amp;rapsrc=apiv3" style="font-family: Roboto, Arial, sans-serif; font-size: 10px; color: rgb(68, 68, 68); text-decoration: none; position: relative;">Report a map error</a></div></div><div class="gmnoprint gm-bundled-control" draggable="false" controlwidth="28" controlheight="55" style="margin: 10px; -webkit-user-select: none; position: absolute; left: 0px; top: 0px;"><div class="gmnoprint" controlwidth="28" controlheight="55" style="position: absolute; left: 0px; top: 0px;"><div draggable="false" style="-webkit-user-select: none; box-shadow: rgba(0, 0, 0, 0.298039) 0px 1px 4px -1px; border-radius: 2px; cursor: pointer; width: 28px; height: 55px; background-color: rgb(255, 255, 255);"><div title="Zoom in" style="position: relative; width: 28px; height: 27px; left: 0px; top: 0px;"><div style="overflow: hidden; position: absolute; width: 15px; height: 15px; left: 7px; top: 6px;"><img src="http://maps.gstatic.com/mapfiles/api-3/images/tmapctrl.png" draggable="false" style="position: absolute; left: 0px; top: 0px; -webkit-user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none; width: 120px; height: 54px;"></div></div><div style="position: relative; overflow: hidden; width: 67%; height: 1px; left: 16%; top: 0px; background-color: rgb(230, 230, 230);"></div><div title="Zoom out" style="position: relative; width: 28px; height: 27px; left: 0px; top: 0px;"><div style="overflow: hidden; position: absolute; width: 15px; height: 15px; left: 7px; top: 6px;"><img src="http://maps.gstatic.com/mapfiles/api-3/images/tmapctrl.png" draggable="false" style="position: absolute; left: 0px; top: -15px; -webkit-user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none; width: 120px; height: 54px;"></div></div></div></div></div><div class="gmnoprint gm-bundled-control gm-bundled-control-on-bottom" draggable="false" controlwidth="28" controlheight="28" style="margin: 10px; -webkit-user-select: none; position: absolute; bottom: 42px; right: 28px;"><div class="gm-svpc" controlwidth="28" controlheight="28" style="box-shadow: rgba(0, 0, 0, 0.298039) 0px 1px 4px -1px; border-radius: 2px; width: 28px; height: 28px; cursor: url(&quot;http://maps.gstatic.com/mapfiles/openhand_8_8.cur&quot;) 8 8, default; position: absolute; left: 0px; top: 0px; background-color: rgb(255, 255, 255);"><div style="position: absolute; left: 1px; top: 1px;"></div><div style="position: absolute; left: 1px; top: 1px;"><div aria-label="Street View Pegman Control" style="width: 26px; height: 26px; overflow: hidden; position: absolute; left: 0px; top: 0px;"><img src="http://maps.gstatic.com/mapfiles/api-3/images/cb_scout5.png" draggable="false" style="position: absolute; left: -147px; top: -26px; width: 215px; height: 835px; -webkit-user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;"></div><div aria-label="Pegman is on top of the Map" style="width: 26px; height: 26px; overflow: hidden; position: absolute; left: 0px; top: 0px; visibility: hidden;"><img src="http://maps.gstatic.com/mapfiles/api-3/images/cb_scout5.png" draggable="false" style="position: absolute; left: -147px; top: -52px; width: 215px; height: 835px; -webkit-user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;"></div><div aria-label="Street View Pegman Control" style="width: 26px; height: 26px; overflow: hidden; position: absolute; left: 0px; top: 0px; visibility: hidden;"><img src="http://maps.gstatic.com/mapfiles/api-3/images/cb_scout5.png" draggable="false" style="position: absolute; left: -147px; top: -78px; width: 215px; height: 835px; -webkit-user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;"></div></div></div><div class="gmnoprint" controlwidth="28" controlheight="0" style="display: none; position: absolute;"><div title="Rotate map 90 degrees" style="width: 28px; height: 28px; overflow: hidden; position: absolute; border-radius: 2px; box-shadow: rgba(0, 0, 0, 0.298039) 0px 1px 4px -1px; cursor: pointer; display: none; background-color: rgb(255, 255, 255);"><img src="http://maps.gstatic.com/mapfiles/api-3/images/tmapctrl4.png" draggable="false" style="position: absolute; left: -141px; top: 6px; width: 170px; height: 54px; -webkit-user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;"></div><div class="gm-tilt" style="width: 28px; height: 28px; overflow: hidden; position: absolute; border-radius: 2px; box-shadow: rgba(0, 0, 0, 0.298039) 0px 1px 4px -1px; top: 0px; cursor: pointer; background-color: rgb(255, 255, 255);"><img src="http://maps.gstatic.com/mapfiles/api-3/images/tmapctrl4.png" draggable="false" style="position: absolute; left: -141px; top: -13px; width: 170px; height: 54px; -webkit-user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none;"></div></div></div><div draggable="false" class="gm-style-cc" style="position: absolute; -webkit-user-select: none; height: 14px; line-height: 14px; right: 72px; bottom: 0px;"><div style="opacity: 0.7; width: 100%; height: 100%; position: absolute;"><div style="width: 1px;"></div><div style="width: auto; height: 100%; margin-left: 1px; background-color: rgb(245, 245, 245);"></div></div><div style="position: relative; padding-right: 6px; padding-left: 6px; font-family: Roboto, Arial, sans-serif; font-size: 10px; color: rgb(68, 68, 68); white-space: nowrap; direction: ltr; text-align: right; vertical-align: middle; display: inline-block;"><span>2000 km&nbsp;</span><div style="position: relative; display: inline-block; height: 8px; bottom: -1px; width: 56px;"><div style="width: 100%; height: 4px; position: absolute; left: 0px; top: 0px; background-color: rgb(255, 255, 255);"></div><div style="width: 4px; height: 8px; left: 0px; top: 0px; background-color: rgb(255, 255, 255);"></div><div style="width: 4px; height: 8px; position: absolute; left: 0px; bottom: 0px; background-color: rgb(255, 255, 255);"></div><div style="position: absolute; height: 2px; left: 1px; bottom: 1px; right: 1px; background-color: rgb(102, 102, 102);"></div><div style="position: absolute; width: 2px; height: 6px; left: 1px; top: 1px; background-color: rgb(102, 102, 102);"></div><div style="width: 2px; height: 6px; position: absolute; bottom: 1px; right: 1px; background-color: rgb(102, 102, 102);"></div></div></div></div><div style="margin-left: 5px; margin-right: 5px; z-index: 1000000; position: absolute; left: 0px; bottom: 0px;"><a target="_blank" href="https://maps.google.com/maps?ll=25.935556,66.542311&amp;z=2&amp;t=m&amp;hl=en-US&amp;gl=US&amp;mapclient=apiv3" title="Click to see this area on Google Maps" style="position: static; overflow: visible; float: none; display: inline;"><div style="width: 66px; height: 26px; cursor: pointer;"><img src="http://maps.gstatic.com/mapfiles/api-3/images/google4.png" draggable="false" style="position: absolute; left: 0px; top: 0px; width: 66px; height: 26px; -webkit-user-select: none; border: 0px; padding: 0px; margin: 0px;"></div></a></div><div class="gmnoprint" style="margin: 10px; z-index: 0; position: absolute; cursor: pointer; left: 48px; top: 0px;"><div class="gm-style-mtc" style="float: left;"><div draggable="false" title="Show street map" style="direction: ltr; overflow: hidden; text-align: center; position: relative; color: rgb(0, 0, 0); font-family: Roboto, Arial, sans-serif; -webkit-user-select: none; font-size: 11px; padding: 8px; border-bottom-left-radius: 2px; border-top-left-radius: 2px; -webkit-background-clip: padding-box; box-shadow: rgba(0, 0, 0, 0.298039) 0px 1px 4px -1px; min-width: 22px; font-weight: 500; background-color: rgb(255, 255, 255); background-clip: padding-box;">Map</div><div style="z-index: -1; padding: 2px; border-bottom-left-radius: 2px; border-bottom-right-radius: 2px; box-shadow: rgba(0, 0, 0, 0.298039) 0px 1px 4px -1px; position: absolute; left: 0px; top: 31px; text-align: left; display: none; background-color: white;"><div draggable="false" title="Show street map with terrain" style="color: rgb(0, 0, 0); font-family: Roboto, Arial, sans-serif; -webkit-user-select: none; font-size: 11px; padding: 6px 8px 6px 6px; direction: ltr; text-align: left; white-space: nowrap; background-color: rgb(255, 255, 255);"><span role="checkbox" style="box-sizing: border-box; position: relative; line-height: 0; font-size: 0px; margin: 0px 5px 0px 0px; display: inline-block; border: 1px solid rgb(198, 198, 198); border-radius: 1px; width: 13px; height: 13px; vertical-align: middle; background-color: rgb(255, 255, 255);"><div style="position: absolute; left: 1px; top: -2px; width: 13px; height: 11px; overflow: hidden; display: none;"><img src="http://maps.gstatic.com/mapfiles/mv/imgs8.png" draggable="false" style="position: absolute; left: -52px; top: -44px; -webkit-user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none; width: 68px; height: 67px;"></div></span><label style="vertical-align: middle; cursor: pointer;">Terrain</label></div></div></div><div class="gm-style-mtc" style="float: left;"><div draggable="false" title="Show satellite imagery" style="direction: ltr; overflow: hidden; text-align: center; position: relative; color: rgb(86, 86, 86); font-family: Roboto, Arial, sans-serif; -webkit-user-select: none; font-size: 11px; padding: 8px; border-bottom-right-radius: 2px; border-top-right-radius: 2px; -webkit-background-clip: padding-box; box-shadow: rgba(0, 0, 0, 0.298039) 0px 1px 4px -1px; border-left-width: 0px; min-width: 40px; background-color: rgb(255, 255, 255); background-clip: padding-box;">Satellite</div><div style="z-index: -1; padding: 2px; border-bottom-left-radius: 2px; border-bottom-right-radius: 2px; box-shadow: rgba(0, 0, 0, 0.298039) 0px 1px 4px -1px; position: absolute; right: 0px; top: 31px; text-align: left; display: none; background-color: white;"><div draggable="false" title="Show imagery with street names" style="color: rgb(0, 0, 0); font-family: Roboto, Arial, sans-serif; -webkit-user-select: none; font-size: 11px; padding: 6px 8px 6px 6px; direction: ltr; text-align: left; white-space: nowrap; background-color: rgb(255, 255, 255);"><span role="checkbox" style="box-sizing: border-box; position: relative; line-height: 0; font-size: 0px; margin: 0px 5px 0px 0px; display: inline-block; border: 1px solid rgb(198, 198, 198); border-radius: 1px; width: 13px; height: 13px; vertical-align: middle; background-color: rgb(255, 255, 255);"><div style="position: absolute; left: 1px; top: -2px; width: 13px; height: 11px; overflow: hidden;"><img src="http://maps.gstatic.com/mapfiles/mv/imgs8.png" draggable="false" style="position: absolute; left: -52px; top: -44px; -webkit-user-select: none; border: 0px; padding: 0px; margin: 0px; max-width: none; width: 68px; height: 67px;"></div></span><label style="vertical-align: middle; cursor: pointer;">Labels</label></div></div></div></div></div></div>
+                                </div>
+                              </div>
+                              <span class="help-block text-danger">Please select a valid location</span>
+                            </div>
+                          </section>
+
+                          <section class="form-group">
+                            <label class="control-label col-xs-3">fee:
+                              <span class="required"> * </span>
+                            </label>
+                            <div class="col-xs-8">
+                              <input type="text" class="form-control input-circle" id="fee" name="fee"  placeholder="enter the fee amount" style="margin-bottom:10px;" required /> 
+                              <span class="help-block text-danger">Please enter a valid fee</span>
+                            </div>
+                          </section>
+
+                          <section class="form-group">
+                            <label class="control-label col-xs-3">Bank account number:
+                              <span class="required"> * </span>
+                            </label>
+                            <div class="col-xs-8">
+                              <input  type="text" class="form-control input-circle" id="accno" name="accno"  placeholder="enter the bank account number" style="margin-bottom:10px;" readonly /> 
+                              <span class="help-block text-danger">Please enter a valid account number</span>
+                            </div>
+                          </section>
+
+                          <section class="form-group form-md-line-input has-info " style="padding:0px;">
+                            <label class="control-label col-xs-3" style="color:black;">Category:
+                              <span class="required"> * </span>
+                            </label>
+                            <div class="col-xs-8">
+                              <select class="form-control" id="form_control_1 " required>
+                                <option value="" disabled selected hidden>select Category</option>
+                                <option value="1">Category1</option>
+                                <option value="2">Category2</option>
+                                <option value="3">category3</option>
+                              </select>
+                              <span class="help-block text-danger">Please Select any one </span>
+                            </div>
+                          </section>
+
+                          <section class="form-group">
+                            <label class="control-label col-xs-3">Gallery:
+                              <span class="required"> * </span>
+                            </label>
+                            <div class="col-xs-8">
+                              <div class="image-group col-xs-12" style="margin-bottom:15px;">
+                                <div class="galleryholder col-sm-3 col-xs-4 gallery" >
+                                </div>
+                                <div class="galleryholder col-sm-3 col-xs-4 gallery">
+                                </div>
+                                <div class="galleryholder col-sm-3 col-xs-4 gallery">
+                                </div>
+                                <div class="galleryholder col-sm-3 col-xs-4 gallery">
+                                </div>
+                                <div class="galleryholder col-sm-3 col-xs-4 gallery">
+                                </div>
+                                <div class="galleryholder col-sm-3 col-xs-4 gallery">
+                                </div>
+
+                                <section class="row fileupload-buttonbar filebtn pull-right" style="margin-right:0;margin-left:0;">
+                                  <button type="button" class="btn btn-default" style="margin-top:10px; " >
+                                    <i class="fa fa-plus"></i>
+                                    <span> Add More.. </span>
+                                  </button>
+                                  <span class="btn green fileinput-button uploadbtn"  style="margin-top:10px; ">
+                                    <i class="fa fa-plus"></i>
+                                    <span> Upload </span>
+                                    <input type="file" name="files[]" id="files[]" multiple=""> 
+                                  </span>
+                                  <button type="button" class="btn red delete deletebtn" style="margin-top:10px; " >
+                                    <i class="fa fa-trash"></i>
+                                    <span> Remove </span>
+                                  </button>
+                                </section>
+                              </div>
+                            </div>
+                          </section>
+
+                          <section class="form-group form-md-line-input has-info" style="padding:0px;">
+                            <label class="control-label col-xs-3" style="color:black;">Status:
+                              <span class="required"> * </span>
+                            </label>
+                            <div class="col-xs-8">
+                              <select class="form-control" id="form_control_1" required>
+                                <option value="" disabled selected hidden>select status</option>
+                                <option value="3">active</option>
+                                <option value="4">suspended</option>
+                                <option value="5">Permanent suspend</option>
+                              </select>
+                              <span class="help-block text-danger">Please Select any one </span>
+                            </div>
+                          </section>
+                        </form>
+                      </div>
+                    </form>
+                  </div>
+                </section>
+                <section class="col-md-12 col-xs-12">
+                  <div class="form-actions rightshift" style="margin-bottom:15px;">
+                    <button type="button" class="btn default margin-form-btn" onclick="location.href='Merchant_List.html'">Cancel</button>
+                    <button type="submit" class="btn button-color margin-form-btn" onclick="location.href='Merchant_List.html'">Make Active</button>
+                  </div>
+                </section>
+              </section>
+            </div>
+          </div>   
+        </div>
+        <!-- END CONTENT BODY -->
+      </section>
+      <!-- END CONTENT -->
+    </div>
+    <script type="text/javascript" src="js/jquery-1.12.0.js"></script>
+
+    <script src="js/jquery.min.js" type="text/javascript"></script>
+    <script src="js/bootstrap.min.js" type="text/javascript"></script>
+
+    <script src="http://maps.google.com/maps/api/js?sensor=false" type="text/javascript"></script>
+    <script src="js/gmaps.min.js" type="text/javascript"></script>
+
+    <script src="js/app.min.js" type="text/javascript"></script>
+    <script src="js/maps-google.min.js" type="text/javascript"></script>
+    <script src="js/layout.min.js" type="text/javascript"></script>
+
+
+    <script type="text/javascript" src="js/jquery-1.12.0.js"></script>
+    <script src="js/jquery.slimscroll.min.js" type="text/javascript"></script>  
+  </body>
+</html>
