@@ -78,7 +78,7 @@ module.exports = {
         },
         branchName: {
             type: Sequelize.STRING,
-            defaultValue: null,
+            // defaultValue: null,
         },
         accountHolder: {
             type: Sequelize.STRING,
@@ -140,13 +140,17 @@ module.exports = {
         Merchants.belongsToMany(Galleries,{
             through:'MerchantsGalleries',
             foreignKey:{
-                name:'galleryId',
+                name:'merchantId',
+                // onDelete: 'RESTRICT',
+                // onUpdate: 'CASCADE'
             }
         });
         Galleries.belongsToMany(Merchants,{
             through:'MerchantsGalleries',
             foreignKey:{
-                name:'merchantId'
+                name:'galleryId',
+                // onDelete: 'RESTRICT',
+                // onUpdate: 'CASCADE'
             }
         });
     }
