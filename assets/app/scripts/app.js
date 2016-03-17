@@ -31,6 +31,42 @@
                 controller: 'addCategoryController',
                 controllerAs: 'addCategoryVm'
             })
+        
+            .state('categoryList', {
+                url: '/categoryList',
+                templateUrl: 'app/views/category/category_list.html'
+            })
+
+            .state('userList', {
+                url: '/userList',
+                templateUrl: 'app/views/user/user_list.html'
+            })
+        
+            .state('merchantList', {
+                url: '/merchantList',
+                templateUrl: 'app/views/merchant/merchant_list.html'
+            })
+
+            .state('offerList', {
+                url: '/offerList',
+                templateUrl: 'app/views/offer/offer_list.html'
+            })
+        
+            .state('promocodeList', {
+                url: '/promocodeList',
+                templateUrl: 'app/views/promocode/promo_list.html'
+            })
+
+            .state('reports', {
+                url: '/reports',
+                templateUrl: 'app/views/reports/reports.html'
+            })
+        
+            .state('notification', {
+                url: '/notification',
+                templateUrl: 'app/views/notification/notification.html'
+            })
+
 
     }
 
