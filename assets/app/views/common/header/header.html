@@ -1,4 +1,4 @@
-    <header class="page-header navbar navbar-fixed-top" style="border:5px solid transparent; border-bottom-color:#FF4081;">
+    <header class="page-header navbar navbar-fixed-top" style="border:5px solid transparent; border-bottom-color:#FF4081;" ng-show="isAuthenticated">
       <!-- HEADER BEGIN -->
       <div class="page-header-inner">
         <div class="page-logo">
@@ -25,8 +25,8 @@
                     <i class="fa fa-key"></i> Change Password 
                   </a>
                 </li>
-                <li>
-                  <a ui-sref="login">
+                <li ng-controller="headerController">
+                  <a ng-click="logout()">
                     <i class="fa fa-lock"></i> Log Out 
                   </a>
                 </li>

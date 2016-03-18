@@ -42,7 +42,25 @@ table.dataTable thead .sorting {
     overflow:auto;
 }
 
-.page-sidebar-menu>li:hover>a{background:#3949AB!important;}
+.page-sidebar-menu>li:hover>a {
+    background:#3980C2!important; 
+    color: #fff !important;
+    font-weight: bold;
+}
+
+.page-sidebar-menu>li:hover>a > .fa{
+    color: #fff !important;
+    font-size: 20px;
+}
+.page-sidebar-menu>li:hover>a>.title {
+    color:#fff !important;     
+}
+
+.page-sidebar-menu>li:active>a {
+    background:#3980C2!important; 
+    color: #fff;
+    font-weight: bold;
+}
 
 .page-sidebar .page-sidebar-menu>li>a,.page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu>li>a{border:0;color:#b4bcc8}
 
@@ -56,7 +74,7 @@ table.dataTable thead .sorting {
     background-color: transparent;
 }
 
-.page-sidebar .page-sidebar-menu > li.active > a, .page-sidebar .page-sidebar-menu > li.active.open > a {
+.page-sidebar .page-sidebar-menu > li.active > a, .page-sidebar .page-sidebar-menu > li.active.open > a:active {
     background:  #F0F0F0;
     color:white;
     font-weight: bold;
@@ -67,7 +85,9 @@ table.dataTable thead .sorting {
     background-color: transparent!important;
 }
 
-
+.caption-subject {
+    color: #fff;
+}
 
 .colorlabel {
     color:#34495e !important;
@@ -75,8 +95,10 @@ table.dataTable thead .sorting {
 
 
 
-.page-sidebar .page-sidebar-menu > li.active.open > a:hover , {
-    background: #3949AB !important;
+.page-sidebar .page-sidebar-menu > li.active.open > a:hover {
+    background: #3980C2 !important;
+    color: #fff;
+    font-weight: bold;
 }
 
 .title {
@@ -87,9 +109,11 @@ table.dataTable thead .sorting {
     color:white;
 }
 
+/*
 .nav-item :hover {
     background-color: #3949AB;
 }
+*/
 
 .dpholder {
     margin-top: 25%;
@@ -138,7 +162,7 @@ tbody.datatablecustom > tr > td {
 
 }
 .centerdiv {
-    position: absolute;
+  position: fixed;
   left: 50%;
   top: 50%;
   transform: translate(-50%, -50%);
@@ -147,11 +171,10 @@ tbody.datatablecustom > tr > td {
 
 
 
-.company-logo {
-    width:100%;	
-   padding-left: 22%;
-   padding-right: 15%;
-    text-align: center;
+.company-logo {    
+    padding-left: 12%;
+    margin-left: 5%;
+    margin-bottom: 5%;
 }
 
 
@@ -254,11 +277,6 @@ tbody.datatablecustom > tr > td {
         padding-right:5px !important;
     }
 
-    .company-logo {
-        padding-left:40px;
-
-    }
-
     
 }
 
@@ -281,7 +299,7 @@ tbody.datatablecustom > tr > td {
 }
 
 .portlet-title {
-    background-color:#C5CAE9 !important;
+    background-color:#3980C2 !important;
 }
 
 @media screen and (max-width: 320px) {
@@ -312,7 +330,7 @@ tbody.datatablecustom > tr > td {
 
 
 .portlet.box.purple > .portlet-title {
-    background-color:#C5CAE9 !important;
+    background-color:#3980C2 !important;
 }
 
 .select2-container .select2-search--inline {

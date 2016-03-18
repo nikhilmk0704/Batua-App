@@ -4,7 +4,7 @@ angular.module('app').controller('headerController', function ($scope, $state, a
 
  $scope.logout = function () {
   authenticationService.ClearCredentials();
-  $state.go('login');
+  $state.go('login', {reload:true});
  }
 
 

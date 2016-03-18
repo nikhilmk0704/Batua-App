@@ -1,9 +1,9 @@
 <section class="container">
     <div class="centerdiv">
         <section class="center-section">
-            <section class="company-logo">
-                <img src="assets/images/logo.png" alt="login-logo" class="img-large" />
-                <img src="assets/images/logo-less.png" alt="login-logo" class="img-mobile" />
+            <section class="company-logo col-xs-12">
+                <img src="assets/images/comp-logo.png" alt="login-logo" class="img-large" width="80%" height="70px"/>
+                <img src="assets/images/comp-logo-less.png" alt="login-logo" class="img-mobile" width="80%" height="50px;"/>
             </section>
             <form class="login-form" ng-submit="loginVm.login(user)" method="post" name="loginForm" novalidate>
                 <div class="form-group" ng-class="{'has-error': loginForm.email.$invalid && !loginForm.email.$pristine}">
