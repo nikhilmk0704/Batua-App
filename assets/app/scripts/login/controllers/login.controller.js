@@ -1,13 +1,27 @@
-angular.module('app').controller('loginController', function ($scope, $location, loginService) {
+angular.module('app').controller('loginController', function($scope, $location, loginService, toastr, $state, authenticationService, $location) {
 
-    var vm = this;
+  // if ($scope.$auth.IsAuthenticated()) {
+  //  $state.go('addCategory');
+  // }
 
-    vm.login = function (userModel) {
+  var _this = this;
 
-        loginService.Login(userModel, function (response) {
-            if (response.status == 200) {
-                $location.path('/dashboard');
-            } else {}
+  _this.login = function(userModel) {
+
+    loginService.Login(userModel, function(response) {
+      if (response.status == 200) {
+        // Success need to save credentials in local storage
+        authenticationService.SetCredentials(response.data);
+        $state.go('addCategory');
+      } else if (response.status === 400) {
+        toastr.error('The admin Credentials are incorrect. Please provide the correct email id / password', {
+          closeButton: true
         });
-    }
+      } else if (response.status != 400 || response.status != 200) {
+        toastr.error('Oops! Something went wrong. Please check after some time', {
+          closeButton: true
+        });
+      }
+    });
+  }
 });

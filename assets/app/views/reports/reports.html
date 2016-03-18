@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+  <meta charset="utf-8" />
+  <title>Offer List</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta content="width=device-width, initial-scale=1" name="viewport" />
+  <link rel="stylesheet" type="text/css" href="font-awesome-4.5.0/css/font-awesome.css" />
+
+  <link href="css/simple-line-icons.min.css" rel="stylesheet" type="text/css" />
+  <link rel="stylesheet" href="css/bootstrap.min.css" />
+
+  <link href="css/datatables.min.css" rel="stylesheet" type="text/css" />
+  <link href="css/datatables.bootstrap.css" rel="stylesheet" type="text/css" />
+
+
+  <link href="css/components.min.css" rel="stylesheet" type="text/css" /> 
+  <link href="css/plugins.min.css" rel="stylesheet" type="text/css" />
+  <link href="css/layout.min.css" rel="stylesheet" type="text/css" />  
+  <link href="css/darkblue.min.css" rel="stylesheet" type="text/css" id="style_color" />
+  <link href="css/custom.min.css" rel="stylesheet" type="text/css" />
+
+  <link rel="stylesheet" href="css/bootstrap-select.min.css" />
+  <link rel="stylesheet" href="css/bootstrap-datepicker3.min.css" />
+
+
+
+  <link href="css/style.css" rel="stylesheet" type="text/css" /> 
+  <link href="css/jquery-fileupload.css" rel="stylesheet" type="text/css" />
+
+</head>
+
+<body class="page-header-fixed page-sidebar-closed-hide-logo page-content-white">
+
+  <header class="page-header navbar navbar-fixed-top" style="border:5px solid transparent; border-bottom-color:#FF4081;">
+      <!-- HEADER BEGIN -->
+      <div class="page-header-inner">
+        <div class="page-logo">
+          <a href="User_List.html">
+            <img src="images/comp-logo.png" alt="logo" class="logo-default" width="200" height="50px"  style="top:0;padding-bottom:5px;"/> 
+          </a>   
+        </div>
+        <!-- RESPONSIVE TOGGLER -->
+        <a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse" data-target=".navbar-collapse" style="margin-top:25px;"> </a>
+        <!-- END RESPONSIVE MENU TOGGLER -->
+        <!-- BEGIN TOP NAVIGATION MENU -->
+        <div class="top-menu"  style="padding-top:15px;">
+          <!-- User Profile -->
+          <ul class="nav navbar-nav pull-right">
+            <li class="dropdown dropdown-user">
+              <a href="javascript:;" class="dropdown-toggle customedropdown" data-toggle="dropdown" data-hover="dropdown" data-close-others="true">
+                <img alt="" class="img-circle" src="images/avatar3_small.jpg" />
+                <span class="username username-hide-on-mobile black"><strong> Nick as <label> Admin</label></strong></span>
+                <i class="fa fa-angle-down"></i>
+              </a>
+              <ul class="dropdown-menu dropdown-menu-default">
+                <li>
+                  <a href="Change_Password.html">
+                    <i class="fa-calendar"></i> Change Password 
+                  </a>
+                </li>
+                <li>
+                  <a href="Login.html">
+                    <i class="fa-key"></i> Log Out 
+                  </a>
+                </li>
+              </ul>
+            </li> 
+          </ul>
+        </div>
+        <!-- END TOP NAVIGATION MENU -->
+      </div>
+      <!-- END HEADER INNER -->
+    </header>
+
+  <div class="clearfix clearfixcol" > </div>
+
+  <div class="page-container">
+    <!-- sidebar begins -->
+    <aside class="page-sidebar-wrapper">         
+      <div class="page-sidebar navbar-collapse collapse">
+        <ul class="page-sidebar-menu  page-header-fixed" data-keep-expanded="false" data-auto-scroll="true" data-slide-speed="200" style="padding-top:80px;"> 
+          <li class="sidebar-toggler-wrapper hide">
+            <!-- BEGIN SIDEBAR TOGGLER BUTTON -->
+            <div class="sidebar-toggler"> </div>
+            <!-- END SIDEBAR TOGGLER BUTTON -->
+          </li> 
+
+          <li class="nav-item start marginnav" style="padding-bottom:10px;">
+            <a href="User_List.html" class="nav-link nav-toggle">
+              <i class="fa fa-user"></i>
+              <span class="title">User</span>
+              <span class="selected"></span>
+            </a>  
+          </li>
+                
+          <li class="nav-item" style="padding-bottom:10px;">
+            <a href="Merchant_List.html" class="nav-link nav-toggle">
+              <i class="fa fa-user"></i>
+              <span class="title">Merchant</span>           
+            </a>
+          </li>
+
+          <li class="nav-item" style="padding-bottom:10px;">
+            <a href="Category_List.html" class="nav-link nav-toggle">
+              <i class="fa fa-clone"></i>
+              <span class="title">Category</span>
+            </a>
+          </li>
+
+          <li class="nav-item" style="padding-bottom:10px;">
+            <a href="Offer_List.html" class="nav-link nav-toggle">
+              <i class="fa fa-clone"></i>
+              <span class="title">Offer</span>   
+            </a>         
+          </li>
+
+          <li class="nav-item" style="padding-bottom:10px;">
+            <a href="Promo_List.html" class="nav-link nav-toggle">
+              <i class="fa fa-clone"></i>
+              <span class="title">Promocode</span>
+            </a>    
+          </li>
+
+          <li class="nav-item" style="padding-bottom:10px;">
+            <a href="Report_View.html" class="nav-link nav-toggle">
+              <i class="fa fa-clone"></i>
+              <span class="title">Report</span>
+            </a>
+          </li>
+
+          <li class="nav-item" style="padding-bottom:10px;">
+            <a href="Notification.html" class="nav-link nav-toggle">
+              <i class="fa fa-clone"></i>
+              <span class="title">Notification</span>
+            </a>
+          </li> 
+        </ul>
+          <!-- END SIDEBAR MENU -->
+      </div>      
+    </aside>
+    <!-- sidebar ends -->
+    <section class="page-content-wrapper">
+      <!-- BEGIN CONTENT BODY -->
+      <div class="page-content" style="min-height:785px">
+
+        <div class="row">
+          <section class="col-md-10 margincontent">
+            <!-- BEGIN EXAMPLE TABLE PORTLET-->
+            <article class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+              <a href="Transaction_Report.html">
+                <div class="dashboard-stat green">
+                  <div class="visual">
+                      <i class="fa fa-bar-chart-o"></i>
+                  </div>
+                  <h2  style="text-align:center;color:#FF4081;margin-top:8%"> <strong> Transaction History </strong></h2>
+                  <span class="more"> View more
+                      <i class="m-icon-swapright m-icon-white"></i>
+                  </span>
+                </div>
+              </a>
+            </article>
+
+            <article class="col-lg-6 col-md-6 col-sm-12 col-xs-12">
+              <a href="Payment_Report.html">
+                <div class="dashboard-stat blue">
+                  <div class="visual">
+                      <i class="fa fa-bar-chart-o"></i>
+                  </div>
+                  <h2  style="text-align:center;color:#FF4081;margin-top:8%"> <strong> Payment Report </strong></h2>
+                  <span class="more"> View more
+                      <i class="m-icon-swapright m-icon-white"></i>
+                  </span>
+                </div>
+              </a>
+            </article>
+            <!-- END EXAMPLE TABLE PORTLET-->
+          </section>
+        </div>
+      </div>
+      <!-- END CONTENT BODY -->
+    </section>
+    <!-- END CONTENT -->
+
+  </div>
+
+  <script type="text/javascript" src="js/jquery-1.12.0.js"></script>
+
+  <script src="js/jquery.min.js" type="text/javascript"></script>
+  <script src="js/bootstrap.min.js" type="text/javascript"></script>
+  <script src="js/jquery.uniform.min.js" type="text/javascript"></script>
+  <script src="js/bootstrap-switch.min.js" type="text/javascript"></script>
+
+  <script src="js/datatable.min.js" type="text/javascript"></script>
+  <script src="js/datatables.min.js" type="text/javascript"></script>
+  <script src="js/datatables.bootstrap.js" type="text/javascript"></script>
+
+  <script src="js/app.min.js" type="text/javascript"></script>
+  <script src="js/table-datatables-managed.min.js" type="text/javascript"></script>
+  <script src="js/layout.min.js" type="text/javascript"></script>
+
+
+  <script type="text/javascript" src="js/jquery-1.12.0.js"></script>
+  <script src="js/jquery.slimscroll.min.js" type="text/javascript"></script> 
+</body>
+
+
+</html>
