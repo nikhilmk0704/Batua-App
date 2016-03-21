@@ -1,252 +1,227 @@
-
-      <!-- BEGIN CONTENT BODY -->
-      <div class="page-content" style="min-height:785px">
-
-        <div class="row">
-          <section class="col-md-10 margincontent">
+<div class="page-content" style="min-height:785px">
+    <div class="row">
+        <section class="col-md-10 margincontent">
             <!-- BEGIN EXAMPLE TABLE PORTLET-->
             <section class="portlet light bordered portletcustom" style="padding:0;">
-              <section class="portlet-title">
-                <div class="caption font-dark" style="padding-left:20px;padding-top:15px;">
-                  
-                  <span class="caption-subject bold uppercase"> Promo List</span>
-                </div> 
-                <div class="col-xs-4" style="margin-top:10px;float:right;">  
-
-                    <div id="sample_1_filter" class="dataTables_filter pull-right" style="">
-
-                      <div class="input-group pull-right">
-                        <span class="input-group-addon input-circle-left">
+                <section class="portlet-title">
+                    <div class="caption font-dark" style="padding-left:20px;padding-top:15px;">
+                        <span class="caption-subject bold uppercase"> Promo List</span>
+                    </div>
+                    <div class="col-xs-4" style="margin-top:10px;float:right;">
+                        <div id="sample_1_filter" class="dataTables_filter pull-right" style="">
+                            <div class="input-group pull-right">
+                                <span class="input-group-addon input-circle-left">
                          <i class="fa fa-search"></i>
                        </span>
-                       <input type="search" class="form-control input-sm input-medium input-inline input-circle-right" id="search" name="search" placeholder="search here" aria-controls="sample_1"> 
-                      </div>
-
-                   </div>
-                  </div>  
-              </section>
-              <section class="portlet-body">
-                <section class="table-toolbar">
-                  <div class="row">
-                    <div class="col-md-6">
-                      <div class="btn-group" style="padding-left:30px;">
-                        <a id="sample_editable_1_new" class="btn sbold green" href="Add_Promo.html"> Add New Promo
+                                <input type="search" class="form-control input-sm input-medium input-inline input-circle-right" id="search" name="search" placeholder="search here" aria-controls="sample_1">
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section class="portlet-body">
+                    <section class="table-toolbar">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="btn-group" style="padding-left:30px;">
+                                    <a id="sample_editable_1_new" class="btn sbold green" href="Add_Promo.html"> Add New Promo
                           <i class="fa fa-plus"></i>
                         </a>
-                      </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    <div id="sample_1_wrapper" class="dataTables_wrapper no-footer">
+                        <div class="table-scrollable">
+                            <table class="table table-striped table-bordered table-hover order-column dataTable no-footer" id="sample_1" role="grid" aria-describedby="sample_1_info">
+                                <thead>
+                                    <tr role="row">
+                                        <th class="" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" aria-label="activate to sort column ascending" style="width: 120px;">Promocode </th>
+                                        <th class="sorting" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" aria-label="  activate to sort column ascending" style="width:100%;"> Merchant Name
+                                        </th>
+                                        <th class="" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" aria-label="activate to sort column ascending" style="width: 100px;"> Offer/Discount </th>
+                                        <th class="" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" aria-sort="ascending" aria-label="activate to sort column descending" style="width: 108px;">Max Limit</th>
+                                        <th class="" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" aria-label=" activate to sort column ascending" style="width: 119px;"> Valid-From </th>
+                                        <th class="" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" aria-label=" activate to sort column ascending" style="width: 119px;"> Valid-To </th>
+                                        <th class="desc" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" aria-label=" activate to sort column ascending" style="width: 220px;"> Description </th>
+                                        <th class="promo" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" aria-label="activate to sort column ascending"> Percentage By Batua </th>
+                                        <th class="promo" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" aria-label="activate to sort column ascending" style="width: 50px;"> Percentage By Merchant</th>
+                                        <th class="status" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" aria-label="  activate to sort column ascending" style="width: 120px;"> Status </th>
+                                        <th class="action" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" aria-label="  activate to sort column ascending" style="width: 120px;"> Action </th>
+                                    </tr>
+                                </thead>
+                                <tbody class="datatablecustom">
+                                    <tr class="gradeX odd" role="row">
+                                        <td>1</td>
+                                        <td>demo user </td>
+                                        <td>10%</td>
+                                        <td class=""> Rs. 1000 </td>
+                                        <td> 12/1/2015 </td>
+                                        <td> 10/2/2015 </td>
+                                        <td> hello, this is some description </td>
+                                        <td> 10% </td>
+                                        <td> 10% </td>
+                                        <td>
+                                            <select class="form-control input-circle" id="form_control_1" style="width:180px;" required>
+                                                <option value="" disabled selected hidden>select status</option>
+                                                <option value="3">active</option>
+                                                <option value="4">suspended</option>
+                                                <option value="5">Peermanent suspend</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <a type="submit" class="btn button-color-table" style="float:left;" href="Edit_Promo.html"><i class="fa fa-pencil"></i></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="gradeX even" role="row">
+                                        <td>1</td>
+                                        <td>demo user </td>
+                                        <td>10%</td>
+                                        <td class=""> Rs. 1000 </td>
+                                        <td> 12/1/2015 </td>
+                                        <td> 10/2/2015 </td>
+                                        <td> hello, this is some description </td>
+                                        <td> 10% </td>
+                                        <td> 10% </td>
+                                        <td>
+                                            <select class="form-control input-circle" id="form_control_1" style="width:180px;" required>
+                                                <option value="" disabled selected hidden>select status</option>
+                                                <option value="3">active</option>
+                                                <option value="4">suspended</option>
+                                                <option value="5">Peermanent suspend</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <a type="submit" class="btn button-color-table" style="float:left;" href="Edit_Promo.html"><i class="fa fa-pencil"></i></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="gradeX odd" role="row">
+                                        <td>1</td>
+                                        <td>demo user </td>
+                                        <td>10%</td>
+                                        <td class=""> Rs. 1000 </td>
+                                        <td> 12/1/2015 </td>
+                                        <td> 10/2/2015 </td>
+                                        <td> hello, this is some description </td>
+                                        <td> 10% </td>
+                                        <td> 10% </td>
+                                        <td>
+                                            <select class="form-control input-circle" id="form_control_1" style="width:180px;" required>
+                                                <option value="" disabled selected hidden>select status</option>
+                                                <option value="3">active</option>
+                                                <option value="4">suspended</option>
+                                                <option value="5">Peermanent suspend</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <a type="submit" class="btn button-color-table" style="float:left;" href="Edit_Promo.html"><i class="fa fa-pencil"></i></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="gradeX even" role="row">
+                                        <td>1</td>
+                                        <td>demo user </td>
+                                        <td>10%</td>
+                                        <td class=""> Rs. 1000 </td>
+                                        <td> 12/1/2015 </td>
+                                        <td> 10/2/2015 </td>
+                                        <td> hello, this is some description </td>
+                                        <td> 10% </td>
+                                        <td> 10% </td>
+                                        <td>
+                                            <select class="form-control input-circle" id="form_control_1" style="width:180px;" required>
+                                                <option value="" disabled selected hidden>select status</option>
+                                                <option value="3">active</option>
+                                                <option value="4">suspended</option>
+                                                <option value="5">Peermanent suspend</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <a type="submit" class="btn button-color-table" style="float:left;" href="Edit_Promo.html"><i class="fa fa-pencil"></i></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="gradeX odd" role="row">
+                                        <td>1</td>
+                                        <td>demo user </td>
+                                        <td>10%</td>
+                                        <td class=""> Rs. 1000 </td>
+                                        <td> 12/1/2015 </td>
+                                        <td> 10/2/2015 </td>
+                                        <td> hello, this is some description </td>
+                                        <td> 10% </td>
+                                        <td> 10% </td>
+                                        <td>
+                                            <select class="form-control input-circle" id="form_control_1" style="width:180px;" required>
+                                                <option value="" disabled selected hidden>select status</option>
+                                                <option value="3">active</option>
+                                                <option value="4">suspended</option>
+                                                <option value="5">Peermanent suspend</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <a type="submit" class="btn button-color-table" style="float:left;" href="Edit_Promo.html"><i class="fa fa-pencil"></i></a>
+                                        </td>
+                                    </tr>
+                                    <tr class="gradeX even" role="row">
+                                        <td>1</td>
+                                        <td>demo user </td>
+                                        <td>10%</td>
+                                        <td class=""> Rs. 1000 </td>
+                                        <td> 12/1/2015 </td>
+                                        <td> 10/2/2015 </td>
+                                        <td> hello, this is some description </td>
+                                        <td> 10% </td>
+                                        <td> 10% </td>
+                                        <td>
+                                            <select class="form-control input-circle" id="form_control_1" style="width:180px;" required>
+                                                <option value="" disabled selected hidden>select status</option>
+                                                <option value="3">active</option>
+                                                <option value="4">suspended</option>
+                                                <option value="5">Peermanent suspend</option>
+                                            </select>
+                                        </td>
+                                        <td>
+                                            <a type="submit" class="btn button-color-table" style="float:left;" href="Edit_Promo.html"><i class="fa fa-pencil"></i></a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-7 col-sm-7 pull-right">
+                                <div class="dataTables_paginate paging_bootstrap_full_number" id="sample_1_paginate">
+                                    <ul class="pagination" style="visibility: visible;">
+                                        <li class="prev disabled">
+                                            <a href="#" title="First"><i class="fa fa-angle-double-left"></i></a>
+                                        </li>
+                                        <li class="prev disabled">
+                                            <a href="#" title="Prev"><i class="fa fa-angle-left"></i></a>
+                                        </li>
+                                        <li class="active">
+                                            <a href="#">1</a></li>
+                                        <li><a href="#">2</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">3</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">4</a>
+                                        </li>
+                                        <li>
+                                            <a href="#">5</a>
+                                        </li>
+                                        <li class="next">
+                                            <a href="#" title="Next"><i class="fa fa-angle-right"></i></a>
+                                        </li>
+                                        <li class="next">
+                                            <a href="#" title="Last"><i class="fa fa-angle-double-right"></i></a>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                   
-                  </div>
                 </section>
-
-
-                <div id="sample_1_wrapper" class="dataTables_wrapper no-footer">
-                  <div class="table-scrollable">
-                    <table class="table table-striped table-bordered table-hover order-column dataTable no-footer" id="sample_1" role="grid" aria-describedby="sample_1_info">
-                      <thead>
-                        <tr role="row">
-
-                          <th class="" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" aria-label="activate to sort column ascending" style="width: 120px;">Promocode </th>
-                          <th class="sorting" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" aria-label="  activate to sort column ascending" style="width:100%;"> Merchant Name 
-                             
-                          </th>
-                          <th class="" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" aria-label="activate to sort column ascending" style="width: 100px;"> Offer/Discount </th>
-                          <th class="" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" aria-sort="ascending" aria-label="activate to sort column descending" style="width: 108px;">Max Limit</th>
-                          <th class="" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" aria-label=" activate to sort column ascending" style="width: 119px;"> Valid-from </th>
-                          <th class="" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" aria-label=" activate to sort column ascending" style="width: 119px;"> Valid-To </th>
-                          <th class="" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" aria-label=" activate to sort column ascending" style="width: 220px;"> Description </th>
-                          <th class="" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" aria-label="activate to sort column ascending" style="width: 200px;"> Percentage By Batua </th>
-                          <th class="" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" aria-label="activate to sort column ascending" style="width: 200px;"> Percentage By Merchant</th>
-                          <th class="" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" aria-label="  activate to sort column ascending" style="width: 120px;"> Status </th>
-                          <th class="" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" aria-label="  activate to sort column ascending" style="width: 120px;"> Action </th>
-                        </tr>
-                      </thead>
-                      <tbody class="datatablecustom">   
-                        <tr class="gradeX odd" role="row">
-
-                          <td>1</td>
-                          <td>demo user </td>
-                          <td>10%</td>
-                          <td class=""> Rs. 1000 </td>
-                          <td> 12/1/2015 </td>
-                          <td> 10/2/2015 </td>
-                          <td> hello, this is some description </td>
-                          <td> 10% </td>
-                          <td> 10% </td>
-                          <td>
-                            <select class="form-control input-circle" id="form_control_1" style="width:180px;" required>
-                              <option value="" disabled selected hidden>select status</option>
-                              <option value="3">active</option>
-                              <option value="4">suspended</option>
-                              <option value="5">Peermanent suspend</option>
-                            </select> 
-                          </td>
-                          <td > 
-                            <a type="submit" class="btn button-color-table" style="float:left;" href="Edit_Promo.html"><i class="fa fa-pencil"></i></a>   
-                          </td>
-                        </tr>
-
-                        <tr class="gradeX even" role="row">
-
-                          <td>1</td>
-                          <td>demo user </td>
-                          <td>10%</td>
-                          <td class=""> Rs. 1000 </td>
-                          <td> 12/1/2015 </td>
-                          <td> 10/2/2015 </td>
-                          <td> hello, this is some description </td>
-                          <td> 10% </td>
-                          <td> 10% </td>
-                          <td>
-                            <select class="form-control input-circle" id="form_control_1" style="width:180px;" required>
-                              <option value="" disabled selected hidden>select status</option>
-                              <option value="3">active</option>
-                              <option value="4">suspended</option>
-                              <option value="5">Peermanent suspend</option>
-                            </select> 
-                          </td>
-                          <td > 
-                            <a type="submit" class="btn button-color-table" style="float:left;" href="Edit_Promo.html"><i class="fa fa-pencil"></i></a>   
-                          </td>
-                        </tr>
-
-                        <tr class="gradeX odd" role="row">
-
-                          <td>1</td>
-                          <td>demo user </td>
-                          <td>10%</td>
-                          <td class=""> Rs. 1000 </td>
-                          <td> 12/1/2015 </td>
-                          <td> 10/2/2015 </td>
-                          <td> hello, this is some description </td>
-                          <td> 10% </td>
-                          <td> 10% </td>
-                          <td>
-                            <select class="form-control input-circle" id="form_control_1" style="width:180px;" required>
-                              <option value="" disabled selected hidden>select status</option>
-                              <option value="3">active</option>
-                              <option value="4">suspended</option>
-                              <option value="5">Peermanent suspend</option>
-                            </select> 
-                          </td>
-                          <td > 
-                            <a type="submit" class="btn button-color-table" style="float:left;" href="Edit_Promo.html"><i class="fa fa-pencil"></i></a>   
-                          </td>
-                        </tr>
-
-                        <tr class="gradeX even" role="row">
-
-                          <td>1</td>
-                          <td>demo user </td>
-                          <td>10%</td>
-                          <td class=""> Rs. 1000 </td>
-                          <td> 12/1/2015 </td>
-                          <td> 10/2/2015 </td>
-                          <td> hello, this is some description </td>
-                          <td> 10% </td>
-                          <td> 10% </td>
-                          <td>
-                            <select class="form-control input-circle" id="form_control_1" style="width:180px;" required>
-                              <option value="" disabled selected hidden>select status</option>
-                              <option value="3">active</option>
-                              <option value="4">suspended</option>
-                              <option value="5">Peermanent suspend</option>
-                            </select> 
-                          </td>
-                          <td > 
-                            <a type="submit" class="btn button-color-table" style="float:left;" href="Edit_Promo.html"><i class="fa fa-pencil"></i></a>   
-                          </td>
-                        </tr>
-
-                        <tr class="gradeX odd" role="row">
-
-                          <td>1</td>
-                          <td>demo user </td>
-                          <td>10%</td>
-                          <td class=""> Rs. 1000 </td>
-                          <td> 12/1/2015 </td>
-                          <td> 10/2/2015 </td>
-                          <td> hello, this is some description </td>
-                          <td> 10% </td>
-                          <td> 10% </td>
-                          <td>
-                            <select class="form-control input-circle" id="form_control_1" style="width:180px;" required>
-                              <option value="" disabled selected hidden>select status</option>
-                              <option value="3">active</option>
-                              <option value="4">suspended</option>
-                              <option value="5">Peermanent suspend</option>
-                            </select> 
-                          </td>
-                          <td > 
-                            <a type="submit" class="btn button-color-table" style="float:left;" href="Edit_Promo.html"><i class="fa fa-pencil"></i></a>   
-                          </td>
-                        </tr>
-
-                        <tr class="gradeX even" role="row">
-
-                          <td>1</td>
-                          <td>demo user </td>
-                          <td>10%</td>
-                          <td class=""> Rs. 1000 </td>
-                          <td> 12/1/2015 </td>
-                          <td> 10/2/2015 </td>
-                          <td> hello, this is some description </td>
-                          <td> 10% </td>
-                          <td> 10% </td>
-                          <td>
-                            <select class="form-control input-circle" id="form_control_1" style="width:180px;" required>
-                              <option value="" disabled selected hidden>select status</option>
-                              <option value="3">active</option>
-                              <option value="4">suspended</option>
-                              <option value="5">Peermanent suspend</option>
-                            </select> 
-                          </td>
-                          <td > 
-                            <a type="submit" class="btn button-color-table" style="float:left;" href="Edit_Promo.html"><i class="fa fa-pencil"></i></a>   
-                          </td>
-                        </tr>       
-                      </tbody>
-                    </table>
-                  </div>
-                  <div class="row">
-
-                    <div class="col-md-7 col-sm-7 pull-right">
-                      <div class="dataTables_paginate paging_bootstrap_full_number" id="sample_1_paginate">
-                        <ul class="pagination" style="visibility: visible;">
-                          <li class="prev disabled">
-                            <a href="#" title="First"><i class="fa fa-angle-double-left"></i></a>
-                          </li>
-                          <li class="prev disabled">
-                            <a href="#" title="Prev"><i class="fa fa-angle-left"></i></a>
-                          </li>
-                          <li class="active">
-                            <a href="#">1</a></li><li><a href="#">2</a>
-                          </li>
-                          <li>
-                            <a href="#">3</a>
-                          </li>
-                          <li>
-                            <a href="#">4</a>
-                          </li>
-                          <li>
-                            <a href="#">5</a>
-                          </li>
-                          <li class="next">
-                            <a href="#" title="Next"><i class="fa fa-angle-right"></i></a>
-                          </li>
-                          <li class="next">
-                            <a href="#" title="Last"><i class="fa fa-angle-double-right"></i></a>
-                          </li>
-                        </ul>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </section>
             </section>
             <!-- END EXAMPLE TABLE PORTLET-->
-          </section>
-        </div>
-
-      </div>
-      <!-- END CONTENT BODY -->
+        </section>
+    </div>
+</div>

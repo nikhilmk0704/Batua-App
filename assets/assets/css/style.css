@@ -24,7 +24,9 @@ body {
     background-color: transparent !important;
 }
 
-
+.page-header{
+    min-width: 400px;
+}
 
 table.dataTable thead .sorting {
     background: url(../images/sort_both.png) center right no-repeat !important;
@@ -93,7 +95,22 @@ table.dataTable thead .sorting {
     color:#34495e !important;
 }
 
+@media (max-width: 480px){
+    .page-header.navbar .top-menu {
+    background-color: transparent;
+}
 
+}
+
+/*@media (max-width: 300px){
+    .control-label {
+        width:100%;
+
+    }
+    .formcontrolresp{
+        width:100%;
+    }
+}*/
 
 .page-sidebar .page-sidebar-menu > li.active.open > a:hover {
     background: #3980C2 !important;
@@ -146,10 +163,6 @@ tbody.datatablecustom > tr > td {
     overflow: auto;
 }
 
-
-
-
-
 @media (max-width: 480px){
 .page-header.navbar .top-menu .navbar-nav > li.dropdown-user .dropdown-toggle:hover {
     background-color:transparent;
@@ -160,6 +173,19 @@ tbody.datatablecustom > tr > td {
     color: #e5e5e5;
 }
 
+.page-header.navbar .top-menu .navbar-nav > li.dropdown-user .dropdown-toggle {
+    background-color:transparent;
+    margin-top: 5px;
+}
+
+.page-content{
+    margin-right:30px;
+}
+
+.page-container{
+
+}
+
 }
 .centerdiv {
   position: fixed;
@@ -168,15 +194,11 @@ tbody.datatablecustom > tr > td {
   transform: translate(-50%, -50%);
 }
 
-
-
-
 .company-logo {    
     padding-left: 12%;
     margin-left: 5%;
     margin-bottom: 5%;
 }
-
 
 
 .form-title {
@@ -516,6 +538,50 @@ a, button, code, div, img, input, label, li, p, pre, select, span, svg, table, t
     position: relative;
     overflow: hidden;
     display: inline-block;
+}
+
+.text-danger {
+    margin-left:2%;
+}
+
+th,td {
+    text-align: center;
+}
+
+.table-scrollable>.table>thead>tr>th.promo {
+   
+    max-width: 80px;
+    min-width: 70px;
+    white-space: normal;
+    text-align: center;
+}
+
+.table > thead > tr > th {
+    vertical-align: middle;
+
+}
+
+.desc {
+    min-width: 200px;max-width: 250px;
+}
+
+.status {
+    min-width: 160px;
+    max-width: 180px;
+}
+
+.action {
+    min-width: 30px;
+    max-width: 50px;
+}
+.actionmultiple {
+    min-width: 10px;
+    max-width: 20px;
+}
+
+.srno {
+    min-width: 10px;
+    max-width: 20px;
 }
 
 

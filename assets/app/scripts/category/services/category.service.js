@@ -1,27 +1,34 @@
-(function () {    
- 'use strict';
+(function() {    
+    'use strict';
 
- angular.module('app').factory('categoryService', categoryService);
+    angular.module('app').factory('categoryService', categoryService);
 
- categoryService.$inject = ['$http', 'API', '$localStorage', '$cookieStore', '$state'];
+    categoryService.$inject = ['httpi', 'API', '$localStorage', '$cookieStore', '$state'];
 
- function categoryService($http, API, $localStorage, $cookieStore, $state) {
+    function categoryService(httpi, API, $localStorage, $cookieStore, $state) {
 
-  var service = {};
+        var service = {};
 
-  service.addCategory = addCategory;
+        service.addCategory = addCategory;
 
-  return service;
+        return service;
 
-  function addCategory(data, callback) {
-   $http.post(API.addCategory, data).then(function (response) {
-    callback(response);
-   }, function (err) {
-    callback(err);
-   });
-  }
+        function addCategory(category) {
+            return httpi({
+                method: "post",
+                url: "API.addCategory",
+                data: {
+                    name: category
+                }
+            }).then(function(response) {
+                debugger;
+                return response;
+            }, function(err) {
+                throw err.data;
+            });
+        }
 
 
- }
+    }
 
 })();

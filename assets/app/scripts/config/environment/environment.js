@@ -1,4 +1,4 @@
-(function () {
+(function() {
     angular.module('app').factory('ENVIRONMENT', ENVIRONMENT);
 
     ENVIRONMENT.$inject = ['connections'];

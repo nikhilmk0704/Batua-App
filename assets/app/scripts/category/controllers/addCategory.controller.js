@@ -1,19 +1,21 @@
-angular.module('app').controller('addCategoryController', function ($scope, $state, categoryService) {
+angular.module('app').controller('addCategoryController', function($state, categoryService) {
 
- var _this = this;
+    var vm = this;
 
- _this.addCategory = function(category) {
+    vm.addCategory = function(category) {
 
-    categoryService.addCategory(category, function(response) {
-      if (response.status == 200) {
-        $state.go('categoryList');
-      } else if (response.status === 400) {
-        toastr.error(response.data);
-      } else if (response.status != 400 || response.status != 200) {
-        toastr.error(response.data);
-      }
-    });
-  }
+        categoryService.addCategory(category, function(response) {
+            if (response.status == 200) {
+                $state.go('categoryList');
+            }
+            if (response.status === 400) {
+                return toastr.error(response.data);
+            }
+            if (response.status != 400 || response.status != 200) {
+                return toastr.error(response.data);
+            }
+        });
+    }
 
 
 });

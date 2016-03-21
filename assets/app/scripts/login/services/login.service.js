@@ -1,33 +1,41 @@
-(function () {    
- 'use strict';
+(function() {    
+    'use strict';
 
- angular.module('app').factory('loginService', loginService);
+    angular.module('app').factory('loginService', loginService);
 
- loginService.$inject = ['$http', 'API', '$localStorage', '$cookieStore', '$state'];
+    loginService.$inject = ['httpi', 'API', '$localStorage', '$cookieStore', '$state'];
 
- function loginService($http, API, $localStorage, $cookieStore, $state) {
+    function loginService(httpi, API, $localStorage, $cookieStore, $state) {
 
-  var service = {};
+        var service = {};
 
-  service.Login = Login;
-  service.isAuthenticated = isAuthenticated;
+        service.Login = Login;
+        service.isAuthenticated = isAuthenticated;
 
-  return service;
+        return service;
 
-  function Login(data, callback) {
-   $http.post(API.login, data).then(function (response) {
-    callback(response);
-   }, function (err) {
-    callback(err);
-   });
-  }
+        function Login(userModel) {
+            return httpi({
+                method: "post",
+                url: "API.login",
+                data: {
+                    email: userModel.email,
+                    password: userModel.password
+                }
+            }).then(function(response) {
+                debugger;
+                return response;
+            }, function(err) {
+                throw err.data;
+            });
+        }
 
-  function isAuthenticated() {
-   if ($localStorage.getObject('admin')) {
-    $state.go('addCategory');
-   }
-  }
+        function isAuthenticated() {
+            if ($localStorage.getObject('admin')) {
+                $state.go('addCategory');
+            }
+        }
 
- }
+    }
 
 })();

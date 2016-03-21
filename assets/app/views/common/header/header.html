@@ -1,40 +1,40 @@
-    <header class="page-header navbar navbar-fixed-top" style="border:5px solid transparent; border-bottom-color:#FF4081;" ng-show="isAuthenticated">
-      <!-- HEADER BEGIN -->
-      <div class="page-header-inner">
+<header class="page-header navbar navbar-fixed-top" style="border:5px solid transparent; border-bottom-color:#FF4081;" ng-show="isAuthenticated">
+    <!-- HEADER BEGIN -->
+    <div class="page-header-inner">
         <div class="page-logo">
-          <a href="User_List.html">
-            <img src="assets/images/comp-logo.png" alt="logo" class="logo-default" width="200" height="50px"  style="top:0;padding-bottom:5px;"/> 
-          </a>   
+            <a href="User_List.html">
+                <img src="assets/images/comp-logo.png" alt="logo" class="logo-default" width="200" height="50px" style="top:0;padding-bottom:5px;" />
+            </a>
         </div>
         <!-- RESPONSIVE TOGGLER -->
         <a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse" data-target=".navbar-collapse" style="margin-top:25px;"> </a>
         <!-- END RESPONSIVE MENU TOGGLER -->
         <!-- BEGIN TOP NAVIGATION MENU -->
-        <div class="top-menu"  style="padding-top:15px;">
-          <!-- User Profile -->
-          <ul class="nav navbar-nav pull-right">
-            <li class="dropdown dropdown-user" uib-dropdown>
-              <a href="javascript:;" class="dropdown-toggle customedropdown" data-hover="dropdown" uib-dropdown-toggle>
-                <img alt="" class="img-circle" src="assets/images/avatar3_small.jpg" />
-                <span class="username username-hide-on-mobile black"><strong> Nick as <label> Admin</label></strong></span>
-                <i class="fa fa-angle-down"></i>
-              </a>
-              <ul class="dropdown-menu dropdown-menu-default">
-                <li>
-                  <a href="Change_Password.html">
-                    <i class="fa fa-key"></i> Change Password 
-                  </a>
+        <div class="top-menu" style="padding-top:15px;">
+            <!-- User Profile -->
+            <ul class="nav navbar-nav pull-right">
+                <li class="dropdown dropdown-user" uib-dropdown>
+                    <a href="javascript:;" class="dropdown-toggle customedropdown" data-hover="dropdown" uib-dropdown-toggle>
+                        <img alt="" class="img-circle" src="assets/images/avatar3_small.jpg" />
+                        <span class="username username-hide-on-mobile black"><strong> Nick as <label> Admin</label></strong></span>
+                        <i class="fa fa-angle-down"></i>
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-default">
+                        <li>
+                            <a href="Change_Password.html">
+                                <i class="fa fa-key"></i> Change Password
+                            </a>
+                        </li>
+                        <li ng-controller="headerController">
+                            <a ng-click="logout()">
+                                <i class="fa fa-lock"></i> Log Out
+                            </a>
+                        </li>
+                    </ul>
                 </li>
-                <li ng-controller="headerController">
-                  <a ng-click="logout()">
-                    <i class="fa fa-lock"></i> Log Out 
-                  </a>
-                </li>
-              </ul>
-            </li> 
-          </ul>
+            </ul>
         </div>
         <!-- END TOP NAVIGATION MENU -->
-      </div>
-      <!-- END HEADER INNER -->
-    </header>
+    </div>
+    <!-- END HEADER INNER -->
+</header>
