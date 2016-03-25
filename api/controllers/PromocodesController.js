@@ -8,32 +8,36 @@
 'use strict';
 
 module.exports = {
+    /*
+    save(params, callback) {
+
+        var siteData = {};
+        siteData = params.site;
+        siteData.companyId = params.companyId;
+        if (!_.isUndefined(params.userId)) {
+            return createSite(siteData, function(err, result) {
+                if (err) {
+                    return callback(err);
+                }
+                return checkIfUserHasSiteAssociated(params.userId, result, callback);
+            });
+        }
+        return createSite(siteData, callback);
+    }
+    */
 
     create: function(req, res) {
 
         var params = req.body;
+        
         var promocodesService = new PromocodesService();
-        var merchantsPromocodeService = new MerchantsPromocodeService();
+        /*var merchantsPromocodeService = new MerchantsPromocodeService();*/
 
-        promocodesService.save(params, function(err, promocodeResult) {
+        promocodesService.save(params, function(err, result) {
             if (err) {
                 return res.badRequest(err);
             } else {
-                var bulkSaveParams = {};
-                bulkSaveParams.baseId = promocodeResult.id;
-                bulkSaveParams.associateIds = params.merchantId;
-                bulkSaveParams.baseAttribute = 'promocodeId';
-                bulkSaveParams.associateAttribute = 'merchantId';
-                merchantsPromocodeService.bulkSave(bulkSaveParams, function(err, result) {
-                    if (err) {
-                        promocodesService.delete({ where: { 'id': promocodeResult.id } }, function(err, result) {
-                            if (err) return res.badRequest(err);
-                            return res.json(400, { message: "Please provide correct merchantIds" });
-                        });
-                    } else {
-                        return res.json(201, { result: promocodeResult });
-                    }
-                });
+                return res.jsonx(result);
             }
         });
     },
