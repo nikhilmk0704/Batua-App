@@ -7,20 +7,18 @@
 
 'use strict';
 
-// module.exports = {
+module.exports = {
 
-//     create: function(req, res) {
-
-//         var params = req.body;
-
-//         var userService = new UserService();
-//         userService.save(params, function(err, result) {
-//             if (err) {
-//                 return res.badRequest(err);
-//             } else {
-//                 return res.jsonx(result);
-//             }
-//         });
-//     }
-// };
+    create: function(req, res) {
+        var params = req.body;
+        var userService = new UserService();
+        userService.save(params, function(err, result) {
+            if (err) {
+                return res.badRequest(err);
+            } else {
+                return res.json(201,result);
+            }
+        });
+    }
+};
 

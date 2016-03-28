@@ -36,7 +36,7 @@ module.exports = {
     },
 
     associations: function() {
-        Permissions.belongsTo(Groups, {
+        Permissions.belongsTo(UserGroups, {
             foreignKey: {
                 name: 'groupId',
                 allowNull: false

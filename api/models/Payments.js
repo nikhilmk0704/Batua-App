@@ -40,6 +40,17 @@ module.exports = {
             allowNull: false,
             defaultValue: false,
         },
+        type: {
+            type: Sequelize.STRING,  // enum values needs to be added
+            required: true,
+            allowNull: false,
+        },
+        canccellationDate: {
+            type: Sequelize.DATE,
+        },
+        cancellationDescription: {
+            type: Sequelize.STRING,
+        },
     },
     associations: function() {
         Payments.belongsTo(Users, {

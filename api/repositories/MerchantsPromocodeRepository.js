@@ -5,7 +5,7 @@ var BaseRepository = require('./BaseRepository.js');
 class MerchantsPromocodeRepository extends BaseRepository {
 
     constructor() {
-        super(sails.models.merchantsPromocodes);
+        super(sails.models.merchantspromocodes);
     }
 
 }
