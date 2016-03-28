@@ -29,7 +29,7 @@ module.exports = {
             if (err) {
                 return res.badRequest(err);
             } else {
-                return res.json(201, result);
+                return res.json(200, result);
             }
         });
     },
