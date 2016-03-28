@@ -29,5 +29,22 @@ module.exports = {
             required: true,
             allowNull: false,
         }
+    },
+    associations: function() {
+        AccessTokens.belongsToMany(Users, {
+            through:'UsersAccessTokens',
+            foreignKey: {
+                name: 'AccessTokenId',
+                allowNull: false
+            }
+        });
+        Users.belongsToMany(AccessTokens, {
+            through:'UsersAccessTokens',
+            foreignKey: {
+                name: 'userId',
+                allowNull: false
+            }
+        });
+
     }
 };
