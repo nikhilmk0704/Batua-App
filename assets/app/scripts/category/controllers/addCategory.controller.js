@@ -1,4 +1,4 @@
-angular.module('app').controller('addCategoryController', function($state, categoryService, toastr) {
+angular.module('app').controller('addCategoryController', [$state, categoryService, toastr, function($state, categoryService, toastr) {
 
     var vm = this;
 
@@ -13,14 +13,14 @@ angular.module('app').controller('addCategoryController', function($state, categ
                 toastr.success('Category has been created successfully.');
                 $state.go('categoryList');
             }
+
             if (response.status === 400) {
                 return toastr.error(response.data);
             }
-            if (response.status !== 400 || response.status !== 200) {
-                return toastr.error(response.data);
-            }
+                
+            return toastr.error(response.data);
         });
     };
 
 
-});
+}]);

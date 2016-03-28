@@ -30,22 +30,14 @@
         //     });
         // }
 
-        function getCategoryList(done) {
+        function getCategoryList(callback) {
             httpi({
                 method: "get",
                 url: API.category
             }).then(function(response) {
-                if (typeof done == "function") {
-                    done(response);
-                } else {
-                    return response.data.result;
-                }
-            }, function(err) {
-                if (typeof done == "function") {
-                    done(err);
-                } else {
-                    return err;
-                }
+                callback(response);
+            }, function(response) {
+                callback(response);
             });
         }
 
