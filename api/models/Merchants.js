@@ -26,8 +26,6 @@ module.exports = {
         },
         profileImageUrl: {
             type: Sequelize.STRING,
-            // required: true,
-            // allowNull: false
         },
         phone: {
             type: Sequelize.INTEGER(10).UNSIGNED,
@@ -73,8 +71,6 @@ module.exports = {
         },
         bankName: {
             type: Sequelize.STRING,
-            // required: true,
-            // allowNull: false,
         },
         branchName: {
             type: Sequelize.STRING,
@@ -82,19 +78,18 @@ module.exports = {
         },
         accountHolder: {
             type: Sequelize.STRING,
-            // required: true,
-            // allowNull: false,
         },
         accountNumber: {
             type: Sequelize.BIGINT(20),
-            // required: true,
-            // allowNull: false
         },
         ifscCode: {
             type: Sequelize.STRING,
-            // required: true,
-            // allowNull: false,
         },
+        status: {
+            type: Sequelize.STRING,
+            required: true,
+            allowNull: false,
+        }
     },
     validate: {
         bothCoordsOrNone: function() {
@@ -107,23 +102,14 @@ module.exports = {
         Merchants.belongsTo(Cities, {
             foreignKey: {
                 name: 'cityId',
-                // allowNull: false,
-                // onDelete: 'RESTRICT',
-                // onUpdate: 'CASCADE'
+                allowNull: false,
+                onDelete: 'RESTRICT',
+                onUpdate: 'CASCADE'
             }
         });
         Merchants.belongsTo(Users, {
             foreignKey: {
                 name: 'createdSalesId',
-                // allowNull: false,
-                // onDelete: 'RESTRICT',
-                // onUpdate: 'CASCADE'
-            }
-        });
-        Merchants.belongsTo(Statuses, {
-            foreignKey: {
-                name: 'statusId',
-                defaultValue:1,
                 allowNull: false,
                 onDelete: 'RESTRICT',
                 onUpdate: 'CASCADE'
@@ -137,16 +123,16 @@ module.exports = {
                 onUpdate: 'CASCADE'
             }
         });
-        Merchants.belongsToMany(Galleries,{
-            through:'MerchantsGalleries',
-            foreignKey:{
-                name:'galleryId',
+        Merchants.belongsToMany(Galleries, {
+            through: 'MerchantsGalleries',
+            foreignKey: {
+                name: 'merchantId',
             }
         });
-        Galleries.belongsToMany(Merchants,{
-            through:'MerchantsGalleries',
-            foreignKey:{
-                name:'merchantId'
+        Galleries.belongsToMany(Merchants, {
+            through: 'MerchantsGalleries',
+            foreignKey: {
+                name: 'galleryId'
             }
         });
     }

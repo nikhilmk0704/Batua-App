@@ -5,9 +5,11 @@ var UserRepository = require('../repositories/UserRepository.js');
 
 class MerchantService {
 
+    // if status is drafted, creates merchant without checking mandatory fields
+    // if status is pending, creates merchant and checks for mandatory fields
     save(params, callback) {
         var merchantService = new MerchantService();
-        if (merchantService.validateRequest(params) && params.status == "Pending for approval") { // true if all mandatory fields are supplied
+        if (merchantService.validateRequest(params) && params.status == "Pending for approval") {
             return merchantService.createMerchant(params, callback);
         } 
         if (params.status == "Drafted") {
@@ -16,6 +18,9 @@ class MerchantService {
         return callback("Error occured");
     }
 
+    // shows only active merchants for user app
+    // shows all merchants for admin portal
+    // shows only those merchants created by particular sales agent
     find(req, callback) {
         var merchantService = new MerchantService();
         var id = req.param('id');
@@ -44,6 +49,8 @@ class MerchantService {
         return callback("Please provide correct id");
     }
 
+    // updates the partialy saved merchant i.e status is drafted
+    // updates the fully saved merchant i.e status is not drafted
     update(req, callback) {
         var merchantService = new MerchantService();
         var params = {};
@@ -60,6 +67,7 @@ class MerchantService {
         return callback("Error occured");
     }
 
+    // delete the merchant based on shortcode (unique field)
     delete(params) {
         var options = {};
         options.where = {};
@@ -67,6 +75,7 @@ class MerchantService {
         Merchants.destroy(options);
     }
 
+    // update status of merchant
     setStatus(req, callback) {
         var params = {};
         var options = {};
@@ -77,6 +86,7 @@ class MerchantService {
         merchantRepository.update(params, options, callback);
     }
 
+    // validates for mandatory fields
     validateRequest(params) {
         var merchantService = new MerchantService();
         _.every(merchantService.getMandatoryFields(), function(element) {
@@ -87,6 +97,7 @@ class MerchantService {
         });
     }
 
+    // creates merchant and its image gallery and display results 
     createMerchant(params, callback) {
         var merchantService = new MerchantService();
         Merchants.create(params).then(function(merchantResult) {
@@ -102,6 +113,7 @@ class MerchantService {
         });
     }
 
+    // updates merchant and its image gallery and display results
     updateMerchant(params, options, callback) {
         var merchantService = new MerchantService();
         var merchantId = options.where.id;
@@ -122,6 +134,7 @@ class MerchantService {
         });
     }
 
+    // creates image gallery and shows merchant result
     createGalleryAndFindMerchant(params, merchantId, findObject, callback) {
         var count = 0;
         if (params.imageGallery.length) {
@@ -155,8 +168,9 @@ class MerchantService {
         }
     }
 
+    // returns models to be included while getting merchant
     getIncludeModels() {
-        return [{
+        return [{                       // return [{all:true}] include all models
             model: Cities,
             required: false
         }, {
@@ -171,6 +185,7 @@ class MerchantService {
         }];
     }
 
+    // returns array of mandatory fields
     getMandatoryFields() {
         return [
             'name', 'shortCode', 'phone', 'pincode',
@@ -179,6 +194,7 @@ class MerchantService {
         ];
     }
 
+    // returns user's group name
     getUserGroup(userId) {
         var userRepository = new UserRepository();
         userRepository.find({ include: [{ model: UserGroups, required: false }], where: { id: userId } }, function(err, data) {
