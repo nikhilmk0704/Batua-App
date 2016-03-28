@@ -1,4 +1,4 @@
-  angular.module('app').controller('loginController', [$location, loginService, toastr, $state, authenticationService, function($location, loginService, toastr, $state, authenticationService) {
+  angular.module('app').controller('loginController', ['$location', 'loginService', 'toastr', '$state', 'authenticationService', function($location, loginService, toastr, $state, authenticationService) {
 
       var vm = this;
 

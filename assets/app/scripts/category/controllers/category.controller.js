@@ -1,4 +1,4 @@
-angular.module('app').controller('categoryController', [$state, categoryService, toastr, function($state, categoryService, toastr) {
+angular.module('app').controller('categoryController', ['$state', 'categoryService', 'toastr', function($state, categoryService, toastr) {
 
     var vm = this;
 
