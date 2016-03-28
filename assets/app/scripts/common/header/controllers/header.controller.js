@@ -1,4 +1,4 @@
-angular.module('app').controller('headerController', function($state, authenticationService) {
+angular.module('app').controller('headerController', [$state, authenticationService, function($state, authenticationService) {
 
     var vm = this;
 
@@ -8,4 +8,4 @@ angular.module('app').controller('headerController', function($state, authentica
     }
 
 
-});
+}]);
