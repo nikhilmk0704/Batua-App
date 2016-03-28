@@ -33,7 +33,7 @@
                 }
             };
             $localStorage.setObject('admin', userData);
-            $http.defaults.headers.common['accessToken'] = userData.accessToken; // jshint ignore:line
+            // $http.defaults.headers.common['accessToken'] = userData.accessToken; // jshint ignore:line
             $cookieStore.put('globals', $rootScope.globals);
         }
 

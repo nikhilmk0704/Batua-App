@@ -14,19 +14,18 @@
 
         return service;
 
-        function Login(userModel) {
-            return httpi({
+        function Login(user, callback) {
+            httpi({
                 method: "post",
-                url: "API.login",
+                url: API.login,
                 data: {
-                    email: userModel.email,
-                    password: userModel.password
+                    email: user.email,
+                    password: user.password
                 }
-            }).then(function(response) {
-                debugger;
-                return response;
-            }, function(err) {
-                throw err.data;
+            }).then(function (response) {
+                callback(response);
+            }, function (response) {
+                callback(response);
             });
         }
 

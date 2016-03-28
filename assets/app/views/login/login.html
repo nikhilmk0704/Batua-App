@@ -5,14 +5,14 @@
                 <img src="assets/images/comp-logo.png" alt="login-logo" class="img-large" width="80%" height="70px" />
                 <img src="assets/images/comp-logo-less.png" alt="login-logo" class="img-mobile" width="80%" height="50px;" />
             </section>
-            <form class="login-form" ng-submit="loginVm.login(user)" method="post" name="loginForm" novalidate>
+            <form class="login-form" ng-submit="vm.login(user)" method="post" name="loginForm" novalidate>
                 <div class="form-group" ng-class="{'has-error': loginForm.email.$invalid && !loginForm.email.$pristine}">
                     <div class="input-group">
                         <span class="input-group-addon input-circle-left">
                                     <i class="fa fa-envelope"></i>
                                 </span>
                         <input type="email" class="form-control input-circle-right" id="email" name="email" placeholder="Email" ng-model="user.email" required ng-pattern="/^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$/">
-                        <div class="help-block text-danger" ng-if="loginForm.email.$invalid && !loginForm.email.$pristine" role="alert" ng-messages="loginForm.email.$error">
+                        <div class="help-block text-danger" ng-if="loginForm.email.$invalid && !loginForm.email.$pristine" role="alert" ng-messages="loginForm.email.$error" role="alert"> 
                             <div ng-message="pattern">Email is required.</div>
                         </div>
                     </div>

@@ -6,7 +6,10 @@
 
         return {
             login: "/user/login",
-            addCategory: "/category"
+            category: "/category",
+            updateCategory: "/category/:id",
+            offer: "/offerdiscount",
+            promocode: "/promocode",
         }
 
     }
