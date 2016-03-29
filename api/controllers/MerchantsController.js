@@ -14,8 +14,8 @@ module.exports = {
         var merchantService = new MerchantService();
         merchantService.save(params, function(err, result) {
             if (err) {
-                merchantService.delete(params);
                 return res.badRequest(err);
+                merchantService.delete(params);
             } 
             return res.json(201, result);
         });
@@ -26,6 +26,9 @@ module.exports = {
         merchantService.find(req, function(err, result) {
             if (err) {
                 return res.badRequest(err);
+            }
+            if(_.isEmpty(result)){
+                return res.notFound("Does not exist");
             }
             return res.json(200, result);
         });

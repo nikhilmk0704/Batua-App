@@ -30,23 +30,7 @@ class MerchantService {
         var params = {};
         params.include = merchantService.getIncludeModels();
         params.where = {};
-        var merchantRepository = new MerchantRepository();
-        if (id) {
-            params.where.id = id;
-            return merchantRepository.find(params, callback);
-        } 
-        if (userId && !id && merchantService.getUserGroup(userId) == 'User') {
-            params.where.status = 'Active';
-            return merchantRepository.findAll(params, callback);
-        } 
-        if (salesAgentId && !id && merchantService.getUserGroup(salesAgentId) == 'Field Sales Agent') {
-            params.where.createdSalesId = salesAgentId;
-            return merchantRepository.findAll(params, callback);
-        } 
-        if (adminId && !id && (merchantService.getUserGroup(adminId) == 'Admin' | 'Super Admin')) {
-            return merchantRepository.findAll(params, callback);
-        } 
-        return callback("Please provide correct id");
+        merchantService.getUserGroup(params,id,userId,salesAgentId,adminId,callback);
     }
 
     // updates the partialy saved merchant i.e status is drafted
@@ -89,11 +73,10 @@ class MerchantService {
     // validates for mandatory fields
     validateRequest(params) {
         var merchantService = new MerchantService();
-        _.every(merchantService.getMandatoryFields(), function(element) {
+        return _.every(merchantService.getMandatoryFields(), function(element) {
             if (params[element]) {
                 return true;
             } 
-            return false;
         });
     }
 
@@ -121,7 +104,8 @@ class MerchantService {
         findObject.include = merchantService.getIncludeModels();
         findObject.where = {};
         findObject.where.id = merchantId;
-        MerchantsGalleries.destroy({ where: { 'merchantId': merchantId } }).then(function(deletedRowCount) {
+        MerchantsGalleries.destroy({ where: { 'merchantId': merchantId } })
+        .then(function(deletedRowCount) {
             Merchants.update(params, options).then(function(merchantResult) {
                 merchantService.createGalleryAndFindMerchant(params, merchantId, findObject, callback);
                 return null;
@@ -141,7 +125,8 @@ class MerchantService {
             params.imageGallery.forEach(function(imageUrl) {
                 Galleries.create({ 'url': imageUrl }).then(function(galleryResult) {
                     var galleryId = galleryResult.dataValues.id;
-                    MerchantsGalleries.create({ 'merchantId': merchantId, 'galleryId': galleryId }).then(function(result) {
+                    MerchantsGalleries.create({ 'merchantId': merchantId, 'galleryId': galleryId })
+                    .then(function(result) {
                         count++;
                         if (params.imageGallery.length == count) {
                             Merchants.find(findObject).then(function(data) {
@@ -194,11 +179,29 @@ class MerchantService {
         ];
     }
 
-    // returns user's group name
-    getUserGroup(userId) {
-        var userRepository = new UserRepository();
-        userRepository.find({ include: [{ model: UserGroups, required: false }], where: { id: userId } }, function(err, data) {
-            return data.dataValues.UserGroups.dataValues.name;
+    // get merchant lists for user,admin,salesAgent,super admin
+    getUserGroup(params,id,userId,salesAgentId,adminId,callback) {
+        var groupId=(userId|salesAgentId|adminId);
+        Users.find({ include: [{ model: UserGroups, required: false }], where: { id: groupId } })
+        .then(function(data) {
+            var groupName=(data.dataValues.UserGroup.dataValues.name);
+            var merchantRepository = new MerchantRepository();
+            if (id) {
+                params.where.id = id;
+                return merchantRepository.find(params, callback);
+            } 
+            if (userId && !id && groupName == 'User') {
+                params.where.status = 'Active';
+                return merchantRepository.findAll(params, callback);
+            } 
+            if (salesAgentId && !id && groupName == 'Field Sales Agent') {
+                params.where.createdSalesId = salesAgentId;
+                return merchantRepository.findAll(params, callback);
+            } 
+            if (adminId && !id && (groupName == 'Admin'|| groupName=='Super Admin')) {
+                return merchantRepository.findAll(params, callback);
+            } 
+            return callback("Please provide correct id");
         });
     }
 
