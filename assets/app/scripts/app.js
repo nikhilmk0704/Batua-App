@@ -18,13 +18,6 @@
         // Now set up the states
         $stateProvider
 
-        .state('login', {
-            url: '/login',
-            templateUrl: 'app/views/login/login.html',
-            controller: 'loginController',
-            controllerAs: 'vm'
-        })
-
         .state('addCategory', {
             url: '/addCategory',
             templateUrl: 'app/views/category/add_category.html',
@@ -58,44 +51,32 @@
 
         .state('addOffer', {
             url: '/addOffer',
-            templateUrl: 'app/views/offer/add_offer.html',
-            controller: 'addOfferController',
-            controllerAs: 'vm'
+            templateUrl: 'app/views/offer/add_offer.html'
         })
 
         .state('editOffer', {
             url: '/editOffer',
-            templateUrl: 'app/views/offer/edit_offer.html',
-            controller: 'editOfferController',
-            controllerAs: 'vm'
+            templateUrl: 'app/views/offer/edit_offer.html'
         })
 
         .state('offerList', {
             url: '/offerList',
-            templateUrl: 'app/views/offer/offer_list.html',
-            controller: 'offerController',
-            controllerAs: 'vm'
+            templateUrl: 'app/views/offer/offer_list.html'
         })
 
         .state('addPromocode', {
             url: '/addPromocode',
-            templateUrl: 'app/views/promocode/add_promo.html',
-            controller: 'addPromocodeController',
-            controllerAs: 'vm'
+            templateUrl: 'app/views/promocode/add_promo.html'
         })
 
         .state('editPromocode', {
             url: '/editPromocode',
-            templateUrl: 'app/views/promocode/edit_promo.html',
-            controller: 'editPromocodeController',
-            controllerAs: 'vm'
+            templateUrl: 'app/views/promocode/edit_promo.html'
         })
 
         .state('promocodeList', {
             url: '/promocodeList',
-            templateUrl: 'app/views/promocode/promo_list.html',
-            controller: 'promocodeController',
-            controllerAs: 'vm'
+            templateUrl: 'app/views/promocode/promo_list.html'
         })
 
         .state('reports', {

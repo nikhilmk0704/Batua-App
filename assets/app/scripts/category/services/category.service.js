@@ -61,13 +61,10 @@
         function editCategory(category, callback) {
             httpi({
                 method: "put",
-                url: API.updateCategory,
+                url: API.category,
                 data: {
                     id: category.id,
                     name: category.name
-                },
-                params: {
-                    id: category.id
                 }
             }).then(function(response) {
                 callback(response);

@@ -2,18 +2,17 @@ angular.module('app').controller('categoryController', ['$state', 'categoryServi
 
     var vm = this;
 
-    vm.getCategoryList = function() {
-        categoryService.getCategoryList(function(response) {
-            if (response.status === 200) {
-                vm.categories = response.data;
-                return vm.categories;
-            } 
-            if (response.status === 400) {
-                return toastr.error(response.data);
-            }    
+    categoryService.getCategoryList(function(response) {
+        if (response.status === 200) {
+            vm.categories = response.data;
+            return;
+        }
+        if (response.status === 400) {
             return toastr.error(response.data);
-        });
-    };
+        }
+        return toastr.error(response.data);
+    });
+
 
     vm.editCategoryData = function(category) {
         categoryService.setCategoryData(category);
@@ -25,11 +24,11 @@ angular.module('app').controller('categoryController', ['$state', 'categoryServi
         categoryService.deleteCategory(categoryId, function(response) {
             if (response.status === 200) {
                 $state.reload();
-                return;
-            } 
+                return toastr.success('Category has been deleted successfully.');
+            }
             if (response.status === 400) {
                 return toastr.error(response.data);
-            }    
+            }
             return toastr.error(response.data);
         });
     };

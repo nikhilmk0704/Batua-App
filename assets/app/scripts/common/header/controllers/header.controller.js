@@ -1,9 +1,8 @@
-angular.module('app').controller('headerController', function ($scope, $state, authenticationService) {
+angular.module('app').controller('headerController', function ($scope, $state) {
 
  var _this = this;
 
  $scope.logout = function () {
-  authenticationService.ClearCredentials();
   $state.go('login');
  }
 
