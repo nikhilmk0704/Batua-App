@@ -67,7 +67,7 @@ class MerchantService {
         options.where = {};
         options.where.id = req.body.id;
         var merchantRepository = new MerchantRepository();
-        merchantRepository.update(params, options, callback);
+        merchantRepository.updateAndFind(params, options, options, callback);
     }
 
     // validates for mandatory fields

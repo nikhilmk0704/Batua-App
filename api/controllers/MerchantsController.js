@@ -47,7 +47,7 @@ module.exports = {
 
     setStatus: function(req, res) {
         var merchantService = new MerchantService();
-        merchantService.update(req, function(err, result) {
+        merchantService.setStatus(req, function(err, result) {
             if (err) {
                 return res.badRequest(err);
             } 
