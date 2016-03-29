@@ -15,9 +15,8 @@ module.exports = {
         rateReviewService.save(params, function(err, result) {
             if (err) {
                 return res.badRequest(err);
-            } else {
-                return res.json(201, result);
-            }
+            } 
+            return res.json(201, result);
         });
     },
 
@@ -28,9 +27,11 @@ module.exports = {
         rateReviewService.find(userId, merchantId, function(err, result) {
             if (err) {
                 return res.badRequest(err);
-            } else {
-                return res.json(200, result);
+            } 
+            if(_.isEmpty(result)){
+                return res.notFound("Does not exist");
             }
+            return res.json(200, result);
         });
     },
 
@@ -40,9 +41,8 @@ module.exports = {
     	rateReviewService.updateAndFind(params, function(err, result) {
             if (err) {
                 return res.badRequest(err);
-            } else {
-                return res.json(200,result);
-            }
+            } 
+            return res.json(200,result);
         });
     },
 
@@ -52,9 +52,8 @@ module.exports = {
         rateReviewService.delete(id, function(err, result) {
             if (err) {
                 return res.badRequest(err);
-            } else {
-                return res.jsonx(200,result);
-            }
+            } 
+            return res.jsonx(200,result);
         });
     }
 };
