@@ -60,7 +60,24 @@ class RateReviewService {
         options.where = {};
         options.where.id = params.id;
         var rateReviewRepository = new RateReviewRepository();
-        rateReviewRepository.updateAndFind(params, options, options, callback);
+        async.waterfall([
+            function(callback){
+               rateReviewRepository.updateAndFind(params, options, options, callback);
+            },
+            function(rateReviewResult,callback){
+                rateReviewObject=rateReviewResult;
+                rateReviewService.getAverageRating(rateReviewResult.dataValues,callback);
+            },
+            function(averageRating,callback){
+                var merchantId=rateReviewObject.dataValues.merchantId;
+                merchantRepository.update({averageRating:averageRating},{where:{id:merchantId}},callback);
+            }
+        ],function(err,result){
+            if(err){
+                return callback(err);
+            }
+            return callback(null,rateReviewObject.dataValues);
+        });
     }
 
     // deletes rate and reviews from ratereview table and update average rating field in merchant table 
@@ -69,7 +86,24 @@ class RateReviewService {
         options.where = {};
         options.where.id = id;
         var rateReviewRepository = new RateReviewRepository();
-        rateReviewRepository.remove(options, callback);
+        async.waterfall([
+            function(callback){
+                rateReviewRepository.remove(options, callback);
+            },
+            function(rateReviewResult,callback){
+                rateReviewObject=rateReviewResult;
+                rateReviewService.getAverageRating(rateReviewResult.dataValues,callback);
+            },
+            function(averageRating,callback){
+                var merchantId=rateReviewObject.dataValues.merchantId;
+                merchantRepository.update({averageRating:averageRating},{where:{id:merchantId}},callback);
+            }
+        ],function(err,result){
+            if(err){
+                return callback(err);
+            }
+            return callback(null,rateReviewObject.dataValues);
+        });
     }
 
     // calculates average rating of a merchant
