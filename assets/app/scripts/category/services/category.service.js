@@ -10,11 +10,9 @@
         var service = {};
 
         service.getCategoryList = getCategoryList;
-        service.getCategory = getCategory;
         service.addCategory = addCategory;
         service.editCategory = editCategory;
         service.deleteCategory = deleteCategory;
-        service.setCategoryData = setCategoryData;
         service.getCategoryData = getCategoryData;
 
         return service;
@@ -30,7 +28,7 @@
             });
         }
 
-        function getCategory(categoryId, callback) {
+        function getCategoryData(categoryId, callback) {
             httpi({
                 method: "get",
                 url: API.updateCategory,
@@ -85,14 +83,6 @@
             }, function(response) {
                 callback(response);
             });
-        }
-
-        function getCategoryData() {
-            return $localStorage.getObject('categoryData');
-        }
-
-        function setCategoryData(category) {
-            $localStorage.setObject('categoryData', category);
         }
 
 

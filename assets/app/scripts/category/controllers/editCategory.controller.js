@@ -1,8 +1,19 @@
-angular.module('app').controller('editCategoryController', ['$state', 'categoryService', 'toastr', function($state, categoryService, toastr) {
+angular.module('app').controller('editCategoryController', ['$state', 'categoryService', 'toastr', '$stateParams', function($state, categoryService, toastr, $stateParams) {
 
     var vm = this;
 
-    vm.editCategoryData = categoryService.getCategoryData();
+    vm.categoryId = $stateParams.categoryId;
+
+    categoryService.getCategoryData(vm.categoryId, function(response) {
+        if (response.status === 200) {
+            vm.editCategoryData = response.data;
+            return;
+        }
+        if (response.status === 400) {
+            return toastr.error(response.data);
+        }
+        return toastr.error(response.data);
+    });
 
     vm.cancel = function() {
         $state.go('categoryList');

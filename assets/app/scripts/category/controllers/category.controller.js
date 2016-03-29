@@ -15,8 +15,7 @@ angular.module('app').controller('categoryController', ['$state', 'categoryServi
 
 
     vm.editCategoryData = function(category) {
-        categoryService.setCategoryData(category);
-        $state.go('editCategory');
+        $state.go('editCategory',{categoryId: category.id});
     };
 
     vm.deleteCategory = function(categoryId) {

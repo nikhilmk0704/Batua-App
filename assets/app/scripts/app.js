@@ -26,7 +26,7 @@
         })
 
         .state('editCategory', {
-            url: '/editCategory',
+            url: '/editCategory/:categoryId',
             templateUrl: 'app/views/category/edit_category.html',
             controller: 'editCategoryController',
             controllerAs: 'vm'
@@ -47,6 +47,13 @@
         .state('merchantList', {
             url: '/merchantList',
             templateUrl: 'app/views/merchant/merchant_list.html'
+        })
+
+        .state('editMerchant', {
+            url: '/editMerchant',
+            templateUrl: 'app/views/merchant/merchant_details.html',
+            controller: 'editMerchantController',
+            controllerAs: 'vm'
         })
 
         .state('addOffer', {
