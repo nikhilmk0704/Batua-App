@@ -15,7 +15,7 @@ class MerchantService {
         if (params.status == "Drafted") {
             return merchantService.createMerchant(params, callback);
         } 
-        return callback("Error occured");
+        return callback("Mandatory fields missing");
     }
 
     // shows only active merchants for user app
@@ -58,13 +58,13 @@ class MerchantService {
         var options = {};
         options.where = {};
         options.where.id = req.body.id;
-        if (merchantService.validateRequest(params) && params.statusId != "Drafted") { // true if all mandatory fields are supplied
+        if (merchantService.validateRequest(params) && params.status != "Drafted") { // true if all mandatory fields are supplied
             return merchantService.updateMerchant(params, options, callback);
         } 
-        if (params.statusId == "Drafted") {
+        if (params.status == "Drafted") {
             return merchantService.updateMerchant(params, options, callback);
         } 
-        return callback("Error occured");
+        return callback("Mandatory fields missing");
     }
 
     // delete the merchant based on shortcode (unique field)

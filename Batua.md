@@ -703,6 +703,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
                 "bankBranch":"branch name of bank",
                 "bankName":"HDFC",
                 "status":"Active",
+                "createdSalesId": 3
             }
             
         
@@ -1018,6 +1019,8 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
                 "bankBranch":"branch name of bank",
                 "bankName":"HDFC",
                 "status":"Active",
+                "createdSalesId": 3
+                
             }
 
 + Response 200 (application/json)
@@ -1093,7 +1096,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 400 (application/json)
 
 
-## Create Category [/api/category/{id}]
+## Create Category [/api/category]
 
 ###  Create Category [POST]
 
@@ -1126,7 +1129,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 401 (application/json)
 
 
-### Get Category [GET]
+### Get Category [GET /api/category/{id}]
 
 + Response 200 (application/json)
     
@@ -1153,7 +1156,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 401 (application/json)
 
 
-###  Update Category [PUT]
+###  Update Category [PUT /api/category]
 
 + Request (application/json)
 
@@ -1198,7 +1201,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 401 (application/json)
 
 
-## City [/api/city/{id}]
+## City [/api/city]
 
 ### Create City [POST]
 
@@ -1231,7 +1234,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 401 (application/json)
 
 
-### Update City [PUT]
+### Update City [PUT /api/city]
 
 + Request (application/json)
 
@@ -1262,7 +1265,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 401 (application/json)
 
 
-### Get City [GET]
+### Get City [GET /api/city/{id}]
 
 + Response 200 (application/json)
     
@@ -1303,7 +1306,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 401 (application/json)
 
 
-## Rate & Review Merchant [/api/ratereview/{id}]
+## Rate & Review Merchant [/api/ratereview]
 
 ### Create Review [POST]
 
@@ -1340,7 +1343,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 401 (application/json)
 
 
-### Get Review [GET]
+### Get Review [GET /api/ratereview/user/{userId}/merchant/{merchantId}]
 
 + Response 200 (application/json)
     
@@ -1374,7 +1377,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 401 (application/json)
 
 
-### Update Review [PUT]
+### Update Review [PUT /api/ratereview]
 
 + Request (application/json)
 
@@ -1410,20 +1413,10 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 401 (application/json)
 
 
-### Delete Review [DELETE]
+### Delete Review [DELETE /api/ratereview/{id}]
 
 + Request (application/json)
 
-    + Headers
-
-            Access-Token: "ABCDEFGH12345678"
-
-    + Body
-    
-            {   
-                "userId":23,
-                "merchantId":12
-            }
 
 + Response 200 (application/json)
     
