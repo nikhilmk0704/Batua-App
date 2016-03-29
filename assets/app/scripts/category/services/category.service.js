@@ -3,9 +3,9 @@
 
     angular.module('app').factory('categoryService', categoryService);
 
-    categoryService.$inject = ['httpi', 'API', '$localStorage', '$cookieStore', '$state'];
+    categoryService.$inject = ['httpi', 'API', '$cookieStore', '$state'];
 
-    function categoryService(httpi, API, $localStorage, $cookieStore, $state) {
+    function categoryService(httpi, API, $cookieStore, $state) {
 
         var service = {};
 
