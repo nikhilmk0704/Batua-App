@@ -5,7 +5,8 @@
 
     function ENVIRONMENT(connections) {
         return {
-            BASEURL: connections.MOCK
+            // BASEURL: connections.MOCK
+            BASEURL: connections.DEVELOPMENT
         }
     }
 })();
