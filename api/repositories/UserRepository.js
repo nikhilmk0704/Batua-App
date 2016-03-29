@@ -5,7 +5,7 @@ var BaseRepository = require('./BaseRepository.js');
 class UserRepository extends BaseRepository {
 
     constructor() {
-        super(sails.models.user);
+        super(sails.models.users);
     }
 
 }

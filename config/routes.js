@@ -10,35 +10,38 @@
 
 module.exports.routes = {
 
-    // 'post /oauth/client': 'OAuthClientsController.create',
-
-    // 'get /api/permissions': 'PermissionsController.find',
-    // 'put /api/permissions': 'PermissionsController.update',
-
-    // 'post /api/user': 'UserController.create',
-
-    // 'post /email/send': 'EmailController.send',
-
     'post /api/category': 'CategoriesController.create',
     'get /api/category/:id?': 'CategoriesController.find',
     'put /api/category': 'CategoriesController.update',
-    'delete /api/category/:id?': 'CategoriesController.delete',
+    'delete /api/category/:id': 'CategoriesController.delete',
 
     'post /api/city': 'CitiesController.create',
     'get /api/city/:id?': 'CitiesController.find',
     'put /api/city': 'CitiesController.update',
-    'delete /api/city/:id?': 'CitiesController.delete',
-
-    'post /api/status': 'StatusesController.create',
-    'get /api/status/:id?': 'StatusesController.find',
-    'put /api/status': 'StatusesController.update',
-    'delete /api/status/:id?': 'StatusesController.delete',
+    'delete /api/city/:id': 'CitiesController.delete',
 
     'post /api/merchant': 'MerchantsController.create',
-    'get /api/merchant/:id?': 'MerchantsController.find',
+    'get /api/user/:userId/merchant/:id?': 'MerchantsController.find',
+    'get /api/salesagent/:salesAgentId/merchant/:id?': 'MerchantsController.find',
+    'get /api/admin/:adminId/merchant/:id?': 'MerchantsController.find',
     'put /api/merchant': 'MerchantsController.update',
-    'delete /api/merchant/:id?': 'MerchantsController.delete',
-    'put /api/merchant/setstatus': 'MerchantsController.Setstatus',
+    'put /api/merchant/setstatus': 'MerchantsController.setStatus',
 
+    'post /api/promocode': 'PromocodesController.create',
+    'get /api/promocode/:id?': 'PromocodesController.find',
+    'put /api/promocode': 'PromocodesController.update',
+    'delete /api/promocode/:id': 'PromocodesController.delete',
 
+    'post /api/ratereview': 'RateReviewsController.create',
+    'get /api/ratereview/user/:userId/merchant/:merchantId':'RateReviewsController.find',
+    'put /api/ratereview':'RateReviewsController.update',
+    'delete /api/ratereview/:id':'RateReviewsController.delete',
+
+    'post /api/usergroup': 'UserGroupsController.create',
+    'get /api/usergroup/:id?': 'UserGroupsController.find',
+    'put /api/usergroup': 'UserGroupsController.update',
+    'delete /api/usergroup/:id': 'UserGroupsController.delete',
+
+    'post /api/user': 'UsersController.create',
+    
 }

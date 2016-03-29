@@ -10,77 +10,49 @@
 module.exports = {
 
     create: function(req, res) {
-
         var params = req.body;
-        console.log("gud");
         var cityService = new CityService();
         cityService.save(params, function(err, result) {
             if (err) {
                 return res.badRequest(err);
             } else {
-                return res.json(201, { result: result });
+                return res.json(201, result);
             }
         });
     },
 
     find: function(req, res) {
-
-        var _id = req.param('id');
-        var params = {};
-        if (_id) {
-            params.where = {};
-            params.where.id = _id;
-            var cityService = new CityService();
-            cityService.find(params, function(err, result) {
-                if (err) {
-                    return res.badRequest(err);
-                } else {
-                    return res.json(200, { result: result });
-                }
-            });
-        } else {
-            var cityService = new CityService();
-            cityService.findAll(params, function(err, result) {
-                if (err) {
-                    return res.badRequest(err);
-                } else {
-                    return res.json(200, { result: result });
-                }
-            });
-        }
-    },
-
-    update: function(req, res) {
-
-        var params = {};
-        var options = {};
-        params.name = req.body.name;
-        options.where = {};
-        options.where.id = req.body.id;
-
+        var id = req.param('id');
         var cityService = new CityService();
-        cityService.update(params, options, function(err, result) {
+        cityService.find(id, function(err, result) {
             if (err) {
                 return res.badRequest(err);
             } else {
-                return res.json(200, { result: result });
+                return res.json(200,result);
+            }
+        });
+    },
+
+    update: function(req, res) {
+        var params=req.body;
+        var cityService = new CityService();
+        cityService.updateAndFind(params, function(err, result) {
+            if (err) {
+                return res.badRequest(err);
+            } else {
+                return res.json(200,result);
             }
         });
     },
 
     delete: function(req, res) {
-
-        var _id = req.param('id');
-        var options = {};
-        options.where = {};
-        options.where.id = _id;
-
+        var id=req.param('id');
         var cityService = new CityService();
-        cityService.delete(options, function(err, result) {
+        cityService.delete(id, function(err, result) {
             if (err) {
                 return res.badRequest(err);
             } else {
-                return res.json(200, { result: result });
+                return res.json(200,result);
             }
         });
     }

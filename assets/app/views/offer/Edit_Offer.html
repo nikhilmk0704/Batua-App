@@ -1,0 +1,94 @@
+
+        <!-- BEGIN CONTENT BODY -->
+        <div class="page-content">
+          <div class="row">
+            <div class="col-md-8 margincontent">
+              <!-- BEGIN SAMPLE FORM PORTLET-->
+              <section class="portlet box purple portletcustom">
+                <section class="portlet-title">
+                  <div class="caption font-dark">
+                    <span class="caption-subject bold uppercase"> Edit Offer</span>  
+                  </div>
+                </section>
+                <section class="portlet-body form">
+                  <form class="form-horizontal" role="form">
+                    <div class="form-body">
+                      <form class="editoffer-form" action="" method=""> 
+                        <section class="form-group">
+                          <label class="control-label col-xs-3">Merchant Name:
+                            <span class="required"> * </span>
+                          </label>
+                          <div class="col-xs-8">
+                            <input name="text" type="text" class="form-control input-circle" id="Merchantname" name="Merchantname"  placeholder="Enter the Merchant Name" style="margin-bottom:10px;" readonly /> 
+                            <span class="help-block text-danger">Please enter a valid merchant name </span>
+                          </div>
+                        </section>
+                        <section class="form-group">
+                          <label class="control-label col-xs-3">Offer/Discount in %:
+                            <span class="required"> * </span>
+                          </label>
+                          <div class="col-xs-8">
+                            <input type="number" class="form-control input-circle" id="offerpercent" name="offerpercent"  placeholder="Offer/Discount in Peercentage"  min="0" max="100" step="0.1"  style="margin-bottom:15px;" required>
+                            <span class="help-block text-danger">Please enter a valid offer percentage </span>
+                          </div>
+                        </section>
+
+                        <section class="form-group">
+                          <label class="control-label col-xs-3">Description:
+                            <span class="required"> * </span>
+                          </label>
+                          <div class="col-xs-8">
+                            <textarea class="form-control input-circle col-xs-12" rows="3" id="offerdesc" name="offerdesc" placeholder="Enter Offer Description" style="margin-bottom:15px;" value="" readonly></textarea>
+                            <span class="help-block text-danger">Please enter valid description for the offer </span>
+                          </div>
+                        </section>
+
+                        <section class="form-group">
+                          <label class="control-label col-xs-3">Maximum Limit(Rs):
+                            <span class="required"> * </span>
+                          </label>
+                          <div class="col-xs-8">
+                            <input type="text" class="form-control input-circle" id="maxlimit" name="maxlimit"  placeholder="Enter the Maximum Limit" style="margin-bottom:15px;"  required>
+                            <span class="help-block text-danger">Please 3nter a valid max limit </span>
+                          </div>
+                        </section>
+
+                        <section class="form-group">
+                          <label class="control-label col-xs-3">Offer Start Date:
+                            <span class="required"> * </span>
+                          </label>
+                          <section class="input-group col-xs-8  offerstartdate" style="margin-bottom:15px;" >
+                            <div class="input-group-addon input-circle-left">
+                                <i class="fa fa-calendar">
+                                </i>
+                            </div>
+                            <input class="form-control input-circle-right" id="date" name="date" placeholder="Offer Start Date as MM/DD/YYYY" type="text"/>
+                          </section>
+                          <span class="help-block text-danger col-xs-8 col-xs-push-3"> Please select a valid start date </span>
+                        </section>
+
+                        <section class="form-group">
+                          <label class="control-label col-xs-3">Offer End Date:
+                            <span class="required"> * </span>
+                          </label>
+                          <section class="input-group col-xs-8  offerenddate" style="margin-bottom:15px;" >
+                            <div class="input-group-addon input-circle-left">
+                                <i class="fa fa-calendar">
+                                </i>
+                            </div>
+                            <input class="form-control input-circle-right" id="date" name="date" placeholder="Offer End Date as MM/DD/YYYY" type="text"/>
+                          </section>
+                          <span class="help-block text-danger col-xs-8 col-xs-push-3"> Please select a valid end date </span>
+                        </section>
+                      </form>                   
+                    </div>
+                    <div class="form-actions rightshift" style="border-top-width:0px;">
+                      <button type="button" class="btn default margin-form-btn" onclick="location.href='Offer_List.html'">Cancel</button>
+                      <button type="submit" class="btn button-color margin-form-btn" onclick="location.href='Offer_List.html'">Submit</button>
+                    </div>
+                  </form>
+                </section>
+              </section>
+            </div>   
+          </div>
+        </div>

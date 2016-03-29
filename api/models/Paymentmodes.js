@@ -13,10 +13,11 @@ module.exports = {
             primaryKey: true,
             autoIncrement: true,
         },
-        name: {
+        paymentMode: {
             type: Sequelize.STRING,
-            required: true,
-            allowNull: false,
+        },
+        walletType: {
+            type: Sequelize.STRING,
         }
     }
 };

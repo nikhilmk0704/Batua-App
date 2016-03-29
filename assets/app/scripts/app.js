@@ -6,10 +6,12 @@
         .config(config)
         .run(run);
 
-    config.$inject = ['$stateProvider', '$urlRouterProvider'];
+    config.$inject = ['$stateProvider', '$urlRouterProvider', 'cfpLoadingBarProvider'];
 
-    function config($stateProvider, $urlRouterProvider) {
+    function config($stateProvider, $urlRouterProvider, cfpLoadingBarProvider) {
 
+        cfpLoadingBarProvider.includeSpinner = false;
+        
         // For any unmatched url, redirect to /state1
         $urlRouterProvider.otherwise("/addCategory");
 

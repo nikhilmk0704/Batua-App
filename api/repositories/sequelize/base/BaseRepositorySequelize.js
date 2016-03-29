@@ -14,9 +14,51 @@ class BaseRepositorySequelize {
         });
     }
 
+    bulkSave(object, callback) {
+        var baseId = object.baseId;
+        var associateIds = object.associateIds;
+        var baseAttribute = object.baseAttribute;
+        var associateAttribute = object.associateAttribute;
+        var data = [];
+        associateIds.forEach(function(id) {
+            var obj = {};
+            obj[baseAttribute] = baseId;
+            obj[associateAttribute] = id;
+            data.push(obj);
+        });
+        var duplicateObject = {};
+        duplicateObject.updateOnDuplicate = [baseAttribute, associateAttribute];
+        this.modelType.bulkCreate(data, duplicateObject).then(function(result) {
+            callback(null, result);
+        }).catch(function(exception) {
+            callback(exception);
+        });
+    }
+
+    bulkInsert(object, callback) {
+        this.modelType.bulkCreate(object).then(function(result) {
+            callback(null, result);
+        }).catch(function(exception) {
+            callback(exception);
+        });
+    }
+
     update(object, options, callback) {
         this.modelType.update(object, options).then(function(result) {
             callback(null, result);
+        }).catch(function(exception) {
+            callback(exception);
+        });
+    }
+
+    updateAndFind(object, options, findObject, callback) {
+        var model = this.modelType;
+        model.update(object, options).then(function(updatedRowCount) {
+            model.find(findObject).then(function(result) {
+                callback(null, result);
+            }).catch(function(exception) {
+                callback(exception);
+            });
         }).catch(function(exception) {
             callback(exception);
         });
