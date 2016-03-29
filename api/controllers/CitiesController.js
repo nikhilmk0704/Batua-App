@@ -52,7 +52,7 @@ module.exports = {
             if (err) {
                 return res.badRequest(err);
             } else {
-                return res.json(200,result);
+                return res.jsonx(200,result);
             }
         });
     }
