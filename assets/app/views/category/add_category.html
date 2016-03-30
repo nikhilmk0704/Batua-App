@@ -22,7 +22,7 @@
                                     </label>
                                     <div class="col-xs-8">
                                         <input type="text" class="form-control input-circle" id="categoryname" name="categoryname" placeholder="Enter A Category Name" style="margin-bottom:10px;" required ng-model="category.name" />
-                                        <span class="help-block text-danger" ng-if="!addcategoryForm.categoryname.$pristine && addcategoryForm.categoryname.$invalid" ng-messages="addcategoryForm.categoryname.$error" role="alert">Please enter a valid category name </span>
+                                        <span class="help-block text-danger" ng-if="!addcategoryForm.categoryname.$pristine && addcategoryForm.categoryname.$invalid" ng-messages="addcategoryForm.categoryname.$error">Please enter a valid category name </span>
                                     </div>
                                 </section>
                                 <div class="form-actions rightshift" style="border-top-width:0px;">

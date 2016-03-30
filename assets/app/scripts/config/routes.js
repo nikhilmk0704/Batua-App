@@ -7,7 +7,7 @@
         return {
             login: "/user/login",
             category: "/category",
-            updateCategory: "/category/:id",
+            updateCategory: "/category/:id"
         }
 
     }
