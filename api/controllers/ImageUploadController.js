@@ -16,7 +16,7 @@
  		imageUploadService.upload(params,function(err,result){
  			if(err)
  				return res.badRequest(err);
- 			return res.json(200,result[0].extra.Location);
+ 			return res.json(200,result);
  		});
  	}
  }
