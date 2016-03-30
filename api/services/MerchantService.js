@@ -104,16 +104,23 @@ class MerchantService {
         findObject.include = merchantService.getIncludeModels();
         findObject.where = {};
         findObject.where.id = merchantId;
-        MerchantsGalleries.destroy({ where: { 'merchantId': merchantId } })
-        .then(function(deletedRowCount) {
-            Merchants.update(params, options).then(function(merchantResult) {
-                merchantService.createGalleryAndFindMerchant(params, merchantId, findObject, callback);
+        Merchants.find({where:{id:merchantId}}).then(function(data){
+            (data.dataValues.shortCode==params.shortCode)?(delete params.shortCode):(params);
+            (data.dataValues.phone==params.phone)?(delete params.phone):(params);
+            MerchantsGalleries.destroy({ where: { 'merchantId': merchantId } })
+            .then(function(deletedRowCount) {
+                Merchants.update(params, options).then(function(merchantResult) {
+                    merchantService.createGalleryAndFindMerchant(params, merchantId, findObject, callback);
+                    return null;
+                }).catch(function(exception) {
+                    callback(exception);
+                });
                 return null;
             }).catch(function(exception) {
                 callback(exception);
             });
             return null;
-        }).catch(function(exception) {
+        }).catch(function(exception){
             callback(exception);
         });
     }

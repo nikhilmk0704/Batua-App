@@ -43,5 +43,7 @@ module.exports.routes = {
     'delete /api/usergroup/:id': 'UserGroupsController.delete',
 
     'post /api/user': 'UsersController.create',
+
+    'post /api/image/upload':'ImageUploadController.upload',
     
 }
