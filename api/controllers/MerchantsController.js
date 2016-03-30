@@ -10,6 +10,7 @@
 module.exports = {
 
     create: function(req, res) {
+        var params={};
         var params = req.body;
         var merchantService = new MerchantService();
         merchantService.save(params, function(err, result) {
@@ -22,8 +23,13 @@ module.exports = {
     },
 
     find: function(req, res) {
+        var params={};
+        params.id = req.param('id');
+        params.userId = req.param('userId');
+        params.salesAgentId = req.param('salesAgentId');
+        params.adminId = req.param('adminId');
         var merchantService = new MerchantService();
-        merchantService.find(req, function(err, result) {
+        merchantService.find(params, function(err, result) {
             if (err) {
                 return res.badRequest(err);
             }
@@ -36,8 +42,10 @@ module.exports = {
     },
 
     update: function(req, res) {
+        var params={};
+        params=req.body;
         var merchantService = new MerchantService();
-        merchantService.update(req, function(err, result) {
+        merchantService.update(params, function(err, result) {
             if (err) {
                 return res.badRequest(err);
             } 
@@ -46,8 +54,10 @@ module.exports = {
     },
 
     setStatus: function(req, res) {
+        var params={};
+        params=req.body;
         var merchantService = new MerchantService();
-        merchantService.update(req, function(err, result) {
+        merchantService.setStatus(params, function(err, result) {
             if (err) {
                 return res.badRequest(err);
             } 

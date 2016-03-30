@@ -489,9 +489,9 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 
 
 
-## Profile Image Upload [/user/{id}/profile/Image]
+## Image Upload [/api/image/upload]
 
-### Upload Profile Image [PUT]
+### Upload Image [PUT]
 
 + Request (multipart/form-data)
 
@@ -501,7 +501,10 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 
     + Body
     
-            $image
+            {
+                "image":$image,
+                "fileName":"icon.jpg",
+            }
             
         
 + Response 200 (application/json)

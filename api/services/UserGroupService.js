@@ -25,8 +25,9 @@ class UserGroupService {
         var options = {};
         options.where = {};
         options.where.id = params.id;
+        var findObject=options;
         var userGroupRepository = new UserGroupRepository();
-        userGroupRepository.updateAndFind(params, options, options, callback);
+        userGroupRepository.updateAndFind(params, options, findObject, callback);
     }
 
     delete(id, callback) {

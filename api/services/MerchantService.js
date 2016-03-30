@@ -21,27 +21,25 @@ class MerchantService {
     // shows only active merchants for user app
     // shows all merchants for admin portal
     // shows only those merchants created by particular sales agent
-    find(req, callback) {
+    find(params, callback) {
         var merchantService = new MerchantService();
-        var id = req.param('id');
-        var userId = req.param('userId');
-        var salesAgentId = req.param('salesAgentId');
-        var adminId = req.param('adminId');
-        var params = {};
-        params.include = merchantService.getIncludeModels();
-        params.where = {};
-        merchantService.getUserGroup(params,id,userId,salesAgentId,adminId,callback);
+        var id=params.id;
+        var userId=params.userId;
+        var salesAgentId=params.salesAgentId;
+        var adminId=params.adminId;
+        var newParams = {};
+        newParams.include = merchantService.getIncludeModels();
+        newParams.where = {};
+        merchantService.getUserGroup(newParams,id,userId,salesAgentId,adminId,callback);
     }
 
     // updates the partialy saved merchant i.e status is drafted
     // updates the fully saved merchant i.e status is not drafted
-    update(req, callback) {
+    update(params, callback) {
         var merchantService = new MerchantService();
-        var params = {};
-        params = req.body;
         var options = {};
         options.where = {};
-        options.where.id = req.body.id;
+        options.where.id = params.id;
         if (merchantService.validateRequest(params) && params.status != "Drafted") { // true if all mandatory fields are supplied
             return merchantService.updateMerchant(params, options, callback);
         } 
@@ -60,14 +58,16 @@ class MerchantService {
     }
 
     // update status of merchant
-    setStatus(req, callback) {
-        var params = {};
+    setStatus(params, callback) {
+        var newParams = {};
         var options = {};
-        params.status = req.body.status;
+        var findObject={};
+        newParams.status = params.status;
         options.where = {};
-        options.where.id = req.body.id;
+        options.where.id = params.id;
+        findObject=options;
         var merchantRepository = new MerchantRepository();
-        merchantRepository.update(params, options, callback);
+        merchantRepository.updateAndFind(newParams, options, findObject, callback);
     }
 
     // validates for mandatory fields
@@ -84,7 +84,7 @@ class MerchantService {
     createMerchant(params, callback) {
         var merchantService = new MerchantService();
         Merchants.create(params).then(function(merchantResult) {
-            var merchantId = merchantResult.dataValues.id;
+            var merchantId = merchantResult.id;
             var findObject = {};
             findObject.include = merchantService.getIncludeModels();
             findObject.where = {};
@@ -104,53 +104,86 @@ class MerchantService {
         findObject.include = merchantService.getIncludeModels();
         findObject.where = {};
         findObject.where.id = merchantId;
-        MerchantsGalleries.destroy({ where: { 'merchantId': merchantId } })
-        .then(function(deletedRowCount) {
-            Merchants.update(params, options).then(function(merchantResult) {
-                merchantService.createGalleryAndFindMerchant(params, merchantId, findObject, callback);
-                return null;
-            }).catch(function(exception) {
-                callback(exception);
-            });
+        merchantService.findMerchants(params,merchantId,options,findObject,callback);
+        return null;
+    }
+
+    findMerchants(params,merchantId,options,findObject,callback){
+        var merchantService = new MerchantService();
+        Merchants.find({where:{id:merchantId}}).then(function(result){
+            (result.shortCode==params.shortCode)?(delete params.shortCode):(params);
+            (result.phone==params.phone)?(delete params.phone):(params);
+            merchantService.destroyMerchantsGalleries(params,merchantId,options,findObject,callback);
             return null;
-        }).catch(function(exception) {
-            callback(exception);
+        }).catch(function(exception){
+            return callback(exception);
+        })
+    }
+
+    destroyMerchantsGalleries(params,merchantId,options,findObject,callback){
+        var merchantService = new MerchantService();
+        MerchantsGalleries.destroy({ where: { 'merchantId': merchantId } }).then(function(result){
+            merchantService.updateMerchantAndCreateGalleryAndFindMerchant(params,merchantId,options,findObject,callback);
+            return null;
+        }).catch(function(exception){
+            return callback(exception);
+        });
+    }
+
+    updateMerchantAndCreateGalleryAndFindMerchant(params,merchantId,options,findObject,callback){
+        var merchantService = new MerchantService();
+        Merchants.update(params,options).then(function(result){
+            merchantService.createGalleryAndFindMerchant(params,merchantId,findObject,callback);
+            return null;
+        }).catch(function(exception){
+            return callback(exception);
         });
     }
 
     // creates image gallery and shows merchant result
     createGalleryAndFindMerchant(params, merchantId, findObject, callback) {
+        var merchantService = new MerchantService();
         var count = 0;
-        if (params.imageGallery.length) {
+        var imageGalleryArrayLength=params.imageGallery.length;
+        if (imageGalleryArrayLength) {
             params.imageGallery.forEach(function(imageUrl) {
-                Galleries.create({ 'url': imageUrl }).then(function(galleryResult) {
-                    var galleryId = galleryResult.dataValues.id;
-                    MerchantsGalleries.create({ 'merchantId': merchantId, 'galleryId': galleryId })
-                    .then(function(result) {
-                        count++;
-                        if (params.imageGallery.length == count) {
-                            Merchants.find(findObject).then(function(data) {
-                                callback(null, data);
-                            }).catch(function(exception) {
-                                callback(exception);
-                            });
-                        }
-                        return null;
-                    }).catch(function(exception) {
-                        callback(exception);
-                    });
-                    return null;
-                }).catch(function(exception) {
-                    callback(exception);
-                });
+                count++;
+                merchantService.createGalleries(imageUrl,merchantId,findObject,imageGalleryArrayLength,count,callback);
             });
         } else {
-            Merchants.find(findObject).then(function(result) {
-                callback(null, result);
-            }).catch(function(exception) {
-                callback(exception);
-            });
+            merchantService.getMerchantById(findObject,callback);
         }
+    }
+
+    createGalleries(imageUrl,merchantId,findObject,imageGalleryArrayLength,count,callback){
+        var merchantService = new MerchantService();
+        Galleries.create({'url':imageUrl}).then(function(result){
+            var galleryId=result.id;
+            merchantService.createMerchantsGalleries(merchantId,galleryId,findObject,imageGalleryArrayLength,count,callback);
+            return null
+        }).catch(function(exception){
+            return callback(exception);
+        });
+    }
+
+    createMerchantsGalleries(merchantId,galleryId,findObject,imageGalleryArrayLength,count,callback){
+        var merchantService = new MerchantService();
+        MerchantsGalleries.create({'merchantId':merchantId,'galleryId':galleryId}).then(function(result){
+            if(imageGalleryArrayLength==count){
+                merchantService.getMerchantById(findObject,callback);
+            }
+            return null;
+        }).catch(function(exception){
+            return callback(exception);
+        });
+    }
+
+    getMerchantById(findObject,callback){
+        Merchants.find(findObject).then(function(result){
+            return callback(null,result);
+        }).catch(function(exception){
+            return callback(exception);
+        });
     }
 
     // returns models to be included while getting merchant
@@ -184,7 +217,7 @@ class MerchantService {
         var groupId=(userId|salesAgentId|adminId);
         Users.find({ include: [{ model: UserGroups, required: false }], where: { id: groupId } })
         .then(function(data) {
-            var groupName=(data.dataValues.UserGroup.dataValues.name);
+            var groupName=(data.UserGroup.name);
             var merchantRepository = new MerchantRepository();
             if (id) {
                 params.where.id = id;
