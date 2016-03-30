@@ -1,0 +1,56 @@
+<div class="page-content" style="min-height:785px">
+    <div class="row">
+        <div class="col-md-9 margincontent">
+            <!-- BEGIN EXAMPLE TABLE PORTLET-->
+            <section class="portlet light portlet-fit bordered">
+                <!--section title-->
+                <section class="portlet-title">
+                    <div class="caption font-dark" style="padding-top:5px;">
+                        <span class="caption-subject bold uppercase"> Category List</span>
+                    </div>
+                </section>
+                <!-- section title ends -->
+                <!-- section body begins -->
+                <section class="portlet-body">
+                    <div class="table-toolbar">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="btn-group" style="padding-left:10px;">
+                                    <a class="btn sbold green" ui-sref="addCategory"> Add Category <i class="fa fa-plus"></i></a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="dataTables_wrapper no-footer custom-table" style="width:auto">
+                        <div class="table-scrollable">
+                            <table datatable="ng" class="table table-striped table-hover table-bordered dataTable no-footer responsive">
+                                <thead>
+                                    <tr role="row">
+                                        <th class="srno" tabindex="0" rowspan="1" colspan="1" aria-label="activate to sort column ascending">Sr No. </th>
+                                        <th class="sorting" tabindex="0" rowspan="1" colspan="1" aria-label="activate to sort column ascending" style="width:68%;"> Category Name
+                                        </th>
+                                        <th class="actionmultiple" tabindex="0" rowspan="1" colspan="2" aria-label="activate to sort column ascending" style="text-align:center"> Action </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr role="row" class="odd" ng-repeat="category in vm.categories">
+                                        <td class=""> {{$index+1}} </td>
+                                        <td> {{category.name}} </td>
+                                        <td>
+                                            <a type="button" class="btn button-color-table" style="float:left;" ng-click="vm.editCategoryData(category)"><i class="fa fa-pencil"></i></a>
+                                        </td>
+                                        <td>
+                                            <a type="button" class="btn button-color-table" style="float:left;" ng-click="vm.deleteCategory(category.id)"><i class="fa fa-trash"></i></a>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+                <!-- section body ends -->
+            </section>
+            <!-- END EXAMPLE TABLE PORTLET-->
+        </div>
+    </div>
+</div>
