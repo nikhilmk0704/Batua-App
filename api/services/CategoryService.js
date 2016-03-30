@@ -25,8 +25,9 @@ class CategoryService {
         var options = {};
         options.where = {};
         options.where.id = params.id;
+        var findObject=options;
         var categoryRepository = new CategoryRepository();
-        categoryRepository.updateAndFind(params, options, options, callback);
+        categoryRepository.updateAndFind(params, options, findObject, callback);
     }
 
     delete(id, callback) {

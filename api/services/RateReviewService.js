@@ -59,10 +59,11 @@ class RateReviewService {
         var options = {};
         options.where = {};
         options.where.id = params.id;
+        var findObject=options;
         var rateReviewRepository = new RateReviewRepository();
         async.waterfall([
             function(callback){
-               rateReviewRepository.updateAndFind(params, options, options, callback);
+               rateReviewRepository.updateAndFind(params, options, findObject, callback);
             },
             function(rateReviewResult,callback){
                 rateReviewObject=rateReviewResult;

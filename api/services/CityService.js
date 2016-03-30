@@ -25,8 +25,9 @@ class CityService {
         var options = {};
         options.where = {};
         options.where.id = params.id;
+        var findObject=options;
         var cityRepository = new CityRepository();
-        cityRepository.updateAndFind(params, options, options, callback);
+        cityRepository.updateAndFind(params, options, findObject, callback);
     }
 
     delete(id, callback) {
