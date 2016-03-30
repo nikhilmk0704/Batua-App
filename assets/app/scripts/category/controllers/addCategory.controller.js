@@ -1,19 +1,25 @@
-angular.module('app').controller('addCategoryController', function ($scope, $state, categoryService) {
+angular.module('app').controller('addCategoryController', ['$state', 'categoryService', 'toastr', function($state, categoryService, toastr) {
 
- var _this = this;
+    var vm = this;
 
- _this.addCategory = function(category) {
-
-    categoryService.addCategory(category, function(response) {
-      if (response.status == 200) {
+    vm.cancel = function() {
         $state.go('categoryList');
-      } else if (response.status === 400) {
-        toastr.error(response.data);
-      } else if (response.status != 400 || response.status != 200) {
-        toastr.error(response.data);
-      }
-    });
-  }
+    };
+
+    vm.addCategory = function(category) {
+
+        categoryService.addCategory(category, function(response) {
+            if (response.status === 201) {
+                $state.go('categoryList');
+                return toastr.success('Category has been created successfully.');
+            }
+
+            if (response.status === 400) {
+                return toastr.error(response.data);
+            }
+            return toastr.error(response.data);
+        });
+    };
 
 
-});
+}]);

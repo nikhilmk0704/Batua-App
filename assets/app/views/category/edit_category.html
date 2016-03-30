@@ -7,29 +7,30 @@
                 <!-- Section Title-->
                 <article class="portlet-title">
                     <div class="caption font-dark">
-                        <span class="caption-subject bold uppercase"> Add Category </span>
+                        <span class="caption-subject bold uppercase"> Edit Category </span>
                     </div>
                 </article>
                 <!-- Section Body begins-->
                 <article class="portlet-body form">
                     <div class="form-horizontal">
                         <div class="form-body">
-                            <!--add category form begins -->
-                            <form class="addcategory-form" ng-submit="vm.addCategory(category)" name="addcategoryForm" role="form" novalidate>
-                                <section class="form-group" ng-class="{'has-error': addcategoryForm.categoryname.$invalid && !addcategoryForm.categoryname.$pristine}">
+                            <!--edit category form begins -->
+                            <form class="Editcategory-form" role="form" ng-submit="vm.editCategory(vm.editCategoryData)" name="editcategoryForm" novalidate>
+                                <section class="form-group" ng-class="{'has-error': editcategoryForm.categoryname.$invalid && !editcategoryForm.categoryname.$pristine}">
                                     <label class="control-label col-xs-3">Category Name:
                                         <span class="required"> * </span>
                                     </label>
                                     <div class="col-xs-8">
-                                        <input type="text" class="form-control input-circle" id="categoryname" name="categoryname" placeholder="Enter A Category Name" style="margin-bottom:10px;" required ng-model="category.name" />
-                                        <span class="help-block text-danger" ng-if="!addcategoryForm.categoryname.$pristine && addcategoryForm.categoryname.$invalid" ng-messages="addcategoryForm.categoryname.$error">Please enter a valid category name </span>
+                                        <input type="text" class="form-control input-circle" id="categoryname" name="categoryname" placeholder="Enter A Category Name" style="margin-bottom:10px;" required ng-model="vm.editCategoryData.name" />
+                                        <span class="help-block text-danger" ng-if="!editcategoryForm.categoryname.$pristine && editcategoryForm.categoryname.$invalid" ng-messages="editcategoryForm.categoryname.$error" role="alert">Please enter a valid category name </span>
                                     </div>
                                 </section>
                                 <div class="form-actions rightshift" style="border-top-width:0px;">
-                                    <button type="submit" class="btn button-color margin-form-btn" ng-disabled="addcategoryForm.$invalid">Submit</button>
+                                    <button type="submit" class="btn button-color margin-form-btn" ng-disabled="editcategoryForm.$invalid">Submit</button>
                                     <button type="button" class="btn default margin-form-btn" ui-sref="categoryList">Cancel</button>
                                 </div>
                             </form>
+                            <!-- edit category form ends-->
                         </div>
                     </div>
                 </article>
@@ -39,4 +40,4 @@
         </div>
     </div>
 </div>
-<!-- END CONTENT -->
+<!-- END CONTENT BODY -->

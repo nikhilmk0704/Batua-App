@@ -1,27 +1,91 @@
-(function () {    
- 'use strict';
+(function() {    
+    'use strict';
 
- angular.module('app').factory('categoryService', categoryService);
+    angular.module('app').factory('categoryService', categoryService);
 
- categoryService.$inject = ['$http', 'API', '$localStorage', '$cookieStore', '$state'];
+    categoryService.$inject = ['httpi', 'API', '$cookieStore', '$state'];
 
- function categoryService($http, API, $localStorage, $cookieStore, $state) {
+    function categoryService(httpi, API, $cookieStore, $state) {
 
-  var service = {};
+        var service = {};
 
-  service.addCategory = addCategory;
+        service.getCategoryList = getCategoryList;
+        service.addCategory = addCategory;
+        service.editCategory = editCategory;
+        service.deleteCategory = deleteCategory;
+        service.getCategoryData = getCategoryData;
 
-  return service;
+        return service;
 
-  function addCategory(data, callback) {
-   $http.post(API.addCategory, data).then(function (response) {
-    callback(response);
-   }, function (err) {
-    callback(err);
-   });
-  }
+        function getCategoryList(callback) {
+            httpi({
+                method: "get",
+                url: API.category
+            }).then(function(response) {
+                callback(response);
+            }, function(response) {
+                callback(response);
+            });
+        }
+
+        function getCategoryData(categoryId, callback) {
+            httpi({
+                method: "get",
+                url: API.updateCategory,
+                params: {
+                    id: categoryId
+                }
+            }).then(function(response) {
+                callback(response);
+            }, function(response) {
+                callback(response);
+            });
+        }
+
+        function addCategory(category, callback) {
+            httpi({
+                method: "post",
+                url: API.category,
+                data: {
+                    name: category.name
+                }
+            }).then(function(response) {
+                callback(response);
+            }, function(response) {
+                callback(response);
+            });
+        }
+
+        function editCategory(category, callback) {
+            httpi({
+                method: "put",
+                url: API.category,
+                data: {
+                    id: category.id,
+                    name: category.name
+                }
+            }).then(function(response) {
+                callback(response);
+            }, function(response) {
+                callback(response);
+            });
+        }
+
+        function deleteCategory(categoryId, callback) {
+            httpi({
+                method: "delete",
+                url: API.updateCategory,
+                params: {
+                    id: categoryId
+                }
+            }).then(function(response) {
+                callback(response);
+            }, function(response) {
+                callback(response);
+            });
+        }
 
 
- }
+    }
 
 })();
