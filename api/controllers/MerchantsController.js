@@ -10,6 +10,7 @@
 module.exports = {
 
     create: function(req, res) {
+        var params={};
         var params = req.body;
         var merchantService = new MerchantService();
         merchantService.save(params, function(err, result) {
@@ -41,7 +42,8 @@ module.exports = {
     },
 
     update: function(req, res) {
-        var params=req.body;
+        var params={};
+        params=req.body;
         var merchantService = new MerchantService();
         merchantService.update(params, function(err, result) {
             if (err) {
@@ -52,7 +54,8 @@ module.exports = {
     },
 
     setStatus: function(req, res) {
-        var params=req.body;
+        var params={};
+        params=req.body;
         var merchantService = new MerchantService();
         merchantService.setStatus(params, function(err, result) {
             if (err) {
