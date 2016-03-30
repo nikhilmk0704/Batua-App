@@ -3,7 +3,7 @@
 class S3upload {
 
     imageUpload(params, callback) {
-        params.file('image').upload({
+        params.image.upload({
             adapter: require('skipper-s3'),
             key: sails.config.credentials.s3Bucket.key,
             secret: sails.config.credentials.s3Bucket.secret,

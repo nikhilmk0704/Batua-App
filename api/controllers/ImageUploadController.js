@@ -10,7 +10,8 @@
  module.exports={
 
  	upload:function(req,res){
- 		var params=req;
+ 		var params={};
+ 		params.image=req.file('image');
  		var imageUploadService=new ImageUploadService();
  		imageUploadService.upload(params,function(err,result){
  			if(err)
