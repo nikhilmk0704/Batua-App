@@ -100,9 +100,11 @@ module.exports.connections = {
      ***************************************************************************/
 
      s3Bucket: {
-            key: 'AKIAIRU6ETNKYND4Z6SA',
-            secret: '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',
-            bucket: 'beatniks-s3'    
+            key: 'AKIAIM7PFH47KK5U4WKA',
+            secret: '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',
+            bucket: 'batua-test'
         }
+
+
 
 };
