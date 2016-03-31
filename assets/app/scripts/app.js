@@ -39,6 +39,28 @@
             controllerAs: 'vm'
         })
 
+        .state('merchantList', {
+            url: '/merchantList',
+            templateUrl: 'app/views/merchant/merchant_list.html',
+            controller: 'merchantController',
+            controllerAs: 'vm'
+        })
+
+        .state('editMerchant', {
+            url: '/editMerchant/:merchantId',
+            templateUrl: 'app/views/merchant/merchant_details.html',
+            controller: 'editMerchantController',
+            controllerAs: 'vm',
+            resolve: {
+                categories: function(merchantService) {
+                    return merchantService.getCategories();
+                },
+                cities: function(merchantService) {
+                    return merchantService.getCities();
+                }
+            }
+        })
+
     }
 
     run.$inject = [];

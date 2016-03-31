@@ -25,10 +25,13 @@
     "angular-httpi": "*",
     "angular-route": "~1.5.3",
     "angular-datatables": "~0.5.3",
-    "angularjs-dropdown-multiselect": "~1.5.2"
+    "angularjs-dropdown-multiselect": "~1.5.2",
+    "angular-mass-autocomplete": "~0.2.3",
+    "angular-sanitize": "~1.5.3",
+    "ng-flow": "~2.7.1"
   },
   "resolutions": {
-    "angular": "1.5.3",
+    "angular": "~1",
     "angular-loading-bar": "~0.9.0"
   }
 }
