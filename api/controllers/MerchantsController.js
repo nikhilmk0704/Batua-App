@@ -15,8 +15,8 @@ module.exports = {
         var merchantService = new MerchantService();
         merchantService.save(params, function(err, result) {
             if (err) {
-                return res.badRequest(err);
                 merchantService.delete(params);
+                return res.badRequest(err);
             } 
             return res.json(201, result);
         });

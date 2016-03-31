@@ -193,6 +193,7 @@ class MerchantService {
             required: false
         }, {
             model: Users,
+            attributes:['id','name','phone','email'],
             required: false
         }, {
             model: Galleries,
@@ -217,21 +218,21 @@ class MerchantService {
         var groupId=(userId|salesAgentId|adminId);
         Users.find({ include: [{ model: UserGroups, required: false }], where: { id: groupId } })
         .then(function(data) {
-            var groupName=(data.UserGroup.name);
+            var groupName=(data && data.UserGroup.name);
             var merchantRepository = new MerchantRepository();
-            if (id) {
+            if (data && id) {
                 params.where.id = id;
                 return merchantRepository.find(params, callback);
             } 
-            if (userId && !id && groupName == 'User') {
+            if (data && userId && !id && groupName == 'User') {
                 params.where.status = 'Active';
                 return merchantRepository.findAll(params, callback);
             } 
-            if (salesAgentId && !id && groupName == 'Field Sales Agent') {
+            if (data && salesAgentId && !id && groupName == 'Field Sales Agent') {
                 params.where.createdSalesId = salesAgentId;
                 return merchantRepository.findAll(params, callback);
             } 
-            if (adminId && !id && (groupName == 'Admin'|| groupName=='Super Admin')) {
+            if (data && adminId && !id && (groupName == 'Admin'|| groupName=='Super Admin')) {
                 return merchantRepository.findAll(params, callback);
             } 
             return callback("Please provide correct id");
