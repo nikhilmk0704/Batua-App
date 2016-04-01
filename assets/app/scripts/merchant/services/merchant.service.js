@@ -14,6 +14,7 @@
         service.getMerchantData = getMerchantData;
         service.getCategories = getCategories;
         service.getCities = getCities;
+        service.setstatus = setstatus;
 
         return service;
 
@@ -31,7 +32,7 @@
             });
         }
 
-        function editMerchant(merchant, adminId, callback) {
+        function editMerchant(merchant, adminId, imageGallery, callback) {
             httpi({
                 method: "put",
                 url: API.updateMerchant,
@@ -42,7 +43,7 @@
                     profileImageUrl: merchant.profileImageUrl,
                     email: merchant.email,
                     phone: merchant.phone,
-                    imageGallery: merchant.imageGallery,
+                    imageGallery: imageGallery,
                     fees: merchant.fees,
                     categoryId: merchant.categoryId,
                     cityId: merchant.cityId,
@@ -55,7 +56,7 @@
                     ifscCode: merchant.ifscCode,
                     branchName: merchant.branchName,
                     bankName: merchant.bankName,
-                    status: merchant.status,
+                    status: "Active",
                     createdSalesId: merchant.createdSalesId
                 },
                 params: {
@@ -104,6 +105,21 @@
                 deferred.resolve(response.data);
             });
             return deferred.promise;
+        }
+
+        function setstatus(merchantId, status, callback) {
+            httpi({
+                method: "put",
+                url: API.setstatus,
+                data: {
+                    id: merchantId,
+                    status: status 
+                }
+            }).then(function(response) {
+                callback(response);
+            }, function(response) {
+                callback(response);
+            });
         }
 
 
