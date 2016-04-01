@@ -32,7 +32,7 @@
             });
         }
 
-        function editMerchant(merchant, adminId, imageGallery, callback) {
+        function editMerchant(merchant, imageGallery, callback) {
             httpi({
                 method: "put",
                 url: API.updateMerchant,
@@ -46,7 +46,7 @@
                     imageGallery: imageGallery,
                     fees: merchant.fees,
                     categoryId: merchant.categoryId,
-                    cityId: merchant.cityId,
+                    cityId: merchant.cityId.originalObject.id, 
                     address: merchant.address,
                     pincode: merchant.pincode,
                     latitude: merchant.latitude,
@@ -58,10 +58,6 @@
                     bankName: merchant.bankName,
                     status: "Active",
                     createdSalesId: merchant.createdSalesId
-                },
-                params: {
-                    adminId: adminId,
-                    id: merchant.id
                 }
             }).then(function(response) {
                 callback(response);
@@ -113,7 +109,7 @@
                 url: API.setstatus,
                 data: {
                     id: merchantId,
-                    status: status 
+                    status: status
                 }
             }).then(function(response) {
                 callback(response);
