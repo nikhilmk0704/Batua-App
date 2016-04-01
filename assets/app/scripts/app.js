@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('app', ['ui.router', 'ui.bootstrap', 'toastr', 'angular-loading-bar', 'ngAnimate', 'ngCookies', 'ngLodash', 'httpi', 'datatables'])
+        .module('app', ['ui.router', 'ui.bootstrap', 'toastr', 'angular-loading-bar', 'ngAnimate', 'ngCookies', 'ngLodash', 'httpi', 'datatables', 'ngSanitize', 'flow', 'angucomplete-alt'])
         .config(config)
         .run(run);
 
@@ -37,6 +37,28 @@
             templateUrl: 'app/views/category/category_list.html',
             controller: 'categoryController',
             controllerAs: 'vm'
+        })
+
+        .state('merchantList', {
+            url: '/merchantList',
+            templateUrl: 'app/views/merchant/merchant_list.html',
+            controller: 'merchantController',
+            controllerAs: 'vm'
+        })
+
+        .state('editMerchant', {
+            url: '/editMerchant/:merchantId',
+            templateUrl: 'app/views/merchant/merchant_details.html',
+            controller: 'editMerchantController',
+            controllerAs: 'vm',
+            resolve: {
+                categories: function(merchantService) {
+                    return merchantService.getCategories();
+                },
+                cities: function(merchantService) {
+                    return merchantService.getCities();
+                }
+            }
         })
 
     }

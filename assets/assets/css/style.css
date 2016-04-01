@@ -147,8 +147,9 @@ table.dataTable thead .sorting {
 
 .dpholder {
     margin-top: 25%;
-    height: 200px;
+    height: 150px;
     border: 1px solid #cecece;
+    padding: 0px;
 }
 
 .image-group {
@@ -157,12 +158,11 @@ table.dataTable thead .sorting {
 }
 
 .galleryholder {
-    height: 150px;
-    border: 1px solid #cecece;
+    padding: 0px;
 }
 
 .gallery {
-    margin-left: 5%;
+    margin-left: 2%;
     margin-right: 2%;
     margin-bottom: 10px;
     margin-top: 10px;
