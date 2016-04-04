@@ -52,6 +52,16 @@ module.exports = {
         },
         password: {
             type: Sequelize.STRING,
+            validate:{
+                isWhiteSpace:function(value){
+                    if(/\s/g.test(value))
+                        throw new Error("Spaces not allowed");
+                },
+                length:function(value){
+                    if(value.length < 6)
+                        throw new Error("Minimum length six");
+                }
+            }
         },
         pin: {
             type: Sequelize.INTEGER(4),
@@ -71,9 +81,14 @@ module.exports = {
         status: {
             type: Sequelize.STRING,
         },
-        walletBalance: {
-            type: Sequelize.FLOAT,
-            defaultValue: 0
+        latitude:{
+            type:Sequelize.FLOAT
+        },
+        longitude:{
+            type:Sequelize.FLOAT
+        },
+        locationUpdateTime:{
+            type:Sequelize.DATE
         }
     },
     options: {
@@ -87,6 +102,18 @@ module.exports = {
                 name: 'userGroupId',
                 required:true,
                 allowNull: false
+            }
+        });
+        Users.belongsToMany(Paymentmodes,{
+            through:'UsersPaymentmodes',
+            foreignKey:{
+                name:'userId'
+            }
+        });
+        Paymentmodes.belongsToMany(Users,{
+            through:'UsersPaymentmodes',
+            foreignKey:{
+                name:'paymentmodeId'
             }
         });
     }

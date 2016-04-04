@@ -136,6 +136,55 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 400 (applicaiton)
 
 
+## Admin Login [/api/admin/user/login]
+
+### Admin Login [POST]
+
++ Request (application/json)
+            
+    + Body
+
+            {
+                "email":"aditya@tecsolsoftware.com",
+                "password":"123456",
+                "deviceId":"device1",
+                "deviceType":"type1"
+            }
+        
++ Response 200 (application/json)
+
+            {
+                "id": 7,
+                "name": "Aditya",
+                "email": "aditya@tecsolsoftware.com",
+                "token": "0922QvJiT8DkZDtVuwrs6SoZ",
+                "deviceId": "device1",
+                "deviceType": "type1",
+                "userGroup":"Admin"
+            }
+
++ Response 400 (applicaiton)
+
+
+## Admin Logout [/api/admin/user/logout]
+
+### Admin Logout [PUT]
+
++ Request (application/json)
+            
+    + Body
+
+            {
+                "token":"0922TmsgSpIfAJPaaJVvsykG"
+
+            }
+        
++ Response 200 (application/json)
+
+
++ Response 400 (applicaiton)
+
+
 ## Normal SignUp [/user/normalSignUp]
 
 ### Normal SignUp [POST]

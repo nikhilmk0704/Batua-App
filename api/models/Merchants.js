@@ -37,15 +37,6 @@ module.exports = {
                 max:9999999999
             }
         },
-        pincode: {
-            type: Sequelize.INTEGER(6),
-            required: true,
-            allowNull: false,
-            validate:{
-                min:100000,
-                max:999999
-            }
-        },
         email: {
             type: Sequelize.STRING,
             validate: {
@@ -99,18 +90,11 @@ module.exports = {
             allowNull: false,
         }
     },
-    validate: {
-        bothCoordsOrNone: function() {
-            if ((this.latitude === null) !== (this.longitude === null)) {
-                throw new Error('Require either both latitude and longitude or neither');
-            }
-        }
-    },
     associations: function() {
-        Merchants.belongsTo(Cities, {
+        Merchants.belongsTo(Locations, {
             foreignKey: {
-                name: 'cityId',
-                allowNull: false,
+                name: 'locationId',
+                defaultValue:null,
                 onDelete: 'RESTRICT',
                 onUpdate: 'CASCADE'
             }
@@ -145,3 +129,5 @@ module.exports = {
         });
     }
 };
+
+

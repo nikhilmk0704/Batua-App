@@ -99,12 +99,26 @@ module.exports.connections = {
      *                                                                          *
      ***************************************************************************/
 
-     s3Bucket: {
-            key: 'AKIAIM7PFH47KK5U4WKA',
-            secret: '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',
-            bucket: 'batua-test'
-        }
+    s3Bucket:{
+                key: 'AKIAIM7PFH47KK5U4WKA',
+                secret: '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',
+                bucket: 'batua-test'
+            },
 
+    sns:{
+            accessKeyId: 'AKIAJ6S42QQEPALPV7DQ',
+            secretAccessKey: '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',
+            region: 'us-east-1'
+        },
 
+    snsPlatformArn:{
+                        PlatformApplicationArn:'arn:aws:sns:us-east-1:058033277605:app/GCM/Beatniks'
+                    },
+
+    ses:{
+            "accessKeyId":"AKIAI7NWTVGO2FZZBX6Q",
+            "secretAccessKey":"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",
+            "region":"us-east-1"
+        },
 
 };

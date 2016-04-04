@@ -46,6 +46,8 @@ module.exports.routes = {
     'get /api/admin/user/:id?': 'UsersController.findUserByAdmin',
     'put /api/admin/user': 'UsersController.updateUserByAdmin',
     'put /api/admin/user/setstatus': 'UsersController.setUserStatusByAdmin',
+    'post /api/admin/user/login':'UsersController.adminLogin',
+    'put /api/admin/user/logout':'UsersController.adminLogout',
 
 
     'post /api/image/upload':'ImageUploadController.upload',

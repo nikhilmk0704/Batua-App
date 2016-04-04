@@ -16,10 +16,14 @@ module.exports = {
         params.phone=req.body.phone;
         params.profileImageUrl=req.body.profileImageUrl;
         params.userGroupId=req.body.userGroupId;
+        params.deviceId=req.body.deviceId;
+        params.deviceType=req.body.deviceType;
         var userService = new UserService();
         userService.createUserByAdmin(params,function(err,result){
-            if(err)
+            if(err){
+                delete userService.deleteUser(params);
                 return res.badRequest(err);
+            }
             return res.json(201,result);
         });
     },
@@ -63,7 +67,31 @@ module.exports = {
                 return res.badRequest(err);
             return res.json(200,result);
         });
-    }
+    },
 
+    adminLogin:function(req,res){
+        var params={};
+        params.email=req.body.email;
+        params.password=req.body.password;
+        params.deviceId=req.body.deviceId;
+        params.deviceType=req.body.deviceType;
+        var userService = new UserService();
+        userService.adminLogin(params,function(err,result){
+            if(err)
+                return res.badRequest(err);
+            return res.json(200,result);
+        });
+    },
+
+    adminLogout:function(req,res){
+        var params={};
+        params.token=req.body.token;
+        var userService = new UserService();
+        userService.adminLogout(params,function(err,result){
+            if(err)
+                return res.badRequest(err);
+            return res.json(200,result);
+        });
+    }
 };
 
