@@ -39,8 +39,8 @@ angular.module('app').controller('merchantController', ['$state', 'merchantServi
         }
     };
 
-    vm.setstatus = function(merchantId, status) {
-        merchantService.setstatus(merchantId, status, function(response) {
+    vm.setStatus = function(merchantId, status) {
+        merchantService.setStatus(merchantId, status, function(response) {
             if (response.status === 200) {
                 $state.reload();
                 return toastr.success('Merchant status has been changed successfully.');

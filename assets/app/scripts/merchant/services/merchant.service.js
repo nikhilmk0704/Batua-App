@@ -14,7 +14,7 @@
         service.getMerchantData = getMerchantData;
         service.getCategories = getCategories;
         service.getCities = getCities;
-        service.setstatus = setstatus;
+        service.setStatus = setStatus;
 
         return service;
 
@@ -103,7 +103,7 @@
             return deferred.promise;
         }
 
-        function setstatus(merchantId, status, callback) {
+        function setStatus(merchantId, status, callback) {
             httpi({
                 method: "put",
                 url: API.setstatus,

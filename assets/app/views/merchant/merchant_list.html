@@ -52,9 +52,9 @@
                                             <a type="button" class="btn button-color-table" style="float:left;" ng-click="vm.editMerchantData(merchant)" ng-disabled="vm.checkMerchantStatus(merchant)"><i class="fa fa-pencil"></i></a>
                                         </td>
                                         <td ng-hide = "vm.showActions(merchant)">
-                                            <a style="float:left; font-size:14px;" class="btn" ng-if="merchant.status == 'Suspend'" ng-click="vm.setstatus(merchant.id, 'Active')"><i class="fa fa-unlock"></i> Active </a>
-                                            <a style="float:left; font-size:14px;" class="btn" ng-if="merchant.status == 'Active'" ng-click="vm.setstatus(merchant.id, 'Suspend')"><i class="fa fa-lock"></i> Suspend </a>
-                                            <a style="float:left; font-size:14px;" class="btn" ng-click="vm.setstatus(merchant.id, 'Permanent Suspend')"><i class="fa fa-ban"></i> Permanent Suspend </a>
+                                            <a style="float:left; font-size:14px;" class="btn" ng-if="merchant.status == 'Suspend'" ng-click="vm.setStatus(merchant.id, 'Active')"><i class="fa fa-unlock"></i> Active </a>
+                                            <a style="float:left; font-size:14px;" class="btn" ng-if="merchant.status == 'Active'" ng-click="vm.setStatus(merchant.id, 'Suspend')"><i class="fa fa-lock"></i> Suspend </a>
+                                            <a style="float:left; font-size:14px;" class="btn" ng-click="vm.setStatus(merchant.id, 'Permanent Suspend')"><i class="fa fa-ban"></i> Permanent Suspend </a>
                                         </td>
                                     </tr>
                                 </tbody>
