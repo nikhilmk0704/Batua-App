@@ -15,27 +15,22 @@ module.exports = {
             primaryKey: true,
             autoIncrement: true,
         },
-        firstName: {
-            type: Sequelize.STRING,
-            required: true,
-            allowNull: false,
-        },
-        lastName: {
+        name: {
             type: Sequelize.STRING,
         },
         phone: {
-            type: Sequelize.INTEGER(10),
-            required: true,
-            allowNull: false,
+            type: Sequelize.BIGINT(10),
             unique: true,
+            validate:{
+                min:0,
+                max:9999999999
+            }
         },
         profileImageUrl: {
             type: Sequelize.STRING,
         },
         email: {
             type: Sequelize.STRING,
-            required: true,
-            allowNull: false,
             unique: true,
             validate: {
                 isEmail: true
@@ -53,8 +48,6 @@ module.exports = {
         },
         batuaId: {
             type: Sequelize.STRING,
-            required: true,
-            allowNull: false,
             unique: true,
         },
         password: {
@@ -62,19 +55,21 @@ module.exports = {
         },
         pin: {
             type: Sequelize.INTEGER(4),
+            validate:{
+                min:1000,
+                max:9999
+            }
         },
         isPinActivated: {
             type: Sequelize.BOOLEAN,
             defaultValue: false,
         },
         otp: {
-            type: Sequelize.STRING(8),
+            type: Sequelize.INTEGER(6),
             defaultValue: null,
         },
         status: {
             type: Sequelize.STRING,
-            required: true,
-            allowNull: false
         },
         walletBalance: {
             type: Sequelize.FLOAT,

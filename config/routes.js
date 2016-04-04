@@ -42,7 +42,11 @@ module.exports.routes = {
     'put /api/usergroup': 'UserGroupsController.update',
     'delete /api/usergroup/:id': 'UserGroupsController.delete',
 
-    'post /api/user': 'UsersController.create',
+    'post /api/admin/user': 'UsersController.createUserByAdmin',
+    'get /api/admin/user/:id?': 'UsersController.findUserByAdmin',
+    'put /api/admin/user': 'UsersController.updateUserByAdmin',
+    'put /api/admin/user/setstatus': 'UsersController.setUserStatusByAdmin',
+
 
     'post /api/image/upload':'ImageUploadController.upload',
     
