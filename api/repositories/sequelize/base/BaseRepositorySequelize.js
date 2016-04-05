@@ -53,7 +53,7 @@ class BaseRepositorySequelize {
 
     updateAndFind(object, options, findObject, callback) {
         var model = this.modelType;
-        model.update(object, options).then(function(rowCount) {
+        model.update(object, options).then(function(updatedRowCount) {
             return model.find(findObject).then(function(result) {
                 return callback(null, result);
             }).catch(function(exception) {

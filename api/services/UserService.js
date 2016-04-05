@@ -23,7 +23,7 @@ class UserService {
     }
 
     getMandatoryFieldsAdmin() {
-        return ['name', 'email', 'phone', 'userGroupId', 'profileImageUrl','deviceId','deviceType'];
+        return ['name', 'email', 'phone', 'userGroupId'];
     }
 
     findUserByAdmin(params,callback){
@@ -89,6 +89,7 @@ class UserService {
             userService.createUsersAccessToken(newParams,userData,callback);
             return null;
         }).catch(function(exception){
+            userService.deleteUser(userData.id);
             return callback(exception);
         });
     }
@@ -99,6 +100,7 @@ class UserService {
             userService.sendEmail(userData.email);
             return callback(null,userData);
         }).catch(function(exception){
+            userService.deleteUser(userData.id);
             return callback(exception);
         });
     }
@@ -106,7 +108,7 @@ class UserService {
     deleteUser(params){
         var options={};
         options.where={};
-        options.where.email=params.email;
+        options.where.id=params.id;
         Users.destroy(options);
     }
 
@@ -209,6 +211,14 @@ class UserService {
                 return callback(err);
             return callback(null,"Logged out");
         });
+    }
+
+    adminForgotPassword(params,callback){
+
+    }
+
+    adminResetPassword(params,callback){
+
     }
 
 }
