@@ -86,6 +86,19 @@ class BaseRepositorySequelize {
         });
     }
 
+    updateAndFind(object, options, findObject, callback) {
+        var model = this.modelType;
+        model.update(object, options).then(function(updatedRowCount) {
+            return model.find(findObject).then(function(result) {
+                return callback(null, result);
+            }).catch(function(exception) {
+                return callback(exception);
+            });
+        }).catch(function(exception) {
+            return callback(exception);
+        });
+    }
+
     upload(object,credential,callback){
         domain.run(function safelyUpload() {
             if (req.file('image')._files.length > 0) {
