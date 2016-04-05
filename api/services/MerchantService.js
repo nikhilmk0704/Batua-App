@@ -9,13 +9,57 @@ class MerchantService {
     // if status is pending, creates merchant and checks for mandatory fields
     save(params, callback) {
         var merchantService = new MerchantService();
-        if (merchantService.validateRequest(params) && params.status == "Pending for approval") {
-            return merchantService.createMerchant(params, callback);
+        if (merchantService.validatePartialRequest(params) && params.status == "Drafted") {
+            return merchantService.validateLocationAndCreateMerchant(params, callback);
         } 
-        if (params.status == "Drafted") {
-            return merchantService.createMerchant(params, callback);
+        if (merchantService.validateAllRequest(params) && params.status == "Pending for approval") {
+            return merchantService.validateLocationAndCreateMerchant(params, callback);
         } 
         return callback("Mandatory fields missing");
+    }
+
+    validateLocationAndCreateMerchant(params,callback){
+        var merchantService = new MerchantService();
+        if(params.area || params.pincode || params.cityId){
+            var locationParams={};
+            (params.area)?(locationParams.area=params.area):(locationParams);
+            (params.pincode)?(locationParams.pincode=params.pincode):(locationParams);
+            (params.cityId)?(locationParams.cityId=params.cityId):(locationParams);
+            Locations.create(locationParams).then(function(result){
+                params.locationId=result.id;
+                merchantService.createMerchant(params,callback);
+                return null;
+            }).catch(function(exception){
+                callback(exception);
+            });
+        }else{
+            merchantService.createMerchant(params, callback);  
+        }
+    }
+
+    validatePartialRequest(params){
+        var merchantService = new MerchantService();
+        return _.every(merchantService.getPartialMandatoryFields(), function(element) {
+            if (params[element]) {
+                return true;
+            } 
+        });
+    }
+
+    // creates merchant and its image gallery and display results 
+    createMerchant(params, callback) {
+        var merchantService = new MerchantService();
+        Merchants.create(params).then(function(merchantResult) {
+            var merchantId = merchantResult.id;
+            var findObject = {};
+            findObject.include = merchantService.getIncludeModels();
+            findObject.where = {};
+            findObject.where.id = merchantId;
+            merchantService.createGalleryAndFindMerchant(params, merchantId, findObject, callback);
+            return null;
+        }).catch(function(exception) {
+            callback(exception);
+        });
     }
 
     // shows only active merchants for user app
@@ -40,10 +84,10 @@ class MerchantService {
         var options = {};
         options.where = {};
         options.where.id = params.id;
-        if (merchantService.validateRequest(params) && params.status != "Drafted") { // true if all mandatory fields are supplied
+        if (merchantService.validateAllRequest(params) && params.status != "Drafted") { // true if all mandatory fields are supplied
             return merchantService.updateMerchant(params, options, callback);
         } 
-        if (params.status == "Drafted") {
+        if (merchantService.validatePartialRequest(params) && params.status == "Drafted") {
             return merchantService.updateMerchant(params, options, callback);
         } 
         return callback("Mandatory fields missing");
@@ -71,28 +115,12 @@ class MerchantService {
     }
 
     // validates for mandatory fields
-    validateRequest(params) {
+    validateAllRequest(params) {
         var merchantService = new MerchantService();
-        return _.every(merchantService.getMandatoryFields(), function(element) {
+        return _.every(merchantService.getAllMandatoryFields(), function(element) {
             if (params[element]) {
                 return true;
             } 
-        });
-    }
-
-    // creates merchant and its image gallery and display results 
-    createMerchant(params, callback) {
-        var merchantService = new MerchantService();
-        Merchants.create(params).then(function(merchantResult) {
-            var merchantId = merchantResult.id;
-            var findObject = {};
-            findObject.include = merchantService.getIncludeModels();
-            findObject.where = {};
-            findObject.where.id = merchantId;
-            merchantService.createGalleryAndFindMerchant(params, merchantId, findObject, callback);
-            return null;
-        }).catch(function(exception) {
-            callback(exception);
         });
     }
 
@@ -188,10 +216,7 @@ class MerchantService {
 
     // returns models to be included while getting merchant
     getIncludeModels() {
-        return [{                       // return [{all:true}] include all models
-            model: Cities,
-            required: false
-        }, {
+        return [{
             model: Users,
             attributes:['id','name','phone','email'],
             required: false
@@ -201,15 +226,25 @@ class MerchantService {
         }, {
             model: Categories,
             required: false
+        }, {
+            model: Locations,
+            include:[{model:Cities,required:false}],
+            required: false
         }];
     }
 
-    // returns array of mandatory fields
-    getMandatoryFields() {
+    // returns array of all mandatory fields
+    getAllMandatoryFields() {
         return [
-            'name', 'shortCode', 'phone', 'pincode',
-            'fees', 'cityId', 'categoryId', 'bankName',
+            'name', 'shortCode', 'phone', 'pincode','profileImageUrl',
+            'fees', 'cityId', 'categoryId', 'bankName','createdSalesId',
             'accountHolder', 'accountNumber', 'ifscCode', 'status'
+        ];
+    }
+
+    getPartialMandatoryFields(){
+        return [
+            'name','shortCode','phone','fees','categoryId','status','createdSalesId'
         ];
     }
 
