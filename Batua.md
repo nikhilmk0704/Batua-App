@@ -1324,7 +1324,9 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
     + Body
     
             {
-                "name": "city1"
+                "name": "city1",
+                "state":"state",
+                "country":"india"
             }
 
 + Response 201 (application/json)
@@ -1334,6 +1336,8 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
             {   
                 "id":1,
                 "name": "city1",
+                "state":"state",
+                "country":"india"
                 "createdAt": "2016-11-12T05:03:46.000Z",
                 "updatedAt": "2016-11-12T05:03:46.000Z"
             }
@@ -1355,7 +1359,9 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
     + Body
     
             {   "id":1,
-                "name": "city2"
+                "name": "city2",
+                "state":"state",
+                "country":"india"
             }
 
 + Response 200 (application/json)
@@ -1365,6 +1371,8 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
             {   
                 "id":1,
                 "name": "city2",
+                "state":"state",
+                "country":"india"
                 "createdAt": "2016-11-12T05:03:46.000Z",
                 "updatedAt": "2016-11-12T05:03:46.000Z"
             }
@@ -1385,12 +1393,16 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
                 {   
                     "id":1,
                     "name": "city1",
+                    "state":"state",
+                    "country":"india"
                     "createdAt": "2016-11-12T05:03:46.000Z",
                     "updatedAt": "2016-11-12T05:03:46.000Z"
                 },
                 {   
                     "id":2,
                     "name": "city2",
+                    "state":"state",
+                    "country":"india"
                     "createdAt": "2016-11-12T05:03:46.000Z",
                     "updatedAt": "2016-11-12T05:03:46.000Z"
                 }
