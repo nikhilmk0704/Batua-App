@@ -105,7 +105,6 @@ class BaseRepositorySequelize {
             }
         })
     }
-
 }
 
 module.exports = BaseRepositorySequelize;
