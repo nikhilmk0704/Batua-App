@@ -34,7 +34,30 @@ class PromocodesService {
         options.where.id = params.id;
         var findObject=options;
         var promocodesRepository = new PromocodesRepository();
-        promocodesRepository.updateAndFind(params, options, findObject, callback);
+        promocodesRepository.updateAndFind(params, options, findObject, function(err,result){
+            if (err) {
+                return callback(err,null);
+            }
+            /*---save promocode for each merchants---*/
+            return deleteMerchantPromoCode(params,function(err,merchantDeleteResult){
+               if (err) {
+                return callback(err,null);
+            }
+            var bulkSaveParams = {};    
+            bulkSaveParams.baseId = params.id;
+            bulkSaveParams.associateIds = params.merchantId;
+            
+            return addPromoCodeToMerchants(bulkSaveParams, function(err, merchantSaveResult) {
+                if (err) {
+                    return callback(err,null);
+                }
+                return callback(null, result);
+            });
+
+        })
+            
+            /*---/save promocode for each merchants---*/    
+        });
     }
 
     bulkSave(params, callback) {
@@ -56,7 +79,7 @@ class PromocodesService {
 
         var promocodesRepository = new PromocodesRepository();
         promocodesRepository.update(params, options, callback);
-    
+
     }
 
     delete(options, callback) {
@@ -82,7 +105,22 @@ function addPromoCodeToMerchants(params, callback) {
 
        return callback(err,null); 
    }
-    return callback(null,result); 
+   return callback(null,result); 
+});
+
+}
+
+function deleteMerchantPromoCode(params,callback){
+    var options = {};
+    options.where = {};
+    options.where.promocodeId = params.id;
+    var merchantsPromocodeRepository = new MerchantsPromocodeRepository();
+    merchantsPromocodeRepository.remove(options, function(err,result){
+        if(err){
+
+           return callback(err,null); 
+       }
+       return callback(null,result); 
    });
 
 }
