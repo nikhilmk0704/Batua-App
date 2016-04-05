@@ -15,8 +15,15 @@ module.exports = {
         },
         name: {
             type: Sequelize.STRING,
+            required:true,
             allowNull: false,
             unique: true
         },
+        state:{
+            type: Sequelize.STRING,
+        },
+        country:{
+            type: Sequelize.STRING,
+        }
     }
 };

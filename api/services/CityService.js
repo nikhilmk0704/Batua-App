@@ -9,22 +9,31 @@ class CityService {
         cityRepository.save(params, callback);
     }
 
-    find(params, callback) {
+    find(id, callback) {
+        var params={};
         var cityRepository = new CityRepository();
-        cityRepository.find(params, callback);
+        if (id) {
+            params.where = {};
+            params.where.id = id;
+            cityRepository.find(params, callback);
+        } else {
+            cityRepository.findAll(params, callback);
+        }
     }
 
-    findAll(params, callback) {
+    updateAndFind(params, callback) {
+        var options = {};
+        options.where = {};
+        options.where.id = params.id;
+        var findObject=options;
         var cityRepository = new CityRepository();
-        cityRepository.findAll(params, callback);
+        cityRepository.updateAndFind(params, options, findObject, callback);
     }
 
-    update(params, options, callback) {
-        var cityRepository = new CityRepository();
-        cityRepository.update(params, options, callback);
-    }
-
-    delete(options, callback) {
+    delete(id, callback) {
+        var options = {};
+        options.where = {};
+        options.where.id = id;
         var cityRepository = new CityRepository();
         cityRepository.remove(options, callback);
     }

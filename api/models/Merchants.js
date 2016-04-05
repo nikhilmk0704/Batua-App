@@ -26,19 +26,16 @@ module.exports = {
         },
         profileImageUrl: {
             type: Sequelize.STRING,
-            // required: true,
-            // allowNull: false
         },
         phone: {
-            type: Sequelize.INTEGER(10).UNSIGNED,
+            type: Sequelize.INTEGER(10),
             required: true,
             unique: true,
-            allowNull: false
-        },
-        pincode: {
-            type: Sequelize.INTEGER(6),
-            required: true,
-            allowNull: false
+            allowNull: false,
+            validate:{
+                min:0,
+                max:9999999999
+            }
         },
         email: {
             type: Sequelize.STRING,
@@ -73,8 +70,6 @@ module.exports = {
         },
         bankName: {
             type: Sequelize.STRING,
-            // required: true,
-            // allowNull: false,
         },
         branchName: {
             type: Sequelize.STRING,
@@ -82,48 +77,31 @@ module.exports = {
         },
         accountHolder: {
             type: Sequelize.STRING,
-            // required: true,
-            // allowNull: false,
         },
         accountNumber: {
             type: Sequelize.BIGINT(20),
-            // required: true,
-            // allowNull: false
         },
         ifscCode: {
             type: Sequelize.STRING,
-            // required: true,
-            // allowNull: false,
         },
-    },
-    validate: {
-        bothCoordsOrNone: function() {
-            if ((this.latitude === null) !== (this.longitude === null)) {
-                throw new Error('Require either both latitude and longitude or neither');
-            }
+        status: {
+            type: Sequelize.STRING,
+            required: true,
+            allowNull: false,
         }
     },
     associations: function() {
-        Merchants.belongsTo(Cities, {
+        Merchants.belongsTo(Locations, {
             foreignKey: {
-                name: 'cityId',
-                // allowNull: false,
-                // onDelete: 'RESTRICT',
-                // onUpdate: 'CASCADE'
+                name: 'locationId',
+                defaultValue:null,
+                onDelete: 'RESTRICT',
+                onUpdate: 'CASCADE'
             }
         });
         Merchants.belongsTo(Users, {
             foreignKey: {
                 name: 'createdSalesId',
-                // allowNull: false,
-                // onDelete: 'RESTRICT',
-                // onUpdate: 'CASCADE'
-            }
-        });
-        Merchants.belongsTo(Statuses, {
-            foreignKey: {
-                name: 'statusId',
-                defaultValue:1,
                 allowNull: false,
                 onDelete: 'RESTRICT',
                 onUpdate: 'CASCADE'
@@ -137,17 +115,19 @@ module.exports = {
                 onUpdate: 'CASCADE'
             }
         });
-        Merchants.belongsToMany(Galleries,{
-            through:'MerchantsGalleries',
-            foreignKey:{
-                name:'galleryId',
+        Merchants.belongsToMany(Galleries, {
+            through: 'MerchantsGalleries',
+            foreignKey: {
+                name: 'merchantId',
             }
         });
-        Galleries.belongsToMany(Merchants,{
-            through:'MerchantsGalleries',
-            foreignKey:{
-                name:'merchantId'
+        Galleries.belongsToMany(Merchants, {
+            through: 'MerchantsGalleries',
+            foreignKey: {
+                name: 'galleryId'
             }
         });
     }
 };
+
+

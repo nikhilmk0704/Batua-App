@@ -41,5 +41,12 @@ module.exports = {
                 allowNull: false,
             }
         });
+        RateReviews.belongsTo(Payments, {
+            foreignKey: {
+                name: 'paymentId',
+                required: true,
+                allowNull: false,
+            }
+        });
     }
 };

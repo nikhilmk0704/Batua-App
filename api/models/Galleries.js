@@ -24,13 +24,5 @@ module.exports = {
             allowNull: false,
             defaultValue: 'image',
         }
-    },
-    // associations: function() {
-    //     Galleries.belongsTo(Merchants, {
-    //         foreignKey: {
-    //             name: 'merchantId',
-    //             allowNull: false,
-    //         }
-    //     });
-    // }
+    }
 };

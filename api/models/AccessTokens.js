@@ -16,18 +16,31 @@ module.exports = {
         token: {
             type: Sequelize.STRING,
             required: true,
-            allowNull: false,
-            unique: true,
         },
         deviceId: {
             type: Sequelize.STRING,
-            required: true,
-            allowNull: false,
+            defaultValue:null
         },
         deviceType: {
             type: Sequelize.STRING,
-            required: true,
-            allowNull: false,
+            defaultValue:null
         }
+    },
+    associations: function() {
+        AccessTokens.belongsToMany(Users, {
+            through:'UsersAccessTokens',
+            foreignKey: {
+                name: 'accessTokenId',
+                allowNull: false
+            }
+        });
+        Users.belongsToMany(AccessTokens, {
+            through:'UsersAccessTokens',
+            foreignKey: {
+                name: 'userId',
+                allowNull: false
+            }
+        });
+
     }
 };

@@ -10,135 +10,59 @@
 module.exports = {
 
     create: function(req, res) {
-
+        var params={};
         var params = req.body;
-
         var merchantService = new MerchantService();
-        merchantService.validateAndSave(params, function(err, result) {
+        merchantService.save(params, function(err, result) {
             if (err) {
+                merchantService.delete(params);
                 return res.badRequest(err);
-            } else {
-                return res.json(201, result);
-            }
+            } 
+            return res.json(201, result);
         });
     },
 
     find: function(req, res) {
-
-        var _id = req.param('id');
-        var salesAgentId = req.param('salesAgentId');
-        var params = {};
-        var include = [{
-            model: Cities,
-            required: false
-        }, {
-            model: Users,
-            required: false
-        }, {
-            model: Galleries,
-            required: false
-        }, {
-            model: Statuses,
-            required: false
-        }, {
-            model: Categories,
-            required: false
-        }, {
-            model: BankDetails,
-            required: false
-        }];
-        params.include = include;
-
-        if (_id) {
-            params.where = {};
-            params.where.id = _id;
-            var merchantService = new MerchantService();
-            merchantService.find(params, function(err, result) {
-                if (err) {
-                    return res.badRequest(err);
-                } else {
-                    return res.json(200, { result: result });
-                }
-            });
-        } else {
-            if (salesAgentId) {
-                params.where = {};
-                params.where.createdSalesId = salesAgentId;
-
-                var merchantService = new MerchantService();
-                merchantService.findAll(params, function(err, result) {
-                    if (err) {
-                        return res.badRequest(err);
-                    } else {
-                        return res.json(200, { result: result });
-                    }
-                });
-            } else {
-                var merchantService = new MerchantService();
-                merchantService.findAll(params, function(err, result) {
-                    if (err) {
-                        return res.badRequest(err);
-                    } else {
-                        return res.json(200, { result: result });
-                    }
-                });
+        var params={};
+        params.id = req.param('id');
+        params.userId = req.param('userId');
+        params.salesAgentId = req.param('salesAgentId');
+        params.adminId = req.param('adminId');
+        var merchantService = new MerchantService();
+        merchantService.find(params, function(err, result) {
+            if (err) {
+                return res.badRequest(err);
             }
+            if(_.isEmpty(result)){
+                return res.notFound("Does not exist");
+            }
+            return res.json(200, result);
+        });
 
-        }
     },
 
     update: function(req, res) {
-
-        var params = {};
-        params = req.body;
-        var options = {};
-        options.where = {};
-        options.where.id = req.body.id;
-
+        var params={};
+        params=req.body;
         var merchantService = new MerchantService();
-        merchantService.validateAndUpdate(params, options, function(err, result) {
+        merchantService.update(params, function(err, result) {
             if (err) {
                 return res.badRequest(err);
-            } else {
-                return res.json(200, { result: result });
-            }
+            } 
+            return res.json(200, result);
         });
     },
 
-    delete: function(req, res) {
-
-        var _id = req.param('id');
-        var options = {};
-        options.where = {};
-        options.where.id = _id;
-
+    setStatus: function(req, res) {
+        var params={};
+        params=req.body;
         var merchantService = new MerchantService();
-        merchantService.delete(options, function(err, result) {
+        merchantService.setStatus(params, function(err, result) {
             if (err) {
                 return res.badRequest(err);
-            } else {
-                return res.json(200, { result: result });
-            }
+            } 
+            return res.json(200, result);
         });
-    },
-
-    Setstatus: function(req, res) {
-
-        var params = {};
-        var options = {};
-        params.statusId = req.body.statusId;
-        options.where = {};
-        options.where.id = req.body.id;
-
-        var merchantService = new MerchantService();
-        merchantService.update(params, options, function(err, result) {
-            if (err) {
-                return res.badRequest(err);
-            } else {
-                return res.json(200, { result: result });
-            }
-        });
-
     }
 
 };

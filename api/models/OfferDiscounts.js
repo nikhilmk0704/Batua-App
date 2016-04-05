@@ -62,12 +62,6 @@ module.exports = {
         }
     },
     associations: function() {
-        OfferDiscounts.belongsTo(Statuses, {
-            foreignKey: {
-                name: 'statusId',
-                allowNull: false
-            }
-        });
         OfferDiscounts.belongsToMany(Merchants, {
             through: MerchantsOffers,
             foreignKey: {

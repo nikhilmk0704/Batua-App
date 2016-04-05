@@ -5,6 +5,8 @@
  * @docs        :: http://sailsjs.org/documentation/concepts/models-and-orm/models
  */
 
+var md5 = require('md5');
+
 module.exports = {
 
     attributes: {
@@ -13,158 +15,116 @@ module.exports = {
             primaryKey: true,
             autoIncrement: true,
         },
-        firstName: {
-            type: Sequelize.STRING,
-            required: true,
-            allowNull: false,
-        },
-        lastName: {
+        name: {
             type: Sequelize.STRING,
         },
         phone: {
-            type: Sequelize.INTEGER(10),
-            required: true,
-            allowNull: false,
+            type: Sequelize.BIGINT(10),
             unique: true,
+            validate:{
+                min:0,
+                max:9999999999
+            }
         },
         profileImageUrl: {
             type: Sequelize.STRING,
         },
+        email: {
+            type: Sequelize.STRING,
+            unique: true,
+            validate: {
+                isEmail: true
+            }
+        },
+        isPhoneVerified: {
+            type: Sequelize.BOOLEAN,
+            defaultValue: false,
+        },
+        facebookId: {
+            type: Sequelize.STRING,
+        },
+        googleId: {
+            type: Sequelize.STRING,
+        },
+        batuaId: {
+            type: Sequelize.STRING,
+            unique: true,
+        },
+        password: {
+            type: Sequelize.STRING,
+            validate:{
+                isWhiteSpace:function(value){
+                    if(/\s/g.test(value))
+                        throw new Error("Spaces not allowed");
+                },
+                length:function(value){
+                    if(value.length < 6)
+                        throw new Error("Minimum length six");
+                }
+            }
+        },
+        pin: {
+            type: Sequelize.INTEGER(4),
+            validate:{
+                min:1000,
+                max:9999
+            }
+        },
+        isPinActivated: {
+            type: Sequelize.BOOLEAN,
+            defaultValue: false,
+        },
+        otp: {
+            type: Sequelize.INTEGER(6),
+            defaultValue: null,
+        },
+        status: {
+            type: Sequelize.STRING,
+        },
+        latitude:{
+            type:Sequelize.FLOAT
+        },
+        longitude:{
+            type:Sequelize.FLOAT
+        },
+        locationUpdateTime:{
+            type:Sequelize.DATE
+        }
+    },
+    options: {
+        hooks: {
+            beforeCreate: hashPasswordHook
+        }
     },
     associations: function() {
-        Users.belongsTo(Statuses, {
-            foreignKey: {
-                name: 'statusId',
-                allowNull: false
-            }
-        });
         Users.belongsTo(UserGroups, {
             foreignKey: {
                 name: 'userGroupId',
+                required:true,
                 allowNull: false
             }
         });
-        Users.belongsTo(Authentications, {
-            foreignKey: {
-                name: 'authenticationId',
-                allowNull: false
+        Users.belongsToMany(Paymentmodes,{
+            through:'UsersPaymentmodes',
+            foreignKey:{
+                name:'userId'
             }
         });
-        Users.belongsTo(Wallets, {
-            foreignKey: {
-                name: 'walletId',
+        Paymentmodes.belongsToMany(Users,{
+            through:'UsersPaymentmodes',
+            foreignKey:{
+                name:'paymentmodeId'
             }
         });
     }
 };
 
+function hashPassword(password) {
+    return md5(password);
+};
 
-// var md5 = require('md5');
+function hashPasswordHook(instance, options, callback) {
+    instance.set('password', hashPassword(instance.get('password')));
+    callback(null, instance);
+}
 
-// module.exports = {
-
-//     attributes: {
-//         id: {
-//             type: Sequelize.INTEGER,
-//             primaryKey: true,
-//             autoIncrement: true
-//         },
-//         firstname: {
-//             type: Sequelize.STRING,
-//             required: true
-//         },
-//         lastname: {
-//             type: Sequelize.STRING,
-//             required: true
-//         },
-//         dateOfBirth: {
-//             type: Sequelize.DATE,
-//             required: false
-//         },
-//         designation: {
-//             type: Sequelize.STRING,
-//             required: false
-//         },
-//         phone: {
-//             type: Sequelize.STRING,
-//             required: false
-//         },
-//         addressLine1: {
-//             type: Sequelize.STRING,
-//             required: false
-//         },
-//         addressLine2: {
-//             type: Sequelize.STRING,
-//             required: false
-//         },
-//         street: {
-//             type: Sequelize.STRING,
-//             required: false
-//         },
-//         city: {
-//             type: Sequelize.STRING,
-//             required: false
-//         },
-//         state: {
-//             type: Sequelize.STRING,
-//             required: false
-//         },
-//         country: {
-//             type: Sequelize.STRING,
-//             required: false
-//         },
-//         email: {
-//             type: Sequelize.STRING,
-//             required: true,
-//             unique: true,
-//             validate: {
-//                 isEmail: true
-//             }
-//         },
-//         password: {
-//             type: Sequelize.STRING,
-//             required: true
-//         }
-//     },
-//     options: {
-//         hooks: {
-//             beforeCreate: hashPasswordHook,
-//             beforeFind: hashPasswordForFindHook
-//         }
-//     },
-//     instanceMethods: {
-//         toJSON: function() {
-//             var values = this.get();
-//             delete values.password;
-//             return values;
-//         }
-//     },
-
-//     associations: function() {
-//         User.belongsTo(Groups, {
-//             foreignKey: {
-//                 name: 'groupId',
-//                 allowNull: true
-//             }
-//         });
-//     }
-
-// }
-
-// function hashPassword(password) {
-//     return md5(password);
-// };
-
-// function hashPasswordHook(instance, options, callback) {
-//     instance.set('password', hashPassword(instance.get('password')));
-//     callback(null, instance);
-// };
-
-// function hashPasswordForFindHook(instance, callback) {
-
-//     if (instance.where.password) {
-//         instance.where.password = hashPassword(instance.where.password);
-//     }
-
-//     callback(null, instance);
-// };

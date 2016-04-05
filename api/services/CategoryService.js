@@ -9,22 +9,31 @@ class CategoryService {
         categoryRepository.save(params, callback);
     }
 
-    find(params, callback) {
+    find(id, callback) {
+        var params={};
         var categoryRepository = new CategoryRepository();
-        categoryRepository.find(params, callback);
+        if (id) {
+            params.where = {};
+            params.where.id = id;
+            categoryRepository.find(params, callback);
+        } else {
+            categoryRepository.findAll(params, callback);
+        }
     }
 
-    findAll(params, callback) {
+    updateAndFind(params, callback) {
+        var options = {};
+        options.where = {};
+        options.where.id = params.id;
+        var findObject=options;
         var categoryRepository = new CategoryRepository();
-        categoryRepository.findAll(params, callback);
+        categoryRepository.updateAndFind(params, options, findObject, callback);
     }
 
-    update(params, options, callback) {
-        var categoryRepository = new CategoryRepository();
-        categoryRepository.update(params, options, callback);
-    }
-
-    delete(options, callback) {
+    delete(id, callback) {
+        var options = {};
+        options.where = {};
+        options.where.id = id;
         var categoryRepository = new CategoryRepository();
         categoryRepository.remove(options, callback);
     }

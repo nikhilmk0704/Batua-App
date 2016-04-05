@@ -1,5 +1,8 @@
 FORMAT: 1A
-HOST: http://polls.apiblueprint.org/
+HOST: http://52.36.228.74:1337
+Headers: {
+            Content-Type:application/json
+         }
 
 # Batua
 
@@ -7,9 +10,9 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 
 # User Authentication
 
-## User By Admin [/user]
+## User By Admin [ /api/admin/user]
 
-### Create New User [POST]
+### Create New User [POST /api/admin/user]
 
 + Request (application/json)
 
@@ -23,20 +26,17 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
                 "name":"vikash singh",
                 "email":"username@domain.com",
                 "phone":9876543210,
-                "password":"123456",
                 "profileImageUrl":"url",
-                "groupId":1,
-                "deviceToken":"APA91bGl8H-kxi4eEVIcNHExgbsI5zB32Aj42340iAkL7_D6g2VYTlTvYDKIqfKeiX9eDswg7xFifVhOmrJtmRAtzviDKZEVlaq3FiWAzNB8jpyaEv8d22uH04MyUn_XwsUs4kwV88ZC"
+                "groupId":1
             }
         
 + Response 201 (application/json)
 
-            {
+            {   "id":1,
                 "name":"vikash singh",
                 "email":"username@domain.com",
                 "phone":9876543210,
-                "profileImageUrl":"url",
-                "accessToken": "dgfjsdgjkbdjkbvs"
+                "profileImageUrl":"url"
             }
 
 + Response 400 (applicaiton)
@@ -46,13 +46,13 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
             "message": "Already exist"
         }
 
-### Get User List [GET]
+### Get User List [GET /api/admin/user/{id}]
         
 + Response 200 (application/json)
     
     + Body
     
-            {
+            {   "id":1,
                 "name":"vikash singh",
                 "email":"username@domain.com",
                 "phone":9876543210,
@@ -72,6 +72,117 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
         {
             "success": false
         }
+
+### Update User [PUT /api/admin/user/]
+
++ Request (application/json)
+
+    + Headers
+        
+            Access-Token: "ABCDEFGH12345678"
+            
+    + Body
+
+            {
+                "id":1,
+                "name":"vikash singh",
+                "email":"username@domain.com",
+                "phone":9876543210,
+                "profileImageUrl":"url",
+                "groupId":1
+            }
+        
++ Response 201 (application/json)
+
+            {   "id":1,
+                "name":"vikash singh",
+                "email":"username@domain.com",
+                "phone":9876543210,
+                "profileImageUrl":"url"
+            }
+
++ Response 400 (applicaiton)
+
+        {
+            "success": false,
+            "message": "Already exist"
+        }
+
+### Active/Suspend User [PUT /api/admin/user/setstatus]
+
++ Request (application/json)
+
+    + Headers
+        
+            Access-Token: "ABCDEFGH12345678"
+            
+    + Body
+
+            {
+                "id":1,
+                status:"Active"
+            }
+        
++ Response 201 (application/json)
+
+            {   "id":1,
+                "name":"vikash singh",
+                "email":"username@domain.com",
+                "phone":9876543210,
+                "profileImageUrl":"url",
+                "status":"Active"
+            }
+
++ Response 400 (applicaiton)
+
+
+## Admin Login [/api/admin/user/login]
+
+### Admin Login [POST]
+
++ Request (application/json)
+            
+    + Body
+
+            {
+                "email":"aditya@tecsolsoftware.com",
+                "password":"123456",
+                "deviceId":"device1",
+                "deviceType":"type1"
+            }
+        
++ Response 200 (application/json)
+
+            {
+                "id": 7,
+                "name": "Aditya",
+                "email": "aditya@tecsolsoftware.com",
+                "token": "0922QvJiT8DkZDtVuwrs6SoZ",
+                "deviceId": "device1",
+                "deviceType": "type1",
+                "userGroup":"Admin"
+            }
+
++ Response 400 (applicaiton)
+
+
+## Admin Logout [/api/admin/user/logout]
+
+### Admin Logout [PUT]
+
++ Request (application/json)
+            
+    + Body
+
+            {
+                "token":"0922TmsgSpIfAJPaaJVvsykG"
+
+            }
+        
++ Response 200 (application/json)
+
+
++ Response 400 (applicaiton)
 
 
 ## Normal SignUp [/user/normalSignUp]
@@ -94,10 +205,12 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 201 (application/json)
 
             {
+                "id": 1,
                 "name":"vikash singh",
                 "email":"username@domain.com",
                 "phone":9876543210,
-                "accessToken": "dgfjsdgjkbdjkbvs"
+                "accessToken": "dgfjsdgjkbdjkbvs",
+                "profileImageUrl": null
             }
 
 + Response 400 (applicaiton)
@@ -118,20 +231,22 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
             {
                 "name":"vikash singh",
                 "email":"username@domain.com",
-                "phone":9876543210,
                 "socialId": "hehdbdhbchvywegduahsjxnsajbcdjscvcbjdsbn@facebook.com",
                 "socialType": "FACEBOOK",
                 "profileImageUrl":"https://beatniks-s3.s3.amazonaws.com/e4207a81-2dd1-4c49-b4e5-0391380e235f.jpg",
-                "password":"123456",
                 "deviceToken":"APA91bGl8H-kxi4eEVIcNHExgbsI5zB32Aj42340iAkL7_D6g2VYTlTvYDKIqfKeiX9eDswg7xFifVhOmrJtmRAtzviDKZEVlaq3FiWAzNB8jpyaEv8d22uH04MyUn_XwsUs4kwV88ZC"
             }
         
 + Response 201 (application/json)
 
-        {
-            "success": true,
-            "accessToken": "08yGxPpUNeRcF8UK18g0lnHW"
-        }
+            {
+                "id": 1,
+                "name":"vikash singh",
+                "email":"username@domain.com",
+                "phone":9876543210,
+                "accessToken": "dgfjsdgjkbdjkbvs",
+                "profileImageUrl": "https://beatniws.com/e4207a81e235f.jpg"
+            }
 
 + Response 400 (applicaiton)
 
@@ -185,17 +300,19 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 200 (application/json)
 
             {
+                "id": 1,
                 "name":"vikash singh",
                 "email":"username@domain.com",
                 "phone":9876543210,
-                "accessToken": "dhfvhjevfhjvbhgfvhsdvsjv"
+                "accessToken": "dgfjsdgjkbdjkbvs",
+                "profileImageUrl": "https://beatniws.com/e4207a81e235f.jpg"
             }
 
 + Response 400 (applicaiton)
 
         {
             "success": false,
-            "message": "Bad Request"
+            "message": "Already exist"
         }
 
 ## PIN Login [/user/{id}/pinlogin]
@@ -215,7 +332,8 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
             
 + Response 200 (application/json)
 
-            {
+            {   
+                "id":1,
                 "name":"vikash singh",
                 "email":"username@domain.com",
                 "phone":9876543210,
@@ -479,9 +597,9 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 
 
 
-## Profile Image Upload [/user/{id}/profile/Image]
+## Image Upload [/api/image/upload]
 
-### Upload Profile Image [PUT]
+### Upload Image [PUT]
 
 + Request (multipart/form-data)
 
@@ -491,7 +609,9 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 
     + Body
     
-            $image
+            {
+                "image":$image,
+            }
             
         
 + Response 200 (application/json)
@@ -553,7 +673,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 401 (application/json)
 
 
-## User Groups [/user/group]
+## User Groups [/api/usergroup/{id}]
 
 ### Create Group [POST]
 
@@ -573,6 +693,11 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
         
 + Response 201 (application/json)
 
+        {
+            "id":1,
+            "name": "Field Sales Agent"
+            
+        }
 
 + Response 400 (application/json)
     
@@ -611,22 +736,30 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 401 (application/json)
 
 
-## User Wallet [/user/{id}/wallet]
+### Update Group [PUT]
 
-### Get User Wallet Balance [GET]
-
-+ Response 200 (application/json)
++ Request (application/json)
 
     + Headers
 
             Access-Token: "ABCDEFGH12345678"
 
-    + Body 
-        
-            {
+    + Body
+    
+            {   
                 "id":1,
-                "balance":1500
+                "name": "Sales Agent"
+                
             }
+            
+        
++ Response 200 (application/json)
+
+        {
+            "id":1,
+            "name": "Sales Agent"
+            
+        }
 
 + Response 400 (application/json)
     
@@ -634,7 +767,21 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 401 (application/json)
 
 
-## Create New Merchant [/merchant/{id}]
+### Delete Group [DELETE]
+
++ Request (/api/usergroup/{id})
+
+
++ Response 200 (application/json)
+
+
++ Response 400 (application/json)
+    
+
++ Response 401 (application/json)
+
+
+## Create New Merchant [/api/merchant]
 
 ### Create Merchant [POST]
 
@@ -664,13 +811,58 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
                 "accountNumber":546879463132131644,
                 "ifscCode":"hdfc10554",
                 "bankBranch":"branch name of bank",
-                "bankListId":4,
-                "statusId":1
+                "bankName":"HDFC",
+                "status":"Active",
+                "createdSalesId": 3
             }
             
         
 + Response 201 (application/json)
 
+    
+        {
+            "id": 8,
+            "name": "merchant2",
+            "shortCode": "mer07",
+            "profileImageUrl": null,
+            "phone": 123123649,
+            "pincode": 123456,
+            "email": null,
+            "address": null,
+            "latitude": null,
+            "longitude": null,
+            "averageRating": null,
+            "fees": 100,
+            "bankName": null,
+            "branchName": null,
+            "accountHolder": null,
+            "accountNumber": null,
+            "ifscCode": null,
+            "status": "Drafted",
+            "createdAt": "2016-03-26T09:18:27.000Z",
+            "updatedAt": "2016-03-26T09:18:27.000Z",
+            "cityId": 1,
+            "createdSalesId": null,
+            "categoryId": 1,
+            "City": {
+                        "id": 1,
+                        "name": "bengaluru",
+                        "createdAt": "2016-03-26T05:49:43.000Z",
+                        "updatedAt": "2016-03-26T05:49:43.000Z"
+                    },
+            "User": null,
+            "Galleries":[
+                            {"id": 19, "url": "1", "type": "image",…},
+                            {"id": 20, "url": "2", "type": "image",…},
+                            {"id": 21, "url": "3", "type": "image",…}
+                        ],
+            "Category":{
+                            "id": 1,
+                            "name": "Restaurant",
+                            "createdAt": "2016-03-26T05:49:46.000Z",
+                            "updatedAt": "2016-03-26T05:49:46.000Z"
+                        }
+        }
 
 + Response 400 (application/json)
     
@@ -678,7 +870,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 401 (application/json)
 
 
-### Get Merchant [GET]
+### Get Merchant For User [GET /api/user/:userId/merchant/:id?]
 
 + Response 200 (application/json)
 
@@ -739,22 +931,12 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
                     "pincode":485001,
                     "latitude":17.7426
                     "longitude":75.1546,
-                    "bankDetailsId":  {
-                                        "accountHolder": "Arnold",
-                                        "accountNumber":546879463132131643,
-                                        "ifscCode":"hdfc10554",
-                                        "bankBranch":"branch name of bank",
-                                        "bankListId":   {
-                                                            "id":1,
-                                                            "name":"SBI"
-                                                        },
-                                    },
-                    "statusId":{
-                                    "id":1,
-                                    "name":"Active",
-                                    "createdAt": "2016-11-12T05:03:46.000Z",
-                                    "updatedAt": "2016-11-12T05:03:46.000Z"
-                                 }
+                    "accountHolder": "Arnold",
+                    "accountNumber":546879463132131643,
+                    "ifscCode":"hdfc10554",
+                    "bankBranch":"branch name of bank",
+                    "bankName": "HDFC",
+                    "status": "Active"
                 }
             ]
 
@@ -764,7 +946,159 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 401 (application/json)
 
 
-### Update Merchant [PUT]
+### Get Merchant For sales Agent [GET /api/salesagent/:salesAgentId/merchant/:id?]
+
++ Response 200 (application/json)
+
+            [    {
+                    "name": "merchantName1",
+                    "shortCode":"merchant123",
+                    "profileImageUrl":"someUrl",
+                    "email":"username@domain.com",
+                    "phone":9876543210,
+                    "imageGallery":[ imageUrl1,imageUrl2,imageUrl3,...],
+                    "fee":5000,
+                    "averageRating":4.5,
+                    "categoryId":{
+                                    "id":1,
+                                    "name":"category1"
+                                 },
+                    "cityId":{
+                                "id":1,
+                                "name":"city1"
+                             },
+                    "address":"give some address ",
+                    "pincode":485001,
+                    "latitude":17.7426
+                    "longitude":75.1546,
+                    "bankDetailsId":  {
+                                        "accountHolder": "vikash singh",
+                                        "accountNumber":546879463132131644,
+                                        "ifscCode":"hdfc10554",
+                                        "bankBranch":"branch name of bank",
+                                        "bankListId":   {
+                                                            "id":1,
+                                                            "name":"HDFC"
+                                                        },
+                                    },
+                    "statusId":{
+                                    "id":1,
+                                    "name":"Active"
+                                 }
+                },
+                {
+                    "name": "merchantName2",
+                    "shortCode":"merchant1234",
+                    "profileImageUrl":"someUrl",
+                    "email":"username@domain.com",
+                    "phone":9876543210,
+                    "imageGallery":[ imageUrl1,imageUrl2,imageUrl3,...],
+                    "fee":5000,
+                    "averageRating":4.5,
+                    "categoryId":{
+                                    "id":1,
+                                    "name":"category1"
+                                 },
+                    "cityId":{
+                                "id":1,
+                                "name":"city1"
+                             },
+                    "address":"give some address ",
+                    "pincode":485001,
+                    "latitude":17.7426
+                    "longitude":75.1546,
+                    "accountHolder": "Arnold",
+                    "accountNumber":546879463132131643,
+                    "ifscCode":"hdfc10554",
+                    "bankBranch":"branch name of bank",
+                    "bankName": "HDFC",
+                    "status": "Active"
+                }
+            ]
+
++ Response 400 (application/json)
+    
+
++ Response 401 (application/json)
+
+
+### Get Merchant For Admin [GET /api/admin/:adminId/merchant/:id?]
+
++ Response 200 (application/json)
+
+            [    {
+                    "name": "merchantName1",
+                    "shortCode":"merchant123",
+                    "profileImageUrl":"someUrl",
+                    "email":"username@domain.com",
+                    "phone":9876543210,
+                    "imageGallery":[ imageUrl1,imageUrl2,imageUrl3,...],
+                    "fee":5000,
+                    "averageRating":4.5,
+                    "categoryId":{
+                                    "id":1,
+                                    "name":"category1"
+                                 },
+                    "cityId":{
+                                "id":1,
+                                "name":"city1"
+                             },
+                    "address":"give some address ",
+                    "pincode":485001,
+                    "latitude":17.7426
+                    "longitude":75.1546,
+                    "bankDetailsId":  {
+                                        "accountHolder": "vikash singh",
+                                        "accountNumber":546879463132131644,
+                                        "ifscCode":"hdfc10554",
+                                        "bankBranch":"branch name of bank",
+                                        "bankListId":   {
+                                                            "id":1,
+                                                            "name":"HDFC"
+                                                        },
+                                    },
+                    "statusId":{
+                                    "id":1,
+                                    "name":"Active"
+                                 }
+                },
+                {
+                    "name": "merchantName2",
+                    "shortCode":"merchant1234",
+                    "profileImageUrl":"someUrl",
+                    "email":"username@domain.com",
+                    "phone":9876543210,
+                    "imageGallery":[ imageUrl1,imageUrl2,imageUrl3,...],
+                    "fee":5000,
+                    "averageRating":4.5,
+                    "categoryId":{
+                                    "id":1,
+                                    "name":"category1"
+                                 },
+                    "cityId":{
+                                "id":1,
+                                "name":"city1"
+                             },
+                    "address":"give some address ",
+                    "pincode":485001,
+                    "latitude":17.7426
+                    "longitude":75.1546,
+                    "accountHolder": "Arnold",
+                    "accountNumber":546879463132131643,
+                    "ifscCode":"hdfc10554",
+                    "bankBranch":"branch name of bank",
+                    "bankName": "HDFC",
+                    "status": "Active"
+                }
+            ]
+
++ Response 400 (application/json)
+    
+
++ Response 401 (application/json)
+
+
+### Update Merchant [PUT /api/merchant]
 
 + Request (application/json)
 
@@ -775,14 +1109,14 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
     + Body
     
             {   
-                "id":1,
+                "id":8,
                 "name": "merchantName",
                 "shortCode":"merchant123",
                 "profileImageUrl":"someUrl",
                 "email":"username@domain.com",
                 "phone":9876543210,
                 "imageGallery":[ imageUrl1,imageUrl2,imageUrl3,...],
-                "fee":5000,
+                "fee":50,
                 "categoryId":1,
                 "cityId":1,
                 "address":"give some address ",
@@ -794,18 +1128,63 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
                 "ifscCode":"hdfc10554",
                 "bankBranch":"branch name of bank",
                 "bankName":"HDFC",
-                "statusId":1
+                "status":"Active",
+                "createdSalesId": 3
+                
             }
 
 + Response 200 (application/json)
     
+        {
+            "id": 8,
+            "name": "merchant2",
+            "shortCode": "mer07",
+            "profileImageUrl": null,
+            "phone": 123123649,
+            "pincode": 123456,
+            "email": null,
+            "address": null,
+            "latitude": null,
+            "longitude": null,
+            "averageRating": null,
+            "fees": 100,
+            "bankName": null,
+            "branchName": null,
+            "accountHolder": null,
+            "accountNumber": null,
+            "ifscCode": null,
+            "status": "Drafted",
+            "createdAt": "2016-03-26T09:18:27.000Z",
+            "updatedAt": "2016-03-26T09:18:27.000Z",
+            "cityId": 1,
+            "createdSalesId": null,
+            "categoryId": 1,
+            "City": {
+                        "id": 1,
+                        "name": "bengaluru",
+                        "createdAt": "2016-03-26T05:49:43.000Z",
+                        "updatedAt": "2016-03-26T05:49:43.000Z"
+                    },
+            "User": null,
+            "Galleries":[
+                            {"id": 19, "url": "1", "type": "image",…},
+                            {"id": 20, "url": "2", "type": "image",…},
+                            {"id": 21, "url": "3", "type": "image",…}
+                        ],
+            "Category":{
+                            "id": 1,
+                            "name": "Restaurant",
+                            "createdAt": "2016-03-26T05:49:46.000Z",
+                            "updatedAt": "2016-03-26T05:49:46.000Z"
+                        }
+        }
 
 + Response 400 (application/json)
 
 
 + Response 401 (application/json)
 
-## Suspend/Activate/Permanent Suspend Merchant [/merchant/{id}/status]
+## Suspend/Activate/Permanent Suspend Merchant [/api/merchant/setstatus]
 
 ### Suspend/Activate/Permanent Suspend [PUT]
 
@@ -815,7 +1194,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 
             {
                 "id":1,
-                "statusId": 3
+                "status": "Active"
             }
 
 + Response 200 (application/json)
@@ -827,7 +1206,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 400 (application/json)
 
 
-## Create Category [/category/{id}]
+## Create Category [/api/category]
 
 ###  Create Category [POST]
 
@@ -840,7 +1219,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
     + Body
     
             {
-                "name": "merchantName"
+                "name": "categoryName"
             }
 
 + Response 201 (application/json)
@@ -860,7 +1239,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 401 (application/json)
 
 
-### Get Category [GET]
+### Get Category [GET /api/category/{id}]
 
 + Response 200 (application/json)
     
@@ -869,13 +1248,13 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
             [
                 {   
                     "id":1,
-                    "name": "merchantName1",
+                    "name": "categoryName1",
                     "createdAt": "2016-11-12T05:03:46.000Z",
                     "updatedAt": "2016-11-12T05:03:46.000Z"
                 },
                 {   
                     "id":2,
-                    "name": "merchantName2",
+                    "name": "categoryName2",
                     "createdAt": "2016-11-12T05:03:46.000Z",
                     "updatedAt": "2016-11-12T05:03:46.000Z"
                 }
@@ -887,7 +1266,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 401 (application/json)
 
 
-###  Update Category [PUT]
+###  Update Category [PUT /api/category]
 
 + Request (application/json)
 
@@ -898,7 +1277,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
     + Body
     
             {   "id":1,
-                "name": "merchantName3"
+                "name": "categoryName3"
             }
 
 + Response 200 (application/json)
@@ -907,7 +1286,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
     
             {   
                 "id":1,
-                "name": "merchantName3",
+                "name": "categoryName3",
                 "createdAt": "2016-11-12T05:03:46.000Z",
                 "updatedAt": "2016-11-12T05:03:46.000Z"
             }
@@ -920,16 +1299,11 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 
 ###  Delete Category [DELETE]
 
++ Request (/api/category/{id}) 
+
+
 + Response 200 (application/json)
     
-    + Body
-    
-            {   
-                "id":1,
-                "name": "merchantName3",
-                "createdAt": "2016-11-12T05:03:46.000Z",
-                "updatedAt": "2016-11-12T05:03:46.000Z"
-            }
     
 + Response 400 (application/json)
 
@@ -937,7 +1311,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 401 (application/json)
 
 
-## City [/city/{id}]
+## City [/api/city]
 
 ### Create City [POST]
 
@@ -970,7 +1344,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 401 (application/json)
 
 
-### Update City [PUT]
+### Update City [PUT /api/city]
 
 + Request (application/json)
 
@@ -1001,7 +1375,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 401 (application/json)
 
 
-### Get City [GET]
+### Get City [GET /api/city/{id}]
 
 + Response 200 (application/json)
     
@@ -1030,28 +1404,11 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 
 ### Delete City [DELETE]
 
-+ Request (application/json)
++ Request (/api/city/{id})
 
-    + Headers
-
-            Access-Token: "ABCDEFGH12345678"
-
-    + Body
-    
-            {
-                "id":1
-            }
 
 + Response 200 (application/json)
     
-    + Body
-    
-            {   
-                "id":1,
-                "name": "city1",
-                "createdAt": "2016-11-12T05:03:46.000Z",
-                "updatedAt": "2016-11-12T05:03:46.000Z"
-            }
     
 + Response 400 (application/json)
 
@@ -1059,130 +1416,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 401 (application/json)
 
 
-## Bank Lists [/bankList/{id}]
-
-### Create Bank List [POST]
-
-+ Request (application/json)
-
-    + Headers
-
-            Access-Token: "ABCDEFGH12345678"
-
-    + Body
-    
-            {
-                "name": "HDFC"
-            }
-
-+ Response 201 (application/json)
-    
-    + Body
-    
-            {   
-                "id":1,
-                "name": "HDFC",
-                "createdAt": "2016-11-12T05:03:46.000Z",
-                "updatedAt": "2016-11-12T05:03:46.000Z"
-            }
-    
-+ Response 400 (application/json)
-
-
-+ Response 401 (application/json)
-
-
-### Get Bank List [GET]
-
-+ Response 200 (application/json)
-    
-    + Body
-    
-            [    
-                {   
-                    "id":1,
-                    "name": "HDFC",
-                    "createdAt": "2016-11-12T05:03:46.000Z",
-                    "updatedAt": "2016-11-12T05:03:46.000Z"
-                },
-                {   
-                    "id":2,
-                    "name": "SBI",
-                    "createdAt": "2016-11-12T05:03:46.000Z",
-                    "updatedAt": "2016-11-12T05:03:46.000Z"
-                }
-            ]
-    
-+ Response 400 (application/json)
-
-
-+ Response 401 (application/json)
-
-
-### Update Bank List [PUT]
-
-+ Request (application/json)
-
-    + Headers
-
-            Access-Token: "ABCDEFGH12345678"
-
-    + Body
-    
-            {
-                "id":1,
-                "name": "HDFC"
-            }
-
-+ Response 200 (application/json)
-    
-    + Body
-    
-            {   
-                "id":1,
-                "name": "HDFC",
-                "createdAt": "2016-11-12T05:03:46.000Z",
-                "updatedAt": "2016-11-12T05:03:46.000Z"
-            }
-    
-+ Response 400 (application/json)
-
-
-+ Response 401 (application/json)
-
-
-### Delete Bank List [DELETE]
-
-+ Request (application/json)
-
-    + Headers
-
-            Access-Token: "ABCDEFGH12345678"
-
-    + Body
-    
-            {   
-                "id":1
-            }
-
-+ Response 200 (application/json)
-    
-    + Body
-    
-            {   
-                "id":1,
-                "name": "HDFC",
-                "createdAt": "2016-11-12T05:03:46.000Z",
-                "updatedAt": "2016-11-12T05:03:46.000Z"
-            }
-    
-+ Response 400 (application/json)
-
-
-+ Response 401 (application/json)
-
-
-## Rate & Review Merchant [/ratereview/{id}]
+## Rate & Review Merchant [/api/ratereview]
 
 ### Create Review [POST]
 
@@ -1206,7 +1440,11 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
     + Body
     
             {   
-                "success": true
+                "id":1,
+                "rating":4,
+                "review":"give some review",
+                "userId":23,
+                "merchantId":12
             }
     
 + Response 400 (application/json)
@@ -1215,7 +1453,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 401 (application/json)
 
 
-### Get Review [GET]
+### Get Review [GET /api/ratereview/user/{userId}/merchant/{merchantId}]
 
 + Response 200 (application/json)
     
@@ -1249,7 +1487,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 401 (application/json)
 
 
-### Update Review [PUT]
+### Update Review [PUT /api/ratereview]
 
 + Request (application/json)
 
@@ -1272,37 +1510,12 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
     + Body
     
             {   
-                "success": true
-            }
-    
-+ Response 400 (application/json)
-
-
-+ Response 401 (application/json)
-
-
-### Delete Review [DELETE]
-
-+ Request (application/json)
-
-    + Headers
-
-            Access-Token: "ABCDEFGH12345678"
-
-    + Body
-    
-            {   
+                "id":1,
+                "rating":5,
+                "review":"give some new review",
                 "userId":23,
                 "merchantId":12
             }
-
-+ Response 200 (application/json)
-    
-    + Body
-    
-            {   
-                "success": true
-            }
     
 + Response 400 (application/json)
 
@@ -1310,214 +1523,13 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 401 (application/json)
 
 
-## Status [/status/{id}]
-
-### Create Status [POST]
+### Delete Review [DELETE /api/ratereview/{id}]
 
 + Request (application/json)
 
-    + Headers
-
-            Access-Token: "ABCDEFGH12345678"
-
-    + Body
-    
-            {   
-                "name":Active
-            }
-
-+ Response 201 (application/json)
-    
-    + Body
-    
-            {   
-                "id":1,
-                "name":"Active",
-                "createdAt": "2016-11-12T05:03:46.000Z",
-                "updatedAt": "2016-11-12T05:03:46.000Z"
-            }
-    
-+ Response 400 (application/json)
-
-
-+ Response 401 (application/json)
-
-
-### Update Status [PUT]
-
-+ Request (application/json)
-
-    + Headers
-
-            Access-Token: "ABCDEFGH12345678"
-
-    + Body
-    
-            {   
-                "id":1,
-                "name":active
-            }
 
 + Response 200 (application/json)
     
-    + Body
-    
-            {   
-                "id":1,
-                "name":"active",
-                "createdAt": "2016-11-12T05:03:46.000Z",
-                "updatedAt": "2016-11-12T05:03:46.000Z"
-            }
-    
-+ Response 400 (application/json)
-
-
-+ Response 401 (application/json)
-
-
-### Get Status [GET]
-
-+ Response 200 (application/json)
-    
-    + Body
-    
-            [
-                {   
-                    "id":1,
-                    "name":"active"
-                },
-                {   
-                    "id":2,
-                    "name":"suspend"
-                }
-            ]
-        
-+ Response 400 (application/json)
-
-
-+ Response 401 (application/json)
-
-
-### Delete Status [DELETE]
-
-+ Request (application/json)
-
-    + Headers
-
-            Access-Token: "ABCDEFGH12345678"
-
-    + Body
-    
-            {   
-                "id":1
-            }
-
-+ Response 200 (application/json)
-    
-    + Body
-    
-            {   
-                "id":1,
-                "name":"active",
-                "createdAt": "2016-11-12T05:03:46.000Z",
-                "updatedAt": "2016-11-12T05:03:46.000Z"
-            }
-    
-+ Response 400 (application/json)
-
-
-+ Response 401 (application/json)
-
-
-## Contact Us [/contactus/{id}]
-
-### Create ContactUs [POST]
-
-+ Request (application/json)
-
-    + Headers
-
-            Access-Token: "ABCDEFGH12345678"
-
-    + Body
-    
-            {   
-                "email":"username@domain.com",
-                "query":"write your query here",
-                "userId":23
-            }
-
-+ Response 201 (application/json)
-    
-    + Body
-    
-            {   
-                "success": true
-            }
-    
-+ Response 400 (application/json)
-
-
-+ Response 401 (application/json)
-
-
-### Get ContactUs [GET]
-
-+ Response 200 (application/json)
-    
-    + Body
-    
-            [
-                {   
-                    "id":1,
-                    "email":"username@domain.com",
-                    "query":"write your query here",
-                    "userId":23,
-                    "createdAt": "2016-11-12T05:03:46.000Z",
-                    "updatedAt": "2016-11-12T05:03:46.000Z"
-                },
-                {   
-                    "id":2,
-                    "email":"username@domain.com",
-                    "query":"write your query here",
-                    "userId":24,
-                    "createdAt": "2016-11-12T05:03:46.000Z",
-                    "updatedAt": "2016-11-12T05:03:46.000Z"
-                }
-            ]
-        
-+ Response 400 (application/json)
-
-
-+ Response 401 (application/json)
-
-
-### Delete Status [DELETE]
-
-+ Request (application/json)
-
-    + Headers
-
-            Access-Token: "ABCDEFGH12345678"
-
-    + Body
-    
-            {   
-                "id":1
-            }
-
-+ Response 200 (application/json)
-    
-    + Body
-    
-            {   
-                "id":1,
-                "email":"username@domain.com",
-                "query":"write your query here",
-                "userId":23,
-                "createdAt": "2016-11-12T05:03:46.000Z",
-                "updatedAt": "2016-11-12T05:03:46.000Z"
-            }
     
 + Response 400 (application/json)
 
@@ -1962,122 +1974,6 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 
         
 + Response 400 (application/json)
-
-
-## Wallet Types [/wallet/types]
-
-### Create Wallet Types [POST]
-
-+ Request (application/json)
-
-    + Headers
-
-            Access-Token: "ABCDEFGH12345678"
-
-    + Body
-    
-            {   
-                "name":"mobikwik"
-            }
-
-+ Response 201 (application/json)
-    
-    + Body
-    
-            {   
-                "id":1,
-                "name":"mobikwiks",
-                "createdAt": "2016-11-12T05:03:46.000Z",
-                "updatedAt": "2016-11-12T05:03:46.000Z"
-            }
-    
-+ Response 400 (application/json)
-
-
-+ Response 401 (application/json)
-
-
-### Update Wallet Types [PUT]
-
-+ Request (application/json)
-
-    + Headers
-
-            Access-Token: "ABCDEFGH12345678"
-
-    + Body
-    
-            {   
-                "id":1,
-                "name":"mobikwik"
-            }
-
-+ Response 200 (application/json)
-    
-    + Body
-    
-            {   
-                "id":1,
-                "name":"mobikwik",
-                "createdAt": "2016-11-12T05:03:46.000Z",
-                "updatedAt": "2016-11-12T05:03:46.000Z"
-            }
-    
-+ Response 400 (application/json)
-
-
-+ Response 401 (application/json)
-
-
-### Get Wallet Types [GET]
-
-+ Response 200 (application/json)
-    
-    + Body
-    
-            [
-                {   
-                    "id":1,
-                    "name":"mobikwik"
-                },
-                {   
-                    "id":2,
-                    "name":"payUmoney"
-                }
-            ]
-        
-+ Response 400 (application/json)
-
-
-+ Response 401 (application/json)
-
-
-### Delete Wallet Types [DELETE]
-
-+ Request (application/json)
-
-    + Headers
-
-            Access-Token: "ABCDEFGH12345678"
-
-    + Body
-    
-            {   
-                "id":1
-            }
-
-+ Response 200 (application/json)
-    
-    + Body
-    
-            {   
-                "success": true
-            }
-    
-+ Response 400 (application/json)
-
-
-+ Response 401 (application/json)
 
 
 ## Push Notification [/user/notification]
@@ -2944,80 +2840,6 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
                 },
             ]
     
-+ Response 400 (application/json)
-
-
-+ Response 401 (application/json)
-
-
-## Weekly LeaderBoard [/user/{id}/leaderboard/weekly]
-
-### Get Weekly LeaderBoard [GET]
-
-+ Response 200 (application/json)
-
-    + Body
-    
-            [
-                {
-                    "name":"abcd1",
-                    "count":10
-                },
-                {
-                    "name":"abcd2",
-                    "count":9
-                },
-                {
-                    "name":"abcd3",
-                    "count":8
-                },
-                {
-                    "name":"abcd4",
-                    "count":7
-                },
-                {
-                    "name":"abcd5",
-                    "count":6
-                },
-            ]
-            
-+ Response 400 (application/json)
-
-
-+ Response 401 (application/json)
-
-
-## Monthly LeaderBoard [/user/{id}/leaderboard/monthly]
-
-### Get Monthly LeaderBoard [GET]
-
-+ Response 200 (application/json)
-
-    + Body
-    
-            [
-                {
-                    "name":"abcd1",
-                    "count":10
-                },
-                {
-                    "name":"abcd2",
-                    "count":9
-                },
-                {
-                    "name":"abcd3",
-                    "count":8
-                },
-                {
-                    "name":"abcd4",
-                    "count":7
-                },
-                {
-                    "name":"abcd5",
-                    "count":6
-                },
-            ]
-            
 + Response 400 (application/json)
 
 
