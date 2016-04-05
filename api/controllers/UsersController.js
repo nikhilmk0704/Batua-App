@@ -21,7 +21,6 @@ module.exports = {
         var userService = new UserService();
         userService.createUserByAdmin(params,function(err,result){
             if(err){
-                delete userService.deleteUser(params);
                 return res.badRequest(err);
             }
             return res.json(201,result);
@@ -92,6 +91,29 @@ module.exports = {
                 return res.badRequest(err);
             return res.json(200,result);
         });
-    }
+    },
+
+    adminForgotPassword:function(req,res){
+        var params={};
+        params.email=req.body.email;
+        var userService = new UserService();
+        userService.adminForgotPassword(params,function(err,result){
+            if(err)
+                return res.badRequest(err);
+            return res.json(200,result);
+        });
+    },
+
+    adminResetPassword:function(req,res){
+        var params={};
+        params.email=req.body.email;
+        var userService = new UserService();
+        userService.adminResetPassword(params,function(err,result){
+            if(err)
+                return res.badRequest(err);
+            return res.json(200,result);
+        });
+    },    
+
 };
 

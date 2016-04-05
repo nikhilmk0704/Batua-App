@@ -55,7 +55,8 @@ class MerchantService {
             findObject.include = merchantService.getIncludeModels();
             findObject.where = {};
             findObject.where.id = merchantId;
-            merchantService.createGalleryAndFindMerchant(params, merchantId, findObject, callback);
+            var type="create";
+            merchantService.createGalleryAndFindMerchant(params, merchantId, findObject, type, callback);
             return null;
         }).catch(function(exception) {
             callback(exception);
@@ -97,7 +98,7 @@ class MerchantService {
     delete(params) {
         var options = {};
         options.where = {};
-        options.where.shortCode = params.shortCode;
+        options.where.id = params.id;
         Merchants.destroy(options);
     }
 
@@ -161,7 +162,8 @@ class MerchantService {
     updateMerchantAndCreateGalleryAndFindMerchant(params,merchantId,options,findObject,callback){
         var merchantService = new MerchantService();
         Merchants.update(params,options).then(function(result){
-            merchantService.createGalleryAndFindMerchant(params,merchantId,findObject,callback);
+            var type="update";
+            merchantService.createGalleryAndFindMerchant(params,merchantId,findObject,type, callback);
             return null;
         }).catch(function(exception){
             return callback(exception);
@@ -169,32 +171,34 @@ class MerchantService {
     }
 
     // creates image gallery and shows merchant result
-    createGalleryAndFindMerchant(params, merchantId, findObject, callback) {
+    createGalleryAndFindMerchant(params, merchantId, findObject, type, callback) {
         var merchantService = new MerchantService();
         var count = 0;
         var imageGalleryArrayLength=params.imageGallery.length;
         if (imageGalleryArrayLength) {
             params.imageGallery.forEach(function(imageUrl) {
                 count++;
-                merchantService.createGalleries(imageUrl,merchantId,findObject,imageGalleryArrayLength,count,callback);
+                merchantService.createGalleries(imageUrl,merchantId,findObject,imageGalleryArrayLength,count,type,callback);
             });
         } else {
             merchantService.getMerchantById(findObject,callback);
         }
     }
 
-    createGalleries(imageUrl,merchantId,findObject,imageGalleryArrayLength,count,callback){
+    createGalleries(imageUrl,merchantId,findObject,imageGalleryArrayLength,count,type,callback){
         var merchantService = new MerchantService();
         Galleries.create({'url':imageUrl}).then(function(result){
             var galleryId=result.id;
-            merchantService.createMerchantsGalleries(merchantId,galleryId,findObject,imageGalleryArrayLength,count,callback);
+            merchantService.createMerchantsGalleries(merchantId,galleryId,findObject,imageGalleryArrayLength,count,type,callback);
             return null
         }).catch(function(exception){
+            if(type==="create")
+                merchantService.delete(merchantId);
             return callback(exception);
         });
     }
 
-    createMerchantsGalleries(merchantId,galleryId,findObject,imageGalleryArrayLength,count,callback){
+    createMerchantsGalleries(merchantId,galleryId,findObject,imageGalleryArrayLength,count,type,callback){
         var merchantService = new MerchantService();
         MerchantsGalleries.create({'merchantId':merchantId,'galleryId':galleryId}).then(function(result){
             if(imageGalleryArrayLength==count){
@@ -202,6 +206,8 @@ class MerchantService {
             }
             return null;
         }).catch(function(exception){
+            if(type==="create")
+                merchantService.delete(merchantId);
             return callback(exception);
         });
     }
