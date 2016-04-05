@@ -49,7 +49,7 @@ module.exports.connections = {
         database: 'batua',
         supportBigNumbers: true,
         bigNumberStrings: true,
-    },
+    } ,
 
     /***************************************************************************
      *                                                                          *
