@@ -13,7 +13,6 @@ class PromocodesService {
         promocodesRepository.save(params, function(err,result){
             if (err)
                 return callback(err,null);
-            
             /*---save promocode for each merchants---*/
             var bulkSaveParams = {};    
             bulkSaveParams.baseId = result.id;
@@ -25,11 +24,17 @@ class PromocodesService {
                 }
                 return callback(null, result);
             });
-
-            
             /*---/save promocode for each merchants---*/
-        
         });
+    }
+
+    updateAndFind(params, callback) {
+        var options = {};
+        options.where = {};
+        options.where.id = params.id;
+        var findObject=options;
+        var promocodesRepository = new PromocodesRepository();
+        promocodesRepository.updateAndFind(params, options, findObject, callback);
     }
 
     bulkSave(params, callback) {
@@ -48,8 +53,10 @@ class PromocodesService {
     }
 
     update(params, options, callback) {
+
         var promocodesRepository = new PromocodesRepository();
         promocodesRepository.update(params, options, callback);
+    
     }
 
     delete(options, callback) {
