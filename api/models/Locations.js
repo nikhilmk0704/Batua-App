@@ -25,7 +25,7 @@ module.exports = {
         },
     },
     associations: function() {
-        Merchants.belongsTo(Cities, {
+        Locations.belongsTo(Cities, {
             foreignKey: {
                 name: 'cityId',
                 onDelete: 'RESTRICT',
