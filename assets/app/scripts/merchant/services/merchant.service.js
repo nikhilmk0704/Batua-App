@@ -32,7 +32,7 @@
             });
         }
 
-        function editMerchant(merchant, imageGallery, callback) {
+        function editMerchant(merchant, imageGallery, cityId, callback) {
             httpi({
                 method: "put",
                 url: API.updateMerchant,
@@ -46,7 +46,7 @@
                     imageGallery: imageGallery,
                     fees: merchant.fees,
                     categoryId: merchant.categoryId,
-                    cityId: merchant.cityId.originalObject.id, 
+                    cityId: cityId, 
                     address: merchant.address,
                     pincode: merchant.pincode,
                     latitude: merchant.latitude,

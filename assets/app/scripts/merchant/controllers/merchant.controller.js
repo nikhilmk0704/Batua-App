@@ -10,7 +10,7 @@ angular.module('app').controller('merchantController', ['$state', 'merchantServi
             return;
         }
         if (response.status === 400) {
-            return toastr.error(response.data);
+            return toastr.error(response.data.errors[0].message);
         }
         return toastr.error(response.data);
     });
@@ -46,7 +46,7 @@ angular.module('app').controller('merchantController', ['$state', 'merchantServi
                 return toastr.success('Merchant status has been changed successfully.');
             }
             if (response.status === 400) {
-                return toastr.error(response.data);
+                return toastr.error(response.data.errors[0].message);
             }
             return toastr.error(response.data);
         });

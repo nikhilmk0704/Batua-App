@@ -9,24 +9,20 @@ angular.module('app').controller('editMerchantController', ['$state', 'merchantS
         vm.cities = cities;
         vm.uploadedImages = [];
 
-
         var adminId = 2; //adminId is static after login module make it dynamic
 
-        $timeout(function() {
-            merchantService.getMerchantData(vm.merchantId, adminId, function(response) {
-                if (response.status === 200) {
-                    vm.editMerchantData = response.data;
-                    vm.editMerchantData.profileImageUrl = response.data.profileImageUrl;
-                    vm.editMerchantData.latitude = response.data.latitude;
-                    vm.editMerchantData.longitude = response.data.longitude;
-                    return;
-                }
-                if (response.status === 400) {
-                    return toastr.error(response.data);
-                }
-                return toastr.error(response.data);
-            });
-        }, 500);
+        merchantService.getMerchantData(vm.merchantId, adminId, function(response) {
+            if (response.status === 200) {
+                vm.editMerchantData = response.data;
+                vm.editMerchantData.profileImageUrl = response.data.profileImageUrl;
+                vm.coordinates = [response.data.latitude, response.data.longitude];
+                return;
+            }
+            if (response.status === 400) {
+                return toastr.error(response.data.errors[0].message);
+            }
+            return toastr.error(response.data);
+        });
 
         vm.getAllImages = function() {
             var urls = [];
@@ -42,16 +38,22 @@ angular.module('app').controller('editMerchantController', ['$state', 'merchantS
         };
 
         vm.editMerchant = function(merchant) {
-
+            var cityId;
             var imageGallery = vm.getAllImages();
 
-            merchantService.editMerchant(merchant, imageGallery, function(response) {
+            if (angular.isDefined(merchant.cityId)) {
+                cityId = merchant.cityId.originalObject.id;
+            } else {
+                cityId = vm.editMerchantData.Location.cityId;
+            }
+
+            merchantService.editMerchant(merchant, imageGallery, cityId, vm.coordinates, function(response) {
                 if (response.status === 200) {
                     $state.go('merchantList');
                     return toastr.success('Merchant Details has been updated successfully.');
                 }
                 if (response.status === 400) {
-                    return toastr.error(response.data);
+                    return toastr.error(response.data.errors[0].message);
                 }
                 return toastr.error(response.data);
             });
@@ -73,8 +75,9 @@ angular.module('app').controller('editMerchantController', ['$state', 'merchantS
                             $flow.files = [];
                             if (response.status === 200) {
                                 vm.uploadedImages.push(response.data);
+                                return;
                             } else {
-                                toastr.error(response.data);
+                                return toastr.error(response.data.errors[0].message);
                             }
                         });
                     }
@@ -97,7 +100,7 @@ angular.module('app').controller('editMerchantController', ['$state', 'merchantS
                         vm.editMerchantData.profileImageUrl = imgOld;
                     });
                     if (this.width < 320 || this.height < 240)
-                        toastr.error("Please select an image above 320px width and 240px height");
+                        return toastr.error("Please select an image above 320px width and 240px height");
                     else {
                         imageUpload.uploadImage(file, function(response) {
                             $flow.files = [];
@@ -110,7 +113,7 @@ angular.module('app').controller('editMerchantController', ['$state', 'merchantS
                                     return vm.editMerchantData.profileImageUrl;
                                 }, 1500);
                             } else {
-                                toastr.error(response.data);
+                                return toastr.error(response.data.errors[0].message);
                             }
                         });
                     }
@@ -123,73 +126,6 @@ angular.module('app').controller('editMerchantController', ['$state', 'merchantS
         };
 
         /* --- END Image Upload --- */
-
-
-
-        /* --- START Google Maps Integration --- */
-
-        $scope.options = {
-            map: ".map_canvas",
-            location: "NYC"
-        };
-
-        var geocoder = new google.maps.Geocoder;
-        var reverseGeolocation = function(lat, lng, callback) {
-            var latlng = {
-                lat: parseFloat(lat),
-                lng: parseFloat(lng)
-            };
-
-            geocoder.geocode({
-                'location': latlng
-            }, function(results, status) {
-                if (status === google.maps.GeocoderStatus.OK) {
-                    callback(results[0].formatted_address);
-                } else {
-                    window.alert('Geocoder failed due to: ' + status);
-                }
-            });
-
-        };
-
-
-        var plotMap = function(lat, lng) {
-
-            var myLatLng = {
-                lat: parseFloat(lat),
-                lng: parseFloat(lng)
-            };
-
-            var map = new google.maps.Map($('#map')[0], {
-                center: myLatLng,
-                scrollwheel: false,
-                zoom: 15
-            });
-
-            var marker = new google.maps.Marker({
-                position: myLatLng,
-                draggable: true,
-                map: map,
-                title: 'Location'
-            });
-
-            google.maps.event.addListener(marker, 'dragend', function(evt) {
-                var lat = evt.latLng.lat();
-                var lng = evt.latLng.lng();
-                reverseGeolocation(lat, lng, function(city) {
-                    vm.editMerchantData.latitude = lat;
-                    vm.editMerchantData.longitude = lng;
-                    vm.editMerchantData.city = city;
-                    $scope.$apply();
-                });
-            });
-        };
-
-        $timeout(function() {
-            plotMap(vm.editMerchantData.latitude, vm.editMerchantData.longitude);
-        }, 1500);
-
-        /* --- END Google Maps Integration --- */
 
 
     }

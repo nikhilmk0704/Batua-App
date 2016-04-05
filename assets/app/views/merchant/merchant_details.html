@@ -73,7 +73,7 @@ BEGIN CONTENT BODY -->
                                             <span class="required"> * </span>
                                         </label>
                                         <div class="col-xs-8" mass-autocomplete>
-                                            <angucomplete-alt pause="100" selected-object="vm.editMerchantData.cityId" local-data="vm.cities" search-fields="name" title-field="name" minlength="1" input-class="form-control form-control-small input-circle" input-name="city" field-required="true" initial-value="vm.editMerchantData.City.name" id="city"/>
+                                            <angucomplete-alt pause="100" selected-object="vm.editMerchantData.cityId" local-data="vm.cities" search-fields="name" title-field="name" minlength="1" input-class="form-control form-control-small input-circle" input-name="city" field-required="true" initial-value="vm.editMerchantData.Location.City.name" id="city"/>
                                             <span class="help-block text-danger" ng-if="!merchantForm.city.$pristine && merchantForm.city.$invalid" ng-messages="merchantForm.city.$error">Please select city</span>
                                         </div>
                                     </section>
@@ -82,16 +82,17 @@ BEGIN CONTENT BODY -->
                                             <span class="required"> * </span>
                                         </label>
                                         <div class="col-xs-8">
-                                            <input type="text" class="form-control input-circle" id="pincode" name="pincode" style="margin-bottom:10px;" required ng-model="vm.editMerchantData.pincode" />
+                                            <input type="text" class="form-control input-circle" id="pincode" name="pincode" style="margin-bottom:10px;" required ng-model="vm.editMerchantData.Location.pincode" />
                                             <span class="help-block text-danger" ng-if="!merchantForm.pincode.$pristine && merchantForm.pincode.$invalid" ng-messages="merchantForm.pincode.$error">Please enter a valid pincode</span>
                                         </div>
                                     </section>
                                     <section class="form-group">
                                         <label class="control-label col-xs-3">Map: </label>
                                         <div class="col-xs-8">
-                                            <div align="center" id="map" class="map_canvas" style="height: 400px; margin-bottom:10px;">
+                                            <!-- <div align="center" id="map" class="map_canvas" style="height: 400px; margin-bottom:10px;">
                                                 <br/>
-                                            </div>
+                                            </div> -->
+                                            <map></map>
                                         </div>
                                     </section>
                                     <section class="form-group" ng-class="{'has-error': merchantForm.fee.$invalid && !merchantForm.fee.$pristine}">
