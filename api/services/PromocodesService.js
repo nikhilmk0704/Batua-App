@@ -39,8 +39,9 @@ class PromocodesService {
                 return callback(err,null);
             }
             /*---save promocode for each merchants---*/
+            
             return deleteMerchantPromoCode(params,function(err,merchantDeleteResult){
-               if (err) {
+             if (err) {
                 return callback(err,null);
             }
             var bulkSaveParams = {};    
@@ -55,11 +56,23 @@ class PromocodesService {
             });
 
         })
-            
             /*---/save promocode for each merchants---*/    
         });
     }
-
+    statusUpdateAndFind(params, callback) {
+        var options = {};
+        options.where = {};
+        options.where.id = params.id;
+        var findObject=options;
+        var promocodesRepository = new PromocodesRepository();
+        promocodesRepository.updateAndFind(params, options, findObject, function(err,result){
+            if (err) {
+                return callback(err,null);
+            }
+            return callback(null, result);
+        });
+    }
+    
     bulkSave(params, callback) {
         var promocodesRepository = new PromocodesRepository();
         promocodesRepository.bulkSave(params, callback);
@@ -93,19 +106,19 @@ module.exports = PromocodesService;
 
 function addPromoCodeToMerchants(params, callback) {
 
-   var bulkSaveParams = {};
-   bulkSaveParams.baseId = params.baseId;
-   bulkSaveParams.associateIds = params.associateIds;
-   bulkSaveParams.baseAttribute = 'promocodeId';
-   bulkSaveParams.associateAttribute = 'merchantId';
+ var bulkSaveParams = {};
+ bulkSaveParams.baseId = params.baseId;
+ bulkSaveParams.associateIds = params.associateIds;
+ bulkSaveParams.baseAttribute = 'promocodeId';
+ bulkSaveParams.associateAttribute = 'merchantId';
 
-   var merchantsPromocodeRepository = new MerchantsPromocodeRepository();
-   merchantsPromocodeRepository.bulkSave(bulkSaveParams, function(err,result){
+ var merchantsPromocodeRepository = new MerchantsPromocodeRepository();
+ merchantsPromocodeRepository.bulkSave(bulkSaveParams, function(err,result){
     if(err){
 
-       return callback(err,null); 
-   }
-   return callback(null,result); 
+     return callback(err,null); 
+ }
+ return callback(null,result); 
 });
 
 }
@@ -118,9 +131,9 @@ function deleteMerchantPromoCode(params,callback){
     merchantsPromocodeRepository.remove(options, function(err,result){
         if(err){
 
-           return callback(err,null); 
-       }
-       return callback(null,result); 
-   });
+         return callback(err,null); 
+     }
+     return callback(null,result); 
+ });
 
 }

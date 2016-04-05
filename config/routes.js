@@ -30,7 +30,8 @@ module.exports.routes = {
     'post /api/promocode': 'PromocodesController.create',
     'get /api/promocode/:id?': 'PromocodesController.find',
     'put /api/promocode/:id?': 'PromocodesController.update',
-    'delete /api/promocode/:id': 'PromocodesController.delete',
+    'put /api/promocode/:id/status': 'PromocodesController.updateStatus',
+   
 
     'post /api/ratereview': 'RateReviewsController.create',
     'get /api/ratereview/user/:userId/merchant/:merchantId':'RateReviewsController.find',
