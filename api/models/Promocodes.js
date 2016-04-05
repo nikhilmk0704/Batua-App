@@ -87,7 +87,7 @@ module.exports = {
         status: {
             type: Sequelize.ENUM,
             values: ['active', 'suspend', 'expired'],
-            default: 'active'
+            defaultValue: 'active'
         }
     },
     associations: function () {

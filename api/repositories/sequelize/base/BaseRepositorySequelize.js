@@ -30,11 +30,11 @@ class BaseRepositorySequelize {
         });
         var duplicateObject = {};
         duplicateObject.updateOnDuplicate = [baseAttribute, associateAttribute];
-        /*joinTable*/
+        
         this.modelType.bulkCreate(data, duplicateObject).then(function(result) {
             callback(null, result);
         }).catch(function(exception) {
-            callback(exception);
+            callback(exception,null);
         });
     }
 

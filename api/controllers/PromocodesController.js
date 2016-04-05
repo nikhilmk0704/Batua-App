@@ -8,36 +8,18 @@
 'use strict';
 
 module.exports = {
-    /*
-    save(params, callback) {
-
-        var siteData = {};
-        siteData = params.site;
-        siteData.companyId = params.companyId;
-        if (!_.isUndefined(params.userId)) {
-            return createSite(siteData, function(err, result) {
-                if (err) {
-                    return callback(err);
-                }
-                return checkIfUserHasSiteAssociated(params.userId, result, callback);
-            });
-        }
-        return createSite(siteData, callback);
-    }
-    */
 
     create: function(req, res) {
 
         var params = req.body;
         
         var promocodesService = new PromocodesService();
-        /*var merchantsPromocodeService = new MerchantsPromocodeService();*/
 
         promocodesService.save(params, function(err, result) {
             if (err) {
                 return res.badRequest(err);
             } else {
-                return res.jsonx(result);
+                return res.json(201,result);
             }
         });
     },
