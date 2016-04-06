@@ -55,8 +55,12 @@ BEGIN CONTENT BODY -->
                                             <span class="required"> * </span>
                                         </label>
                                         <div class="col-xs-8">
-                                            <input type="tel" class="form-control input-circle" id="phonenumber" name="phonenumber" style="margin-bottom:10px;" required ng-model="vm.editMerchantData.phone" />
-                                            <span class="help-block text-danger" ng-if="!merchantForm.phonenumber.$pristine && merchantForm.phonenumber.$invalid" ng-messages="merchantForm.phonenumber.$error">Please enter a valid phonenumber</span>
+                                            <input type="tel" class="form-control input-circle" id="phonenumber" name="phonenumber" style="margin-bottom:10px;" required ng-model="vm.editMerchantData.phone" ng-maxlength="12" ng-pattern="/^[0-9]*$/" />
+                                            <span class="help-block text-danger" ng-if="!merchantForm.phonenumber.$pristine && merchantForm.phonenumber.$invalid" ng-messages="merchantForm.phonenumber.$error">
+                                            <span class="help-block text-danger" ng-if="merchantForm.phonenumber.$error.required" ng-message="required">Please enter phonenumber</span>
+                                            <span class="help-block text-danger" ng-if="merchantForm.phonenumber.$error.pattern" ng-message="pattern">Enter only numbers!</span>
+                                            <span class="help-block text-danger" ng-if="merchantForm.phonenumber.$error.maxlength" ng-message="maxlength">Not matching standards!</span>
+                                            </span>
                                         </div>
                                     </section>
                                     <section class="form-group" ng-class="{'has-error': merchantForm.address.$invalid && !merchantForm.address.$pristine}">
@@ -82,26 +86,32 @@ BEGIN CONTENT BODY -->
                                             <span class="required"> * </span>
                                         </label>
                                         <div class="col-xs-8">
-                                            <input type="text" class="form-control input-circle" id="pincode" name="pincode" style="margin-bottom:10px;" required ng-model="vm.editMerchantData.Location.pincode" />
-                                            <span class="help-block text-danger" ng-if="!merchantForm.pincode.$pristine && merchantForm.pincode.$invalid" ng-messages="merchantForm.pincode.$error">Please enter a valid pincode</span>
+                                            <input type="tel" class="form-control input-circle" id="pincode" name="pincode" style="margin-bottom:10px;" required ng-model="vm.editMerchantData.Location.pincode" ng-maxlength="6" ng-pattern="/^[0-9]*$/" />
+                                            <span class="help-block text-danger" ng-if="!merchantForm.pincode.$pristine && merchantForm.pincode.$invalid" ng-messages="merchantForm.pincode.$error">
+                                            <span class="help-block text-danger" ng-if="merchantForm.pincode.$error.pattern" ng-message="pattern">Enter only numbers!</span>
+                                            <span class="help-block text-danger" ng-if="merchantForm.pincode.$error.maxlength" ng-message="maxlength">Not matching standards!</span>
+                                            <span class="help-block text-danger" ng-if="!merchantForm.pincode.$error.required" ng-message="required">Please enter a valid pincode</span>
+                                            </span>
                                         </div>
                                     </section>
                                     <section class="form-group">
                                         <label class="control-label col-xs-3">Map: </label>
                                         <div class="col-xs-8">
-                                            <!-- <div align="center" id="map" class="map_canvas" style="height: 400px; margin-bottom:10px;">
-                                                <br/>
-                                            </div> -->
                                             <map></map>
+
                                         </div>
+
                                     </section>
                                     <section class="form-group" ng-class="{'has-error': merchantForm.fee.$invalid && !merchantForm.fee.$pristine}">
                                         <label class="control-label col-xs-3">fee:
                                             <span class="required"> * </span>
                                         </label>
                                         <div class="col-xs-8">
-                                            <input type="text" class="form-control input-circle" id="fee" name="fee" style="margin-bottom:10px;" required ng-model="vm.editMerchantData.fees" />
-                                            <span class="help-block text-danger" ng-if="!merchantForm.fee.$pristine && merchantForm.fee.$invalid" ng-messages="merchantForm.fee.$error">Please enter a fee</span>
+                                            <input type="number" class="form-control input-circle" id="fee" name="fee" style="margin-bottom:10px;" required ng-model="vm.editMerchantData.fees" ng-pattern="/^(?=.*[1-9])\d{0,2}(?:\.\d{0,2})?$/" />
+                                            <span class="help-block text-danger" ng-if="!merchantForm.fee.$pristine && merchantForm.fee.$invalid" ng-messages="merchantForm.fee.$error">
+                                            <span class="help-block text-danger" ng-if="merchantForm.fee.$error.pattern" ng-message="pattern">Fee must be between 1 to 99.99</span>
+                                            <span class="help-block text-danger" ng-if="merchantForm.fee.$error.required" ng-message="required">Please enter a fee</span>
+                                            </span>
                                         </div>
                                     </section>
                                     <section class="form-group">
@@ -147,7 +157,7 @@ BEGIN CONTENT BODY -->
                                                     <div class="thumbnail">
                                                         <img class="img-responsive" ng-src="{{image.url}}" style="width:inherit; height:inherit;" />
                                                         <div class="caption">
-                                                            <a ng-click="vm.imageDelete(image)" uib-tooltip="delete"><i class="fa fa-trash fa-lg"></i></a>
+                                                            <a ng-click="vm.deleteImage(vm.editMerchantData, image.url)" uib-tooltip="delete"><i class="fa fa-trash fa-lg"></i></a>
                                                         </div>
                                                     </div>
                                                 </div>

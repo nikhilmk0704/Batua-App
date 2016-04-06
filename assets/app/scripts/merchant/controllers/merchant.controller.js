@@ -18,25 +18,22 @@ angular.module('app').controller('merchantController', ['$state', 'merchantServi
     vm.editMerchantData = function(merchant) {
         if (merchant.status == 'Drafted' || merchant.status == 'Suspend') {
             return;
-        } else {
-            $state.go('editMerchant', { merchantId: merchant.id });
         }
+        $state.go('editMerchant', { merchantId: merchant.id });
     };
 
     vm.checkMerchantStatus = function(merchant) {
         if (merchant.status == 'Drafted' || merchant.status == 'Suspend') {
             return true;
-        } else {
-            return false;
         }
+        return false;
     };
 
     vm.showActions = function(merchant) {
         if (merchant.status == 'Drafted' || merchant.status == 'Pending for approval') {
             return true;
-        } else {
-            return false;
         }
+        return false;
     };
 
     vm.setStatus = function(merchantId, status) {

@@ -10,7 +10,7 @@
         var service = {};
 
         service.getMerchantList = getMerchantList;
-        service.editMerchant = editMerchant;
+        service.updateMerchant = updateMerchant;
         service.getMerchantData = getMerchantData;
         service.getCategories = getCategories;
         service.getCities = getCities;
@@ -32,7 +32,7 @@
             });
         }
 
-        function editMerchant(merchant, imageGallery, cityId, callback) {
+        function updateMerchant(merchant, imageGallery, cityId, coordinates, callback) {
             httpi({
                 method: "put",
                 url: API.updateMerchant,
@@ -48,9 +48,9 @@
                     categoryId: merchant.categoryId,
                     cityId: cityId, 
                     address: merchant.address,
-                    pincode: merchant.pincode,
-                    latitude: merchant.latitude,
-                    longitude: merchant.longitude,
+                    pincode: merchant.Location.pincode,
+                    latitude: coordinates[0],
+                    longitude: coordinates[1],
                     accountHolder: merchant.accountHolder,
                     accountNumber: merchant.accountNumber,
                     ifscCode: merchant.ifscCode,
@@ -106,7 +106,7 @@
         function setStatus(merchantId, status, callback) {
             httpi({
                 method: "put",
-                url: API.setstatus,
+                url: API.setStatus,
                 data: {
                     id: merchantId,
                     status: status

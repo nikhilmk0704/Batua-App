@@ -52,12 +52,12 @@
             controller: 'editMerchantController',
             controllerAs: 'vm',
             resolve: {
-                categories: function(merchantService) {
+                categories: ['merchantService', function(merchantService) {
                     return merchantService.getCategories();
-                },
-                cities: function(merchantService) {
+                }],
+                cities: ['merchantService', function(merchantService) {
                     return merchantService.getCities();
-                }
+                }]
             }
         })
 

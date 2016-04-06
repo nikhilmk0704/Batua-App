@@ -38,7 +38,7 @@ angular.module('app').controller('editMerchantController', ['$state', 'merchantS
         };
 
         vm.editMerchant = function(merchant) {
-            var cityId;
+            var cityId, coordinates;
             var imageGallery = vm.getAllImages();
 
             if (angular.isDefined(merchant.cityId)) {
@@ -47,7 +47,9 @@ angular.module('app').controller('editMerchantController', ['$state', 'merchantS
                 cityId = vm.editMerchantData.Location.cityId;
             }
 
-            merchantService.editMerchant(merchant, imageGallery, cityId, vm.coordinates, function(response) {
+            coordinates = vm.coordinates;
+
+            merchantService.updateMerchant(merchant, imageGallery, cityId, coordinates, function(response) {
                 if (response.status === 200) {
                     $state.go('merchantList');
                     return toastr.success('Merchant Details has been updated successfully.');
@@ -59,6 +61,38 @@ angular.module('app').controller('editMerchantController', ['$state', 'merchantS
             });
         };
 
+        vm.deleteImage = function(merchant, imageUrl) {
+
+            var imageGallery = vm.getAllImages();
+            var image = imageGallery.indexOf(imageUrl);
+            if (image != -1) {
+                imageGallery.splice(image, 1);
+            }
+
+            var cityId, coordinates;
+
+            if (angular.isDefined(merchant.cityId)) {
+                cityId = merchant.cityId.originalObject.id;
+            } else {
+                cityId = vm.editMerchantData.Location.cityId;
+            }
+
+            coordinates = vm.coordinates;
+
+            merchantService.updateMerchant(merchant, imageGallery, cityId, coordinates, function(response) {
+                if (response.status === 200) {
+                    $state.reload();
+                    return toastr.success('Image is deleted successfully');
+                }
+                if (response.status === 400) {
+                    return toastr.error(response.data.errors[0].message);
+                }
+                return toastr.error(response.data);
+            });
+            
+
+        };
+
 
         /* --- START Image Upload --- */
 
@@ -68,25 +102,30 @@ angular.module('app').controller('editMerchantController', ['$state', 'merchantS
             if ((file = file.file)) {
                 image = new Image();
                 image.onload = function() {
-                    if (this.width < 320 || this.height < 240)
-                        toastr.error("Please select an image above 320px width and 240px height");
-                    else {
-                        imageUpload.uploadImage(file, function(response) {
-                            $flow.files = [];
-                            if (response.status === 200) {
-                                vm.uploadedImages.push(response.data);
-                                return;
-                            } else {
-                                return toastr.error(response.data.errors[0].message);
-                            }
-                        });
+                    if (this.width < 320 || this.height < 240) {
+                        return toastr.error("Please select an image above 320px width and 240px height");
                     }
+                    return handleUploadImage(file, event, $flow);
                 }
                 image.onerror = function() {
-                    toastr.error("not a valid file: " + file.type);
+                    return toastr.error("not a valid file: " + file.type);
                 };
                 image.src = _URL.createObjectURL(file);
             }
+        };
+
+        var handleUploadImage = function(file, event, $flow) {
+            imageUpload.uploadImage(file, function(response) {
+                $flow.files = [];
+                if (response.status === 200) {
+                    vm.uploadedImages.push(response.data);
+                    return;
+                }
+                if (response.status === 400) {
+                    return toastr.error(response.data.errors[0].message);
+                }
+                return toastr.error(response.data);
+            });
         };
 
         vm.profileImageUpload = function(file, event, $flow) {
@@ -99,30 +138,35 @@ angular.module('app').controller('editMerchantController', ['$state', 'merchantS
                     $scope.$apply(function() {
                         vm.editMerchantData.profileImageUrl = imgOld;
                     });
-                    if (this.width < 320 || this.height < 240)
+                    if (this.width < 320 || this.height < 240) {
                         return toastr.error("Please select an image above 320px width and 240px height");
-                    else {
-                        imageUpload.uploadImage(file, function(response) {
-                            $flow.files = [];
-                            if (response.status === 200) {
-                                $timeout(function() {
-                                    $scope.$apply(function() {
-                                        vm.editMerchantData.profileImageUrl = response.data;
-                                    });
-                                    vm.editMerchantData.profileImageUrl = response.data;
-                                    return vm.editMerchantData.profileImageUrl;
-                                }, 1500);
-                            } else {
-                                return toastr.error(response.data.errors[0].message);
-                            }
-                        });
                     }
+                    return handleProfileImageUpload(file, event, $flow);
                 }
                 image.onerror = function() {
-                    toastr.error("not a valid file: " + file.type);
+                    return toastr.error("not a valid file: " + file.type);
                 };
                 image.src = _URL.createObjectURL(file);
             }
+        };
+
+        var handleProfileImageUpload = function(file, event, $flow) {
+            imageUpload.uploadImage(file, function(response) {
+                $flow.files = [];
+                if (response.status === 200) {
+                    $timeout(function() {
+                        $scope.$apply(function() {
+                            vm.editMerchantData.profileImageUrl = response.data;
+                        });
+                        vm.editMerchantData.profileImageUrl = response.data;
+                        return vm.editMerchantData.profileImageUrl;
+                    }, 1500);
+                }
+                if (response.status === 400) {
+                    return toastr.error(response.data.errors[0].message);
+                }
+                return toastr.error(response.data);
+            });
         };
 
         /* --- END Image Upload --- */
