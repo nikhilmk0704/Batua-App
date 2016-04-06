@@ -15,7 +15,7 @@ module.exports = {
         var merchantService = new MerchantService();
         merchantService.save(params, function(err, result) {
             if (err) {
-                return res.badRequest(err);
+                return res.badRequest(merchantService.generateErrorMessage(err));
             } 
             return res.json(201, result);
         });
@@ -30,10 +30,10 @@ module.exports = {
         var merchantService = new MerchantService();
         merchantService.find(params, function(err, result) {
             if (err) {
-                return res.badRequest(err);
+                return res.badRequest(merchantService.generateErrorMessage(err));
             }
             if(_.isEmpty(result)){
-                return res.notFound("Does not exist");
+                return res.notFound(merchantService.generateErrorMessage("Does not exist"));
             }
             return res.json(200, result);
         });
@@ -46,7 +46,7 @@ module.exports = {
         var merchantService = new MerchantService();
         merchantService.update(params, function(err, result) {
             if (err) {
-                return res.badRequest(err);
+                return res.badRequest(merchantService.generateErrorMessage(err));
             } 
             return res.json(200, result);
         });
@@ -58,7 +58,7 @@ module.exports = {
         var merchantService = new MerchantService();
         merchantService.setStatus(params, function(err, result) {
             if (err) {
-                return res.badRequest(err);
+                return res.badRequest(merchantService.generateErrorMessage(err));
             } 
             return res.json(200, result);
         });

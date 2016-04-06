@@ -99,6 +99,14 @@ class BaseRepositorySequelize {
         });
     }
 
+    count(object,callback){
+        this.modelType.count(object).then(function(result){
+            return callback(null,result);
+        }).catch(function(exception){
+            return callback(exception);
+        });
+    }
+
     upload(object,credential,callback){
         domain.run(function safelyUpload() {
             if (req.file('image')._files.length > 0) {

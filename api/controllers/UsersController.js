@@ -21,7 +21,7 @@ module.exports = {
         var userService = new UserService();
         userService.createUserByAdmin(params,function(err,result){
             if(err){
-                return res.badRequest(err);
+                return res.badRequest(userService.generateErrorMessage(err));
             }
             return res.json(201,result);
         });
@@ -33,9 +33,9 @@ module.exports = {
         var userService = new UserService();
         userService.findUserByAdmin(params,function(err,result){
             if(err)
-                return res.badRequest(err);
+                return res.badRequest(userService.generateErrorMessage(err));
             if(_.isEmpty(result))
-                return res.notFound("Does not exist");
+                return res.notFound(userService.generateErrorMessage("Does not exist"));
             return res.json(200,result);
         })
     },
@@ -51,7 +51,7 @@ module.exports = {
         var userService = new UserService();
         userService.updateUserByAdmin(params,function(err,result){
             if(err)
-                return res.badRequest(err);
+                return res.badRequest(userService.generateErrorMessage(err));
             return res.json(200,result);
         });
     },
@@ -63,7 +63,7 @@ module.exports = {
         var userService = new UserService();
         userService.setUserStatusByAdmin(params,function(err,result){
             if(err)
-                return res.badRequest(err);
+                return res.badRequest(userService.generateErrorMessage(err));
             return res.json(200,result);
         });
     },
@@ -77,7 +77,7 @@ module.exports = {
         var userService = new UserService();
         userService.adminLogin(params,function(err,result){
             if(err)
-                return res.badRequest(err);
+                return res.badRequest(userService.generateErrorMessage(err));
             return res.json(200,result);
         });
     },
@@ -88,7 +88,7 @@ module.exports = {
         var userService = new UserService();
         userService.adminLogout(params,function(err,result){
             if(err)
-                return res.badRequest(err);
+                return res.badRequest(userService.generateErrorMessage(err));
             return res.json(200,result);
         });
     },
@@ -99,7 +99,7 @@ module.exports = {
         var userService = new UserService();
         userService.adminForgotPassword(params,function(err,result){
             if(err)
-                return res.badRequest(err);
+                return res.badRequest(userService.generateErrorMessage(err));
             return res.json(200,result);
         });
     },
@@ -107,10 +107,13 @@ module.exports = {
     adminResetPassword:function(req,res){
         var params={};
         params.email=req.body.email;
+        params.password=req.body.password;
+        params.confirmPassword=req.body.confirmPassword;
+        params.accessToken=req.body.accessToken;
         var userService = new UserService();
         userService.adminResetPassword(params,function(err,result){
             if(err)
-                return res.badRequest(err);
+                return res.badRequest(userService.generateErrorMessage(err));
             return res.json(200,result);
         });
     },    
