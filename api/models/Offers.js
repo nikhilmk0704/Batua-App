@@ -1,5 +1,5 @@
 /**
- * Promocodes.js
+ * Offers.js
  *
  * @description :: TODO: You might write a short summary of how this model works and what it represents here.
  * @docs        :: http://sailsjs.org/documentation/concepts/models-and-orm/models
@@ -14,12 +14,6 @@ module.exports = {
             type: Sequelize.INTEGER,
             primaryKey: true,
             autoIncrement: true,
-        },
-        promocode: {
-            type: Sequelize.STRING,
-            required: true,
-            allowNull: false,
-            unique: true,
         },
         discountPercentage: {
             type: Sequelize.INTEGER,
@@ -66,24 +60,6 @@ module.exports = {
                 }
             }
         },
-        percentageCostBourneByBatua: {
-            type: Sequelize.INTEGER,
-            required: true,
-            allowNull: false,
-            validate: {
-                min: 0,
-                max: 100,
-            }
-        },
-        percentageCostBourneByMerchant: {
-            type: Sequelize.INTEGER,
-            required: true,
-            allowNull: false,
-            validate: {
-                min: 0,
-                max: 100,
-            }
-        },
         status: {
             type: Sequelize.ENUM,
             values: ['Active', 'Suspend', 'Expired'],
@@ -91,14 +67,14 @@ module.exports = {
         }
     },
     associations: function () {
-        Promocodes.belongsToMany(Merchants, {
-            through: MerchantsPromocodes,
+        Offers.belongsToMany(Merchants, {
+            through: MerchantsOffers,
             foreignKey: {
-                name: 'promocodeId'
+                name: 'offerId'
             }
         });
-        Merchants.belongsToMany(Promocodes, {
-            through: MerchantsPromocodes,
+        Merchants.belongsToMany(Offers, {
+            through: MerchantsOffers,
             foreignKey: {
                 name: 'merchantId',
             }
