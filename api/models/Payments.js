@@ -64,7 +64,7 @@ module.exports = {
                 name: 'promocodeId',
             }
         });
-        Payments.belongsTo(OfferDiscounts, {
+        Payments.belongsTo(Offers, {
             foreignKey: {
                 name: 'offerDiscountId',
             }
