@@ -49,6 +49,8 @@ module.exports.routes = {
     'put /api/admin/user/setstatus': 'UsersController.setUserStatusByAdmin',
     'post /api/admin/user/login':'UsersController.adminLogin',
     'put /api/admin/user/logout':'UsersController.adminLogout',
+    'put /api/admin/user/forgotpassword':'UsersController.adminForgotPassword',
+    'put /api/admin/user/resetpassword':'UsersController.adminResetPassword',
 
 
     'post /api/image/upload':'ImageUploadController.upload',

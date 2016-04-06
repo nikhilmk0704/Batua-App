@@ -15,7 +15,7 @@ class MerchantService {
         if (merchantService.validateAllRequest(params) && params.status == "Pending for approval") {
             return merchantService.validateLocationAndCreateMerchant(params, callback);
         } 
-        return callback("Mandatory fields missing");
+        return callback(merchantService.generateErrorMessage("Mandatory fields missing"));
     }
 
     validateLocationAndCreateMerchant(params,callback){
@@ -91,7 +91,7 @@ class MerchantService {
         if (merchantService.validatePartialRequest(params) && params.status == "Drafted") {
             return merchantService.updateMerchant(params, options, callback);
         } 
-        return callback("Mandatory fields missing");
+        return callback(merchantService.generateErrorMessage("Mandatory fields missing"));
     }
 
     // delete the merchant based on shortcode (unique field)
@@ -140,13 +140,43 @@ class MerchantService {
     findMerchants(params,merchantId,options,findObject,callback){
         var merchantService = new MerchantService();
         Merchants.find({where:{id:merchantId}}).then(function(result){
-            (result.shortCode==params.shortCode)?(delete params.shortCode):(params);
-            (result.phone==params.phone)?(delete params.phone):(params);
-            merchantService.destroyMerchantsGalleries(params,merchantId,options,findObject,callback);
+            if(result && result.locationId){
+                merchantService.updateLocations(params,result,merchantId,options,findObject,callback);
+            }else{
+                merchantService.createLocations(params,result,merchantId,options,findObject,callback);
+            }
             return null;
         }).catch(function(exception){
             return callback(exception);
         })
+    }
+
+    createLocations(params,result,merchantId,options,findObject,callback){
+        var merchantService = new MerchantService();
+        Locations.create(params).then(function(result){
+            params.locationId=result.id;
+            merchantService.updateMerchantAndGalleries(params,result,merchantId,options,findObject,callback);
+            return null;
+        }).catch(function(exception){
+            return callback(exception);
+        });
+    }
+
+    updateLocations(params,result,merchantId,options,findObject,callback){
+        var merchantService = new MerchantService();
+        Locations.update(params,{where:{id:result.locationId}}).then(function(result){
+            merchantService.updateMerchantAndGalleries(params,result,merchantId,options,findObject,callback);
+            return null;
+        }).catch(function(exception){
+            return callback(exception);
+        });
+    }
+
+    updateMerchantAndGalleries(params,result,merchantId,options,findObject,callback){
+        var merchantService = new MerchantService();
+        (result.shortCode==params.shortCode)?(delete params.shortCode):(params);
+        (result.phone==params.phone)?(delete params.phone):(params);
+        merchantService.destroyMerchantsGalleries(params,merchantId,options,findObject,callback);
     }
 
     destroyMerchantsGalleries(params,merchantId,options,findObject,callback){
@@ -174,7 +204,7 @@ class MerchantService {
     createGalleryAndFindMerchant(params, merchantId, findObject, type, callback) {
         var merchantService = new MerchantService();
         var count = 0;
-        var imageGalleryArrayLength=params.imageGallery.length;
+        var imageGalleryArrayLength=(params.imageGallery)?(params.imageGallery.length):null;
         if (imageGalleryArrayLength) {
             params.imageGallery.forEach(function(imageUrl) {
                 count++;
@@ -193,7 +223,7 @@ class MerchantService {
             return null
         }).catch(function(exception){
             if(type==="create")
-                merchantService.delete(merchantId);
+                merchantService.delete({id:merchantId});
             return callback(exception);
         });
     }
@@ -207,7 +237,7 @@ class MerchantService {
             return null;
         }).catch(function(exception){
             if(type==="create")
-                merchantService.delete(merchantId);
+                merchantService.delete({id:merchantId});
             return callback(exception);
         });
     }
@@ -276,8 +306,23 @@ class MerchantService {
             if (data && adminId && !id && (groupName == 'Admin'|| groupName=='Super Admin')) {
                 return merchantRepository.findAll(params, callback);
             } 
-            return callback("Please provide correct id");
+            return callback(merchantService.generateErrorMessage("Please provide correct id"));
         });
+    }
+
+    generateErrorMessage(messageOrObject){
+        var messageObject={};
+        if(typeof messageOrObject == "string")
+            messageObject.message=messageOrObject;
+        else if(typeof messageOrObject == "object" && messageOrObject.errors)
+            messageObject.message=messageOrObject.errors[0].message;
+        else if(typeof messageOrObject=="object" && messageOrObject.message)
+            messageObject.message=(messageOrObject.message).split(":")[1];
+        var array=[];
+        array.push(messageObject);
+        var errorObject={};
+        errorObject.errors=array;
+        return errorObject;
     }
 
 }

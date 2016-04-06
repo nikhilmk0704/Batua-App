@@ -14,7 +14,7 @@ module.exports = {
         var categoryService = new CategoryService();
         categoryService.save(params, function(err, result) {
             if (err) {
-                return res.badRequest(err);
+                return res.badRequest(categoryService.generateErrorMessage(err));
             } 
             return res.json(201,result);
         });
@@ -25,10 +25,10 @@ module.exports = {
         var categoryService = new CategoryService();
         categoryService.find(id, function(err, result) {
             if (err) {
-                return res.badRequest(err);
+                return res.badRequest(categoryService.generateErrorMessage(err));
             } 
             if(_.isEmpty(result)){
-                return res.notFound("Does not exist");
+                return res.notFound(categoryService.generateErrorMessage("Does not exist"));
             }
             return res.json(200,result);
         });
@@ -39,7 +39,7 @@ module.exports = {
         var categoryService = new CategoryService();
         categoryService.updateAndFind(params, function(err, result) {
             if (err) {
-                return res.badRequest(err);
+                return res.badRequest(categoryService.generateErrorMessage(err));
             } 
             return res.json(200,result);
         });
@@ -50,7 +50,7 @@ module.exports = {
         var categoryService = new CategoryService();
         categoryService.delete(id, function(err, result) {
             if (err) {
-                return res.badRequest(err);
+                return res.badRequest(categoryService.generateErrorMessage(err));
             } 
             return res.jsonx(200,result);
         });

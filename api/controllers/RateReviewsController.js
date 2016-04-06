@@ -14,7 +14,7 @@ module.exports = {
         var rateReviewService = new RateReviewService();
         rateReviewService.save(params, function(err, result) {
             if (err) {
-                return res.badRequest(err);
+                return res.badRequest(rateReviewService.generateErrorMessage(err));
             } 
             return res.json(201, result);
         });
@@ -26,10 +26,10 @@ module.exports = {
         var rateReviewService = new RateReviewService();
         rateReviewService.find(userId, merchantId, function(err, result) {
             if (err) {
-                return res.badRequest(err);
+                return res.badRequest(rateReviewService.generateErrorMessage(err));
             } 
             if(_.isEmpty(result)){
-                return res.notFound("Does not exist");
+                return res.notFound(rateReviewService.generateErrorMessage("Does not exist"));
             }
             return res.json(200, result);
         });
@@ -40,7 +40,7 @@ module.exports = {
         var rateReviewService = new RateReviewService();
     	rateReviewService.updateAndFind(params, function(err, result) {
             if (err) {
-                return res.badRequest(err);
+                return res.badRequest(rateReviewService.generateErrorMessage(err));
             } 
             return res.json(200,result);
         });
@@ -51,7 +51,7 @@ module.exports = {
         var rateReviewService = new RateReviewService();
         rateReviewService.delete(id, function(err, result) {
             if (err) {
-                return res.badRequest(err);
+                return res.badRequest(rateReviewService.generateErrorMessage(err));
             } 
             return res.jsonx(200,result);
         });

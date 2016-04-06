@@ -2,6 +2,8 @@
 
 var UserRepository = require('../repositories/UserRepository.js');
 var token=require('rand-token');
+var md5 = require('md5');
+var fs = require('fs');
 
 class UserService {
 
@@ -10,7 +12,7 @@ class UserService {
         if(userService.validateRequestAdmin(params)){
         	return userService.createUserAndSendEmailByAdmin(params,callback);
         }
-        return callback("Mandatory Fields Missing");
+        return callback(userService.generateErrorMessage("Mandatory fields missing"));
     }
 
     validateRequestAdmin(params){
@@ -86,7 +88,8 @@ class UserService {
             var newParams={};
             newParams.accessTokenId=result.id;
             newParams.userId=userData.id;
-            userService.createUsersAccessToken(newParams,userData,callback);
+            var passwordGenerationUrl="http://52.36.228.74:1337/api/"+ userData.email + "/" + result.token;
+            userService.createUsersAccessToken(newParams,userData,passwordGenerationUrl,callback);
             return null;
         }).catch(function(exception){
             userService.deleteUser(userData.id);
@@ -94,13 +97,13 @@ class UserService {
         });
     }
 
-    createUsersAccessToken(params,userData,callback){
+    createUsersAccessToken(params,userData,passwordGenerationUrl,callback){
         var userService = new UserService();
         UsersAccessTokens.create(params).then(function(result){
-            userService.sendEmail(userData.email);
+            userService.sendEmail(userData.email,userData.name,passwordGenerationUrl);
             return callback(null,userData);
         }).catch(function(exception){
-            userService.deleteUser(userData.id);
+            userService.deleteUser(userData);
             return callback(exception);
         });
     }
@@ -112,7 +115,7 @@ class UserService {
         Users.destroy(options);
     }
 
-    sendEmail(email){
+    sendEmail(email,name,passwordGenerationUrl){
         var awsSesService = new AwsSesService();
         var params={};
         params.sender='support@thebatua.com';
@@ -120,7 +123,10 @@ class UserService {
         params.receivers.push(email);
         params.subjectText='Welcome to Batua !!!';
         params.bodyText='Welcome to Batua !!!';
-        params.htmlTemplate=null;
+        var template = fs.readFileSync('./views/forget_password_mail.html',"utf-8");
+        var htmlTemplate = template.replace(/FIRSTNAME LASTNAME/g, name);
+        var htmlTemplate = template.replace(/URL/g, passwordGenerationUrl);
+        params.htmlTemplate=htmlTemplate;
         awsSesService.sendEmail(params,function(err,result){
             if(err)
                 console.log(err);
@@ -147,7 +153,7 @@ class UserService {
                 return callback(err);
             if(userService.validateAdminLogin(params,result))
                 return userService.updateAccessTokenAndShowResult(params,result,callback);
-            return callback("Does not exist");
+            return callback(userService.generateErrorMessage("Does not exist"));
         });
     }
 
@@ -156,7 +162,7 @@ class UserService {
         var status=result.status;
         var isValidGroupName= (name == 'Admin'||name=='Super Admin');
         var isValidStatus= (status=='Active');
-        var isValidPassword=(result.password==params.password);
+        var isValidPassword=(result.password==md5(params.password));
         if(result && params.deviceType && params.deviceId && isValidGroupName && isValidStatus && isValidPassword)
             return true;
         return false;
@@ -209,18 +215,99 @@ class UserService {
         accessTokensService.update(newParams,options,function(err,result){
             if(err)
                 return callback(err);
-            return callback(null,"Logged out");
+            return callback(null,{message:"Logged out"});
         });
     }
 
     adminForgotPassword(params,callback){
+        var userService = new UserService();
+        var token=userService.generateToken();
+        var email=params.email;
+        var passwordGenerationUrl="http://52.36.228.74:1337/api/"+ email + "/" + token;
+        Users.find({where:{email:email}}).then(function(result){
+            if(result)
+                userService.createAccessToken(result.id,email,token,passwordGenerationUrl,callback);
+            if(!result)
+                return callback("Invalid Email");
+            return null;
+        }).catch(function(exception){
+            return callback(exception);
+        });
+    }
 
+    createAccessToken(userId,email,token,passwordGenerationUrl,callback){
+        var userService = new UserService();
+        AccessTokens.create({token:token}).then(function(result){
+            var accessTokenId=result.id;
+            userService.updateUsersAccessTokens(userId,accessTokenId,email,passwordGenerationUrl,callback);
+            return null;
+        }).catch(function(exception){
+            return callback(exception);
+        });
+    }
+
+    updateUsersAccessTokens(userId,accessTokenId,email,passwordGenerationUrl,callback){
+        var userService = new UserService();
+        UsersAccessTokens.create({userId:userId,accessTokenId:accessTokenId}).then(function(result){
+            userService.sendEmail(email,name,passwordGenerationUrl);
+            return callback(null,"Email sent");
+        }).catch(function(exception){
+            return callback(exception);
+        })
     }
 
     adminResetPassword(params,callback){
-
+        var userService = new UserService();
+        var userRepository = new UserRepository();
+        var password=md5(params.password);
+        var confirmPassword=md5(params.confirmPassword);
+        var accessToken=params.accessToken;
+        var email=params.email;
+        if(password==confirmPassword){
+            var rawQueryString="select Users.id as userId from Users inner join (UsersAccessTokens "+
+            "inner join AccessTokens on UsersAccessTokens.accessTokenId=AccessTokens.id) "+
+            "on UsersAccessTokens.userId=Users.id where AccessTokens.token='" + accessToken + 
+            "' and Users.email='" + email +"'" ;
+            sequelize.query(rawQueryString).spread(function(metaResult,result){
+                var userId=(result.length)?(result[0].userId):(null);
+                if(result.length && userId){
+                    userService.updatePassword(userId,password,callback);
+                }
+                if(!result.length)
+                    return callback("Give correct accessToken");
+                return null;
+            }).catch(function(exception){
+                return callback(exception);
+            });
+        }else{
+            return callback("Password not matched");
+        }
     }
 
+    updatePassword(userId,password,callback){
+        var updateObject={password:password};
+        var updateOptions={where:{id:userId}};
+        Users.update(updateObject,updateOptions).then(function(result){
+            return callback(null,{message:"Password reset"});
+        }).catch(function(exception){
+            return callback(exception);
+        });
+    }
+
+    generateErrorMessage(messageOrObject){
+        var messageObject={};
+        if(typeof messageOrObject == "string")
+            messageObject.message=messageOrObject;
+        else if(typeof messageOrObject == "object" && messageOrObject.errors)
+            messageObject.message=messageOrObject.errors[0].message;
+        else if(typeof messageOrObject=="object" && messageOrObject.message)
+            messageObject.message=(messageOrObject.message).split(":")[1];
+        var array=[];
+        array.push(messageObject);
+        var errorObject={};
+        errorObject.errors=array;
+        return errorObject;
+    }
 }
 
 module.exports = UserService;
