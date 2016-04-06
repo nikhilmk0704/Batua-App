@@ -57,13 +57,12 @@ module.exports = {
 
     update: function(req, res) {
 
-        var options = {};
         var params = req.body;
-        options.where = {};
-        options.where.id = req.param('id');
+       
+        params.id = req.param('id');
         var promocodesService = new PromocodesService();
         
-        promocodesService.updateAndFind(params, options, function(err, result) {
+        promocodesService.updateAndFind(params, function(err, result) {
             if (err) {
                 return res.badRequest(err);
             } else {
@@ -72,15 +71,14 @@ module.exports = {
         });
     },
 
-    delete: function(req, res) {
+    updateStatus: function(req, res) {
 
-        var _id = req.param('id');
-        var options = {};
-        options.where = {};
-        options.where.id = _id;
-
+        var params = req.body;
+       
+        params.id = req.param('id');
         var promocodesService = new PromocodesService();
-        promocodesService.delete(options, function(err, result) {
+        
+        promocodesService.statusUpdateAndFind(params, function(err, result) {
             if (err) {
                 return res.badRequest(err);
             } else {
