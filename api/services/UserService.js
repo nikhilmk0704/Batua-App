@@ -123,7 +123,7 @@ class UserService {
         params.receivers.push(email);
         params.subjectText='Welcome to Batua !!!';
         params.bodyText='Welcome to Batua !!!';
-        var template = fs.readFileSync('./views/forget_password_mail.html',"utf-8");
+        var template = fs.readFileSync('./api/templates/forgot-password/forget_password_mail.ejs',"utf-8");
         var mapObject={FIRSTNAME:name,LASTNAME:"",URL:passwordGenerationUrl};
         var regExp=new RegExp(Object.keys(mapObject).join("|"),"gi");
         var htmlTemplate=template.replace(regExp,function(matched){
