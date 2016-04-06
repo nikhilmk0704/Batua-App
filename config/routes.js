@@ -31,6 +31,11 @@ module.exports.routes = {
     'get /api/promocode/:id?': 'PromocodesController.find',
     'put /api/promocode/:id?': 'PromocodesController.update',
     'put /api/promocode/:id/status': 'PromocodesController.updateStatus',
+
+    'post /api/offer': 'OfferController.create',
+    'get /api/offer/:id?': 'OfferController.find',
+    'put /api/offer/:id?': 'OfferController.update',
+    'put /api/offer/:id/status': 'OfferController.updateStatus',
    
 
     'post /api/ratereview': 'RateReviewsController.create',

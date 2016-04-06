@@ -8,6 +8,22 @@
 module.exports = {
 
     attributes: {
-
+    	id: {
+            type: Sequelize.INTEGER,
+            primaryKey: true,
+            autoIncrement: true,
+        }
+    },
+    associations: function() {
+        MerchantsPromocodes.belongsTo(Merchants, {
+            foreignKey: {
+                name: 'merchantId'
+            }
+        });
+        MerchantsPromocodes.belongsTo(Offers, {
+            foreignKey: {
+                name: 'offerId'
+            }
+        });
     }
 };
