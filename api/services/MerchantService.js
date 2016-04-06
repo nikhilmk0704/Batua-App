@@ -290,6 +290,7 @@ class MerchantService {
         Users.find({ include: [{ model: UserGroups, required: false }], where: { id: groupId } })
         .then(function(data) {
             var groupName=(data && data.UserGroup.name);
+            var merchantService = new MerchantService();
             var merchantRepository = new MerchantRepository();
             if (data && id) {
                 params.where.id = id;
@@ -300,10 +301,15 @@ class MerchantService {
                 return merchantRepository.findAll(params, callback);
             } 
             if (data && salesAgentId && !id && groupName == 'Field Sales Agent') {
-                params.where.createdSalesId = salesAgentId;
+                params.where.$and={};
+                params.where.$and.createdSalesId = salesAgentId;
+                params.where.$and.status={};
+                params.where.$and.status.$not="Permanent Suspend";
                 return merchantRepository.findAll(params, callback);
             } 
             if (data && adminId && !id && (groupName == 'Admin'|| groupName=='Super Admin')) {
+                params.where.status={};
+                params.where.status.$not="Permanent Suspend";
                 return merchantRepository.findAll(params, callback);
             } 
             return callback(merchantService.generateErrorMessage("Please provide correct id"));

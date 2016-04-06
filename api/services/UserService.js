@@ -124,8 +124,11 @@ class UserService {
         params.subjectText='Welcome to Batua !!!';
         params.bodyText='Welcome to Batua !!!';
         var template = fs.readFileSync('./views/forget_password_mail.html',"utf-8");
-        var htmlTemplate = template.replace(/FIRSTNAME LASTNAME/g, name);
-        var htmlTemplate = template.replace(/URL/g, passwordGenerationUrl);
+        var mapObject={FIRSTNAME:name,LASTNAME:"",URL:passwordGenerationUrl};
+        var regExp=new RegExp(Object.keys(mapObject).join("|"),"gi");
+        var htmlTemplate=template.replace(regExp,function(matched){
+            return mapObject[matched];
+        });
         params.htmlTemplate=htmlTemplate;
         awsSesService.sendEmail(params,function(err,result){
             if(err)
@@ -226,34 +229,35 @@ class UserService {
         var passwordGenerationUrl="http://52.36.228.74:1337/api/"+ email + "/" + token;
         Users.find({where:{email:email}}).then(function(result){
             if(result)
-                userService.createAccessToken(result.id,email,token,passwordGenerationUrl,callback);
+                userService.createAccessToken(result.id,email,token,result.name,passwordGenerationUrl,callback);
             if(!result)
-                return callback("Invalid Email");
+                callback("Invalid Email");
             return null;
         }).catch(function(exception){
-            return callback(exception);
+            callback(exception);
         });
     }
 
-    createAccessToken(userId,email,token,passwordGenerationUrl,callback){
+    createAccessToken(userId,email,token,name,passwordGenerationUrl,callback){
         var userService = new UserService();
         AccessTokens.create({token:token}).then(function(result){
             var accessTokenId=result.id;
-            userService.updateUsersAccessTokens(userId,accessTokenId,email,passwordGenerationUrl,callback);
+            userService.updateUsersAccessTokens(userId,accessTokenId,email,name,passwordGenerationUrl,callback);
             return null;
         }).catch(function(exception){
-            return callback(exception);
+            callback(exception);
         });
     }
 
-    updateUsersAccessTokens(userId,accessTokenId,email,passwordGenerationUrl,callback){
+    updateUsersAccessTokens(userId,accessTokenId,email,name,passwordGenerationUrl,callback){
         var userService = new UserService();
         UsersAccessTokens.create({userId:userId,accessTokenId:accessTokenId}).then(function(result){
             userService.sendEmail(email,name,passwordGenerationUrl);
-            return callback(null,"Email sent");
+            callback(null,{message:"Email sent"});
+            return null;
         }).catch(function(exception){
-            return callback(exception);
-        })
+            callback(exception);
+        });
     }
 
     adminResetPassword(params,callback){
