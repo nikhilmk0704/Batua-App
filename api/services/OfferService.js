@@ -81,7 +81,7 @@ class PromocodesService {
 
     findAll(params, callback) {
      var offersRepository = new OffersRepository();
-     offersRepository.find(params, callback);
+     offersRepository.findAll(params, callback);
  }
 
 }
