@@ -5,9 +5,9 @@
  * @help        :: See http://sailsjs.org/#!/documentation/concepts/Controllers
  */
 
-'use strict';
+ 'use strict';
 
-module.exports = {
+ module.exports = {
 
     create: function(req, res) {
 
@@ -18,7 +18,10 @@ module.exports = {
         offerService.save(params, function(err, result) {
             if (err) {
                 return res.badRequest(err);
-            } else {
+            }else if(_.isEmpty(result)){
+                return res.notFound("Does not exist");
+            }
+            else {
                 return res.json(201,result);
             }
         });
@@ -40,6 +43,8 @@ module.exports = {
             offerService.find(params, function(err, result) {
                 if (err) {
                     return res.badRequest(err);
+                } else if(_.isEmpty(result)){
+                    return res.notFound("Does not exist");
                 } else {
                     return res.json(200, result);
                 }
@@ -47,9 +52,17 @@ module.exports = {
         } else {
             offerService.findAll(params, function(err, result) {
                 if (err) {
+
                     return res.badRequest(err);
+
+                } else if(_.isEmpty(result)){
+
+                    return res.notFound("Does not exist");
+
                 } else {
+
                     return res.json(200,result);
+
                 }
             });
         }
@@ -58,14 +71,21 @@ module.exports = {
     update: function(req, res) {
 
         var params = req.body;
-       
+
         params.id = req.param('id');
         var offerService = new OfferService();
         
         offerService.updateAndFind(params, function(err, result) {
             if (err) {
+                
                 return res.badRequest(err);
-            } else {
+            
+            } else if(_.isEmpty(result)){
+                
+                return res.notFound("Does not exist");
+            
+            }
+            else {
                 return res.json(200, result);
             }
         });
@@ -74,14 +94,22 @@ module.exports = {
     updateStatus: function(req, res) {
 
         var params = req.body;
-       
+
         params.id = req.param('id');
         var offerService = new OfferService();
         
         offerService.statusUpdateAndFind(params, function(err, result) {
             if (err) {
+                
                 return res.badRequest(err);
-            } else {
+            
+            } else if(_.isEmpty(result)){
+
+                return res.notFound("Does not exist");
+            
+            }
+            else {
+                
                 return res.json(200, result);
             }
         });
