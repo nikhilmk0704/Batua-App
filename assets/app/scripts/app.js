@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('app', ['ui.router', 'ui.bootstrap', 'toastr', 'angular-loading-bar', 'ngAnimate', 'ngCookies', 'ngLodash', 'httpi', 'datatables'])
+        .module('app', ['ui.router', 'ui.bootstrap', 'toastr', 'angular-loading-bar', 'ngAnimate', 'ngCookies', 'ngLodash', 'httpi', 'datatables', 'ngSanitize', 'flow', 'angucomplete-alt'])
         .config(config)
         .run(run);
 
@@ -36,6 +36,49 @@
             url: '/categoryList',
             templateUrl: 'app/views/category/category_list.html',
             controller: 'categoryController',
+            controllerAs: 'vm'
+        })
+
+        .state('merchantList', {
+            url: '/merchantList',
+            templateUrl: 'app/views/merchant/merchant_list.html',
+            controller: 'merchantController',
+            controllerAs: 'vm'
+        })
+
+        .state('editMerchant', {
+            url: '/editMerchant/:merchantId',
+            templateUrl: 'app/views/merchant/merchant_details.html',
+            controller: 'editMerchantController',
+            controllerAs: 'vm',
+            resolve: {
+                categories: ['merchantService', function(merchantService) {
+                    return merchantService.getCategories();
+                }],
+                cities: ['merchantService', function(merchantService) {
+                    return merchantService.getCities();
+                }]
+            }
+        })
+
+        .state('addUser', {
+            url: '/addUser',
+            templateUrl: 'app/views/user/add_user.html',
+            controller: 'addUserController',
+            controllerAs: 'vm'
+        })
+
+        .state('editUser', {
+            url: '/editUser/:userId',
+            templateUrl: 'app/views/user/edit_user.html',
+            controller: 'editUserController',
+            controllerAs: 'vm'
+        })
+
+        .state('userList', {
+            url: '/userList',
+            templateUrl: 'app/views/user/user_list.html',
+            controller: 'userController',
             controllerAs: 'vm'
         })
 
