@@ -8,7 +8,7 @@ angular.module('app').controller('categoryController', ['$state', 'categoryServi
             return;
         }
         if (response.status === 400) {
-            return toastr.error(response.data);
+            return toastr.error(response.data.errors[0].message);
         }
         return toastr.error(response.data);
     });
@@ -26,7 +26,7 @@ angular.module('app').controller('categoryController', ['$state', 'categoryServi
                 return toastr.success('Category has been deleted successfully.');
             }
             if (response.status === 400) {
-                return toastr.error(response.data);
+                return toastr.error(response.data.errors[0].message);
             }
             return toastr.error(response.data);
         });

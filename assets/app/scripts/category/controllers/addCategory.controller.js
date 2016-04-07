@@ -13,9 +13,8 @@ angular.module('app').controller('addCategoryController', ['$state', 'categorySe
                 $state.go('categoryList');
                 return toastr.success('Category has been created successfully.');
             }
-
             if (response.status === 400) {
-                return toastr.error(response.data);
+                return toastr.error(response.data.errors[0].message);
             }
             return toastr.error(response.data);
         });

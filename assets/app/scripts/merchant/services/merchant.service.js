@@ -10,10 +10,11 @@
         var service = {};
 
         service.getMerchantList = getMerchantList;
-        service.editMerchant = editMerchant;
+        service.updateMerchant = updateMerchant;
         service.getMerchantData = getMerchantData;
         service.getCategories = getCategories;
         service.getCities = getCities;
+        service.setStatus = setStatus;
 
         return service;
 
@@ -31,7 +32,7 @@
             });
         }
 
-        function editMerchant(merchant, adminId, callback) {
+        function updateMerchant(merchant, imageGallery, cityId, coordinates, callback) {
             httpi({
                 method: "put",
                 url: API.updateMerchant,
@@ -42,25 +43,21 @@
                     profileImageUrl: merchant.profileImageUrl,
                     email: merchant.email,
                     phone: merchant.phone,
-                    imageGallery: merchant.imageGallery,
+                    imageGallery: imageGallery,
                     fees: merchant.fees,
                     categoryId: merchant.categoryId,
-                    cityId: merchant.cityId,
+                    cityId: cityId, 
                     address: merchant.address,
-                    pincode: merchant.pincode,
-                    latitude: merchant.latitude,
-                    longitude: merchant.longitude,
+                    pincode: merchant.location.pincode,
+                    latitude: coordinates[0],
+                    longitude: coordinates[1],
                     accountHolder: merchant.accountHolder,
                     accountNumber: merchant.accountNumber,
                     ifscCode: merchant.ifscCode,
                     branchName: merchant.branchName,
                     bankName: merchant.bankName,
-                    status: merchant.status,
+                    status: "Active",
                     createdSalesId: merchant.createdSalesId
-                },
-                params: {
-                    adminId: adminId,
-                    id: merchant.id
                 }
             }).then(function(response) {
                 callback(response);
@@ -104,6 +101,21 @@
                 deferred.resolve(response.data);
             });
             return deferred.promise;
+        }
+
+        function setStatus(merchantId, status, callback) {
+            httpi({
+                method: "put",
+                url: API.setStatus,
+                data: {
+                    id: merchantId,
+                    status: status
+                }
+            }).then(function(response) {
+                callback(response);
+            }, function(response) {
+                callback(response);
+            });
         }
 
 

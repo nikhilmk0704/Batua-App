@@ -12,7 +12,8 @@
             merchantDetails: "/admin/:adminId/merchant/:id",
             updateMerchant: "/merchant",
             cities: "/city",
-            imageUpload: "/image/upload"
+            imageUpload: "/image/upload",
+            setStatus: "/merchant/setstatus"
         }
 
     }
