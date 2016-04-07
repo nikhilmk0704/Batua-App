@@ -13,7 +13,10 @@
             updateMerchant: "/merchant",
             cities: "/city",
             imageUpload: "/image/upload",
-            setStatus: "/merchant/setstatus"
+            setStatus: "/merchant/setstatus",
+            user: "/admin/user",
+            userDetails: "/admin/user/:id",
+            userStatus: "/admin/user/setstatus"
         }
 
     }
