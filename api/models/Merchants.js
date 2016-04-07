@@ -92,6 +92,7 @@ module.exports = {
     },
     associations: function() {
         Merchants.belongsTo(Locations, {
+            as:'locations',
             foreignKey: {
                 name: 'locationId',
                 defaultValue:null,
@@ -100,6 +101,7 @@ module.exports = {
             }
         });
         Merchants.belongsTo(Users, {
+            as:'users',
             foreignKey: {
                 name: 'createdSalesId',
                 allowNull: false,
@@ -108,6 +110,7 @@ module.exports = {
             }
         });
         Merchants.belongsTo(Categories, {
+            as:'categories',
             foreignKey: {
                 name: 'categoryId',
                 allowNull: false,
@@ -116,6 +119,7 @@ module.exports = {
             }
         });
         Merchants.belongsToMany(Galleries, {
+            as:'galleries',
             through: 'MerchantsGalleries',
             foreignKey: {
                 name: 'merchantId',

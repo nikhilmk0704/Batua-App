@@ -26,6 +26,7 @@ module.exports = {
     },
     associations: function() {
         Locations.belongsTo(Cities, {
+            as:'cities',
             foreignKey: {
                 name: 'cityId',
                 onDelete: 'RESTRICT',

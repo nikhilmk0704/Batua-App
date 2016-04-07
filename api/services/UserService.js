@@ -30,7 +30,7 @@ class UserService {
 
     findUserByAdmin(params,callback){
         var findObject={};
-        findObject.include=[{model:UserGroups,required:false}];
+        findObject.include=[{model:UserGroups,as:'userGroups',required:false}];
         findObject.attributes=['id','name','phone','email','status'];
         var userRepository = new UserRepository();
         if(params.id){
@@ -48,7 +48,7 @@ class UserService {
     	options.where={};
     	options.where.id=params.id;
     	findObject=options;
-        findObject.include=[{model:UserGroups,required:false}];
+        findObject.include=[{model:UserGroups,as:'userGroups',required:false}];
         findObject.attributes=['id','name','phone','email','status'];
         var userRepository = new UserRepository();
     	userRepository.update(params,options,function(err,result){
@@ -71,28 +71,34 @@ class UserService {
 
     createUserAndSendEmailByAdmin(params,callback){
         var userService = new UserService();
-        var accessToken=userService.generateToken();
-        params.token=accessToken;
         params.status="Active";
         Users.create(params).then(function(result){
-            userService.createAccessToken(params,result,callback);
+            var userData=JSON.parse(JSON.stringify(result));
+            delete userData.isPhoneVerified;
+            delete userData.isPinActivated;
+            userService.createAccessToken(userData,callback);
             return null;
         }).catch(function(exception){
             return callback(exception);
         });
     }
 
-    createAccessToken(params,userData,callback){
+    createAccessToken(userData,callback){
         var userService = new UserService();
+        var accessToken=userService.generateToken();
+        var params={};
+        params.token=accessToken;
         AccessTokens.create(params).then(function(result){
             var newParams={};
             newParams.accessTokenId=result.id;
             newParams.userId=userData.id;
-            var passwordGenerationUrl="http://52.36.228.74:1337/api/"+ userData.email + "/" + result.token;
+            var email=userData.email;
+            var urlToken=result.token;
+            var passwordGenerationUrl="http://52.36.228.74:1337/api/"+ email + "/" + urlToken;
             userService.createUsersAccessToken(newParams,userData,passwordGenerationUrl,callback);
             return null;
         }).catch(function(exception){
-            userService.deleteUser(userData.id);
+            userService.deleteUser(userData);
             return callback(exception);
         });
     }
@@ -100,7 +106,9 @@ class UserService {
     createUsersAccessToken(params,userData,passwordGenerationUrl,callback){
         var userService = new UserService();
         UsersAccessTokens.create(params).then(function(result){
-            userService.sendEmail(userData.email,userData.name,passwordGenerationUrl);
+            var email=userData.email;
+            var name=userData.name;
+            userService.sendEmail(email,name,passwordGenerationUrl);
             return callback(null,userData);
         }).catch(function(exception){
             userService.deleteUser(userData);
@@ -124,7 +132,10 @@ class UserService {
         params.subjectText='Welcome to Batua !!!';
         params.bodyText='Welcome to Batua !!!';
         var template = fs.readFileSync('./api/templates/forgot-password/forget_password_mail.ejs',"utf-8");
-        var mapObject={FIRSTNAME:name,LASTNAME:"",URL:passwordGenerationUrl};
+        var mapObject={};
+        mapObject.FIRSTNAME=name;                       // Capital case because of template is using the same 
+        mapObject.LASTNAME="";
+        mapObject.URL=passwordGenerationUrl;
         var regExp=new RegExp(Object.keys(mapObject).join("|"),"gi");
         var htmlTemplate=template.replace(regExp,function(matched){
             return mapObject[matched];
@@ -144,29 +155,31 @@ class UserService {
 
     adminLogin(params,callback){
         var userService = new UserService();
-        var userRepository = new UserRepository();
         var options={};
         var findObject={};
         options.where={};
         options.where.email=params.email;
         findObject=options;
-        findObject.include=[{model:UserGroups,required:false},{model:AccessTokens,required:false}];
-        userRepository.find(findObject,function(err,result){
-            if(err)
-                return callback(err);
-            if(userService.validateAdminLogin(params,result))
-                return userService.updateAccessTokenAndShowResult(params,result,callback);
+        findObject.include=[{model:UserGroups,as:'userGroups',required:false},
+                            {model:AccessTokens,as:'accessTokens',required:false}];
+        Users.find(findObject).then(function(result){
+            if(userService.validateAdminLogin(params,result)){
+                userService.updateAccessTokenAndShowResult(params,result,callback);
+                return null;
+            }
             return callback(userService.generateErrorMessage("Does not exist"));
+        }).catch(function(exception){
+            callback(exception);
         });
     }
 
     validateAdminLogin(params,result){
-        var name=result.UserGroup.name;
+        var name=result.userGroups.name;
         var status=result.status;
         var isValidGroupName= (name == 'Admin'||name=='Super Admin');
         var isValidStatus= (status=='Active');
         var isValidPassword=(result.password==md5(params.password));
-        if(result && params.deviceType && params.deviceId && isValidGroupName && isValidStatus && isValidPassword)
+        if(result && isValidGroupName && isValidStatus && isValidPassword)
             return true;
         return false;
     }
@@ -176,20 +189,20 @@ class UserService {
         var token = userService.generateToken();
         var createObject={};
         createObject.token=token;
-        createObject.deviceId=params.deviceId;
-        createObject.deviceType=params.deviceType;
+        createObject.deviceId=null;
+        createObject.deviceType=null;
         var options={};
         options.where={};
-        options.where.id=result.AccessTokens.id;
+        options.where.id=result.accessTokens.id;
         AccessTokens.create(createObject).then(function(data){
-            userService.createUsersAccessTokens(result,data,callback);
+            userService.createUsersAccessTokensLogin(result,data,callback);
             return null;
         }).catch(function(exception){
             return callback(exception);
         });
     }
 
-    createUsersAccessTokens(result,data,callback){
+    createUsersAccessTokensLogin(result,data,callback){
         var createObject={};
         createObject.accessTokenId=data.id;
         createObject.userId=result.id;
@@ -199,9 +212,7 @@ class UserService {
             loggedinResult.name=result.name;
             loggedinResult.email=result.email;
             loggedinResult.token=data.token;
-            loggedinResult.deviceId=data.deviceId;
-            loggedinResult.deviceType=data.deviceType;
-            loggedinResult.userGroupd=result.UserGroup.name;
+            loggedinResult.userGroup=result.userGroups.name;
             return callback(null,loggedinResult);
         }).catch(function(exception){
             return callback(exception);
@@ -228,8 +239,11 @@ class UserService {
         var email=params.email;
         var passwordGenerationUrl="http://52.36.228.74:1337/api/"+ email + "/" + token;
         Users.find({where:{email:email}}).then(function(result){
-            if(result)
-                userService.createAccessToken(result.id,email,token,result.name,passwordGenerationUrl,callback);
+            if(result){
+                var userId=result.id;
+                var name=result.name;
+                userService.createAccessTokenAndSendEmail(userId,email,token,name,passwordGenerationUrl,callback);
+            }
             if(!result)
                 callback("Invalid Email");
             return null;
@@ -238,7 +252,7 @@ class UserService {
         });
     }
 
-    createAccessToken(userId,email,token,name,passwordGenerationUrl,callback){
+    createAccessTokenAndSendEmail(userId,email,token,name,passwordGenerationUrl,callback){
         var userService = new UserService();
         AccessTokens.create({token:token}).then(function(result){
             var accessTokenId=result.id;
@@ -289,13 +303,33 @@ class UserService {
     }
 
     updatePassword(userId,password,callback){
-        var updateObject={password:password};
-        var updateOptions={where:{id:userId}};
+        var updateObject={};
+        updateObject.password=password;
+        var updateOptions={};
+        updateOptions.where={};
+        updateOptions.where.id=userId;
         Users.update(updateObject,updateOptions).then(function(result){
             return callback(null,{message:"Password reset"});
         }).catch(function(exception){
             return callback(exception);
         });
+    }
+
+    getProfile(params,callback){
+        var salesagentId=params.salesagentId;
+        var userId=params.userId;
+        var userRepository = new UserRepository();
+        var findObject={};
+        findObject.where={};
+        if(userId){
+            findObject.where.id=userId;
+            findObject.attributes=['id','name','phone','profileImageUrl','email','isPinActivated'];
+        }
+        if(salesagentId){
+            findObject.where.id=salesagentId;
+            findObject.attributes=['id','name','profileImageUrl','email'];
+        }
+        userRepository.find(findObject,callback);
     }
 
     generateErrorMessage(messageOrObject){

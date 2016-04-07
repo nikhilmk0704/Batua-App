@@ -25,22 +25,5 @@ module.exports = {
             type: Sequelize.STRING,
             defaultValue:null
         }
-    },
-    associations: function() {
-        AccessTokens.belongsToMany(Users, {
-            through:'UsersAccessTokens',
-            foreignKey: {
-                name: 'accessTokenId',
-                allowNull: false
-            }
-        });
-        Users.belongsToMany(AccessTokens, {
-            through:'UsersAccessTokens',
-            foreignKey: {
-                name: 'userId',
-                allowNull: false
-            }
-        });
-
     }
 };
