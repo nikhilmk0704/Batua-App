@@ -85,10 +85,11 @@ class MerchantService {
         var options = {};
         options.where = {};
         options.where.id = params.id;
-        if (merchantService.validateAllRequest(params) && params.status != "Drafted") { // true if all mandatory fields are supplied
+        var status=params.status;
+        if (merchantService.validateAllRequest(params) && status != "Drafted") { // true if all mandatory fields are supplied
             return merchantService.updateMerchant(params, options, callback);
         } 
-        if (merchantService.validatePartialRequest(params) && params.status == "Drafted") {
+        if (merchantService.validatePartialRequest(params) && status == "Drafted") {
             return merchantService.updateMerchant(params, options, callback);
         } 
         return callback(merchantService.generateErrorMessage("Mandatory fields missing"));
@@ -139,7 +140,10 @@ class MerchantService {
 
     findMerchants(params,merchantId,options,findObject,callback){
         var merchantService = new MerchantService();
-        Merchants.find({where:{id:merchantId}}).then(function(result){
+        var merchantParams={};
+        merchantParams.where={};
+        merchantParams.where.id=merchantId;
+        Merchants.find(merchantParams).then(function(result){
             if(result && result.locationId){
                 merchantService.updateLocations(params,result,merchantId,options,findObject,callback);
             }else{
@@ -164,7 +168,10 @@ class MerchantService {
 
     updateLocations(params,result,merchantId,options,findObject,callback){
         var merchantService = new MerchantService();
-        Locations.update(params,{where:{id:result.locationId}}).then(function(result){
+        var locationParams={};
+        locationParams.where={};
+        locationParams.where.id=result.locationId;
+        Locations.update(params,locationParams).then(function(result){
             merchantService.updateMerchantAndGalleries(params,result,merchantId,options,findObject,callback);
             return null;
         }).catch(function(exception){
@@ -181,7 +188,10 @@ class MerchantService {
 
     destroyMerchantsGalleries(params,merchantId,options,findObject,callback){
         var merchantService = new MerchantService();
-        MerchantsGalleries.destroy({ where: { 'merchantId': merchantId } }).then(function(result){
+        var merchantsGalleriesParams={};
+        merchantsGalleriesParams.where={};
+        merchantsGalleriesParams.where.merchantId=merchantId;
+        MerchantsGalleries.destroy(merchantsGalleriesParams).then(function(result){
             merchantService.updateMerchantAndCreateGalleryAndFindMerchant(params,merchantId,options,findObject,callback);
             return null;
         }).catch(function(exception){
@@ -217,7 +227,9 @@ class MerchantService {
 
     createGalleries(imageUrl,merchantId,findObject,imageGalleryArrayLength,count,type,callback){
         var merchantService = new MerchantService();
-        Galleries.create({'url':imageUrl}).then(function(result){
+        var galleryParams={};
+        galleryParams.url=imageUrl;
+        Galleries.create(galleryParams).then(function(result){
             var galleryId=result.id;
             merchantService.createMerchantsGalleries(merchantId,galleryId,findObject,imageGalleryArrayLength,count,type,callback);
             return null
@@ -230,7 +242,10 @@ class MerchantService {
 
     createMerchantsGalleries(merchantId,galleryId,findObject,imageGalleryArrayLength,count,type,callback){
         var merchantService = new MerchantService();
-        MerchantsGalleries.create({'merchantId':merchantId,'galleryId':galleryId}).then(function(result){
+        var merchantsGalleriesParams={};
+        merchantsGalleriesParams.merchantId=merchantId;
+        merchantsGalleriesParams.galleryId=galleryId;
+        MerchantsGalleries.create(merchantsGalleriesParams).then(function(result){
             if(imageGalleryArrayLength==count){
                 merchantService.getMerchantById(findObject,callback);
             }
@@ -254,17 +269,21 @@ class MerchantService {
     getIncludeModels() {
         return [{
             model: Users,
+            as:'users',
             attributes:['id','name','phone','email'],
             required: false
         }, {
             model: Galleries,
+            as:'galleries',
             required: false
         }, {
             model: Categories,
+            as:'categories',
             required: false
         }, {
             model: Locations,
-            include:[{model:Cities,required:false}],
+            as:'locations',
+            include:[{model:Cities,as:'cities',required:false}],
             required: false
         }];
     }
@@ -286,10 +305,12 @@ class MerchantService {
 
     // get merchant lists for user,admin,salesAgent,super admin
     getUserGroup(params,id,userId,salesAgentId,adminId,callback) {
-        var groupId=(userId|salesAgentId|adminId);
-        Users.find({ include: [{ model: UserGroups, required: false }], where: { id: groupId } })
-        .then(function(data) {
-            var groupName=(data && data.UserGroup.name);
+        var findObject={};
+        findObject.include=[{ model: UserGroups,as:'userGroups', required: false }];
+        findObject.where={};
+        findObject.where.id=(userId|salesAgentId|adminId);
+        Users.find(findObject).then(function(data) {
+            var groupName=(data && data.userGroups.name);
             var merchantService = new MerchantService();
             var merchantRepository = new MerchantRepository();
             if (data && id) {
@@ -303,8 +324,7 @@ class MerchantService {
             if (data && salesAgentId && !id && groupName == 'Field Sales Agent') {
                 params.where.$and={};
                 params.where.$and.createdSalesId = salesAgentId;
-                params.where.$and.status={};
-                params.where.$and.status.$not="Permanent Suspend";
+                params.where.$and.$or=[{status:"Pending for approval"},{status:"Active"},{status:"Drafted"}];
                 return merchantRepository.findAll(params, callback);
             } 
             if (data && adminId && !id && (groupName == 'Admin'|| groupName=='Super Admin')) {

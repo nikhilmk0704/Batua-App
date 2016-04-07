@@ -16,8 +16,6 @@ module.exports = {
         params.phone=req.body.phone;
         params.profileImageUrl=req.body.profileImageUrl;
         params.userGroupId=req.body.userGroupId;
-        params.deviceId=req.body.deviceId;
-        params.deviceType=req.body.deviceType;
         var userService = new UserService();
         userService.createUserByAdmin(params,function(err,result){
             if(err){
@@ -72,8 +70,6 @@ module.exports = {
         var params={};
         params.email=req.body.email;
         params.password=req.body.password;
-        params.deviceId=req.body.deviceId;
-        params.deviceType=req.body.deviceType;
         var userService = new UserService();
         userService.adminLogin(params,function(err,result){
             if(err)
@@ -117,6 +113,18 @@ module.exports = {
             return res.json(200,result);
         });
     },    
+
+    getProfile:function(req,res){
+        var params={};
+        params.salesagentId=req.param('salesagentId');
+        params.userId=req.param('userId');
+        var userService = new UserService();
+        userService.getProfile(params,function(err,result){
+            if(err)
+                return res.badRequest(userService.generateErrorMessage(err));
+            return res.json(200,result);
+        })
+    },
 
 };
 

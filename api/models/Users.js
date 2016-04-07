@@ -76,7 +76,6 @@ module.exports = {
         },
         otp: {
             type: Sequelize.INTEGER(6),
-            defaultValue: null,
         },
         status: {
             type: Sequelize.STRING,
@@ -98,6 +97,7 @@ module.exports = {
     },
     associations: function() {
         Users.belongsTo(UserGroups, {
+            as:'userGroups',
             foreignKey: {
                 name: 'userGroupId',
                 required:true,
@@ -105,6 +105,7 @@ module.exports = {
             }
         });
         Users.belongsToMany(Paymentmodes,{
+            as:'paymentmodes',
             through:'UsersPaymentmodes',
             foreignKey:{
                 name:'userId'
@@ -114,6 +115,22 @@ module.exports = {
             through:'UsersPaymentmodes',
             foreignKey:{
                 name:'paymentmodeId'
+            }
+        });
+        AccessTokens.belongsToMany(Users, {
+            as:'users',
+            through:'UsersAccessTokens',
+            foreignKey: {
+                name: 'accessTokenId',
+                allowNull: false
+            }
+        });
+        Users.belongsToMany(AccessTokens, {
+            as:'accessTokens',
+            through:'UsersAccessTokens',
+            foreignKey: {
+                name: 'userId',
+                allowNull: false
             }
         });
     }
