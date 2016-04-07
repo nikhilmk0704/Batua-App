@@ -21,26 +21,27 @@
                             </div>
                         </div>
                     </div>
-                    <div class="dataTables_wrapper no-footer custom-table" style="width:auto">
+                    <div class="dataTables_wrapper no-footer">
                         <div class="table-scrollable">
-                            <table datatable="ng" class="table table-striped table-hover table-bordered dataTable no-footer responsive">
+                            <table class="table table-striped table-hover table-bordered order-column dataTable no-footer responsive" datatable="ng">
                                 <thead>
                                     <tr role="row">
-                                        <th class="srno" tabindex="0" rowspan="1" colspan="1" aria-label="activate to sort column ascending">Sr No. </th>
-                                        <th class="sorting" tabindex="0" rowspan="1" colspan="1" aria-label="activate to sort column ascending" style="width:68%;"> Category Name
+                                        <th class="srno" tabindex="0" aria-label="activate to sort column ascending">Sr No. </th>
+                                        <th class="sorting" tabindex="0" aria-label="activate to sort column ascending" style="width:68%;"> Category Name
                                         </th>
-                                        <th class="actionmultiple" tabindex="0" rowspan="1" colspan="2" aria-label="activate to sort column ascending" style="text-align:center"> Action </th>
+                                        <th class="actionmultiple" tabindex="0" aria-label="activate to sort column ascending" style="text-align:center"> Action for Edit </th>
+                                        <th class="actionmultiple" tabindex="0" aria-label="activate to sort column ascending" style="text-align:center"> Action for Delete</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr role="row" class="odd" ng-repeat="category in vm.categories">
+                                <tbody class="datatablecustom">
+                                    <tr class="gradeX odd" ng-repeat="category in vm.categories">
                                         <td class=""> {{$index+1}} </td>
                                         <td> {{category.name}} </td>
                                         <td>
-                                            <a type="button" class="btn button-color-table" style="float:left;" ng-click="vm.editCategoryData(category)"><i class="fa fa-pencil"></i></a>
+                                            <a type="button" class="btn button-color-table" ng-click="vm.editCategoryData(category)"><i class="fa fa-pencil"></i></a>
                                         </td>
                                         <td>
-                                            <a type="button" class="btn button-color-table" style="float:left;" ng-click="vm.deleteCategory(category.id)"><i class="fa fa-trash"></i></a>
+                                            <a type="button" class="btn button-color-table" ng-click="vm.deleteCategory(category.id)"><i class="fa fa-trash"></i></a>
                                         </td>
                                     </tr>
                                 </tbody>
