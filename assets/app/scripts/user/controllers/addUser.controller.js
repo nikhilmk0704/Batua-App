@@ -20,14 +20,10 @@ angular.module('app').controller('addUserController', ['$state', '$scope', '$tim
 
         vm.profileImageUpload = function(file, event, $flow) {
             var file, image;
-            var imgOld = vm.editMerchantData.profileImageUrl;
             var _URL = window.URL || window.webkitURL;
             if ((file = file.file)) {
                 image = new Image();
                 image.onload = function() {
-                    $scope.$apply(function() {
-                        vm.editMerchantData.profileImageUrl = imgOld;
-                    });
                     if (this.width < 320 || this.height < 240) {
                         return toastr.error("Please select an image above 320px width and 240px height");
                     }
@@ -46,10 +42,10 @@ angular.module('app').controller('addUserController', ['$state', '$scope', '$tim
                 if (response.status === 200) {
                     $timeout(function() {
                         $scope.$apply(function() {
-                            vm.editMerchantData.profileImageUrl = response.data;
+                            vm.addUserData.profileImageUrl = response.data;
                         });
-                        vm.editMerchantData.profileImageUrl = response.data;
-                        return vm.editMerchantData.profileImageUrl;
+                        vm.addUserData.profileImageUrl = response.data;
+                        return vm.addUserData.profileImageUrl;
                     }, 1500);
                 }
                 if (response.status === 400) {
