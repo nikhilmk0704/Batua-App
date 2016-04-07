@@ -25,8 +25,9 @@ class CategoryService {
         var options = {};
         options.where = {};
         options.where.id = params.id;
+        var findObject=options;
         var categoryRepository = new CategoryRepository();
-        categoryRepository.updateAndFind(params, options, options, callback);
+        categoryRepository.updateAndFind(params, options, findObject, callback);
     }
 
     delete(id, callback) {
@@ -35,6 +36,21 @@ class CategoryService {
         options.where.id = id;
         var categoryRepository = new CategoryRepository();
         categoryRepository.remove(options, callback);
+    }
+
+    generateErrorMessage(messageOrObject){
+        var messageObject={};
+        if(typeof messageOrObject == "string")
+            messageObject.message=messageOrObject;
+        else if(typeof messageOrObject == "object" && messageOrObject.errors)
+            messageObject.message=messageOrObject.errors[0].message;
+        else if(typeof messageOrObject=="object" && messageOrObject.message)
+            messageObject.message=(messageOrObject.message).split(":")[1];
+        var array=[];
+        array.push(messageObject);
+        var errorObject={};
+        errorObject.errors=array;
+        return errorObject;
     }
 
 }

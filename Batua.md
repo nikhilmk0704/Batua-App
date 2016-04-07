@@ -10,9 +10,9 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 
 # User Authentication
 
-## User By Admin [/user]
+## User By Admin [ /api/admin/user]
 
-### Create New User [POST]
+### Create New User [POST /api/admin/user]
 
 + Request (application/json)
 
@@ -26,10 +26,8 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
                 "name":"vikash singh",
                 "email":"username@domain.com",
                 "phone":9876543210,
-                "password":"123456",
                 "profileImageUrl":"url",
-                "groupId":1,
-                "deviceToken":"APA91bGl8H-kxi4eEVIcNHExgbsI5zB32Aj42340iAkL7_D6g2VYTlTvYDKIqfKeiX9eDswg7xFifVhOmrJtmRAtzviDKZEVlaq3FiWAzNB8jpyaEv8d22uH04MyUn_XwsUs4kwV88ZC"
+                "groupId":1
             }
         
 + Response 201 (application/json)
@@ -38,8 +36,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
                 "name":"vikash singh",
                 "email":"username@domain.com",
                 "phone":9876543210,
-                "profileImageUrl":"url",
-                "accessToken": "dgfjsdgjkbdjkbvs"
+                "profileImageUrl":"url"
             }
 
 + Response 400 (applicaiton)
@@ -49,7 +46,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
             "message": "Already exist"
         }
 
-### Get User List [GET]
+### Get User List [GET /api/admin/user/{id}]
         
 + Response 200 (application/json)
     
@@ -75,6 +72,117 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
         {
             "success": false
         }
+
+### Update User [PUT /api/admin/user/]
+
++ Request (application/json)
+
+    + Headers
+        
+            Access-Token: "ABCDEFGH12345678"
+            
+    + Body
+
+            {
+                "id":1,
+                "name":"vikash singh",
+                "email":"username@domain.com",
+                "phone":9876543210,
+                "profileImageUrl":"url",
+                "groupId":1
+            }
+        
++ Response 201 (application/json)
+
+            {   "id":1,
+                "name":"vikash singh",
+                "email":"username@domain.com",
+                "phone":9876543210,
+                "profileImageUrl":"url"
+            }
+
++ Response 400 (applicaiton)
+
+        {
+            "success": false,
+            "message": "Already exist"
+        }
+
+### Active/Suspend User [PUT /api/admin/user/setstatus]
+
++ Request (application/json)
+
+    + Headers
+        
+            Access-Token: "ABCDEFGH12345678"
+            
+    + Body
+
+            {
+                "id":1,
+                status:"Active"
+            }
+        
++ Response 201 (application/json)
+
+            {   "id":1,
+                "name":"vikash singh",
+                "email":"username@domain.com",
+                "phone":9876543210,
+                "profileImageUrl":"url",
+                "status":"Active"
+            }
+
++ Response 400 (applicaiton)
+
+
+## Admin Login [/api/admin/user/login]
+
+### Admin Login [POST]
+
++ Request (application/json)
+            
+    + Body
+
+            {
+                "email":"aditya@tecsolsoftware.com",
+                "password":"123456",
+                "deviceId":"device1",
+                "deviceType":"type1"
+            }
+        
++ Response 200 (application/json)
+
+            {
+                "id": 7,
+                "name": "Aditya",
+                "email": "aditya@tecsolsoftware.com",
+                "token": "0922QvJiT8DkZDtVuwrs6SoZ",
+                "deviceId": "device1",
+                "deviceType": "type1",
+                "userGroup":"Admin"
+            }
+
++ Response 400 (applicaiton)
+
+
+## Admin Logout [/api/admin/user/logout]
+
+### Admin Logout [PUT]
+
++ Request (application/json)
+            
+    + Body
+
+            {
+                "token":"0922TmsgSpIfAJPaaJVvsykG"
+
+            }
+        
++ Response 200 (application/json)
+
+
++ Response 400 (applicaiton)
 
 
 ## Normal SignUp [/user/normalSignUp]
@@ -489,9 +597,9 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 
 
 
-## Profile Image Upload [/user/{id}/profile/Image]
+## Image Upload [/api/image/upload]
 
-### Upload Profile Image [PUT]
+### Upload Image [PUT]
 
 + Request (multipart/form-data)
 
@@ -501,7 +609,9 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 
     + Body
     
-            $image
+            {
+                "image":$image,
+            }
             
         
 + Response 200 (application/json)
@@ -760,7 +870,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 401 (application/json)
 
 
-### Get Merchant [GET /api/user/:userId/merchant/:id?]
+### Get Merchant For User [GET /api/user/:userId/merchant/:id?]
 
 + Response 200 (application/json)
 
@@ -836,7 +946,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 401 (application/json)
 
 
-### Get Merchant [GET /api/salesagent/:salesAgentId/merchant/:id?]
+### Get Merchant For sales Agent [GET /api/salesagent/:salesAgentId/merchant/:id?]
 
 + Response 200 (application/json)
 
@@ -912,7 +1022,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 401 (application/json)
 
 
-### Get Merchant [GET /api/admin/:adminId/merchant/:id?]
+### Get Merchant For Admin [GET /api/admin/:adminId/merchant/:id?]
 
 + Response 200 (application/json)
 
@@ -1214,7 +1324,9 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
     + Body
     
             {
-                "name": "city1"
+                "name": "city1",
+                "state":"state",
+                "country":"india"
             }
 
 + Response 201 (application/json)
@@ -1224,6 +1336,8 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
             {   
                 "id":1,
                 "name": "city1",
+                "state":"state",
+                "country":"india"
                 "createdAt": "2016-11-12T05:03:46.000Z",
                 "updatedAt": "2016-11-12T05:03:46.000Z"
             }
@@ -1245,7 +1359,9 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
     + Body
     
             {   "id":1,
-                "name": "city2"
+                "name": "city2",
+                "state":"state",
+                "country":"india"
             }
 
 + Response 200 (application/json)
@@ -1255,6 +1371,8 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
             {   
                 "id":1,
                 "name": "city2",
+                "state":"state",
+                "country":"india"
                 "createdAt": "2016-11-12T05:03:46.000Z",
                 "updatedAt": "2016-11-12T05:03:46.000Z"
             }
@@ -1275,12 +1393,16 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
                 {   
                     "id":1,
                     "name": "city1",
+                    "state":"state",
+                    "country":"india"
                     "createdAt": "2016-11-12T05:03:46.000Z",
                     "updatedAt": "2016-11-12T05:03:46.000Z"
                 },
                 {   
                     "id":2,
                     "name": "city2",
+                    "state":"state",
+                    "country":"india"
                     "createdAt": "2016-11-12T05:03:46.000Z",
                     "updatedAt": "2016-11-12T05:03:46.000Z"
                 }

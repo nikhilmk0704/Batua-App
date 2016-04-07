@@ -1,0 +1,206 @@
+BEGIN CONTENT BODY -->
+<div class="page-content">
+    <div class="row">
+        <div class="col-md-10 margincontent">
+            <!-- BEGIN SAMPLE FORM PORTLET-->
+            <section class="portlet box purple portletcustom" style="overflow:auto;">
+                <section class="portlet-title">
+                    <div class="caption font-dark">
+                        <span class="caption-subject bold uppercase"> Edit Merchant </span>
+                    </div>
+                </section>
+                <section class="col-md-2 col-xs-3">
+                    <div class="dpholder col-md-12 col-xs-12">
+                        <img class="img-responsive" alt="Profile Image" ng-src="{{vm.editMerchantData.profileImageUrl}}" style="width:inherit; height:inherit;" />
+                    </div>
+                    <div class="form-actions formactioncustom" style="border-top-width:0px;">
+                        <button class="btn green fileinput-button uploadbtn" style="margin-top:25px;" id="flowUploadForm" flow-init flow-file-added="vm.profileImageUpload($file, $event, $flow)">
+                            <div class="">
+                                <span flow-btn ng-click="$flow.files=[]">Upload</span>
+                            </div>
+                        </button>
+                    </div>
+                </section>
+                <section class="col-md-9 col-xs-9">
+                    <div class="portlet-body form">
+                        <div class="form-horizontal">
+                            <div class="form-body">
+                                <form class="merchant-form" role="form" ng-submit="vm.editMerchant(vm.editMerchantData)" name="merchantForm" novalidate>
+                                    <section class="form-group" ng-class="{'has-error': merchantForm.merchantName.$invalid && !merchantForm.merchantName.$pristine}">
+                                        <label class="control-label col-xs-3"> Name:
+                                            <span class="required"> * </span>
+                                        </label>
+                                        <div class="col-xs-8">
+                                            <input type="text" class="form-control input-circle" id="merchantName" name="merchantName" style="margin-bottom:10px;" required ng-model="vm.editMerchantData.name" />
+                                            <span class="help-block text-danger" ng-if="!merchantForm.merchantName.$pristine && merchantForm.merchantName.$invalid" ng-messages="merchantForm.merchantName.$error">Please enter merchant name </span>
+                                        </div>
+                                    </section>
+                                    <section class="form-group">
+                                        <label class="control-label col-xs-3">Short Code: </label>
+                                        <div class="col-xs-8">
+                                            <input type="text" class="form-control input-circle" style="margin-bottom:10px;" readonly ng-model="vm.editMerchantData.shortCode" />
+                                        </div>
+                                    </section>
+                                    <section class="form-group" ng-class="{'has-error': merchantForm.email.$invalid && !merchantForm.email.$pristine}">
+                                        <label class="control-label col-xs-3">Email:
+                                            <span class="required"> * </span>
+                                        </label>
+                                        <div class="col-xs-8">
+                                            <input type="email" class="form-control input-circle" id="email" name="email" style="margin-bottom:10px;" required ng-model="vm.editMerchantData.email" />
+                                            <span class="help-block text-danger" ng-if="!merchantForm.email.$pristine && merchantForm.email.$invalid" ng-messages="merchantForm.email.$error">Please enter a valid email</span>
+                                        </div>
+                                    </section>
+                                    <section class="form-group" ng-class="{'has-error': merchantForm.phonenumber.$invalid && !merchantForm.phonenumber.$pristine}">
+                                        <label class="control-label col-xs-3">Phone number:
+                                            <span class="required"> * </span>
+                                        </label>
+                                        <div class="col-xs-8">
+                                            <input type="tel" class="form-control input-circle" id="phonenumber" name="phonenumber" style="margin-bottom:10px;" required ng-model="vm.editMerchantData.phone" ng-maxlength="12" ng-pattern="/^[0-9]*$/" />
+                                            <span class="help-block text-danger" ng-if="!merchantForm.phonenumber.$pristine && merchantForm.phonenumber.$invalid" ng-messages="merchantForm.phonenumber.$error">
+                                            <span class="help-block text-danger" ng-if="merchantForm.phonenumber.$error.required" ng-message="required">Please enter phonenumber</span>
+                                            <span class="help-block text-danger" ng-if="merchantForm.phonenumber.$error.pattern" ng-message="pattern">Enter only numbers!</span>
+                                            <span class="help-block text-danger" ng-if="merchantForm.phonenumber.$error.maxlength" ng-message="maxlength">Not matching standards!</span>
+                                            </span>
+                                        </div>
+                                    </section>
+                                    <section class="form-group" ng-class="{'has-error': merchantForm.address.$invalid && !merchantForm.address.$pristine}">
+                                        <label class="control-label col-xs-3">Address:
+                                            <span class="required"> * </span>
+                                        </label>
+                                        <div class="col-xs-8">
+                                            <input type="text" class="form-control input-circle" id="address" name="address" style="margin-bottom:10px;" required ng-model="vm.editMerchantData.address" />
+                                            <span class="help-block text-danger" ng-if="!merchantForm.address.$pristine && merchantForm.address.$invalid" ng-messages="merchantForm.address.$error">Please enter address</span>
+                                        </div>
+                                    </section>
+                                    <section class="form-group" ng-class="{'has-error': merchantForm.city.$invalid && !merchantForm.city.$pristine}">
+                                        <label class="control-label col-xs-3">City:
+                                            <span class="required"> * </span>
+                                        </label>
+                                        <div class="col-xs-8" mass-autocomplete>
+                                            <angucomplete-alt pause="100" selected-object="vm.editMerchantData.cityId" local-data="vm.cities" search-fields="name" title-field="name" minlength="1" input-class="form-control form-control-small input-circle" input-name="city" field-required="true" initial-value="vm.editMerchantData.location.city.name" id="city"/>
+                                            <span class="help-block text-danger" ng-if="!merchantForm.city.$pristine && merchantForm.city.$invalid" ng-messages="merchantForm.city.$error">Please select city</span>
+                                        </div>
+                                    </section>
+                                    <section class="form-group" ng-class="{'has-error': merchantForm.pincode.$invalid && !merchantForm.pincode.$pristine}">
+                                        <label class="control-label col-xs-3">pincode:
+                                            <span class="required"> * </span>
+                                        </label>
+                                        <div class="col-xs-8">
+                                            <input type="tel" class="form-control input-circle" id="pincode" name="pincode" style="margin-bottom:10px;" required ng-model="vm.editMerchantData.location.pincode" ng-maxlength="6" ng-pattern="/^[0-9]*$/" />
+                                            <span class="help-block text-danger" ng-if="!merchantForm.pincode.$pristine && merchantForm.pincode.$invalid" ng-messages="merchantForm.pincode.$error">
+                                            <span class="help-block text-danger" ng-if="merchantForm.pincode.$error.pattern" ng-message="pattern">Enter only numbers!</span>
+                                            <span class="help-block text-danger" ng-if="merchantForm.pincode.$error.maxlength" ng-message="maxlength">Not matching standards!</span>
+                                            <span class="help-block text-danger" ng-if="!merchantForm.pincode.$error.required" ng-message="required">Please enter a valid pincode</span>
+                                            </span>
+                                        </div>
+                                    </section>
+                                    <section class="form-group">
+                                        <label class="control-label col-xs-3">Map: </label>
+                                        <div class="col-xs-8">
+                                            <map></map>
+
+                                        </div>
+
+                                    </section>
+                                    <section class="form-group" ng-class="{'has-error': merchantForm.fee.$invalid && !merchantForm.fee.$pristine}">
+                                        <label class="control-label col-xs-3">fee:
+                                            <span class="required"> * </span>
+                                        </label>
+                                        <div class="col-xs-8">
+                                            <input type="number" class="form-control input-circle" id="fee" name="fee" style="margin-bottom:10px;" required ng-model="vm.editMerchantData.fees" ng-pattern="/^(?=.*[1-9])\d{0,2}(?:\.\d{0,2})?$/" />
+                                            <span class="help-block text-danger" ng-if="!merchantForm.fee.$pristine && merchantForm.fee.$invalid" ng-messages="merchantForm.fee.$error">
+                                            <span class="help-block text-danger" ng-if="merchantForm.fee.$error.pattern" ng-message="pattern">Fee must be between 1 to 99.99</span>
+                                            <span class="help-block text-danger" ng-if="merchantForm.fee.$error.required" ng-message="required">Please enter a fee</span>
+                                            </span>
+                                        </div>
+                                    </section>
+                                    <section class="form-group">
+                                        <label class="control-label col-xs-3">Bank account holder: </label>
+                                        <div class="col-xs-8">
+                                            <input type="text" class="form-control input-circle" style="margin-bottom:10px;" readonly ng-model="vm.editMerchantData.accountHolder" />
+                                        </div>
+                                    </section>
+                                    <section class="form-group">
+                                        <label class="control-label col-xs-3">Bank account number: </label>
+                                        <div class="col-xs-8">
+                                            <input type="text" class="form-control input-circle" style="margin-bottom:10px;" readonly ng-model="vm.editMerchantData.accountNumber" />
+                                        </div>
+                                    </section>
+                                    <section class="form-group">
+                                        <label class="control-label col-xs-3">Bank ifsc code: </label>
+                                        <div class="col-xs-8">
+                                            <input type="text" class="form-control input-circle" style="margin-bottom:10px;" readonly ng-model="vm.editMerchantData.ifscCode" />
+                                        </div>
+                                    </section>
+                                    <section class="form-group">
+                                        <label class="control-label col-xs-3">Bank name with branch: </label>
+                                        <div class="col-xs-8">
+                                            <input type="text" class="form-control input-circle" style="margin-bottom:10px;" readonly ng-model="vm.editMerchantData.bankName + '-' +vm.editMerchantData.branchName" />
+                                        </div>
+                                    </section>
+                                    <section class="form-group form-md-line-input has-info " style="padding:0px;" ng-class="{'has-error': merchantForm.category.$invalid && !merchantForm.category.$pristine}">
+                                        <label class="control-label col-xs-3" style="color:black;">Category:
+                                            <span class="required"> * </span>
+                                        </label>
+                                        <div class="col-xs-8">
+                                            <select class="form-control" id="category" name="category" required ng-model="vm.editMerchantData.categoryId" ng-options="category.id as category.name for category in vm.categories">
+                                                <option value="" disabled selected hidden>select category</option>
+                                            </select>
+                                            <span class="help-block text-danger" ng-if="!merchantForm.category.$pristine && merchantForm.category.$invalid" ng-messages="merchantForm.category.$error">Please choose any one category</span>
+                                        </div>
+                                    </section>
+                                    <section class="form-group" style="margin: 0px;">
+                                        <label class="control-label col-xs-3">Gallery: </label>
+                                        <div class="col-xs-8">
+                                            <div class="image-group col-xs-12" style="margin-bottom:15px; overflow-y: scroll; height: 350px;">
+                                                <div class="galleryholder col-sm-3 col-xs-4 gallery" ng-repeat="image in vm.editMerchantData.galleries">
+                                                    <div class="thumbnail">
+                                                        <img class="img-responsive" ng-src="{{image.url}}" style="width:inherit; height:inherit;" />
+                                                        <div class="caption">
+                                                            <a ng-click="vm.deleteImage(vm.editMerchantData, image.url)" uib-tooltip="delete"><i class="fa fa-trash fa-lg"></i></a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </section>
+                                    <section class="form-group">
+                                        <label class="control-label col-xs-3" ng-if="vm.uploadedImages.length">Recently Uploaded: </label>
+                                        <div class="col-xs-8">
+                                            <div class="row" ng-if="vm.uploadedImages.length">
+                                                <div class="col-sm-2" ng-repeat="image in vm.uploadedImages">
+                                                    <img class="img-responsive" ng-src="{{image}}">
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-xs-11">
+                                            <div class="row fileupload-buttonbar pull-right" style="margin-right:20px;margin-left:0;">
+                                                <div id="flowUploadForm" flow-init flow-file-added="vm.uploadImage($file, $event, $flow)">
+                                                    <span class="btn green fileinput-button uploadbtn" style="margin-top:10px;">
+                                                    <i class="fa fa-plus"></i><span flow-btn ng-click="$flow.files=[]">Upload</span>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </section>
+                                    <section class="form-group" style="padding:0px;">
+                                        <label class="control-label col-xs-3" style="color:black;">Status: </label>
+                                        <div class="col-xs-8">
+                                            <input type="text" class="form-control input-circle" style="margin-bottom:10px;" readonly ng-model="vm.editMerchantData.status" />
+                                        </div>
+                                    </section>
+                                    <div class="form-actions rightshift" style="margin-bottom:15px;">
+                                        <button type="submit" class="btn button-color margin-form-btn" ng-show="vm.editMerchantData.status == 'Pending for approval'" ng-disabled="merchantForm.$invalid">Make Active</button>
+                                        <button type="submit" class="btn button-color margin-form-btn" ng-show="vm.editMerchantData.status == 'Active'" ng-disabled="merchantForm.$invalid">Update</button>
+                                        <button type="button" class="btn default margin-form-btn" ui-sref="merchantList">Cancel</button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </section>
+        </div>
+    </div>
+</div>
+<!-- END CONTENT BODY

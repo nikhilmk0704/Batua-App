@@ -29,8 +29,14 @@ module.exports.routes = {
 
     'post /api/promocode': 'PromocodesController.create',
     'get /api/promocode/:id?': 'PromocodesController.find',
-    'put /api/promocode': 'PromocodesController.update',
-    'delete /api/promocode/:id': 'PromocodesController.delete',
+    'put /api/promocode/:id?': 'PromocodesController.update',
+    'put /api/promocode/:id/status': 'PromocodesController.updateStatus',
+
+    'post /api/offer': 'OfferController.create',
+    'get /api/offer/:id?': 'OfferController.find',
+    'put /api/offer/:id?': 'OfferController.update',
+    'put /api/offer/:id/status': 'OfferController.updateStatus',
+   
 
     'post /api/ratereview': 'RateReviewsController.create',
     'get /api/ratereview/user/:userId/merchant/:merchantId':'RateReviewsController.find',
@@ -42,6 +48,16 @@ module.exports.routes = {
     'put /api/usergroup': 'UserGroupsController.update',
     'delete /api/usergroup/:id': 'UserGroupsController.delete',
 
-    'post /api/user': 'UsersController.create',
+    'post /api/admin/user': 'UsersController.createUserByAdmin',
+    'get /api/admin/user/:id?': 'UsersController.findUserByAdmin',
+    'put /api/admin/user': 'UsersController.updateUserByAdmin',
+    'put /api/admin/user/setstatus': 'UsersController.setUserStatusByAdmin',
+    'post /api/admin/user/login':'UsersController.adminLogin',
+    'put /api/admin/user/logout':'UsersController.adminLogout',
+    'put /api/admin/user/forgotpassword':'UsersController.adminForgotPassword',
+    'put /api/admin/user/resetpassword':'UsersController.adminResetPassword',
+
+
+    'post /api/image/upload':'ImageUploadController.upload',
     
 }

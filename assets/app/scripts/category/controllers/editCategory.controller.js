@@ -1,4 +1,4 @@
-angular.module('app').controller('editCategoryController', ['$state', 'categoryService', 'toastr', '$stateParams', function($state, categoryService, toastr, $stateParams) {
+angular.module('app').controller('editCategoryController', ['$state', '$stateParams', 'categoryService', 'toastr', function($state, $stateParams, categoryService, toastr) {
 
     var vm = this;
 
@@ -10,7 +10,7 @@ angular.module('app').controller('editCategoryController', ['$state', 'categoryS
             return;
         }
         if (response.status === 400) {
-            return toastr.error(response.data);
+            return toastr.error(response.data.errors[0].message);
         }
         return toastr.error(response.data);
     });
@@ -27,7 +27,7 @@ angular.module('app').controller('editCategoryController', ['$state', 'categoryS
                 return toastr.success('Category has been updated successfully.');
             }
             if (response.status === 400) {
-                return toastr.error(response.data);
+                return toastr.error(response.data.errors[0].message);
             }    
             return toastr.error(response.data);
         });

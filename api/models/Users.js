@@ -15,27 +15,22 @@ module.exports = {
             primaryKey: true,
             autoIncrement: true,
         },
-        firstName: {
-            type: Sequelize.STRING,
-            required: true,
-            allowNull: false,
-        },
-        lastName: {
+        name: {
             type: Sequelize.STRING,
         },
         phone: {
-            type: Sequelize.INTEGER(10),
-            required: true,
-            allowNull: false,
+            type: Sequelize.BIGINT(10),
             unique: true,
+            validate:{
+                min:0,
+                max:9999999999
+            }
         },
         profileImageUrl: {
             type: Sequelize.STRING,
         },
         email: {
             type: Sequelize.STRING,
-            required: true,
-            allowNull: false,
             unique: true,
             validate: {
                 isEmail: true
@@ -53,32 +48,47 @@ module.exports = {
         },
         batuaId: {
             type: Sequelize.STRING,
-            required: true,
-            allowNull: false,
             unique: true,
         },
         password: {
             type: Sequelize.STRING,
+            validate:{
+                isWhiteSpace:function(value){
+                    if(/\s/g.test(value))
+                        throw new Error("Spaces not allowed");
+                },
+                length:function(value){
+                    if(value.length < 6)
+                        throw new Error("Minimum length six");
+                }
+            }
         },
         pin: {
             type: Sequelize.INTEGER(4),
+            validate:{
+                min:1000,
+                max:9999
+            }
         },
         isPinActivated: {
             type: Sequelize.BOOLEAN,
             defaultValue: false,
         },
         otp: {
-            type: Sequelize.STRING(8),
+            type: Sequelize.INTEGER(6),
             defaultValue: null,
         },
         status: {
             type: Sequelize.STRING,
-            required: true,
-            allowNull: false
         },
-        walletBalance: {
-            type: Sequelize.FLOAT,
-            defaultValue: 0
+        latitude:{
+            type:Sequelize.FLOAT
+        },
+        longitude:{
+            type:Sequelize.FLOAT
+        },
+        locationUpdateTime:{
+            type:Sequelize.DATE
         }
     },
     options: {
@@ -92,6 +102,18 @@ module.exports = {
                 name: 'userGroupId',
                 required:true,
                 allowNull: false
+            }
+        });
+        Users.belongsToMany(Paymentmodes,{
+            through:'UsersPaymentmodes',
+            foreignKey:{
+                name:'userId'
+            }
+        });
+        Paymentmodes.belongsToMany(Users,{
+            through:'UsersPaymentmodes',
+            foreignKey:{
+                name:'paymentmodeId'
             }
         });
     }

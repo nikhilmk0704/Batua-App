@@ -7,7 +7,13 @@
         return {
             login: "/user/login",
             category: "/category",
-            updateCategory: "/category/:id"
+            updateCategory: "/category/:id",
+            getMerchants: "/admin/:adminId/merchant",
+            merchantDetails: "/admin/:adminId/merchant/:id",
+            updateMerchant: "/merchant",
+            cities: "/city",
+            imageUpload: "/image/upload",
+            setStatus: "/merchant/setstatus"
         }
 
     }

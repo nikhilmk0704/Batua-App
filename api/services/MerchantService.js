@@ -9,71 +9,37 @@ class MerchantService {
     // if status is pending, creates merchant and checks for mandatory fields
     save(params, callback) {
         var merchantService = new MerchantService();
-        if (merchantService.validateRequest(params) && params.status == "Pending for approval") {
-            return merchantService.createMerchant(params, callback);
+        if (merchantService.validatePartialRequest(params) && params.status == "Drafted") {
+            return merchantService.validateLocationAndCreateMerchant(params, callback);
         } 
-        if (params.status == "Drafted") {
-            return merchantService.createMerchant(params, callback);
+        if (merchantService.validateAllRequest(params) && params.status == "Pending for approval") {
+            return merchantService.validateLocationAndCreateMerchant(params, callback);
         } 
-        return callback("Mandatory fields missing");
+        return callback(merchantService.generateErrorMessage("Mandatory fields missing"));
     }
 
-    // shows only active merchants for user app
-    // shows all merchants for admin portal
-    // shows only those merchants created by particular sales agent
-    find(req, callback) {
+    validateLocationAndCreateMerchant(params,callback){
         var merchantService = new MerchantService();
-        var id = req.param('id');
-        var userId = req.param('userId');
-        var salesAgentId = req.param('salesAgentId');
-        var adminId = req.param('adminId');
-        var params = {};
-        params.include = merchantService.getIncludeModels();
-        params.where = {};
-        merchantService.getUserGroup(params,id,userId,salesAgentId,adminId,callback);
+        if(params.area || params.pincode || params.cityId){
+            var locationParams={};
+            (params.area)?(locationParams.area=params.area):(locationParams);
+            (params.pincode)?(locationParams.pincode=params.pincode):(locationParams);
+            (params.cityId)?(locationParams.cityId=params.cityId):(locationParams);
+            Locations.create(locationParams).then(function(result){
+                params.locationId=result.id;
+                merchantService.createMerchant(params,callback);
+                return null;
+            }).catch(function(exception){
+                callback(exception);
+            });
+        }else{
+            merchantService.createMerchant(params, callback);  
+        }
     }
 
-    // updates the partialy saved merchant i.e status is drafted
-    // updates the fully saved merchant i.e status is not drafted
-    update(req, callback) {
+    validatePartialRequest(params){
         var merchantService = new MerchantService();
-        var params = {};
-        params = req.body;
-        var options = {};
-        options.where = {};
-        options.where.id = req.body.id;
-        if (merchantService.validateRequest(params) && params.status != "Drafted") { // true if all mandatory fields are supplied
-            return merchantService.updateMerchant(params, options, callback);
-        } 
-        if (params.status == "Drafted") {
-            return merchantService.updateMerchant(params, options, callback);
-        } 
-        return callback("Mandatory fields missing");
-    }
-
-    // delete the merchant based on shortcode (unique field)
-    delete(params) {
-        var options = {};
-        options.where = {};
-        options.where.shortCode = params.shortCode;
-        Merchants.destroy(options);
-    }
-
-    // update status of merchant
-    setStatus(req, callback) {
-        var params = {};
-        var options = {};
-        params.status = req.body.status;
-        options.where = {};
-        options.where.id = req.body.id;
-        var merchantRepository = new MerchantRepository();
-        merchantRepository.update(params, options, callback);
-    }
-
-    // validates for mandatory fields
-    validateRequest(params) {
-        var merchantService = new MerchantService();
-        return _.every(merchantService.getMandatoryFields(), function(element) {
+        return _.every(merchantService.getPartialMandatoryFields(), function(element) {
             if (params[element]) {
                 return true;
             } 
@@ -84,15 +50,78 @@ class MerchantService {
     createMerchant(params, callback) {
         var merchantService = new MerchantService();
         Merchants.create(params).then(function(merchantResult) {
-            var merchantId = merchantResult.dataValues.id;
+            var merchantId = merchantResult.id;
             var findObject = {};
             findObject.include = merchantService.getIncludeModels();
             findObject.where = {};
             findObject.where.id = merchantId;
-            merchantService.createGalleryAndFindMerchant(params, merchantId, findObject, callback);
+            var type="create";
+            merchantService.createGalleryAndFindMerchant(params, merchantId, findObject, type, callback);
             return null;
         }).catch(function(exception) {
             callback(exception);
+        });
+    }
+
+    // shows only active merchants for user app
+    // shows all merchants for admin portal
+    // shows only those merchants created by particular sales agent
+    find(params, callback) {
+        var merchantService = new MerchantService();
+        var id=params.id;
+        var userId=params.userId;
+        var salesAgentId=params.salesAgentId;
+        var adminId=params.adminId;
+        var newParams = {};
+        newParams.include = merchantService.getIncludeModels();
+        newParams.where = {};
+        merchantService.getUserGroup(newParams,id,userId,salesAgentId,adminId,callback);
+    }
+
+    // updates the partialy saved merchant i.e status is drafted
+    // updates the fully saved merchant i.e status is not drafted
+    update(params, callback) {
+        var merchantService = new MerchantService();
+        var options = {};
+        options.where = {};
+        options.where.id = params.id;
+        if (merchantService.validateAllRequest(params) && params.status != "Drafted") { // true if all mandatory fields are supplied
+            return merchantService.updateMerchant(params, options, callback);
+        } 
+        if (merchantService.validatePartialRequest(params) && params.status == "Drafted") {
+            return merchantService.updateMerchant(params, options, callback);
+        } 
+        return callback(merchantService.generateErrorMessage("Mandatory fields missing"));
+    }
+
+    // delete the merchant based on shortcode (unique field)
+    delete(params) {
+        var options = {};
+        options.where = {};
+        options.where.id = params.id;
+        Merchants.destroy(options);
+    }
+
+    // update status of merchant
+    setStatus(params, callback) {
+        var newParams = {};
+        var options = {};
+        var findObject={};
+        newParams.status = params.status;
+        options.where = {};
+        options.where.id = params.id;
+        findObject=options;
+        var merchantRepository = new MerchantRepository();
+        merchantRepository.updateAndFind(newParams, options, findObject, callback);
+    }
+
+    // validates for mandatory fields
+    validateAllRequest(params) {
+        var merchantService = new MerchantService();
+        return _.every(merchantService.getAllMandatoryFields(), function(element) {
+            if (params[element]) {
+                return true;
+            } 
         });
     }
 
@@ -104,62 +133,128 @@ class MerchantService {
         findObject.include = merchantService.getIncludeModels();
         findObject.where = {};
         findObject.where.id = merchantId;
-        MerchantsGalleries.destroy({ where: { 'merchantId': merchantId } })
-        .then(function(deletedRowCount) {
-            Merchants.update(params, options).then(function(merchantResult) {
-                merchantService.createGalleryAndFindMerchant(params, merchantId, findObject, callback);
-                return null;
-            }).catch(function(exception) {
-                callback(exception);
-            });
+        merchantService.findMerchants(params,merchantId,options,findObject,callback);
+        return null;
+    }
+
+    findMerchants(params,merchantId,options,findObject,callback){
+        var merchantService = new MerchantService();
+        Merchants.find({where:{id:merchantId}}).then(function(result){
+            if(result && result.locationId){
+                merchantService.updateLocations(params,result,merchantId,options,findObject,callback);
+            }else{
+                merchantService.createLocations(params,result,merchantId,options,findObject,callback);
+            }
             return null;
-        }).catch(function(exception) {
-            callback(exception);
+        }).catch(function(exception){
+            return callback(exception);
+        })
+    }
+
+    createLocations(params,result,merchantId,options,findObject,callback){
+        var merchantService = new MerchantService();
+        Locations.create(params).then(function(result){
+            params.locationId=result.id;
+            merchantService.updateMerchantAndGalleries(params,result,merchantId,options,findObject,callback);
+            return null;
+        }).catch(function(exception){
+            return callback(exception);
+        });
+    }
+
+    updateLocations(params,result,merchantId,options,findObject,callback){
+        var merchantService = new MerchantService();
+        Locations.update(params,{where:{id:result.locationId}}).then(function(result){
+            merchantService.updateMerchantAndGalleries(params,result,merchantId,options,findObject,callback);
+            return null;
+        }).catch(function(exception){
+            return callback(exception);
+        });
+    }
+
+    updateMerchantAndGalleries(params,result,merchantId,options,findObject,callback){
+        var merchantService = new MerchantService();
+        (result.shortCode==params.shortCode)?(delete params.shortCode):(params);
+        (result.phone==params.phone)?(delete params.phone):(params);
+        merchantService.destroyMerchantsGalleries(params,merchantId,options,findObject,callback);
+    }
+
+    destroyMerchantsGalleries(params,merchantId,options,findObject,callback){
+        var merchantService = new MerchantService();
+        MerchantsGalleries.destroy({ where: { 'merchantId': merchantId } }).then(function(result){
+            merchantService.updateMerchantAndCreateGalleryAndFindMerchant(params,merchantId,options,findObject,callback);
+            return null;
+        }).catch(function(exception){
+            return callback(exception);
+        });
+    }
+
+    updateMerchantAndCreateGalleryAndFindMerchant(params,merchantId,options,findObject,callback){
+        var merchantService = new MerchantService();
+        Merchants.update(params,options).then(function(result){
+            var type="update";
+            merchantService.createGalleryAndFindMerchant(params,merchantId,findObject,type, callback);
+            return null;
+        }).catch(function(exception){
+            return callback(exception);
         });
     }
 
     // creates image gallery and shows merchant result
-    createGalleryAndFindMerchant(params, merchantId, findObject, callback) {
+    createGalleryAndFindMerchant(params, merchantId, findObject, type, callback) {
+        var merchantService = new MerchantService();
         var count = 0;
-        if (params.imageGallery.length) {
+        var imageGalleryArrayLength=(params.imageGallery)?(params.imageGallery.length):null;
+        if (imageGalleryArrayLength) {
             params.imageGallery.forEach(function(imageUrl) {
-                Galleries.create({ 'url': imageUrl }).then(function(galleryResult) {
-                    var galleryId = galleryResult.dataValues.id;
-                    MerchantsGalleries.create({ 'merchantId': merchantId, 'galleryId': galleryId })
-                    .then(function(result) {
-                        count++;
-                        if (params.imageGallery.length == count) {
-                            Merchants.find(findObject).then(function(data) {
-                                callback(null, data);
-                            }).catch(function(exception) {
-                                callback(exception);
-                            });
-                        }
-                        return null;
-                    }).catch(function(exception) {
-                        callback(exception);
-                    });
-                    return null;
-                }).catch(function(exception) {
-                    callback(exception);
-                });
+                count++;
+                merchantService.createGalleries(imageUrl,merchantId,findObject,imageGalleryArrayLength,count,type,callback);
             });
         } else {
-            Merchants.find(findObject).then(function(result) {
-                callback(null, result);
-            }).catch(function(exception) {
-                callback(exception);
-            });
+            merchantService.getMerchantById(findObject,callback);
         }
+    }
+
+    createGalleries(imageUrl,merchantId,findObject,imageGalleryArrayLength,count,type,callback){
+        var merchantService = new MerchantService();
+        Galleries.create({'url':imageUrl}).then(function(result){
+            var galleryId=result.id;
+            merchantService.createMerchantsGalleries(merchantId,galleryId,findObject,imageGalleryArrayLength,count,type,callback);
+            return null
+        }).catch(function(exception){
+            if(type==="create")
+                merchantService.delete({id:merchantId});
+            return callback(exception);
+        });
+    }
+
+    createMerchantsGalleries(merchantId,galleryId,findObject,imageGalleryArrayLength,count,type,callback){
+        var merchantService = new MerchantService();
+        MerchantsGalleries.create({'merchantId':merchantId,'galleryId':galleryId}).then(function(result){
+            if(imageGalleryArrayLength==count){
+                merchantService.getMerchantById(findObject,callback);
+            }
+            return null;
+        }).catch(function(exception){
+            if(type==="create")
+                merchantService.delete({id:merchantId});
+            return callback(exception);
+        });
+    }
+
+    getMerchantById(findObject,callback){
+        Merchants.find(findObject).then(function(result){
+            return callback(null,result);
+        }).catch(function(exception){
+            return callback(exception);
+        });
     }
 
     // returns models to be included while getting merchant
     getIncludeModels() {
-        return [{                       // return [{all:true}] include all models
-            model: Cities,
-            required: false
-        }, {
+        return [{
             model: Users,
+            attributes:['id','name','phone','email'],
             required: false
         }, {
             model: Galleries,
@@ -167,15 +262,25 @@ class MerchantService {
         }, {
             model: Categories,
             required: false
+        }, {
+            model: Locations,
+            include:[{model:Cities,required:false}],
+            required: false
         }];
     }
 
-    // returns array of mandatory fields
-    getMandatoryFields() {
+    // returns array of all mandatory fields
+    getAllMandatoryFields() {
         return [
-            'name', 'shortCode', 'phone', 'pincode',
-            'fees', 'cityId', 'categoryId', 'bankName',
+            'name', 'shortCode', 'phone', 'pincode','profileImageUrl',
+            'fees', 'cityId', 'categoryId', 'bankName','createdSalesId',
             'accountHolder', 'accountNumber', 'ifscCode', 'status'
+        ];
+    }
+
+    getPartialMandatoryFields(){
+        return [
+            'name','shortCode','phone','fees','categoryId','status','createdSalesId'
         ];
     }
 
@@ -184,25 +289,46 @@ class MerchantService {
         var groupId=(userId|salesAgentId|adminId);
         Users.find({ include: [{ model: UserGroups, required: false }], where: { id: groupId } })
         .then(function(data) {
-            var groupName=(data.dataValues.UserGroup.dataValues.name);
+            var groupName=(data && data.UserGroup.name);
+            var merchantService = new MerchantService();
             var merchantRepository = new MerchantRepository();
-            if (id) {
+            if (data && id) {
                 params.where.id = id;
                 return merchantRepository.find(params, callback);
             } 
-            if (userId && !id && groupName == 'User') {
+            if (data && userId && !id && groupName == 'User') {
                 params.where.status = 'Active';
                 return merchantRepository.findAll(params, callback);
             } 
-            if (salesAgentId && !id && groupName == 'Field Sales Agent') {
-                params.where.createdSalesId = salesAgentId;
+            if (data && salesAgentId && !id && groupName == 'Field Sales Agent') {
+                params.where.$and={};
+                params.where.$and.createdSalesId = salesAgentId;
+                params.where.$and.status={};
+                params.where.$and.status.$not="Permanent Suspend";
                 return merchantRepository.findAll(params, callback);
             } 
-            if (adminId && !id && (groupName == 'Admin'|| groupName=='Super Admin')) {
+            if (data && adminId && !id && (groupName == 'Admin'|| groupName=='Super Admin')) {
+                params.where.status={};
+                params.where.status.$not="Permanent Suspend";
                 return merchantRepository.findAll(params, callback);
             } 
-            return callback("Please provide correct id");
+            return callback(merchantService.generateErrorMessage("Please provide correct id"));
         });
+    }
+
+    generateErrorMessage(messageOrObject){
+        var messageObject={};
+        if(typeof messageOrObject == "string")
+            messageObject.message=messageOrObject;
+        else if(typeof messageOrObject == "object" && messageOrObject.errors)
+            messageObject.message=messageOrObject.errors[0].message;
+        else if(typeof messageOrObject=="object" && messageOrObject.message)
+            messageObject.message=(messageOrObject.message).split(":")[1];
+        var array=[];
+        array.push(messageObject);
+        var errorObject={};
+        errorObject.errors=array;
+        return errorObject;
     }
 
 }

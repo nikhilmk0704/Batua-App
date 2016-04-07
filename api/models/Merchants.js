@@ -28,15 +28,14 @@ module.exports = {
             type: Sequelize.STRING,
         },
         phone: {
-            type: Sequelize.INTEGER(10).UNSIGNED,
+            type: Sequelize.BIGINT(10),
             required: true,
             unique: true,
-            allowNull: false
-        },
-        pincode: {
-            type: Sequelize.INTEGER(6),
-            required: true,
-            allowNull: false
+            allowNull: false,
+            validate:{
+                min:0,
+                max:9999999999
+            }
         },
         email: {
             type: Sequelize.STRING,
@@ -91,18 +90,11 @@ module.exports = {
             allowNull: false,
         }
     },
-    validate: {
-        bothCoordsOrNone: function() {
-            if ((this.latitude === null) !== (this.longitude === null)) {
-                throw new Error('Require either both latitude and longitude or neither');
-            }
-        }
-    },
     associations: function() {
-        Merchants.belongsTo(Cities, {
+        Merchants.belongsTo(Locations, {
             foreignKey: {
-                name: 'cityId',
-                allowNull: false,
+                name: 'locationId',
+                defaultValue:null,
                 onDelete: 'RESTRICT',
                 onUpdate: 'CASCADE'
             }
@@ -137,3 +129,5 @@ module.exports = {
         });
     }
 };
+
+

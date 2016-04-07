@@ -42,8 +42,8 @@ module.exports = {
             allowNull: false,
             validate: {
                 isDate: true,
-                isAfter: function() {
-                    var oldDate = moment(Sequelize.NOW).subtract(60, 'seconds')._d;
+                isAfter: function () {
+                    var oldDate = moment(Sequelize.DATE())._d;
                     var validateDate = moment(this.validFrom)._d;
                     if (!(moment(validateDate).isAfter(oldDate))) {
                         throw new Error('Past dates are not allowed');
@@ -57,7 +57,7 @@ module.exports = {
             allowNull: false,
             validate: {
                 isDate: true,
-                isAfter: function() {
+                isAfter: function () {
                     var validateDateFrom = moment(this.validFrom)._d;
                     var validateDateTo = moment(this.validTo)._d;
                     if (!(moment(validateDateTo).isAfter(validateDateFrom))) {
@@ -83,9 +83,14 @@ module.exports = {
                 min: 0,
                 max: 100,
             }
+        },
+        status: {
+            type: Sequelize.ENUM,
+            values: ['Active', 'Suspend', 'Expired'],
+            defaultValue: 'Active'
         }
     },
-    associations: function() {
+    associations: function () {
         Promocodes.belongsToMany(Merchants, {
             through: MerchantsPromocodes,
             foreignKey: {

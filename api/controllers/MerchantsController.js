@@ -10,25 +10,30 @@
 module.exports = {
 
     create: function(req, res) {
+        var params={};
         var params = req.body;
         var merchantService = new MerchantService();
         merchantService.save(params, function(err, result) {
             if (err) {
-                return res.badRequest(err);
-                merchantService.delete(params);
+                return res.badRequest(merchantService.generateErrorMessage(err));
             } 
             return res.json(201, result);
         });
     },
 
     find: function(req, res) {
+        var params={};
+        params.id = req.param('id');
+        params.userId = req.param('userId');
+        params.salesAgentId = req.param('salesAgentId');
+        params.adminId = req.param('adminId');
         var merchantService = new MerchantService();
-        merchantService.find(req, function(err, result) {
+        merchantService.find(params, function(err, result) {
             if (err) {
-                return res.badRequest(err);
+                return res.badRequest(merchantService.generateErrorMessage(err));
             }
             if(_.isEmpty(result)){
-                return res.notFound("Does not exist");
+                return res.notFound(merchantService.generateErrorMessage("Does not exist"));
             }
             return res.json(200, result);
         });
@@ -36,20 +41,24 @@ module.exports = {
     },
 
     update: function(req, res) {
+        var params={};
+        params=req.body;
         var merchantService = new MerchantService();
-        merchantService.update(req, function(err, result) {
+        merchantService.update(params, function(err, result) {
             if (err) {
-                return res.badRequest(err);
+                return res.badRequest(merchantService.generateErrorMessage(err));
             } 
             return res.json(200, result);
         });
     },
 
     setStatus: function(req, res) {
+        var params={};
+        params=req.body;
         var merchantService = new MerchantService();
-        merchantService.update(req, function(err, result) {
+        merchantService.setStatus(params, function(err, result) {
             if (err) {
-                return res.badRequest(err);
+                return res.badRequest(merchantService.generateErrorMessage(err));
             } 
             return res.json(200, result);
         });

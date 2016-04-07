@@ -19,5 +19,11 @@ module.exports = {
             allowNull: false,
             unique: true
         },
+        state:{
+            type: Sequelize.STRING,
+        },
+        country:{
+            type: Sequelize.STRING,
+        }
     }
 };
