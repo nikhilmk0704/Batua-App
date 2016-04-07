@@ -41,10 +41,10 @@
                                     <tr class="gradeX odd" ng-repeat="merchant in vm.merchants">
                                         <td>{{$index+1}}</td>
                                         <td>{{merchant.name}}</td>
-                                        <td class="">{{merchant.Category.name}}</td>
+                                        <td class="">{{merchant.category.name}}</td>
                                         <td>{{merchant.shortCode}}</td>
-                                        <td>{{merchant.Location.City.name}}</td>
-                                        <td>{{merchant.User.name}}</td>
+                                        <td>{{merchant.location.city.name}}</td>
+                                        <td>{{merchant.user.name}}</td>
                                         <td>
                                             <span class="label label-sm label-success center"> {{merchant.status}} </span>
                                         </td>

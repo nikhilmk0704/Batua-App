@@ -48,7 +48,7 @@
                     categoryId: merchant.categoryId,
                     cityId: cityId, 
                     address: merchant.address,
-                    pincode: merchant.Location.pincode,
+                    pincode: merchant.location.pincode,
                     latitude: coordinates[0],
                     longitude: coordinates[1],
                     accountHolder: merchant.accountHolder,

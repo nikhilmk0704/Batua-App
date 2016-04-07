@@ -77,7 +77,7 @@ BEGIN CONTENT BODY -->
                                             <span class="required"> * </span>
                                         </label>
                                         <div class="col-xs-8" mass-autocomplete>
-                                            <angucomplete-alt pause="100" selected-object="vm.editMerchantData.cityId" local-data="vm.cities" search-fields="name" title-field="name" minlength="1" input-class="form-control form-control-small input-circle" input-name="city" field-required="true" initial-value="vm.editMerchantData.Location.City.name" id="city"/>
+                                            <angucomplete-alt pause="100" selected-object="vm.editMerchantData.cityId" local-data="vm.cities" search-fields="name" title-field="name" minlength="1" input-class="form-control form-control-small input-circle" input-name="city" field-required="true" initial-value="vm.editMerchantData.location.city.name" id="city"/>
                                             <span class="help-block text-danger" ng-if="!merchantForm.city.$pristine && merchantForm.city.$invalid" ng-messages="merchantForm.city.$error">Please select city</span>
                                         </div>
                                     </section>
@@ -86,7 +86,7 @@ BEGIN CONTENT BODY -->
                                             <span class="required"> * </span>
                                         </label>
                                         <div class="col-xs-8">
-                                            <input type="tel" class="form-control input-circle" id="pincode" name="pincode" style="margin-bottom:10px;" required ng-model="vm.editMerchantData.Location.pincode" ng-maxlength="6" ng-pattern="/^[0-9]*$/" />
+                                            <input type="tel" class="form-control input-circle" id="pincode" name="pincode" style="margin-bottom:10px;" required ng-model="vm.editMerchantData.location.pincode" ng-maxlength="6" ng-pattern="/^[0-9]*$/" />
                                             <span class="help-block text-danger" ng-if="!merchantForm.pincode.$pristine && merchantForm.pincode.$invalid" ng-messages="merchantForm.pincode.$error">
                                             <span class="help-block text-danger" ng-if="merchantForm.pincode.$error.pattern" ng-message="pattern">Enter only numbers!</span>
                                             <span class="help-block text-danger" ng-if="merchantForm.pincode.$error.maxlength" ng-message="maxlength">Not matching standards!</span>
@@ -153,7 +153,7 @@ BEGIN CONTENT BODY -->
                                         <label class="control-label col-xs-3">Gallery: </label>
                                         <div class="col-xs-8">
                                             <div class="image-group col-xs-12" style="margin-bottom:15px; overflow-y: scroll; height: 350px;">
-                                                <div class="galleryholder col-sm-3 col-xs-4 gallery" ng-repeat="image in vm.editMerchantData.Galleries">
+                                                <div class="galleryholder col-sm-3 col-xs-4 gallery" ng-repeat="image in vm.editMerchantData.galleries">
                                                     <div class="thumbnail">
                                                         <img class="img-responsive" ng-src="{{image.url}}" style="width:inherit; height:inherit;" />
                                                         <div class="caption">

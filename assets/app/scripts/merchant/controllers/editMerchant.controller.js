@@ -27,7 +27,7 @@ angular.module('app').controller('editMerchantController', ['$state', 'merchantS
         vm.getAllImages = function() {
             var urls = [];
 
-            vm.editMerchantData.Galleries.forEach(function(image) {
+            vm.editMerchantData.galleries.forEach(function(image) {
                 urls.push(image.url);
             });
             vm.uploadedImages.forEach(function(image) {
@@ -44,7 +44,7 @@ angular.module('app').controller('editMerchantController', ['$state', 'merchantS
             if (angular.isDefined(merchant.cityId)) {
                 cityId = merchant.cityId.originalObject.id;
             } else {
-                cityId = vm.editMerchantData.Location.cityId;
+                cityId = vm.editMerchantData.location.cityId;
             }
 
             coordinates = vm.coordinates;
@@ -74,7 +74,7 @@ angular.module('app').controller('editMerchantController', ['$state', 'merchantS
             if (angular.isDefined(merchant.cityId)) {
                 cityId = merchant.cityId.originalObject.id;
             } else {
-                cityId = vm.editMerchantData.Location.cityId;
+                cityId = vm.editMerchantData.location.cityId;
             }
 
             coordinates = vm.coordinates;
@@ -118,8 +118,7 @@ angular.module('app').controller('editMerchantController', ['$state', 'merchantS
             imageUpload.uploadImage(file, function(response) {
                 $flow.files = [];
                 if (response.status === 200) {
-                    vm.uploadedImages.push(response.data);
-                    return;
+                    return vm.uploadedImages.push(response.data);
                 }
                 if (response.status === 400) {
                     return toastr.error(response.data.errors[0].message);
