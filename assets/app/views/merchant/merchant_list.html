@@ -42,7 +42,7 @@
                                     <tr class="gradeX odd" ng-repeat="merchant in vm.merchants">
                                         <td>{{$index+1}}</td>
                                         <td>{{merchant.name}}</td>
-                                        <td class="">{{merchant.category.name}}</td>
+                                        <td>{{merchant.category.name}}</td>
                                         <td>{{merchant.shortCode}}</td>
                                         <td>{{merchant.location.city.name}}</td>
                                         <td>{{merchant.user.name}}</td>
@@ -52,10 +52,12 @@
                                         <td>
                                             <a type="button" class="btn button-color-table" ng-click="vm.editMerchantData(merchant)" ng-disabled="vm.checkMerchantStatus(merchant)"><i class="fa fa-pencil"></i></a>
                                         </td>
-                                        <td ng-hide = "vm.showActions(merchant)">
+                                        <td>
+                                            <span ng-hide = "vm.showActions(merchant)">
                                             <a style="float:left; font-size:14px;" class="btn" ng-if="merchant.status == 'Suspend'" ng-click="vm.setStatus(merchant.id, 'Active')"><i class="fa fa-unlock"></i> Active </a>
                                             <a style="float:left; font-size:14px;" class="btn" ng-if="merchant.status == 'Active'" ng-click="vm.setStatus(merchant.id, 'Suspend')"><i class="fa fa-lock"></i> Suspend </a>
                                             <a style="float:left; font-size:14px;" class="btn" ng-click="vm.setStatus(merchant.id, 'Permanent Suspend')"><i class="fa fa-ban"></i> Permanent Suspend </a>
+                                            </span>
                                         </td>
                                     </tr>
                                 </tbody>
