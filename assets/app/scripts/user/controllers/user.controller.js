@@ -16,7 +16,6 @@ angular.module('app').controller('userController', ['$state', 'userService', 'to
     vm.setStatus = function(userId, status) {
         userService.setStatus(userId, status, function(response) {
             if (response.status === 200) {
-                // $state.reload();
                 return toastr.success('User status has been changed successfully.');
             }
             if (response.status === 400) {

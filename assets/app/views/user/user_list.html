@@ -43,7 +43,7 @@
                                         <td> {{user.phone}} </td>
                                         <td> {{user.userGroups.name}} </td>
                                         <td>
-                                            <select class="form-control input-circle" id="form_control_1" required onchange="vm.setStatus(user.id, value)" ng-model="user.status">
+                                            <select class="form-control input-circle" required ng-change="vm.setStatus(user.id, user.status)" ng-model="user.status">
                                                 <option value="" disabled selected hidden>select status</option>
                                                 <option value="Active">Active</option>
                                                 <option value="Suspend">Suspend</option>

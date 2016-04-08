@@ -13,6 +13,7 @@
         service.getUserData = getUserData;
         service.addUser = addUser;
         service.editUser = editUser;
+        service.setStatus = setStatus;
 
         return service;
 
