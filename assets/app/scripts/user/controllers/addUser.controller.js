@@ -18,44 +18,44 @@ angular.module('app').controller('addUserController', ['$state', '$scope', '$tim
 
     /* --- START Image Upload --- */
 
-        vm.profileImageUpload = function(file, event, $flow) {
-            var file, image;
-            var _URL = window.URL || window.webkitURL;
-            if ((file = file.file)) {
-                image = new Image();
-                image.onload = function() {
-                    if (this.width < 320 || this.height < 240) {
-                        return toastr.error("Please select an image above 320px width and 240px height");
-                    }
-                    return handleProfileImageUpload(file, event, $flow);
+    vm.profileImageUpload = function(file, event, $flow) {
+        var file, image;
+        var _URL = window.URL || window.webkitURL;
+        if ((file = file.file)) {
+            image = new Image();
+            image.onload = function() {
+                if (this.width < 320 || this.height < 240) {
+                    return toastr.error("Please select an image above 320px width and 240px height");
                 }
-                image.onerror = function() {
-                    return toastr.error("not a valid file: " + file.type);
-                };
-                image.src = _URL.createObjectURL(file);
+                return handleProfileImageUpload(file, event, $flow);
             }
-        };
+            image.onerror = function() {
+                return toastr.error("not a valid file: " + file.type);
+            };
+            image.src = _URL.createObjectURL(file);
+        }
+    };
 
-        var handleProfileImageUpload = function(file, event, $flow) {
-            imageUpload.uploadImage(file, function(response) {
-                $flow.files = [];
-                if (response.status === 200) {
-                    $timeout(function() {
-                        $scope.$apply(function() {
-                            vm.addUserData.profileImageUrl = response.data;
-                        });
+    var handleProfileImageUpload = function(file, event, $flow) {
+        imageUpload.uploadImage(file, function(response) {
+            $flow.files = [];
+            if (response.status === 200) {
+                $timeout(function() {
+                    $scope.$apply(function() {
                         vm.addUserData.profileImageUrl = response.data;
-                        return vm.addUserData.profileImageUrl;
-                    }, 1500);
-                }
-                if (response.status === 400) {
-                    return toastr.error(response.data.errors[0].message);
-                }
-                return toastr.error(response.data);
-            });
-        };
+                    });
+                    vm.addUserData.profileImageUrl = response.data;
+                    return vm.addUserData.profileImageUrl;
+                }, 1500);
+            }
+            if (response.status === 400) {
+                return toastr.error(response.data.errors[0].message);
+            }
+            return toastr.error(response.data);
+        });
+    };
 
-        /* --- END Image Upload --- */
+    /* --- END Image Upload --- */
 
 
 }]);

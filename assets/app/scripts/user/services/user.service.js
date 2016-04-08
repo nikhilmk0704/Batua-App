@@ -10,7 +10,7 @@
         var service = {};
 
         service.getUserList = getUserList;
-        service.getUser = getUser;
+        service.getUserData = getUserData;
         service.addUser = addUser;
         service.editUser = editUser;
 
@@ -19,7 +19,7 @@
         function getUserList(callback) {
             httpi({
                 method: "get",
-                url: API.users
+                url: API.user
             }).then(function(response) {
                 callback(response);
             }, function(response) {
@@ -27,10 +27,10 @@
             });
         }
 
-        function getUser(userId, callback) {
+        function getUserData(userId, callback) {
             httpi({
                 method: "get",
-                url: API.getUser,
+                url: API.userDetails,
                 params: {
                     id: userId
                 }
@@ -50,7 +50,7 @@
                     email: user.email,
                     phone: user.phone,
                     profileImageUrl: user.profileImageUrl,
-                    groupId: user.groupId
+                    userGroupId: user.userGroupId
                 }
             }).then(function(response) {
                 callback(response);
@@ -69,7 +69,22 @@
                     email: user.email,
                     phone: user.phone,
                     profileImageUrl: user.profileImageUrl,
-                    groupId: user.groupId
+                    userGroupId: user.userGroups.id
+                }
+            }).then(function(response) {
+                callback(response);
+            }, function(response) {
+                callback(response);
+            });
+        }
+
+        function setStatus(userId, status, callback) {
+            httpi({
+                method: "put",
+                url: API.userStatus,
+                data: {
+                    id: userId,
+                    status: status
                 }
             }).then(function(response) {
                 callback(response);
