@@ -61,6 +61,27 @@
             }
         })
 
+        .state('addUser', {
+            url: '/addUser',
+            templateUrl: 'app/views/user/add_user.html',
+            controller: 'addUserController',
+            controllerAs: 'vm'
+        })
+
+        .state('editUser', {
+            url: '/editUser/:userId',
+            templateUrl: 'app/views/user/edit_user.html',
+            controller: 'editUserController',
+            controllerAs: 'vm'
+        })
+
+        .state('userList', {
+            url: '/userList',
+            templateUrl: 'app/views/user/user_list.html',
+            controller: 'userController',
+            controllerAs: 'vm'
+        })
+
     }
 
     run.$inject = [];
