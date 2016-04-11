@@ -87,6 +87,48 @@
             controllerAs: 'vm'
         })
 
+        .state('addOffer', {
+            url: '/addOffer',
+            templateUrl: 'app/views/offer/add_offer.html',
+            controller: 'addOfferController',
+            controllerAs: 'vm'
+        })
+
+        .state('editOffer', {
+            url: '/editOffer',
+            templateUrl: 'app/views/offer/edit_offer.html',
+            controller: 'editOfferController',
+            controllerAs: 'vm'
+        })
+
+        .state('offerList', {
+            url: '/offerList',
+            templateUrl: 'app/views/offer/offer_list.html',
+            controller: 'offerController',
+            controllerAs: 'vm'
+        })
+
+        .state('addPromocode', {
+            url: '/addPromocode',
+            templateUrl: 'app/views/promocode/add_promo.html',
+            controller: 'addPromocodeController',
+            controllerAs: 'vm'
+        })
+
+        .state('editPromocode', {
+            url: '/editPromocode',
+            templateUrl: 'app/views/promocode/edit_promo.html',
+            controller: 'editPromocodeController',
+            controllerAs: 'vm'
+        })
+
+        .state('promocodeList', {
+            url: '/promocodeList',
+            templateUrl: 'app/views/promocode/promo_list.html',
+            controller: 'promocodeController',
+            controllerAs: 'vm'
+        })
+
     }
 
     run.$inject = [];

@@ -17,7 +17,13 @@
             user: "/admin/user",
             userDetails: "/admin/user/:id",
             userStatus: "/admin/user/setstatus",
-            userGroups: "/usergroup"
+            userGroups: "/usergroup",
+            offer: "/offer",
+            updateOffer: "/offer/:id",
+            offerStatus: "/offer/:id/status",
+            promocode: "/promocode",
+            updatePromocode: "/promocode/:id",
+            promocodeStatus: "/promocode/:id/status"
         }
 
     }
