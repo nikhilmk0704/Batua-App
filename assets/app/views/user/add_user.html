@@ -54,24 +54,20 @@
                                             <span class="required"> * </span>
                                         </label>
                                         <div class="col-xs-8">
-                                            <select class="form-control" id="userGroup" name="userGroup" ng-model="vm.addUserData.userGroupId" required>
+                                            <select class="form-control" id="userGroup" name="userGroup" ng-model="vm.addUserData.userGroupId" ng-options="userGroup.id as userGroup.name for userGroup in vm.userGroups" required>
                                                 <option value="" disabled selected hidden>select user group</option>
-                                                <option value="1">Super-Admin</option>
-                                                <option value="2">Admin/Approver</option>
-                                                <option value="3">Field Sales User</option>
                                             </select>
                                             <span class="help-block text-danger" style="color:#ed6b75;" ng-if="!userForm.userGroup.$pristine && userForm.userGroup.$invalid" ng-messages="userForm.userGroup.$error">Please select any one user group</span>
                                         </div>
                                     </section>
                                     <section class="form-group form-md-line-input has-info" style="padding:0px;">
-                                        <label class="control-label col-xs-3 colorlabel">Profile Image:
-                                        </label>
+                                        <label class="control-label col-xs-3 colorlabel">Profile Image: </label>
                                         <div class="col-xs-8">
                                             <section class="imgholder col-xs-4">
-                                                <img class="img-responsive" alt="Profile Image" ng-src="{{vm.addUserData.profileImageUrl}}" style="width:inherit; height:inherit;" />
+                                                <img class="img-responsive" alt="Profile Image" ng-src="{{vm.addUserData.profileImageUrl}}" style="width:auto; height:inherit;" />
                                             </section>
                                             <section class="row fileupload-buttonbar filebtn col-xs-6" style="margin-top:5%">
-                                                <button class="btn green fileinput-button uploadbtn" style="margin-top:25px;" id="flowUploadForm" flow-init flow-file-added="vm.profileImageUpload($file, $event, $flow)">
+                                                <button type="button" class="btn green fileinput-button uploadbtn" style="margin-top:25px;" id="flowUploadForm" flow-init flow-file-added="vm.profileImageUpload($file, $event, $flow)">
                                                     <div class="">
                                                         <span flow-btn ng-click="$flow.files=[]">Upload</span>
                                                     </div>
@@ -79,11 +75,11 @@
                                             </section>
                                         </div>
                                     </section>
+                                    <div class="form-actions rightshift" style="border-top-width:0px;">
+                                        <button type="button" class="btn default margin-form-btn" ui-sref="userList">Cancel</button>
+                                        <button type="submit" class="btn button-color margin-form-btn" ng-disabled="userForm.$invalid">Submit</button>
+                                    </div>
                                 </section>
-                                <div class="form-actions rightshift" style="border-top-width:0px;">
-                                    <button type="button" class="btn default margin-form-btn" ui-sref="userList">Cancel</button>
-                                    <button type="submit" class="btn button-color margin-form-btn" ng-disabled="userForm.$invalid">Submit</button>
-                                </div>
                             </form>
                             <!-- add user form ends -->
                         </div>

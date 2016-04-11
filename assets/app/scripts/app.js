@@ -65,7 +65,12 @@
             url: '/addUser',
             templateUrl: 'app/views/user/add_user.html',
             controller: 'addUserController',
-            controllerAs: 'vm'
+            controllerAs: 'vm',
+            resolve: {
+                userGroups: ['userService', function(userService) {
+                    return userService.getUserGroups();
+                }]
+            }
         })
 
         .state('editUser', {
