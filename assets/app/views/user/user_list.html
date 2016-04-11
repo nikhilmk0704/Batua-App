@@ -43,15 +43,17 @@
                                         <td> {{user.phone}} </td>
                                         <td> {{user.userGroups.name}} </td>
                                         <td>
-                                            <select class="form-control input-circle" required ng-change="vm.setStatus(user.id, user.status)" ng-model="user.status">
+                                            <select class="form-control input-circle" required ng-change="vm.setStatus(user.id, user.status)" ng-model="user.status" ng-disabled="user.status=='Permanent Suspend'">
                                                 <option value="" disabled selected hidden>select status</option>
                                                 <option value="Active">Active</option>
                                                 <option value="Suspend">Suspend</option>
                                                 <option value="Permanent Suspend">Permanent Suspend</option>
                                             </select>
+                                            <!-- <span ng-show="user.status=='Permanent Suspend'">{{user.status}}</span> -->
                                         </td>
                                         <td>
-                                            <a type="submit" class="btn button-color-table" ui-sref="editUser({userId: user.id})"><i class="fa fa-pencil"></i></a>
+                                            <a type="submit" class="btn button-color-table" ng-if="user.status!='Permanent Suspend'" ui-sref="editUser({userId: user.id})"><i class="fa fa-pencil"></i></a>
+                                            <a type="submit" class="btn button-color-table" ng-if="user.status=='Permanent Suspend'" ng-disabled="user.status=='Permanent Suspend'"><i class="fa fa-pencil"></i></a>
                                         </td>
                                     </tr>
                                 </tbody>

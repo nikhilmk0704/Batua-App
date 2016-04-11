@@ -16,7 +16,8 @@
             setStatus: "/merchant/setstatus",
             user: "/admin/user",
             userDetails: "/admin/user/:id",
-            userStatus: "/admin/user/setstatus"
+            userStatus: "/admin/user/setstatus",
+            userGroups: "/usergroup"
         }
 
     }

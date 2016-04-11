@@ -3,9 +3,9 @@
 
     angular.module('app').factory('userService', userService);
 
-    userService.$inject = ['httpi', 'API', '$localStorage', '$cookieStore', '$state'];
+    userService.$inject = ['httpi', 'API', '$localStorage', '$cookieStore', '$state', '$q'];
 
-    function userService(httpi, API, $localStorage, $cookieStore, $state) {
+    function userService(httpi, API, $localStorage, $cookieStore, $state, $q) {
 
         var service = {};
 
@@ -14,6 +14,7 @@
         service.addUser = addUser;
         service.editUser = editUser;
         service.setStatus = setStatus;
+        service.getUserGroups = getUserGroups;
 
         return service;
 
@@ -92,6 +93,17 @@
             }, function(response) {
                 callback(response);
             });
+        }
+
+        function getUserGroups() {
+            var deferred = $q.defer();
+            httpi({
+                method: "get",
+                url: API.userGroups
+            }).then(function(response) {
+                deferred.resolve(response.data);
+            });
+            return deferred.promise;
         }
 
 

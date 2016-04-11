@@ -24,9 +24,7 @@
                                         </div>
                                     </section>
                                     <section class="form-group">
-                                        <label class="control-label col-xs-3">Email:
-                                            <span class="required"> * </span>
-                                        </label>
+                                        <label class="control-label col-xs-3">Email: </label>
                                         <div class="col-xs-8">
                                             <input type="email" class="form-control input-circle" id="email" name="email" style="margin-bottom:10px;" readonly ng-model="vm.editUserData.email" />
                                         </div>
@@ -45,23 +43,19 @@
                                         </div>
                                     </section>
                                     <section class="form-group" style="padding:0px;">
-                                        <label class="control-label col-xs-3">User Group:
-                                            <span class="required"> * </span>
-                                        </label>
+                                        <label class="control-label col-xs-3">User Group: </label>
                                         <div class="col-xs-8">
-                                            <input type="text" class="form-control input-circle" id="userGroup" name="userGroup"  style="margin-bottom:10px;" readonly ng-model="vm.editUserData.userGroups.name" />
+                                            <input type="text" class="form-control input-circle" id="userGroup" name="userGroup" style="margin-bottom:10px;" readonly ng-model="vm.editUserData.userGroups.name" />
                                         </div>
                                     </section>
                                     <section class="form-group form-md-line-input has-info" style="padding:0px;">
-                                        <label class="control-label col-xs-3 colorlabel">Profile Image:
-                                            <span class="required"> * </span>
-                                        </label>
+                                        <label class="control-label col-xs-3 colorlabel">Profile Image: </label>
                                         <div class="col-xs-8">
                                             <section class="imgholder col-xs-4">
-                                                <img class="img-responsive" alt="Profile Image" ng-src="{{vm.editUserData.profileImageUrl}}" style="width:inherit; height:inherit;" />
+                                                <img class="img-responsive" alt="Profile Image" ng-src="{{vm.editUserData.profileImageUrl}}" style="width:auto; height:inherit;" />
                                             </section>
                                             <section class="row fileupload-buttonbar filebtn col-xs-6" style="margin-top:5%">
-                                                <button class="btn green fileinput-button uploadbtn" style="margin-top:25px;" id="flowUploadForm" flow-init flow-file-added="vm.profileImageUpload($file, $event, $flow)">
+                                                <button type="button" class="btn green fileinput-button uploadbtn" style="margin-top:25px;" id="flowUploadForm" flow-init flow-file-added="vm.profileImageUpload($file, $event, $flow)">
                                                     <div class="">
                                                         <span flow-btn ng-click="$flow.files=[]">Upload</span>
                                                     </div>
@@ -69,11 +63,11 @@
                                             </section>
                                         </div>
                                     </section>
+                                    <div class="form-actions rightshift" style="border-top-width:0px;">
+                                        <button type="button" class="btn default margin-form-btn" ui-sref="userList">Cancel</button>
+                                        <button type="submit" class="btn button-color margin-form-btn" ng-disabled="userForm.$invalid">Submit</button>
+                                    </div>
                                 </section>
-                                <div class="form-actions rightshift" style="border-top-width:0px;">
-                                    <button type="button" class="btn default margin-form-btn" ui-sref="userList">Cancel</button>
-                                    <button type="submit" class="btn button-color margin-form-btn" ng-disabled="userForm.$invalid">Submit</button>
-                                </div>
                             </form>
                         </div>
                     </div>

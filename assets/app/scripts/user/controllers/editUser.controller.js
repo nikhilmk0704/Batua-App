@@ -1,6 +1,6 @@
-angular.module('app').controller('editUserController', ['$scope', '$state', '$stateParams', 'userService', 'toastr', 'imageUpload', 
+angular.module('app').controller('editUserController', ['$scope', '$state', '$timeout', '$stateParams', 'userService', 'toastr', 'imageUpload',
 
-    function($scope, $state, $stateParams, userService, toastr, imageUpload) {
+    function($scope, $state, $timeout, $stateParams, userService, toastr, imageUpload) {
 
         var vm = this;
 
@@ -8,11 +8,11 @@ angular.module('app').controller('editUserController', ['$scope', '$state', '$st
 
         userService.getUserData(vm.userId, function(response) {
             if (response.status === 200) {
-                vm.editUserData = response.data
+                vm.editUserData = response.data;
                 return;
             }
             if (response.status === 400) {
-                return toastr.error(response.data);
+                return toastr.error(response.data.errors[0].message);
             }
             return toastr.error(response.data);
         });
@@ -25,7 +25,7 @@ angular.module('app').controller('editUserController', ['$scope', '$state', '$st
                     return toastr.success('User Details has been updated successfully.');
                 }
                 if (response.status === 400) {
-                    return toastr.error(response.data);
+                    return toastr.error(response.data.errors[0].message);
                 }
                 return toastr.error(response.data);
             });
@@ -58,19 +58,19 @@ angular.module('app').controller('editUserController', ['$scope', '$state', '$st
         var handleProfileImageUpload = function(file, event, $flow) {
             imageUpload.uploadImage(file, function(response) {
                 $flow.files = [];
+                var responseData = response.data;
                 if (response.status === 200) {
                     $timeout(function() {
                         $scope.$apply(function() {
-                            vm.editUserData.profileImageUrl = response.data;
+                            vm.editUserData.profileImageUrl = responseData;
                         });
-                        vm.editUserData.profileImageUrl = response.data;
-                        return vm.editUserData.profileImageUrl;
                     }, 1500);
+                    return vm.editUserData.profileImageUrl;
                 }
                 if (response.status === 400) {
-                    return toastr.error(response.data.errors[0].message);
+                    return toastr.error(responseData.errors[0].message);
                 }
-                return toastr.error(response.data);
+                return toastr.error(responseData);
             });
         };
 
