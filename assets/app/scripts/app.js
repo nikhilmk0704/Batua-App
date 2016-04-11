@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('app', ['ui.router', 'ui.bootstrap', 'ngAnimate', 'ngSanitize', 'ngCookies', 'ngLodash', 'datatables', 'httpi', 'toastr', 'angular-loading-bar', 'flow', 'angucomplete-alt'])
+        .module('app', ['ui.router', 'ui.bootstrap', 'ngAnimate', 'ngSanitize', 'ngCookies', 'ngLodash', 'datatables', 'httpi', 'toastr', 'angular-loading-bar', 'flow', 'angucomplete-alt', 'angularjs-dropdown-multiselect'])
         .config(config)
         .run(run);
 
@@ -116,7 +116,7 @@
         })
 
         .state('editPromocode', {
-            url: '/editPromocode',
+            url: '/editPromocode/:promocodeId',
             templateUrl: 'app/views/promocode/edit_promo.html',
             controller: 'editPromocodeController',
             controllerAs: 'vm'
