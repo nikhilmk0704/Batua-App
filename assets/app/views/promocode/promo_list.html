@@ -60,7 +60,7 @@
                                         <td>{{promocode.percentageCostBourneByBatua}}%</td>
                                         <td>{{promocode.percentageCostBourneByMerchant}}%</td>
                                         <td>
-                                            <select class="form-control input-circle" style="width:180px;" ng-change="vm.setStatus(promocode.id, promocode.status)" ng-model="promocode.status" required> <!-- get it confirm from manaf about expired-->
+                                            <select class="form-control input-circle" style="width:180px;" ng-change="vm.setStatus(promocode.id, promocode.status)" ng-model="promocode.status">
                                                 <option value="" disabled selected hidden>select status</option>
                                                 <option value="Active">Active</option>
                                                 <option value="Suspend">Suspend</option>
