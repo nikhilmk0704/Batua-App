@@ -13,7 +13,7 @@ angular.module('app').controller('addUserController', ['$state', '$scope', '$tim
                     return toastr.success('User has been created successfully.');
                 }
                 if (response.status === 400) {
-                    return toastr.error(response.data);
+                    return toastr.error(response.data.errors[0].message);
                 }
                 return toastr.error(response.data);
             });
@@ -42,19 +42,19 @@ angular.module('app').controller('addUserController', ['$state', '$scope', '$tim
         var handleProfileImageUpload = function(file, event, $flow) {
             imageUpload.uploadImage(file, function(response) {
                 $flow.files = [];
+                var responseData = response.data;
                 if (response.status === 200) {
                     $timeout(function() {
                         $scope.$apply(function() {
-                            vm.addUserData.profileImageUrl = response.data;
+                            vm.addUserData.profileImageUrl = responseData;
                         });
-                        vm.addUserData.profileImageUrl = response.data;
-                        return vm.addUserData.profileImageUrl;
                     }, 1500);
+                    return vm.addUserData.profileImageUrl;
                 }
                 if (response.status === 400) {
-                    return toastr.error(response.data.errors[0].message);
+                    return toastr.error(responseData.errors[0].message);
                 }
-                return toastr.error(response.data);
+                return toastr.error(responseData);
             });
         };
 
