@@ -58,6 +58,9 @@ module.exports.routes = {
     'put /api/admin/user/resetpassword':'UsersController.adminResetPassword',
     'get /api/salesagent/:salesagentId/profile':'UsersController.getProfile',
     'get /api/user/:userId/profile':'UsersController.getProfile',
+    'put /api/salesagent/:salesagentId/profile':'UsersController.updateSalesAgentProfile',
+    'put /api/salesagent/verifyotp':'UsersController.salesAgentVerifyOtp',
+    'put /api/salesagent/logout':'UsersController.salesAgentLogout',
 
 
     'post /api/image/upload':'ImageUploadController.upload',

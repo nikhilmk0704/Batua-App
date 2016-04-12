@@ -1,5 +1,5 @@
 FORMAT: 1A
-HOST: http://52.36.228.74:1337
+HOST: "http://52.36.228.74:1337"
 Headers: {
             Content-Type:application/json
          }
@@ -27,23 +27,29 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
                 "email":"username@domain.com",
                 "phone":9876543210,
                 "profileImageUrl":"url",
-                "groupId":1
+                "userGroupId":1
             }
         
 + Response 201 (application/json)
 
-            {   "id":1,
-                "name":"vikash singh",
-                "email":"username@domain.com",
-                "phone":9876543210,
-                "profileImageUrl":"url"
+            {   
+                "id": 1,
+                "name": "vikash singh",
+                "email": "vikashcool1991@tecsolsoftware.com",
+                "phone": 9479897807,
+                "profileImageUrl": "url",
+                "userGroupId": 1,
+                "status": "Active",
+                "updatedAt": "2016-04-07T10:57:57.000Z",
+                "createdAt": "2016-04-07T10:57:57.000Z"
             }
 
 + Response 400 (applicaiton)
 
-        {
-            "success": false,
-            "message": "Already exist"
+        {   
+            "errors":[
+                        {"message": "Already exist"}
+                    ]
         }
 
 ### Get User List [GET /api/admin/user/{id}]
@@ -52,26 +58,23 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
     
     + Body
     
-            {   "id":1,
-                "name":"vikash singh",
-                "email":"username@domain.com",
-                "phone":9876543210,
-                "accessToken": "dgfjsdgjkbdjkbvs",
-                "groupId":  {
-                                "id":1,
-                                "name":"admin"
-                            },
-                "statusId": {
-                                "id":1,
-                                "name":"active"
+            {
+                "id": 2,
+                "name": "shubham",
+                "phone": 123456785,
+                "email": "shubham@tecsolsoftware.com",
+                "status": "Active",
+                "profileImageUrl": "url",
+                "userGroups":{
+                                "id": 3,
+                                "name": "Field Sales Agent",
+                                "createdAt": "2016-04-04T11:30:24.000Z",
+                                "updatedAt": "2016-04-04T11:30:24.000Z"
                             }
             }
 
 + Response 400 (applicaiton)
 
-        {
-            "success": false
-        }
 
 ### Update User [PUT /api/admin/user/]
 
@@ -83,30 +86,35 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
             
     + Body
 
-            {
+            {   
                 "id":1,
                 "name":"vikash singh",
-                "email":"username@domain.com",
                 "phone":9876543210,
                 "profileImageUrl":"url",
-                "groupId":1
+                "userGroupId":1
             }
         
-+ Response 201 (application/json)
++ Response 200 (application/json)
 
-            {   "id":1,
-                "name":"vikash singh",
-                "email":"username@domain.com",
-                "phone":9876543210,
-                "profileImageUrl":"url"
+            {   
+                "id": 1,
+                "name": "vikash singh",
+                "email": "vikashcool1991@tecsolsoftware.com",
+                "phone": 9479897807,
+                "profileImageUrl": "url",
+                "userGroupId": 1,
+                "status": "Active",
+                "updatedAt": "2016-04-07T10:57:57.000Z",
+                "createdAt": "2016-04-07T10:57:57.000Z"
             }
 
 + Response 400 (applicaiton)
 
-        {
-            "success": false,
-            "message": "Already exist"
-        }
+        {   
+            "errors":[
+                        {"message": "Already exist"}
+                    ]
+        }        
 
 ### Active/Suspend User [PUT /api/admin/user/setstatus]
 
@@ -123,9 +131,10 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
                 status:"Active"
             }
         
-+ Response 201 (application/json)
++ Response 200 (application/json)
 
-            {   "id":1,
+            {   
+                "id":1,
                 "name":"vikash singh",
                 "email":"username@domain.com",
                 "phone":9876543210,
@@ -146,9 +155,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 
             {
                 "email":"aditya@tecsolsoftware.com",
-                "password":"123456",
-                "deviceId":"device1",
-                "deviceType":"type1"
+                "password":"123456"
             }
         
 + Response 200 (application/json)
@@ -158,8 +165,6 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
                 "name": "Aditya",
                 "email": "aditya@tecsolsoftware.com",
                 "token": "0922QvJiT8DkZDtVuwrs6SoZ",
-                "deviceId": "device1",
-                "deviceType": "type1",
                 "userGroup":"Admin"
             }
 
@@ -172,254 +177,24 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 
 + Request (application/json)
             
-    + Body
-
-            {
-                "token":"0922TmsgSpIfAJPaaJVvsykG"
-
-            }
+    + Header
+    
+            token:"092B7NhDGwEwjf77xjaFJgeP"
         
 + Response 200 (application/json)
-
-
-+ Response 400 (applicaiton)
-
-
-## Normal SignUp [/user/normalSignUp]
-
-### Normal SignUp [POST]
-
-+ Request (application/json)
     
     + Body
 
             {
-                "name":"vikash singh",
-                "email":"username@domain.com",
-                "phone":9876543210,
-                "password":"123456",
-                "groupId":1,
-                "deviceToken":"APA91bGl8H-kxi4eEVIcNHExgbsI5zB32Aj42340iAkL7_D6g2VYTlTvYDKIqfKeiX9eDswg7xFifVhOmrJtmRAtzviDKZEVlaq3FiWAzNB8jpyaEv8d22uH04MyUn_XwsUs4kwV88ZC"
-            }
-        
-+ Response 201 (application/json)
-
-            {
-                "id": 1,
-                "name":"vikash singh",
-                "email":"username@domain.com",
-                "phone":9876543210,
-                "accessToken": "dgfjsdgjkbdjkbvs",
-                "profileImageUrl": null
-            }
-
-+ Response 400 (applicaiton)
-
-        {
-            "success": false,
-            "message": "Already exist"
-        }
-
-## Social SignUp [/user/socialSignUp]
-
-### Social SignUp [POST]
-
-+ Request (application/json)
-    
-    + Body
-
-            {
-                "name":"vikash singh",
-                "email":"username@domain.com",
-                "socialId": "hehdbdhbchvywegduahsjxnsajbcdjscvcbjdsbn@facebook.com",
-                "socialType": "FACEBOOK",
-                "profileImageUrl":"https://beatniks-s3.s3.amazonaws.com/e4207a81-2dd1-4c49-b4e5-0391380e235f.jpg",
-                "deviceToken":"APA91bGl8H-kxi4eEVIcNHExgbsI5zB32Aj42340iAkL7_D6g2VYTlTvYDKIqfKeiX9eDswg7xFifVhOmrJtmRAtzviDKZEVlaq3FiWAzNB8jpyaEv8d22uH04MyUn_XwsUs4kwV88ZC"
-            }
-        
-+ Response 201 (application/json)
-
-            {
-                "id": 1,
-                "name":"vikash singh",
-                "email":"username@domain.com",
-                "phone":9876543210,
-                "accessToken": "dgfjsdgjkbdjkbvs",
-                "profileImageUrl": "https://beatniws.com/e4207a81e235f.jpg"
-            }
-
-+ Response 400 (applicaiton)
-
-        {
-            "success": false,
-            "message": "Already exist"
-        }
-
-## Mobile verification [/user/mobileVerification]
-
-### Verify Mobile Number [POST]
-
-+ Request (application/json)
-    
-    + Body
-
-            {
-                "phone": 9876543210,
-                "otp": 123456
+                "message": "Logged out"
             }
             
-+ Response 200 (application/json)
-
-        {
-            "success": true,
-            "accessToken": "08yGxPpUNeRcF8UK18g0lnHW"
-        }
-
 + Response 400 (applicaiton)
 
-        {
-            "success": false,
-            "message": "Bad Request"
-        }
 
-## Login [/user/login]
-
-### Login [POST]
-
-+ Request (application/json)
+## Admin Forgot Password [/api/admin/user/forgotpassword]
     
-    + Body
-
-            {
-                "email":"username@domain.com",
-                "password":"123456",
-                "deviceToken": "bdkjgbekjgbjksbgvjsnb",
-                "groupId": 1
-            }
-            
-+ Response 200 (application/json)
-
-            {
-                "id": 1,
-                "name":"vikash singh",
-                "email":"username@domain.com",
-                "phone":9876543210,
-                "accessToken": "dgfjsdgjkbdjkbvs",
-                "profileImageUrl": "https://beatniws.com/e4207a81e235f.jpg"
-            }
-
-+ Response 400 (applicaiton)
-
-        {
-            "success": false,
-            "message": "Already exist"
-        }
-
-## PIN Login [/user/{id}/pinlogin]
-
-### PIN Login [POST]
-
-+ Request (application/json)
-    
-    + Body
-
-            {
-                "userId":24,
-                "pin":1234,
-                "deviceToken": "bdkjgbekjgbjksbgvjsnb",
-                "groupId": 1
-            }
-            
-+ Response 200 (application/json)
-
-            {   
-                "id":1,
-                "name":"vikash singh",
-                "email":"username@domain.com",
-                "phone":9876543210,
-                "accessToken": "dhfvhjevfhjvbhgfvhsdvsjv"
-            }
-
-+ Response 400 (applicaiton)
-
-            {
-                "success": false,
-                "message": "Bad Request"
-            }
-        
-## Suspend/Activate/Permanent Suspend User [/user/{id}/status]
-
-### Suspend/Activate/Permanent Suspend [PUT]
-
-+ Request  (application/json)
-
-    + Body
-
-            {
-                "id":1,
-                "statusId": 3
-            }
-
-+ Response 200 (application/json)
-
-
-+ Response 401 (application/json)
-
-        
-+ Response 400 (application/json)
-
-
-## Logout [/user/{id}/logout]
-
-### Logout [PUT]
-
-+ Request  (application/json)
-
-    + Headers
-        
-            Access-Token: "ABCDEFGH12345678"
-            
-    + Body
-
-            {
-                "id": "1"
-            }
-
-+ Response 200 (application/json)
-       
-
-+ Response 400 (application/json)
-    
-            {
-                "message":"Unable to logout"
-            }
-
-## Forgot Password [/user/forgotPassword]
-    
-    Used for resend otp also.
-    
-### forgotPassword [POST]
-
-+ Request  (application/json)
-
-    + Body
-
-            {
-                "mobile": 9876543210
-            }
-
-+ Response 201 (application/json)
-
-
-+ Response 401 (application/json)
-
-        
-+ Response 400 (application/json)
-
-    
-## Admin Forgot Password [/admin/forgotPassword]
-    
-### Admin forgotPassword [POST]
+### Admin forgotPassword [PUT]
 
 + Request  (application/json)
 
@@ -429,177 +204,46 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
                 "email": "username@domain.com"
             }
 
-+ Response 201 (application/json)
-
-
-+ Response 401 (application/json)
-
-        
-+ Response 400 (application/json)
-
++ Response 200 (application/json)
     
-
-## OTP Verification [/user/otpverification]
-
-### verify otp for forgotpassword [POST]
-
-+ Request  (application/json)
-
     + Body
-
+    
             {
-                "mobile": 9876543210,
-                "otp": 123456
+                "message": "Email sent"
             }
-
-+ Response 201 (application/json)
-
-
-+ Response 401 (application/json)
-
- 
-+ Response 400 (application/json)
-   
-
-
-## Set New Password [/user/setNewPassword]
-
-### Set New Password [POST]
-
-+ Request  (application/json)
-
-    + Body
-
-            {
-                "mobile": 9876543210
-                "newPassword" : "watro1234",
-                "otp": 123456
-            }
-
-+ Response 201 (application/json)
-
-
-+ Response 401 (application/json)
-
- 
+            
 + Response 400 (application/json)
 
++ Response 404 (application/json)
 
 
-## Reset Password [/user/resetPassword]
+## Admin Reset Password [/api/admin/user/resetpassword]
 
-### Reset Password [PUT]
+### Admin Reset Password [PUT]
 
 + Request  (application/json)
 
     + Headers
         
-            Access-Token: "ABCDEFGH12345678"
+            accessToken: "092B7NhDGwEwjf77xjaFJgeP"
             
     + Body
 
             {
-                "userId": "1",
-                "currentPassword" : "currentPassword",
-                "newPassword" : "newPassword"
+                  "email":"vikash.baghel@tecsolsoftware.com",
+                  "password":"123456",
+                  "confirmPassword":"123456",
+                  "accessToken":"092B7NhDGwEwjf77xjaFJgeP"
             }
 
 + Response 200 (application/json)
-
-
-+ Response 401 (application/json)
-
  
 + Response 400 (application/json)
-
-
-
-## Save PIN [/user/savePin]
-
-### Save PIN [POST]
-
-+ Request  (application/json)
-
-    + Headers
-        
-             Access-Token: "ABCDEFGH12345678"
-            
-    + Body
-
-            {
-                "userId": "1",
-                "PIN" : "1234"
-            }
-
-+ Response 201 (application/json)
-
-
-+ Response 401 (application/json)
-
- 
-+ Response 400 (application/json)
-
-
-
-## Reset PIN [/user/resetPin]
-
-### Reset PIN [POST]
-
-+ Request  (application/json)
-
-    + Headers
-        
-            Access-Token: "ABCDEFGH12345678"
-            
-    + Body
-
-            {
-                "userId": "1",
-                "currentPIN" : 1234,
-                "newPIN" : 4321
-            }
-
-+ Response 201 (application/json)
-
-
-+ Response 401 (application/json)
-
- 
-+ Response 400 (application/json)
-
-
-
-## Forgot PIN [/user/forgotPin]
-
-### Forgot PIN [POST]
-
-+ Request  (application/json)
-    
-    + Headers
-        
-            Access-Token: "ABCDEFGH12345678"
-            
-    + Body
-
-            {
-                "phone": 9876543210,
-                "otp" : 753238,
-                "newPIN" : "1234"
-            }
-
-+ Response 201 (application/json)
-
-
-+ Response 401 (application/json)
-
- 
-+ Response 400 (application/json)
-
 
 
 ## Image Upload [/api/image/upload]
 
-### Upload Image [PUT]
+### Upload Image [POST]
 
 + Request (multipart/form-data)
 
@@ -623,55 +267,66 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 400 (application/json)
     
 
-## Update Profile [/user/{id}/profile]
-
-### Update Profile [PUT]
-
-+ Request (application/json)
-
-    + Headers
-
-            Access-Token: "ABCDEFGH12345678"
-
-    + Body
-    
-            {   
-                "id":1,
-                "name": "updatedName",
-                "profileImageUrl":"url",
-                "groupId":2
-                
-            }
-            
-        
-+ Response 200 (application/json)
-
-
-+ Response 400 (application/json)
-    
-
-+ Response 401 (application/json)
-
-
-### Get Profile [GET]
+### Get Salesagent Profile [GET /api/salesagent/{:salesagentId}/profile]
     
 + Response 200 (application/json)
 
     + Body 
         
             {
-                "userId":1,
+                "id": 14,
                 "name": "vikash",
-                "profileImageUrl":"someUrl",
-                "email":"abc@mail.com",
-                "phone":9876543210
+                "profileImageUrl": "url",
+                "email": "vikash.baghel@tecsolsoftware.com"
+            }
+
++ Response 400 (application/json)
+
+
+### Get Users Profile [GET /api/user/:userId/profile]
+    
++ Response 200 (application/json)
+
+    + Body 
+        
+            {
+                "id": 14,
+                "name": "vikash",
+                "profileImageUrl": "url",
+                "email": "vikash.baghel@tecsolsoftware.com"
+            }
+
++ Response 400 (application/json)
+
+
+### Update Salesagent Profile [PUT /api/salesagent/{:salesagentId}/profile]
+
++ Request (application/json)
+
+    + Body
+    
+            {
+                "id":14,
+                "name":"vikash singh",
+                "profileImageUrl":"https://batua-test.s3.amazonaws.com/1d44bf1e-b507-43cd-8515-4f5211135373.jpg",
+                "currentPassword":"1234567",
+                "newPassword":"123456",
+                "confirmPassword":"123456"
+            }
+            
+        
++ Response 200 (application/json)
+
+            {
+                "id": 14,
+                "name": "vikash singh",
+                "email": "vikash.baghel@tecsolsoftware.com",
+                "profileImageUrl": "https://batua-test.s3.amazonaws.com/1d44bf1e-b507-43cd-8515-4f5211135373.jpg",
+                "phone": 123457856
             }
 
 + Response 400 (application/json)
     
-
-+ Response 401 (application/json)
-
 
 ## User Groups [/api/usergroup/{id}]
 
@@ -776,9 +431,6 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 
 
 + Response 400 (application/json)
-    
-
-+ Response 401 (application/json)
 
 
 ## Create New Merchant [/api/merchant]
@@ -799,13 +451,31 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
                 "profileImageUrl":"someUrl",
                 "email":"username@domain.com",
                 "phone":9876543210,
-                "imageGallery":[ imageUrl1,imageUrl2,imageUrl3,...],
+                "Galleries":[
+                                {"id": 10, "url": "1", "type": "image"},
+                                {"id": 11, "url": "2", "type": "image"},
+                                {"id": 12, "url": "3", "type": "image"}
+                            ],
+                "Location":{
+                                "id": 4,
+                                "area": null,
+                                "pincode": 123456,
+                                "createdAt": "2016-04-04T12:07:21.000Z",
+                                "updatedAt": "2016-04-04T12:07:21.000Z",
+                                "cityId": 1,
+                                "City":{
+                                            "id": 1,
+                                            "name": "Ajmer",
+                                            "state": null,
+                                            "country": null,
+                                            "createdAt": "2016-04-04T11:28:20.000Z",
+                                            "updatedAt": "2016-04-04T11:28:20.000Z"
+                                        }
+                            },
                 "fee":50,
                 "categoryId":1,
-                "cityId":1,
                 "address":"give some address ",
-                "pincode":485001,
-                "latitude":17.7426
+                "latitude":17.7426,
                 "longitude":75.1546,
                 "accountHolder": "vikash singh",
                 "accountNumber":546879463132131644,
@@ -820,49 +490,64 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 201 (application/json)
 
     
-        {
-            "id": 8,
-            "name": "merchant2",
-            "shortCode": "mer07",
-            "profileImageUrl": null,
-            "phone": 123123649,
-            "pincode": 123456,
-            "email": null,
-            "address": null,
-            "latitude": null,
-            "longitude": null,
-            "averageRating": null,
-            "fees": 100,
-            "bankName": null,
-            "branchName": null,
-            "accountHolder": null,
-            "accountNumber": null,
-            "ifscCode": null,
-            "status": "Drafted",
-            "createdAt": "2016-03-26T09:18:27.000Z",
-            "updatedAt": "2016-03-26T09:18:27.000Z",
-            "cityId": 1,
-            "createdSalesId": null,
-            "categoryId": 1,
-            "City": {
-                        "id": 1,
-                        "name": "bengaluru",
-                        "createdAt": "2016-03-26T05:49:43.000Z",
-                        "updatedAt": "2016-03-26T05:49:43.000Z"
-                    },
-            "User": null,
-            "Galleries":[
-                            {"id": 19, "url": "1", "type": "image",…},
-                            {"id": 20, "url": "2", "type": "image",…},
-                            {"id": 21, "url": "3", "type": "image",…}
-                        ],
-            "Category":{
-                            "id": 1,
-                            "name": "Restaurant",
-                            "createdAt": "2016-03-26T05:49:46.000Z",
-                            "updatedAt": "2016-03-26T05:49:46.000Z"
-                        }
-        }
+        
+            {
+                "id": 4,
+                "name": "Kajal004",
+                "shortCode": "kajal004",
+                "profileImageUrl": "url",
+                "phone": 9886543643,
+                "email": null,
+                "address": null,
+                "latitude": null,
+                "longitude": null,
+                "averageRating": null,
+                "fees": 50,
+                "bankName": "HDFC",
+                "branchName": "Kormanagala",
+                "accountHolder": "Kajal",
+                "accountNumber": 9876543210987654,
+                "ifscCode": "HDFC001",
+                "status": "Pending for approval",
+                "createdAt": "2016-04-04T12:07:21.000Z",
+                "updatedAt": "2016-04-04T12:07:21.000Z",
+                "locationId": 4,
+                "createdSalesId": 2,
+                "categoryId": 1,
+                "User":{
+                            "id": 2,
+                            "name": "shubham",
+                            "phone": 123456785,
+                            "email": "shubham@tecsolsoftware.com"
+                        },
+                "Galleries":[
+                                {"id": 10, "url": "1", "type": "image",…},
+                                {"id": 11, "url": "2", "type": "image",…},
+                                {"id": 12, "url": "3", "type": "image",…}
+                            ],
+                "Category":{
+                                "id": 1,
+                                "name": "Restaurant",
+                                "createdAt": "2016-04-04T11:28:25.000Z",
+                                "updatedAt": "2016-04-04T11:28:25.000Z"
+                            },
+                "Location":{
+                                "id": 4,
+                                "area": null,
+                                "pincode": 123456,
+                                "createdAt": "2016-04-04T12:07:21.000Z",
+                                "updatedAt": "2016-04-04T12:07:21.000Z",
+                                "cityId": 1,
+                                "City":{
+                                            "id": 1,
+                                            "name": "Ajmer",
+                                            "state": null,
+                                            "country": null,
+                                            "createdAt": "2016-04-04T11:28:20.000Z",
+                                            "updatedAt": "2016-04-04T11:28:20.000Z"
+                                        }
+                            }
+            }
 
 + Response 400 (application/json)
     
@@ -875,69 +560,119 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 200 (application/json)
 
             [    {
-                    "name": "merchantName1",
-                    "shortCode":"merchant123",
-                    "profileImageUrl":"someUrl",
-                    "email":"username@domain.com",
-                    "phone":9876543210,
-                    "imageGallery":[ imageUrl1,imageUrl2,imageUrl3,...],
-                    "fee":5000,
-                    "averageRating":4.5,
-                    "categoryId":{
-                                    "id":1,
-                                    "name":"category1"
-                                 },
-                    "cityId":{
-                                "id":1,
-                                "name":"city1"
-                             },
-                    "address":"give some address ",
-                    "pincode":485001,
-                    "latitude":17.7426
-                    "longitude":75.1546,
-                    "bankDetailsId":  {
-                                        "accountHolder": "vikash singh",
-                                        "accountNumber":546879463132131644,
-                                        "ifscCode":"hdfc10554",
-                                        "bankBranch":"branch name of bank",
-                                        "bankListId":   {
-                                                            "id":1,
-                                                            "name":"HDFC"
-                                                        },
-                                    },
-                    "statusId":{
-                                    "id":1,
-                                    "name":"Active"
-                                 }
-                },
+                "id": 4,
+                "name": "Kajal004",
+                "shortCode": "kajal004",
+                "profileImageUrl": "url",
+                "phone": 9886543643,
+                "email": null,
+                "address": null,
+                "latitude": null,
+                "longitude": null,
+                "averageRating": null,
+                "fees": 50,
+                "bankName": "HDFC",
+                "branchName": "Kormanagala",
+                "accountHolder": "Kajal",
+                "accountNumber": 9876543210987654,
+                "ifscCode": "HDFC001",
+                "status": "Pending for approval",
+                "createdAt": "2016-04-04T12:07:21.000Z",
+                "updatedAt": "2016-04-04T12:07:21.000Z",
+                "locationId": 4,
+                "createdSalesId": 2,
+                "categoryId": 1,
+                "User":{
+                            "id": 2,
+                            "name": "shubham",
+                            "phone": 123456785,
+                            "email": "shubham@tecsolsoftware.com"
+                        },
+                "Galleries":[
+                                {"id": 10, "url": "1", "type": "image",…},
+                                {"id": 11, "url": "2", "type": "image",…},
+                                {"id": 12, "url": "3", "type": "image",…}
+                            ],
+                "Category":{
+                                "id": 1,
+                                "name": "Restaurant",
+                                "createdAt": "2016-04-04T11:28:25.000Z",
+                                "updatedAt": "2016-04-04T11:28:25.000Z"
+                            },
+                "Location":{
+                                "id": 4,
+                                "area": null,
+                                "pincode": 123456,
+                                "createdAt": "2016-04-04T12:07:21.000Z",
+                                "updatedAt": "2016-04-04T12:07:21.000Z",
+                                "cityId": 1,
+                                "City":{
+                                            "id": 1,
+                                            "name": "Ajmer",
+                                            "state": null,
+                                            "country": null,
+                                            "createdAt": "2016-04-04T11:28:20.000Z",
+                                            "updatedAt": "2016-04-04T11:28:20.000Z"
+                                        }
+                            }
+            },
                 {
-                    "name": "merchantName2",
-                    "shortCode":"merchant1234",
-                    "profileImageUrl":"someUrl",
-                    "email":"username@domain.com",
-                    "phone":9876543210,
-                    "imageGallery":[ imageUrl1,imageUrl2,imageUrl3,...],
-                    "fee":5000,
-                    "averageRating":4.5,
-                    "categoryId":{
-                                    "id":1,
-                                    "name":"category1"
-                                 },
-                    "cityId":{
-                                "id":1,
-                                "name":"city1"
-                             },
-                    "address":"give some address ",
-                    "pincode":485001,
-                    "latitude":17.7426
-                    "longitude":75.1546,
-                    "accountHolder": "Arnold",
-                    "accountNumber":546879463132131643,
-                    "ifscCode":"hdfc10554",
-                    "bankBranch":"branch name of bank",
-                    "bankName": "HDFC",
-                    "status": "Active"
-                }
+                "id": 4,
+                "name": "Kajal004",
+                "shortCode": "kajal004",
+                "profileImageUrl": "url",
+                "phone": 9886543643,
+                "email": null,
+                "address": null,
+                "latitude": null,
+                "longitude": null,
+                "averageRating": null,
+                "fees": 50,
+                "bankName": "HDFC",
+                "branchName": "Kormanagala",
+                "accountHolder": "Kajal",
+                "accountNumber": 9876543210987654,
+                "ifscCode": "HDFC001",
+                "status": "Pending for approval",
+                "createdAt": "2016-04-04T12:07:21.000Z",
+                "updatedAt": "2016-04-04T12:07:21.000Z",
+                "locationId": 4,
+                "createdSalesId": 2,
+                "categoryId": 1,
+                "User":{
+                            "id": 2,
+                            "name": "shubham",
+                            "phone": 123456785,
+                            "email": "shubham@tecsolsoftware.com"
+                        },
+                "Galleries":[
+                                {"id": 10, "url": "1", "type": "image",…},
+                                {"id": 11, "url": "2", "type": "image",…},
+                                {"id": 12, "url": "3", "type": "image",…}
+                            ],
+                "Category":{
+                                "id": 1,
+                                "name": "Restaurant",
+                                "createdAt": "2016-04-04T11:28:25.000Z",
+                                "updatedAt": "2016-04-04T11:28:25.000Z"
+                            },
+                "Location":{
+                                "id": 4,
+                                "area": null,
+                                "pincode": 123456,
+                                "createdAt": "2016-04-04T12:07:21.000Z",
+                                "updatedAt": "2016-04-04T12:07:21.000Z",
+                                "cityId": 1,
+                                "City":{
+                                            "id": 1,
+                                            "name": "Ajmer",
+                                            "state": null,
+                                            "country": null,
+                                            "createdAt": "2016-04-04T11:28:20.000Z",
+                                            "updatedAt": "2016-04-04T11:28:20.000Z"
+                                        }
+                            }
+            }
             ]
 
 + Response 400 (application/json)
@@ -950,70 +685,120 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 
 + Response 200 (application/json)
 
-            [    {
-                    "name": "merchantName1",
-                    "shortCode":"merchant123",
-                    "profileImageUrl":"someUrl",
-                    "email":"username@domain.com",
-                    "phone":9876543210,
-                    "imageGallery":[ imageUrl1,imageUrl2,imageUrl3,...],
-                    "fee":5000,
-                    "averageRating":4.5,
-                    "categoryId":{
-                                    "id":1,
-                                    "name":"category1"
-                                 },
-                    "cityId":{
-                                "id":1,
-                                "name":"city1"
-                             },
-                    "address":"give some address ",
-                    "pincode":485001,
-                    "latitude":17.7426
-                    "longitude":75.1546,
-                    "bankDetailsId":  {
-                                        "accountHolder": "vikash singh",
-                                        "accountNumber":546879463132131644,
-                                        "ifscCode":"hdfc10554",
-                                        "bankBranch":"branch name of bank",
-                                        "bankListId":   {
-                                                            "id":1,
-                                                            "name":"HDFC"
-                                                        },
-                                    },
-                    "statusId":{
-                                    "id":1,
-                                    "name":"Active"
-                                 }
-                },
+        [    {
+                "id": 4,
+                "name": "Kajal004",
+                "shortCode": "kajal004",
+                "profileImageUrl": "url",
+                "phone": 9886543643,
+                "email": null,
+                "address": null,
+                "latitude": null,
+                "longitude": null,
+                "averageRating": null,
+                "fees": 50,
+                "bankName": "HDFC",
+                "branchName": "Kormanagala",
+                "accountHolder": "Kajal",
+                "accountNumber": 9876543210987654,
+                "ifscCode": "HDFC001",
+                "status": "Pending for approval",
+                "createdAt": "2016-04-04T12:07:21.000Z",
+                "updatedAt": "2016-04-04T12:07:21.000Z",
+                "locationId": 4,
+                "createdSalesId": 2,
+                "categoryId": 1,
+                "User":{
+                            "id": 2,
+                            "name": "shubham",
+                            "phone": 123456785,
+                            "email": "shubham@tecsolsoftware.com"
+                        },
+                "Galleries":[
+                                {"id": 10, "url": "1", "type": "image",…},
+                                {"id": 11, "url": "2", "type": "image",…},
+                                {"id": 12, "url": "3", "type": "image",…}
+                            ],
+                "Category":{
+                                "id": 1,
+                                "name": "Restaurant",
+                                "createdAt": "2016-04-04T11:28:25.000Z",
+                                "updatedAt": "2016-04-04T11:28:25.000Z"
+                            },
+                "Location":{
+                                "id": 4,
+                                "area": null,
+                                "pincode": 123456,
+                                "createdAt": "2016-04-04T12:07:21.000Z",
+                                "updatedAt": "2016-04-04T12:07:21.000Z",
+                                "cityId": 1,
+                                "City":{
+                                            "id": 1,
+                                            "name": "Ajmer",
+                                            "state": null,
+                                            "country": null,
+                                            "createdAt": "2016-04-04T11:28:20.000Z",
+                                            "updatedAt": "2016-04-04T11:28:20.000Z"
+                                        }
+                            }
+            },
                 {
-                    "name": "merchantName2",
-                    "shortCode":"merchant1234",
-                    "profileImageUrl":"someUrl",
-                    "email":"username@domain.com",
-                    "phone":9876543210,
-                    "imageGallery":[ imageUrl1,imageUrl2,imageUrl3,...],
-                    "fee":5000,
-                    "averageRating":4.5,
-                    "categoryId":{
-                                    "id":1,
-                                    "name":"category1"
-                                 },
-                    "cityId":{
-                                "id":1,
-                                "name":"city1"
-                             },
-                    "address":"give some address ",
-                    "pincode":485001,
-                    "latitude":17.7426
-                    "longitude":75.1546,
-                    "accountHolder": "Arnold",
-                    "accountNumber":546879463132131643,
-                    "ifscCode":"hdfc10554",
-                    "bankBranch":"branch name of bank",
-                    "bankName": "HDFC",
-                    "status": "Active"
-                }
+                "id": 4,
+                "name": "Kajal004",
+                "shortCode": "kajal004",
+                "profileImageUrl": "url",
+                "phone": 9886543643,
+                "email": null,
+                "address": null,
+                "latitude": null,
+                "longitude": null,
+                "averageRating": null,
+                "fees": 50,
+                "bankName": "HDFC",
+                "branchName": "Kormanagala",
+                "accountHolder": "Kajal",
+                "accountNumber": 9876543210987654,
+                "ifscCode": "HDFC001",
+                "status": "Pending for approval",
+                "createdAt": "2016-04-04T12:07:21.000Z",
+                "updatedAt": "2016-04-04T12:07:21.000Z",
+                "locationId": 4,
+                "createdSalesId": 2,
+                "categoryId": 1,
+                "User":{
+                            "id": 2,
+                            "name": "shubham",
+                            "phone": 123456785,
+                            "email": "shubham@tecsolsoftware.com"
+                        },
+                "Galleries":[
+                                {"id": 10, "url": "1", "type": "image",…},
+                                {"id": 11, "url": "2", "type": "image",…},
+                                {"id": 12, "url": "3", "type": "image",…}
+                            ],
+                "Category":{
+                                "id": 1,
+                                "name": "Restaurant",
+                                "createdAt": "2016-04-04T11:28:25.000Z",
+                                "updatedAt": "2016-04-04T11:28:25.000Z"
+                            },
+                "Location":{
+                                "id": 4,
+                                "area": null,
+                                "pincode": 123456,
+                                "createdAt": "2016-04-04T12:07:21.000Z",
+                                "updatedAt": "2016-04-04T12:07:21.000Z",
+                                "cityId": 1,
+                                "City":{
+                                            "id": 1,
+                                            "name": "Ajmer",
+                                            "state": null,
+                                            "country": null,
+                                            "createdAt": "2016-04-04T11:28:20.000Z",
+                                            "updatedAt": "2016-04-04T11:28:20.000Z"
+                                        }
+                            }
+            }
             ]
 
 + Response 400 (application/json)
@@ -1027,69 +812,119 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 200 (application/json)
 
             [    {
-                    "name": "merchantName1",
-                    "shortCode":"merchant123",
-                    "profileImageUrl":"someUrl",
-                    "email":"username@domain.com",
-                    "phone":9876543210,
-                    "imageGallery":[ imageUrl1,imageUrl2,imageUrl3,...],
-                    "fee":5000,
-                    "averageRating":4.5,
-                    "categoryId":{
-                                    "id":1,
-                                    "name":"category1"
-                                 },
-                    "cityId":{
-                                "id":1,
-                                "name":"city1"
-                             },
-                    "address":"give some address ",
-                    "pincode":485001,
-                    "latitude":17.7426
-                    "longitude":75.1546,
-                    "bankDetailsId":  {
-                                        "accountHolder": "vikash singh",
-                                        "accountNumber":546879463132131644,
-                                        "ifscCode":"hdfc10554",
-                                        "bankBranch":"branch name of bank",
-                                        "bankListId":   {
-                                                            "id":1,
-                                                            "name":"HDFC"
-                                                        },
-                                    },
-                    "statusId":{
-                                    "id":1,
-                                    "name":"Active"
-                                 }
-                },
+                "id": 4,
+                "name": "Kajal004",
+                "shortCode": "kajal004",
+                "profileImageUrl": "url",
+                "phone": 9886543643,
+                "email": null,
+                "address": null,
+                "latitude": null,
+                "longitude": null,
+                "averageRating": null,
+                "fees": 50,
+                "bankName": "HDFC",
+                "branchName": "Kormanagala",
+                "accountHolder": "Kajal",
+                "accountNumber": 9876543210987654,
+                "ifscCode": "HDFC001",
+                "status": "Pending for approval",
+                "createdAt": "2016-04-04T12:07:21.000Z",
+                "updatedAt": "2016-04-04T12:07:21.000Z",
+                "locationId": 4,
+                "createdSalesId": 2,
+                "categoryId": 1,
+                "User":{
+                            "id": 2,
+                            "name": "shubham",
+                            "phone": 123456785,
+                            "email": "shubham@tecsolsoftware.com"
+                        },
+                "Galleries":[
+                                {"id": 10, "url": "1", "type": "image",…},
+                                {"id": 11, "url": "2", "type": "image",…},
+                                {"id": 12, "url": "3", "type": "image",…}
+                            ],
+                "Category":{
+                                "id": 1,
+                                "name": "Restaurant",
+                                "createdAt": "2016-04-04T11:28:25.000Z",
+                                "updatedAt": "2016-04-04T11:28:25.000Z"
+                            },
+                "Location":{
+                                "id": 4,
+                                "area": null,
+                                "pincode": 123456,
+                                "createdAt": "2016-04-04T12:07:21.000Z",
+                                "updatedAt": "2016-04-04T12:07:21.000Z",
+                                "cityId": 1,
+                                "City":{
+                                            "id": 1,
+                                            "name": "Ajmer",
+                                            "state": null,
+                                            "country": null,
+                                            "createdAt": "2016-04-04T11:28:20.000Z",
+                                            "updatedAt": "2016-04-04T11:28:20.000Z"
+                                        }
+                            }
+            },
                 {
-                    "name": "merchantName2",
-                    "shortCode":"merchant1234",
-                    "profileImageUrl":"someUrl",
-                    "email":"username@domain.com",
-                    "phone":9876543210,
-                    "imageGallery":[ imageUrl1,imageUrl2,imageUrl3,...],
-                    "fee":5000,
-                    "averageRating":4.5,
-                    "categoryId":{
-                                    "id":1,
-                                    "name":"category1"
-                                 },
-                    "cityId":{
-                                "id":1,
-                                "name":"city1"
-                             },
-                    "address":"give some address ",
-                    "pincode":485001,
-                    "latitude":17.7426
-                    "longitude":75.1546,
-                    "accountHolder": "Arnold",
-                    "accountNumber":546879463132131643,
-                    "ifscCode":"hdfc10554",
-                    "bankBranch":"branch name of bank",
-                    "bankName": "HDFC",
-                    "status": "Active"
-                }
+                "id": 4,
+                "name": "Kajal004",
+                "shortCode": "kajal004",
+                "profileImageUrl": "url",
+                "phone": 9886543643,
+                "email": null,
+                "address": null,
+                "latitude": null,
+                "longitude": null,
+                "averageRating": null,
+                "fees": 50,
+                "bankName": "HDFC",
+                "branchName": "Kormanagala",
+                "accountHolder": "Kajal",
+                "accountNumber": 9876543210987654,
+                "ifscCode": "HDFC001",
+                "status": "Pending for approval",
+                "createdAt": "2016-04-04T12:07:21.000Z",
+                "updatedAt": "2016-04-04T12:07:21.000Z",
+                "locationId": 4,
+                "createdSalesId": 2,
+                "categoryId": 1,
+                "User":{
+                            "id": 2,
+                            "name": "shubham",
+                            "phone": 123456785,
+                            "email": "shubham@tecsolsoftware.com"
+                        },
+                "Galleries":[
+                                {"id": 10, "url": "1", "type": "image",…},
+                                {"id": 11, "url": "2", "type": "image",…},
+                                {"id": 12, "url": "3", "type": "image",…}
+                            ],
+                "Category":{
+                                "id": 1,
+                                "name": "Restaurant",
+                                "createdAt": "2016-04-04T11:28:25.000Z",
+                                "updatedAt": "2016-04-04T11:28:25.000Z"
+                            },
+                "Location":{
+                                "id": 4,
+                                "area": null,
+                                "pincode": 123456,
+                                "createdAt": "2016-04-04T12:07:21.000Z",
+                                "updatedAt": "2016-04-04T12:07:21.000Z",
+                                "cityId": 1,
+                                "City":{
+                                            "id": 1,
+                                            "name": "Ajmer",
+                                            "state": null,
+                                            "country": null,
+                                            "createdAt": "2016-04-04T11:28:20.000Z",
+                                            "updatedAt": "2016-04-04T11:28:20.000Z"
+                                        }
+                            }
+            }
             ]
 
 + Response 400 (application/json)
@@ -1115,7 +950,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
                 "profileImageUrl":"someUrl",
                 "email":"username@domain.com",
                 "phone":9876543210,
-                "imageGallery":[ imageUrl1,imageUrl2,imageUrl3,...],
+                "imageGallery":[ "imageUrl1","imageUrl2","imageUrl3"],
                 "fee":50,
                 "categoryId":1,
                 "cityId":1,
@@ -1136,48 +971,62 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 200 (application/json)
     
         {
-            "id": 8,
-            "name": "merchant2",
-            "shortCode": "mer07",
-            "profileImageUrl": null,
-            "phone": 123123649,
-            "pincode": 123456,
-            "email": null,
-            "address": null,
-            "latitude": null,
-            "longitude": null,
-            "averageRating": null,
-            "fees": 100,
-            "bankName": null,
-            "branchName": null,
-            "accountHolder": null,
-            "accountNumber": null,
-            "ifscCode": null,
-            "status": "Drafted",
-            "createdAt": "2016-03-26T09:18:27.000Z",
-            "updatedAt": "2016-03-26T09:18:27.000Z",
-            "cityId": 1,
-            "createdSalesId": null,
-            "categoryId": 1,
-            "City": {
-                        "id": 1,
-                        "name": "bengaluru",
-                        "createdAt": "2016-03-26T05:49:43.000Z",
-                        "updatedAt": "2016-03-26T05:49:43.000Z"
-                    },
-            "User": null,
-            "Galleries":[
-                            {"id": 19, "url": "1", "type": "image",…},
-                            {"id": 20, "url": "2", "type": "image",…},
-                            {"id": 21, "url": "3", "type": "image",…}
-                        ],
-            "Category":{
-                            "id": 1,
-                            "name": "Restaurant",
-                            "createdAt": "2016-03-26T05:49:46.000Z",
-                            "updatedAt": "2016-03-26T05:49:46.000Z"
-                        }
-        }
+                "id": 4,
+                "name": "Kajal004",
+                "shortCode": "kajal004",
+                "profileImageUrl": "url",
+                "phone": 9886543643,
+                "email": null,
+                "address": null,
+                "latitude": null,
+                "longitude": null,
+                "averageRating": null,
+                "fees": 50,
+                "bankName": "HDFC",
+                "branchName": "Kormanagala",
+                "accountHolder": "Kajal",
+                "accountNumber": 9876543210987654,
+                "ifscCode": "HDFC001",
+                "status": "Pending for approval",
+                "createdAt": "2016-04-04T12:07:21.000Z",
+                "updatedAt": "2016-04-04T12:07:21.000Z",
+                "locationId": 4,
+                "createdSalesId": 2,
+                "categoryId": 1,
+                "User":{
+                            "id": 2,
+                            "name": "shubham",
+                            "phone": 123456785,
+                            "email": "shubham@tecsolsoftware.com"
+                        },
+                "Galleries":[
+                                {"id": 10, "url": "1", "type": "image",…},
+                                {"id": 11, "url": "2", "type": "image",…},
+                                {"id": 12, "url": "3", "type": "image",…}
+                            ],
+                "Category":{
+                                "id": 1,
+                                "name": "Restaurant",
+                                "createdAt": "2016-04-04T11:28:25.000Z",
+                                "updatedAt": "2016-04-04T11:28:25.000Z"
+                            },
+                "Location":{
+                                "id": 4,
+                                "area": null,
+                                "pincode": 123456,
+                                "createdAt": "2016-04-04T12:07:21.000Z",
+                                "updatedAt": "2016-04-04T12:07:21.000Z",
+                                "cityId": 1,
+                                "City":{
+                                            "id": 1,
+                                            "name": "Ajmer",
+                                            "state": null,
+                                            "country": null,
+                                            "createdAt": "2016-04-04T11:28:20.000Z",
+                                            "updatedAt": "2016-04-04T11:28:20.000Z"
+                                        }
+                            }
+            }
 
 + Response 400 (application/json)
 
@@ -1549,7 +1398,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 401 (application/json)
 
 
-## Promocode Management [/promocode]
+## Promocode Management [/api/promocode]
 
 ### Create Promocode [POST]
 
@@ -1561,46 +1410,44 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 
     + Body
     
-            {   
-                "promocode":code1,
-                "offerDiscountPercentage":40,
-                "description":"grive some description",
-                "maximumAmountLimit":1000,
-                "validFrom":"2016-11-12T05:03:46.000Z",
-                "validTo":"2017-11-12T05:03:46.000Z",
-                "percentageCostBourneByBatua":10,
-                "percentageCostBourneByMerchant":20,
-                "merchantId":12,
-                "statusId":2
+            { 
+                 "promocode": "DEEVALI20",
+                 "discountPercentage":"20",
+                 "description":"Clearance Sale",
+                 "maximumAmountLimit":"2500",
+                 "merchantId":[7,8],
+                 "validFrom":"2016-04-27T11:03:12.000Z",
+                 "validTo":"2016-04-29T11:03:12.000Z",
+                 "percentageCostBourneByBatua":"5",
+                 "percentageCostBourneByMerchant":"2"
             }
 
 + Response 201 (application/json)
     
     + Body
     
-            {   
-                "id":1,
-                "promocode":code1,
-                "offerDiscountPercentage":40,
-                "description":"grive some description",
-                "maximumAmountLimit":1000,
-                "validFrom":"2016-11-12T05:03:46.000Z",
-                "validTo":"2017-11-12T05:03:46.000Z",
-                "percentageCostBourneByBatua":10,
-                "percentageCostBourneByMerchant":20,
-                "merchantId":12,
-                "statusId":2,
-                "createdAt": "2016-11-12T05:03:46.000Z",
-                "updatedAt": "2016-11-12T05:03:46.000Z"
+            {
+                "status": "active",
+                "id": 3,
+                "promocode": "DEEVALI0",
+                "discountPercentage": "0",
+                "description": "Clearance Sale",
+                "maximumAmountLimit": "2500",
+                "validFrom": "2016-04-27T11:03:12.000Z",
+                "validTo": "2016-04-29T11:03:12.000Z",
+                "percentageCostBourneByBatua": "5",
+                "percentageCostBourneByMerchant": "2",
+                "updatedAt": "2016-04-05T05:41:58.000Z",
+                "createdAt": "2016-04-05T05:41:58.000Z"
             }
-    
+
 + Response 400 (application/json)
 
 
 + Response 401 (application/json)
 
 
-### Update Promocode [PUT]
+### Update Promocode [PUT /api/promocode/{id}]
 
 + Request (application/json)
 
@@ -1610,39 +1457,37 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 
     + Body
     
-            {   
-                "id":1,
-                "promocode":newcode,
-                "offerDiscountPercentage":40,
-                "description":"grive some new description",
-                "maximumAmountLimit":1000,
-                "validFrom":"2016-11-12T05:03:46.000Z",
-                "validTo":"2017-11-12T05:03:46.000Z",
-                "percentageCostBourneByBatua":10,
-                "percentageCostBourneByMerchant":20,
-                "merchantId":12,
-                "statusId":2
+            { 
+                 "promocode": "DEEVALI12",
+                 "discountPercentage":"12",
+                 "description":"Clearance Sale",
+                 "maximumAmountLimit":"1000",
+                 "merchantId":[8],
+                 "validFrom":"2016-05-27T11:03:12.000Z",
+                 "validTo":"2016-05-29T11:03:12.000Z",
+                 "percentageCostBourneByBatua":"5",
+                 "percentageCostBourneByMerchant":"2"
             }
 
 + Response 200 (application/json)
     
     + Body
     
-            {   
-                "id":1,
-                "promocode":newcode,
-                "offerDiscountPercentage":40,
-                "description":"grive some new description",
-                "maximumAmountLimit":1000,
-                "validFrom":"2016-11-12T05:03:46.000Z",
-                "validTo":"2017-11-12T05:03:46.000Z",
-                "percentageCostBourneByBatua":10,
-                "percentageCostBourneByMerchant":20,
-                "merchantId":12,
-                "statusId":2,
-                "createdAt": "2016-11-12T05:03:46.000Z",
-                "updatedAt": "2016-11-12T05:03:46.000Z"
+            {
+                "id": 1,
+                "promocode": "DEEVALI12",
+                "discountPercentage": 12,
+                "description": "Clearance Sale",
+                "maximumAmountLimit": 1000,
+                "validFrom": "2016-05-27T11:03:12.000Z",
+                "validTo": "2016-05-29T11:03:12.000Z",
+                "percentageCostBourneByBatua": 5,
+                "percentageCostBourneByMerchant": 2,
+                "status": "active",
+                "createdAt": "2016-04-05T05:16:25.000Z",
+                "updatedAt": "2016-04-05T12:15:22.000Z"
             }
+
     
 + Response 400 (application/json)
 
@@ -1657,121 +1502,245 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
     + Body
     
             [
-                {   
-                    "id":1,
-                    "promocode":code1,
-                    "offerDiscountPercentage":40,
-                    "description":"grive some description",
-                    "maximumAmountLimit":1000,
-                    "validFrom":"2016-11-12T05:03:46.000Z",
-                    "validTo":"2017-11-12T05:03:46.000Z",
-                    "percentageCostBourneByBatua":10,
-                    "percentageCostBourneByMerchant":20,
-                    "merchantId":   {
-                                        "id":14,
-                                        "name":"merchantName",
-                                        "address":"merchant's address",
-                                        "createdAt": "2016-11-12T05:03:46.000Z",
-                                        "updatedAt": "2016-11-12T05:03:46.000Z"
-                                    },
-                    "statusId": {
-                                        "id":2,
-                                        "name":"active"
-                                        "createdAt": "2016-11-12T05:03:46.000Z",
-                                        "updatedAt": "2016-11-12T05:03:46.000Z"
-                                    },
-                    "createdAt": "2016-11-12T05:03:46.000Z",
-                    "updatedAt": "2016-11-12T05:03:46.000Z"
+                {
+                    "id": 1,
+                    "promocode": "DEEVALI12",
+                    "discountPercentage": 12,
+                    "description": "Clearance Sale",
+                    "maximumAmountLimit": 1000,
+                    "validFrom": "2016-05-27T11:03:12.000Z",
+                    "validTo": "2016-05-29T11:03:12.000Z",
+                    "percentageCostBourneByBatua": 5,
+                    "percentageCostBourneByMerchant": 2,
+                    "status": "active",
+                    "createdAt": "2016-04-05T05:16:25.000Z",
+                    "updatedAt": "2016-04-05T12:15:22.000Z",
+                    "Merchants": [
+                        {
+                            "id": 8,
+                            "name": "Kajal",
+                            "shortCode": "kajal123",
+                            "profileImageUrl": "url",
+                            "phone": 9886432663,
+                            "email": null,
+                            "address": null,
+                            "latitude": null,
+                            "longitude": null,
+                            "averageRating": null,
+                            "fees": 50,
+                            "bankName": "HDFC",
+                            "branchName": "Kormanagala",
+                            "accountHolder": "Kajal",
+                            "accountNumber": 9876543210987654,
+                            "ifscCode": "HDFC001",
+                            "status": "Pending for approval",
+                            "createdAt": "2016-04-05T05:14:21.000Z",
+                            "updatedAt": "2016-04-05T05:14:21.000Z",
+                            "locationId": null,
+                            "createdSalesId": 2,
+                            "categoryId": 2,
+                            "MerchantsPromocodes": {
+                                "id": 10,
+                                "createdAt": "2016-04-05T12:15:22.000Z",
+                                "updatedAt": "2016-04-05T12:15:22.000Z",
+                                "merchantId": 8,
+                                "promocodeId": 1
+                            }
+                        }
+                    ]
                 },
-                {   
-                    "id":2,
-                    "promocode":code2,
-                    "offerDiscountPercentage":40,
-                    "description":"grive some description",
-                    "maximumAmountLimit":1000,
-                    "validFrom":"2016-11-12T05:03:46.000Z",
-                    "validTo":"2017-11-12T05:03:46.000Z",
-                    "percentageCostBourneByBatua":10,
-                    "percentageCostBourneByMerchant":20,
-                    "merchantId":   {
-                                        "id":12,
-                                        "name":"merchantName",
-                                        "address":"merchant's address",
-                                        "createdAt": "2016-11-12T05:03:46.000Z",
-                                        "updatedAt": "2016-11-12T05:03:46.000Z"
-                                    },
-                    "statusId":     {
-                                        "id":3,
-                                        "name":"active"
-                                        "createdAt": "2016-11-12T05:03:46.000Z",
-                                        "updatedAt": "2016-11-12T05:03:46.000Z"
-                                    },
-                    "createdAt": "2016-11-12T05:03:46.000Z",
-                    "updatedAt": "2016-11-12T05:03:46.000Z"
+                {
+                    "id": 2,
+                    "promocode": "DEEVALI100",
+                    "discountPercentage": 10,
+                    "description": "Clearance Sale",
+                    "maximumAmountLimit": 2500,
+                    "validFrom": "2016-04-27T11:03:12.000Z",
+                    "validTo": "2016-04-29T11:03:12.000Z",
+                    "percentageCostBourneByBatua": 5,
+                    "percentageCostBourneByMerchant": 2,
+                    "status": "active",
+                    "createdAt": "2016-04-05T05:32:46.000Z",
+                    "updatedAt": "2016-04-05T05:32:46.000Z",
+                    "Merchants": [
+                        {
+                            "id": 7,
+                            "name": "Hashim123",
+                            "shortCode": "hashim1020",
+                            "profileImageUrl": "url",
+                            "phone": 2147483647,
+                            "email": null,
+                            "address": null,
+                            "latitude": null,
+                            "longitude": null,
+                            "averageRating": null,
+                            "fees": 50,
+                            "bankName": "HDFC",
+                            "branchName": "Kormanagala",
+                            "accountHolder": "Kajal",
+                            "accountNumber": 9876543210987654,
+                            "ifscCode": "HDFC001",
+                            "status": "Pending for approval",
+                            "createdAt": "2016-04-05T05:11:31.000Z",
+                            "updatedAt": "2016-04-05T05:11:31.000Z",
+                            "locationId": null,
+                            "createdSalesId": 2,
+                            "categoryId": 2,
+                            "MerchantsPromocodes": {
+                                "id": 3,
+                                "createdAt": "2016-04-05T05:32:46.000Z",
+                                "updatedAt": "2016-04-05T05:32:46.000Z",
+                                "merchantId": 7,
+                                "promocodeId": 2
+                            }
+                        },
+                        {
+                            "id": 8,
+                            "name": "Kajal",
+                            "shortCode": "kajal123",
+                            "profileImageUrl": "url",
+                            "phone": 9886432663,
+                            "email": null,
+                            "address": null,
+                            "latitude": null,
+                            "longitude": null,
+                            "averageRating": null,
+                            "fees": 50,
+                            "bankName": "HDFC",
+                            "branchName": "Kormanagala",
+                            "accountHolder": "Kajal",
+                            "accountNumber": 9876543210987654,
+                            "ifscCode": "HDFC001",
+                            "status": "Pending for approval",
+                            "createdAt": "2016-04-05T05:14:21.000Z",
+                            "updatedAt": "2016-04-05T05:14:21.000Z",
+                            "locationId": null,
+                            "createdSalesId": 2,
+                            "categoryId": 2,
+                            "MerchantsPromocodes": {
+                                "id": 4,
+                                "createdAt": "2016-04-05T05:32:46.000Z",
+                                "updatedAt": "2016-04-05T05:32:46.000Z",
+                                "merchantId": 8,
+                                "promocodeId": 2
+                            }
+                        }
+                    ]
+                },
+                {
+                    "id": 3,
+                    "promocode": "DEEVALI0",
+                    "discountPercentage": 0,
+                    "description": "Clearance Sale",
+                    "maximumAmountLimit": 2500,
+                    "validFrom": "2016-04-27T11:03:12.000Z",
+                    "validTo": "2016-04-29T11:03:12.000Z",
+                    "percentageCostBourneByBatua": 5,
+                    "percentageCostBourneByMerchant": 2,
+                    "status": "active",
+                    "createdAt": "2016-04-05T05:41:58.000Z",
+                    "updatedAt": "2016-04-05T05:41:58.000Z",
+                    "Merchants": [
+                        {
+                            "id": 7,
+                            "name": "Hashim123",
+                            "shortCode": "hashim1020",
+                            "profileImageUrl": "url",
+                            "phone": 2147483647,
+                            "email": null,
+                            "address": null,
+                            "latitude": null,
+                            "longitude": null,
+                            "averageRating": null,
+                            "fees": 50,
+                            "bankName": "HDFC",
+                            "branchName": "Kormanagala",
+                            "accountHolder": "Kajal",
+                            "accountNumber": 9876543210987654,
+                            "ifscCode": "HDFC001",
+                            "status": "Pending for approval",
+                            "createdAt": "2016-04-05T05:11:31.000Z",
+                            "updatedAt": "2016-04-05T05:11:31.000Z",
+                            "locationId": null,
+                            "createdSalesId": 2,
+                            "categoryId": 2,
+                            "MerchantsPromocodes": {
+                                "id": 5,
+                                "createdAt": "2016-04-05T05:41:58.000Z",
+                                "updatedAt": "2016-04-05T05:41:58.000Z",
+                                "merchantId": 7,
+                                "promocodeId": 3
+                            }
+                        },
+                        {
+                            "id": 8,
+                            "name": "Kajal",
+                            "shortCode": "kajal123",
+                            "profileImageUrl": "url",
+                            "phone": 9886432663,
+                            "email": null,
+                            "address": null,
+                            "latitude": null,
+                            "longitude": null,
+                            "averageRating": null,
+                            "fees": 50,
+                            "bankName": "HDFC",
+                            "branchName": "Kormanagala",
+                            "accountHolder": "Kajal",
+                            "accountNumber": 9876543210987654,
+                            "ifscCode": "HDFC001",
+                            "status": "Pending for approval",
+                            "createdAt": "2016-04-05T05:14:21.000Z",
+                            "updatedAt": "2016-04-05T05:14:21.000Z",
+                            "locationId": null,
+                            "createdSalesId": 2,
+                            "categoryId": 2,
+                            "MerchantsPromocodes": {
+                                "id": 6,
+                                "createdAt": "2016-04-05T05:41:58.000Z",
+                                "updatedAt": "2016-04-05T05:41:58.000Z",
+                                "merchantId": 8,
+                                "promocodeId": 3
+                            }
+                        }
+                    ]
                 }
             ]
-        
+
 + Response 400 (application/json)
 
 
 + Response 401 (application/json)
 
 
-### Delete Promocode [DELETE]
-
-+ Request (application/json)
-
-    + Headers
-
-            Access-Token: "ABCDEFGH12345678"
-
-    + Body
-    
-            {   
-                "id":1
-            }
-
-+ Response 200 (application/json)
-    
-    + Body
-    
-            {   
-                "id":1,
-                "promocode":code1,
-                "offerDiscountPercentage":40,
-                "description":"grive some description",
-                "maximumAmountLimit":1000,
-                "validFrom":"2016-11-12T05:03:46.000Z",
-                "validTo":"2017-11-12T05:03:46.000Z",
-                "percentageCostBourneByBatua":10,
-                "percentageCostBourneByMerchant":20,
-                "merchantId":12,
-                "statusId":2,
-                "createdAt": "2016-11-12T05:03:46.000Z",
-                "updatedAt": "2016-11-12T05:03:46.000Z"
-            }
-    
-+ Response 400 (application/json)
-
-
-+ Response 401 (application/json)
-
-
-## Suspend/Activate/Permanent Suspend Promocode [/promocode/{id}/status]
-
-### Suspend/Activate/Permanent Suspend [PUT]
+### Suspend/Activate/Permanent Suspend [PUT /api/promocode/{id}/status]
 
 + Request  (application/json)
 
     + Body
 
             {
-                "id":1,
-                "statusId": 3
+                "status": "active"
             }
 
 + Response 200 (application/json)
-
+    
+    + Body
+    
+            {
+                "id": 1,
+                "promocode": "DEEVALI12",
+                "discountPercentage": 12,
+                "description": "Clearance Sale",
+                "maximumAmountLimit": 1000,
+                "validFrom": "2016-05-27T11:03:12.000Z",
+                "validTo": "2016-05-29T11:03:12.000Z",
+                "percentageCostBourneByBatua": 5,
+                "percentageCostBourneByMerchant": 2,
+                "status": "active",
+                "createdAt": "2016-04-05T05:16:25.000Z",
+                "updatedAt": "2016-04-05T13:22:58.000Z"
+            }
 
 + Response 401 (application/json)
 
@@ -1779,7 +1748,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 400 (application/json)
 
 
-## Offer Discount Management [/offerdiscount]
+## Offer Discount Management [/api/offer]
 
 ### Create Offer Discount [POST]
 
@@ -1791,32 +1760,31 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 
     + Body
     
-            {   
-                "offerDiscountPercentage":40,
-                "description":"grive some description",
-                "maximumAmountLimit":1000,
-                "validFrom":"2016-11-12T05:03:46.000Z",
-                "validTo":"2017-11-12T05:03:46.000Z",
-                "merchantId":12,
-                "statusId":2
+            { 
+                 "discountPercentage":"20",
+                 "description":"Clearance Sale",
+                 "maximumAmountLimit":"2500",
+                 "merchantId":[7,8],
+                 "validFrom":"2016-04-27T11:03:12.000Z",
+                 "validTo":"2016-04-29T11:03:12.000Z"
             }
 
 + Response 201 (application/json)
     
     + Body
     
-            {   
-                "id":1,
-                "offerDiscountPercentage":40,
-                "description":"grive some description",
-                "maximumAmountLimit":1000,
-                "validFrom":"2016-11-12T05:03:46.000Z",
-                "validTo":"2017-11-12T05:03:46.000Z",
-                "merchantId":12,
-                "statusId":2,
-                "createdAt": "2016-11-12T05:03:46.000Z",
-                "updatedAt": "2016-11-12T05:03:46.000Z"
+            {
+                "status": "Active",
+                "id": 2,
+                "discountPercentage": "20",
+                "description": "Clearance Sale",
+                "maximumAmountLimit": "2500",
+                "validFrom": "2016-04-27T11:03:12.000Z",
+                "validTo": "2016-04-29T11:03:12.000Z",
+                "updatedAt": "2016-04-06T09:42:00.000Z",
+                "createdAt": "2016-04-06T09:42:00.000Z"
             }
+
     
 + Response 400 (application/json)
 
@@ -1824,7 +1792,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 401 (application/json)
 
 
-### Update Offer Discount [PUT]
+### Update Offer Discount [PUT /api/offer/{id}]
 
 + Request (application/json)
 
@@ -1834,33 +1802,31 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 
     + Body
     
-            {   
-                "id":1,
-                "offerDiscountPercentage":40,
-                "description":"grive some new description",
-                "maximumAmountLimit":1000,
-                "validFrom":"2016-11-12T05:03:46.000Z",
-                "validTo":"2017-11-12T05:03:46.000Z",
-                "merchantId":12,
-                "statusId":2
+            { 
+                 "discountPercentage":"15",
+                 "description":"Clearance Sale",
+                 "maximumAmountLimit":"2500",
+                 "merchantId":[8],
+                 "validFrom":"2016-04-27T11:03:12.000Z",
+                 "validTo":"2016-04-29T11:03:12.000Z"
             }
 
 + Response 200 (application/json)
     
     + Body
     
-            {   
-                "id":1,
-                "offerDiscountPercentage":40,
-                "description":"grive some new description",
-                "maximumAmountLimit":1000,
-                "validFrom":"2016-11-12T05:03:46.000Z",
-                "validTo":"2017-11-12T05:03:46.000Z",
-                "merchantId":12,
-                "statusId":2,
-                "createdAt": "2016-11-12T05:03:46.000Z",
-                "updatedAt": "2016-11-12T05:03:46.000Z"
+            {
+                "id": 6,
+                "discountPercentage": 15,
+                "description": "Clearance Sale",
+                "maximumAmountLimit": 2500,
+                "validFrom": "2016-04-27T11:03:12.000Z",
+                "validTo": "2016-04-29T11:03:12.000Z",
+                "status": "active",
+                "createdAt": "2016-04-06T07:38:39.000Z",
+                "updatedAt": "2016-04-06T07:42:24.000Z"
             }
+
     
 + Response 400 (application/json)
 
@@ -1874,54 +1840,84 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
     
     + Body
     
-            [
-                {   
-                    "id":1,
-                    "offerDiscountPercentage":40,
-                    "description":"grive some description",
-                    "maximumAmountLimit":1000,
-                    "validFrom":"2016-11-12T05:03:46.000Z",
-                    "validTo":"2017-11-12T05:03:46.000Z",
-                    "merchantId":   {
-                                        "id":14,
-                                        "name":"merchantName",
-                                        "address":"merchant's address",
-                                        "createdAt": "2016-11-12T05:03:46.000Z",
-                                        "updatedAt": "2016-11-12T05:03:46.000Z"
-                                    },
-                    "statusId": {
-                                        "id":2,
-                                        "name":"active"
-                                        "createdAt": "2016-11-12T05:03:46.000Z",
-                                        "updatedAt": "2016-11-12T05:03:46.000Z"
-                                    },
-                    "createdAt": "2016-11-12T05:03:46.000Z",
-                    "updatedAt": "2016-11-12T05:03:46.000Z"
-                },
-                {   
-                    "id":2,
-                    "offerDiscountPercentage":40,
-                    "description":"grive some description",
-                    "maximumAmountLimit":1000,
-                    "validFrom":"2016-11-12T05:03:46.000Z",
-                    "validTo":"2017-11-12T05:03:46.000Z",
-                    "merchantId":   {
-                                        "id":12,
-                                        "name":"merchantName",
-                                        "address":"merchant's address",
-                                        "createdAt": "2016-11-12T05:03:46.000Z",
-                                        "updatedAt": "2016-11-12T05:03:46.000Z"
-                                    },
-                    "statusId":     {
-                                        "id":3,
-                                        "name":"active"
-                                        "createdAt": "2016-11-12T05:03:46.000Z",
-                                        "updatedAt": "2016-11-12T05:03:46.000Z"
-                                    },
-                    "createdAt": "2016-11-12T05:03:46.000Z",
-                    "updatedAt": "2016-11-12T05:03:46.000Z"
-                }
-            ]
+            {
+                "id": 1,
+                "discountPercentage": 20,
+                "description": "Clearance Sale",
+                "maximumAmountLimit": 2500,
+                "validFrom": "2016-04-27T11:03:12.000Z",
+                "validTo": "2016-04-29T11:03:12.000Z",
+                "status": "Active",
+                "createdAt": "2016-04-06T08:54:20.000Z",
+                "updatedAt": "2016-04-06T08:54:20.000Z",
+                "Merchants": [
+                    {
+                        "id": 7,
+                        "name": "Hashim123",
+                        "shortCode": "hashim1020",
+                        "profileImageUrl": "url",
+                        "phone": 2147483647,
+                        "email": null,
+                        "address": null,
+                        "latitude": null,
+                        "longitude": null,
+                        "averageRating": null,
+                        "fees": 50,
+                        "bankName": "HDFC",
+                        "branchName": "Kormanagala",
+                        "accountHolder": "Kajal",
+                        "accountNumber": 9876543210987654,
+                        "ifscCode": "HDFC001",
+                        "status": "Pending for approval",
+                        "createdAt": "2016-04-05T05:11:31.000Z",
+                        "updatedAt": "2016-04-05T05:11:31.000Z",
+                        "locationId": null,
+                        "createdSalesId": 2,
+                        "categoryId": 2,
+                        "MerchantsOffers": {
+                            "id": 1,
+                            "createdAt": "2016-04-06T08:54:20.000Z",
+                            "updatedAt": "2016-04-06T08:54:20.000Z",
+                            "offerDiscountId": null,
+                            "merchantId": 7,
+                            "offerId": 1
+                        }
+                    },
+                    {
+                        "id": 8,
+                        "name": "Kajal",
+                        "shortCode": "kajal123",
+                        "profileImageUrl": "url",
+                        "phone": 9886432663,
+                        "email": null,
+                        "address": null,
+                        "latitude": null,
+                        "longitude": null,
+                        "averageRating": null,
+                        "fees": 50,
+                        "bankName": "HDFC",
+                        "branchName": "Kormanagala",
+                        "accountHolder": "Kajal",
+                        "accountNumber": 9876543210987654,
+                        "ifscCode": "HDFC001",
+                        "status": "Pending for approval",
+                        "createdAt": "2016-04-05T05:14:21.000Z",
+                        "updatedAt": "2016-04-05T05:14:21.000Z",
+                        "locationId": null,
+                        "createdSalesId": 2,
+                        "categoryId": 2,
+                        "MerchantsOffers": {
+                            "id": 2,
+                            "createdAt": "2016-04-06T08:54:20.000Z",
+                            "updatedAt": "2016-04-06T08:54:20.000Z",
+                            "offerDiscountId": null,
+                            "merchantId": 8,
+                            "offerId": 1
+                        }
+                    }
+                ]
+            }
+
         
 + Response 400 (application/json)
 
@@ -1929,63 +1925,429 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 401 (application/json)
 
 
-### Delete Offer Discount [DELETE]
+## Suspend/Activate/Permanent Suspend Offer Discount [/offer/{id}/status]
 
-+ Request (application/json)
-
-    + Headers
-
-            Access-Token: "ABCDEFGH12345678"
-
-    + Body
-    
-            {   
-                "id":1
-            }
-
-+ Response 200 (application/json)
-    
-    + Body
-    
-            {   
-                "id":1,
-                "offerDiscountPercentage":40,
-                "description":"grive some description",
-                "maximumAmountLimit":1000,
-                "validFrom":"2016-11-12T05:03:46.000Z",
-                "validTo":"2017-11-12T05:03:46.000Z",
-                "merchantId":12,
-                "statusId":2,
-                "createdAt": "2016-11-12T05:03:46.000Z",
-                "updatedAt": "2016-11-12T05:03:46.000Z"
-            }
-    
-+ Response 400 (application/json)
-
-
-+ Response 401 (application/json)
-
-
-## Suspend/Activate/Permanent Suspend Offer Discount [/offerdiscount/{id}/status]
-
-### Suspend/Activate/Permanent Suspend [PUT]
+### Suspend/Activate/Permanent Suspend [PUT /offer/{id}/status]
 
 + Request  (application/json)
 
     + Body
 
             {
-                "id":1,
-                "statusId": 3
+                "status": "Active"
             }
 
 + Response 200 (application/json)
+    + Body 
+    
+            {
+                "id": 6,
+                "discountPercentage": 15,
+                "description": "Clearance Sale",
+                "maximumAmountLimit": 2500,
+                "validFrom": "2016-04-27T11:03:12.000Z",
+                "validTo": "2016-04-29T11:03:12.000Z",
+                "status": "active",
+                "createdAt": "2016-04-06T07:38:39.000Z",
+                "updatedAt": "2016-04-06T07:43:56.000Z"
+            }
+
++ Response 401 (application/json)
+
+        
++ Response 400 (application/json)
+
+
+## Sales Agent OTP Verification [/api/salesagent/verifyotp]
+
+### Sales Agent OTP Verification [PUT]
+
++ Request  (application/json)
+
+    + Body
+
+            {
+                "otp": 123456,
+                "phone":123457856,
+                "deviceId":"device1"
+            }
+
++ Response 200 (application/json)
+
+    + Body
+            
+            {
+                "userId": 14
+            }
+
++ Response 400 (application/json)
+
+
+### Sales Agent Logout [PUT /api/salesagent/logout]
+
++ Request  (application/json)
+    
+    + Header
+    
+            token:"092E8vstN81XjO62tJIPdnt6"
+    
+    + Body
+
+            {
+                "deviceId":"device1",
+                "userId":14
+            }
+
++ Response 200 (application/json)
+
+    + Body
+            
+            {
+                "message": "Logged out"
+            }
+
++ Response 400 (application/json)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+## Normal SignUp [/user/normalSignUp]
+
+### Normal SignUp [POST]
+
++ Request (application/json)
+    
+    + Body
+
+            {
+                "name":"vikash singh",
+                "email":"username@domain.com",
+                "phone":9876543210,
+                "password":"123456",
+                "groupId":1,
+                "deviceToken":"APA91bGl8H-kxi4eEVIcNHExgbsI5zB32Aj42340iAkL7_D6g2VYTlTvYDKIqfKeiX9eDswg7xFifVhOmrJtmRAtzviDKZEVlaq3FiWAzNB8jpyaEv8d22uH04MyUn_XwsUs4kwV88ZC"
+            }
+        
++ Response 201 (application/json)
+
+            {
+                "id": 1,
+                "name":"vikash singh",
+                "email":"username@domain.com",
+                "phone":9876543210,
+                "accessToken": "dgfjsdgjkbdjkbvs",
+                "profileImageUrl": null
+            }
+
++ Response 400 (applicaiton)
+
+        {
+            "success": false,
+            "message": "Already exist"
+        }
+
+## Social SignUp [/user/socialSignUp]
+
+### Social SignUp [POST]
+
++ Request (application/json)
+    
+    + Body
+
+            {
+                "name":"vikash singh",
+                "email":"username@domain.com",
+                "socialId": "hehdbdhbchvywegduahsjxnsajbcdjscvcbjdsbn@facebook.com",
+                "socialType": "FACEBOOK",
+                "profileImageUrl":"https://beatniks-s3.s3.amazonaws.com/e4207a81-2dd1-4c49-b4e5-0391380e235f.jpg",
+                "deviceToken":"APA91bGl8H-kxi4eEVIcNHExgbsI5zB32Aj42340iAkL7_D6g2VYTlTvYDKIqfKeiX9eDswg7xFifVhOmrJtmRAtzviDKZEVlaq3FiWAzNB8jpyaEv8d22uH04MyUn_XwsUs4kwV88ZC"
+            }
+        
++ Response 201 (application/json)
+
+            {
+                "id": 1,
+                "name":"vikash singh",
+                "email":"username@domain.com",
+                "phone":9876543210,
+                "accessToken": "dgfjsdgjkbdjkbvs",
+                "profileImageUrl": "https://beatniws.com/e4207a81e235f.jpg"
+            }
+
++ Response 400 (applicaiton)
+
+        {
+            "success": false,
+            "message": "Already exist"
+        }
+
+## Mobile verification [/user/mobileVerification]
+
+### Verify Mobile Number [POST]
+
++ Request (application/json)
+    
+    + Body
+
+            {
+                "phone": 9876543210,
+                "otp": 123456
+            }
+            
++ Response 200 (application/json)
+
+        {
+            "success": true,
+            "accessToken": "08yGxPpUNeRcF8UK18g0lnHW"
+        }
+
++ Response 400 (applicaiton)
+
+        {
+            "success": false,
+            "message": "Bad Request"
+        }
+
+## Login [/user/login]
+
+### Login [POST]
+
++ Request (application/json)
+    
+    + Body
+
+            {
+                "email":"username@domain.com",
+                "password":"123456",
+                "deviceToken": "bdkjgbekjgbjksbgvjsnb",
+                "groupId": 1
+            }
+            
++ Response 200 (application/json)
+
+            {
+                "id": 1,
+                "name":"vikash singh",
+                "email":"username@domain.com",
+                "phone":9876543210,
+                "accessToken": "dgfjsdgjkbdjkbvs",
+                "profileImageUrl": "https://beatniws.com/e4207a81e235f.jpg"
+            }
+
++ Response 400 (applicaiton)
+
+        {
+            "success": false,
+            "message": "Already exist"
+        }
+
+## PIN Login [/user/{id}/pinlogin]
+
+### PIN Login [POST]
+
++ Request (application/json)
+    
+    + Body
+
+            {
+                "userId":24,
+                "pin":1234,
+                "deviceToken": "bdkjgbekjgbjksbgvjsnb",
+                "groupId": 1
+            }
+            
++ Response 200 (application/json)
+
+            {   
+                "id":1,
+                "name":"vikash singh",
+                "email":"username@domain.com",
+                "phone":9876543210,
+                "accessToken": "dhfvhjevfhjvbhgfvhsdvsjv"
+            }
+
++ Response 400 (applicaiton)
+
+            {
+                "success": false,
+                "message": "Bad Request"
+            }
+            
+
+## Logout [/user/{id}/logout]
+
+### Logout [PUT]
+
++ Request  (application/json)
+
+    + Headers
+        
+            Access-Token: "ABCDEFGH12345678"
+            
+    + Body
+
+            {
+                "id": "1"
+            }
+
++ Response 200 (application/json)
+       
+
++ Response 400 (application/json)
+    
+            {
+                "message":"Unable to logout"
+            }
+
+## Forgot Password [/user/forgotPassword]
+    
+    Used for resend otp also.
+    
+### forgotPassword [POST]
+
++ Request  (application/json)
+
+    + Body
+
+            {
+                "mobile": 9876543210
+            }
+
++ Response 201 (application/json)
 
 
 + Response 401 (application/json)
 
         
 + Response 400 (application/json)
+
+
+## Set New Password [/user/setNewPassword]
+
+### Set New Password [POST]
+
++ Request  (application/json)
+
+    + Body
+
+            {
+                "mobile": 9876543210
+                "newPassword" : "1234",
+                "otp": 123456
+            }
+
++ Response 201 (application/json)
+
+
++ Response 401 (application/json)
+
+ 
++ Response 400 (application/json)
+
+
+
+
+
+## Save PIN [/user/savePin]
+
+### Save PIN [POST]
+
++ Request  (application/json)
+
+    + Headers
+        
+             Access-Token: "ABCDEFGH12345678"
+            
+    + Body
+
+            {
+                "userId": "1",
+                "PIN" : "1234"
+            }
+
++ Response 201 (application/json)
+
+
++ Response 401 (application/json)
+
+ 
++ Response 400 (application/json)
+
+
+
+## Reset PIN [/user/resetPin]
+
+### Reset PIN [POST]
+
++ Request  (application/json)
+
+    + Headers
+        
+            Access-Token: "ABCDEFGH12345678"
+            
+    + Body
+
+            {
+                "userId": "1",
+                "currentPIN" : 1234,
+                "newPIN" : 4321
+            }
+
++ Response 201 (application/json)
+
+
++ Response 401 (application/json)
+
+ 
++ Response 400 (application/json)
+
+
+
+## Forgot PIN [/user/forgotPin]
+
+### Forgot PIN [POST]
+
++ Request  (application/json)
+    
+    + Headers
+        
+            Access-Token: "ABCDEFGH12345678"
+            
+    + Body
+
+            {
+                "phone": 9876543210,
+                "otp" : 753238,
+                "newPIN" : "1234"
+            }
+
++ Response 201 (application/json)
+
+
++ Response 401 (application/json)
+
+ 
++ Response 400 (application/json)
+
 
 
 ## Push Notification [/user/notification]
