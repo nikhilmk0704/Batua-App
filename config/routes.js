@@ -24,6 +24,7 @@ module.exports.routes = {
     'get /api/user/:userId/merchant/:id?': 'MerchantsController.find',
     'get /api/salesagent/:salesAgentId/merchant/:id?': 'MerchantsController.find',
     'get /api/admin/:adminId/merchant/:id?': 'MerchantsController.find',
+    'get /api/merchant/:id?': 'MerchantsController.getActiveMerchants',
     'put /api/merchant': 'MerchantsController.update',
     'put /api/merchant/setstatus': 'MerchantsController.setStatus',
 
@@ -58,6 +59,10 @@ module.exports.routes = {
     'put /api/admin/user/resetpassword':'UsersController.adminResetPassword',
     'get /api/salesagent/:salesagentId/profile':'UsersController.getProfile',
     'get /api/user/:userId/profile':'UsersController.getProfile',
+    'put /api/salesagent/:salesagentId/profile':'UsersController.updateSalesAgentProfile',
+    'put /api/salesagent/resetpassword':'UsersController.salesAgentResetPassword',
+    'put /api/salesagent/verifyotp':'UsersController.salesAgentVerifyOtp',
+    'put /api/salesagent/logout':'UsersController.salesAgentLogout',
 
 
     'post /api/image/upload':'ImageUploadController.upload',

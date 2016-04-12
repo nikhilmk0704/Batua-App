@@ -86,7 +86,7 @@ BEGIN CONTENT BODY -->
                                             <span class="required"> * </span>
                                         </label>
                                         <div class="col-xs-8">
-                                            <input type="tel" class="form-control input-circle" id="pincode" name="pincode" style="margin-bottom:10px;" required ng-model="vm.editMerchantData.location.pincode" ng-maxlength="6" ng-pattern="/^[0-9]*$/" />
+                                            <input type="tel" class="form-control input-circle" id="pincode" name="pincode" style="margin-bottom:10px;" required ng-model="vm.editMerchantData.locations.pincode" ng-maxlength="6" ng-pattern="/^[0-9]*$/" />
                                             <span class="help-block text-danger" ng-if="!merchantForm.pincode.$pristine && merchantForm.pincode.$invalid" ng-messages="merchantForm.pincode.$error">
                                             <span class="help-block text-danger" ng-if="merchantForm.pincode.$error.pattern" ng-message="pattern">Enter only numbers!</span>
                                             <span class="help-block text-danger" ng-if="merchantForm.pincode.$error.maxlength" ng-message="maxlength">Not matching standards!</span>

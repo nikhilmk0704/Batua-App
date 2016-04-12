@@ -40,7 +40,7 @@ class MerchantService {
     validatePartialRequest(params){
         var merchantService = new MerchantService();
         return _.every(merchantService.getPartialMandatoryFields(), function(element) {
-            if (params[element]) {
+            if (params[element] || params[element]==0) {
                 return true;
             } 
         });
@@ -120,7 +120,7 @@ class MerchantService {
     validateAllRequest(params) {
         var merchantService = new MerchantService();
         return _.every(merchantService.getAllMandatoryFields(), function(element) {
-            if (params[element]) {
+            if (params[element] || params[element]==0) {
                 return true;
             } 
         });
@@ -168,10 +168,17 @@ class MerchantService {
 
     updateLocations(params,result,merchantId,options,findObject,callback){
         var merchantService = new MerchantService();
-        var locationParams={};
-        locationParams.where={};
-        locationParams.where.id=result.locationId;
-        Locations.update(params,locationParams).then(function(result){
+        var whereObject={};
+        var updateObject={};
+        var area=params.area;
+        var pincode=params.pincode;
+        var cityId=params.cityId;
+        (area)?(updateObject.area=area):(updateObject);
+        (pincode)?(updateObject.pincode=pincode):(updateObject);
+        (cityId)?(updateObject.cityId=cityId):(updateObject);
+        whereObject.where={};
+        whereObject.where.id=result.locationId;
+        Locations.update(updateObject,whereObject).then(function(result){
             merchantService.updateMerchantAndGalleries(params,result,merchantId,options,findObject,callback);
             return null;
         }).catch(function(exception){
@@ -334,6 +341,15 @@ class MerchantService {
             } 
             return callback(merchantService.generateErrorMessage("Please provide correct id"));
         });
+    }
+
+    getActiveMerchants(params,callback){
+        var id=params.id;
+        var whereObject={};
+        whereObject.where={};
+        (id)?(whereObject.where.id=id):(whereObject.where.status='Active');
+        var merchantRepository = new MerchantRepository();
+        merchantRepository.findAll(whereObject,callback);
     }
 
     generateErrorMessage(messageOrObject){

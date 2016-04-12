@@ -17,6 +17,10 @@ class UserGroupService {
             params.where.id = id;
             userGroupRepository.find(params, callback);
         } else {
+            params.where={};
+            params.where.$or=[{name:'Super Admin'},
+                              {name:'Admin'},
+                              {name:'Field Sales Agent'}];
             userGroupRepository.findAll(params, callback);
         }
     }

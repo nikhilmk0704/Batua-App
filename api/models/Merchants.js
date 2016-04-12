@@ -60,7 +60,7 @@ module.exports = {
             }
         },
         fees: {
-            type: Sequelize.INTEGER(3),
+            type: Sequelize.FLOAT,
             required: true,
             allowNull: false,
             validate: {
@@ -73,7 +73,6 @@ module.exports = {
         },
         branchName: {
             type: Sequelize.STRING,
-            defaultValue: null,
         },
         accountHolder: {
             type: Sequelize.STRING,

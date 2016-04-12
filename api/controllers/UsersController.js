@@ -42,7 +42,6 @@ module.exports = {
         var params={};
         params.id=req.body.id;
         params.name=req.body.name;
-        params.email=req.body.email;
         params.phone=req.body.phone;
         params.profileImageUrl=req.body.profileImageUrl;
         params.userGroupId=req.body.userGroupId;
@@ -80,7 +79,7 @@ module.exports = {
 
     adminLogout:function(req,res){
         var params={};
-        params.token=req.body.token;
+        params.token=req.headers['token'];
         var userService = new UserService();
         userService.adminLogout(params,function(err,result){
             if(err)
@@ -105,7 +104,7 @@ module.exports = {
         params.email=req.body.email;
         params.password=req.body.password;
         params.confirmPassword=req.body.confirmPassword;
-        params.accessToken=req.body.accessToken;
+        params.accessToken=req.headers['token'];
         var userService = new UserService();
         userService.adminResetPassword(params,function(err,result){
             if(err)
@@ -124,6 +123,62 @@ module.exports = {
                 return res.badRequest(userService.generateErrorMessage(err));
             return res.json(200,result);
         })
+    },
+
+    updateSalesAgentProfile:function(req,res){
+        var params={};
+        params.salesagentId=req.param('salesagentId');
+        params.id=req.body.id;
+        params.name=req.body.name;
+        params.profileImageUrl=req.body.profileImageUrl;
+        params.newPassword=req.body.newPassword;
+        params.currentPassword=req.body.currentPassword;
+        params.confirmPassword=req.body.confirmPassword;
+        var userService = new UserService();
+        userService.updateSalesAgentProfile(params,function(err,result){
+            if(err)
+                return res.badRequest(userService.generateErrorMessage(err));
+            return res.json(200,result);
+        });
+    },
+
+    salesAgentVerifyOtp:function(req,res){
+        var params={};
+        params.otp=req.body.otp;
+        params.phone=req.body.phone;
+        params.deviceId=req.body.deviceId;
+        var userService = new UserService();
+        userService.salesAgentVerifyOtp(params,function(err,result){
+            if(err)
+                return res.badRequest(userService.generateErrorMessage(err));
+            return res.json(200,result);
+        });
+    },
+
+    salesAgentResetPassword:function(req,res){
+        var params={};
+        params.userId=req.body.userId;
+        params.newPassword=req.body.newPassword;
+        params.confirmPassword=req.body.confirmPassword;
+        var userService = new UserService();
+        userService.salesAgentResetPassword(params,function(err,result){
+            if(err)
+                return res.badRequest(userService.generateErrorMessage(err));
+            return res.json(200,result);
+        });
+    },
+
+    salesAgentLogout:function(req,res){
+        var params={};
+        params.token=req.headers['token'];
+        params.deviceId=req.body.deviceId;
+        params.userId=req.body.userId;
+        var userService = new UserService();
+        userService.salesAgentLogout(params,function(err,result){
+            if(err)
+                return res.badRequest(userService.generateErrorMessage(err));
+            return res.json(200,result);
+        });
     },
 
 };
