@@ -33,7 +33,7 @@
                                         <span class="help-block text-danger" ng-if="!addPromocodeForm.merchantName.$pristine && addPromocodeForm.merchantName.$invalid" ng-messages="addPromocodeForm.merchantName.$error">Please enter a valid merchant name </span>
                                     </div>
                                 </section> 
-                                <section class="form-group" ng-class="{'has-error': addPromocodeForm.offerpercent.$invalid && !addPromocodeForm.offerpercent.$pristine}">
+                                <section class="form-group" ng-class="{'has-error': addPromocodeForm.offerPercent.$invalid && !addPromocodeForm.offerPercent.$pristine}">
                                     <label class="control-label col-xs-3">Offer/Discount in %:
                                         <span class="required"> * </span>
                                     </label>
@@ -43,7 +43,6 @@
                                         <span class="help-block text-danger" ng-if="addPromocodeForm.offerPercent.$error.pattern" ng-message="pattern">Offer must be between 1 to 99.99</span>
                                         <span class="help-block text-danger" ng-if="addPromocodeForm.offerPercent.$error.required" ng-message="required">Please enter a valid Offer Percentage</span>
                                         </span>
-
                                     </div>
                                 </section>
                                 <section class="form-group" ng-class="{'has-error': addPromocodeForm.offerdesc.$invalid && !addPromocodeForm.offerdesc.$pristine}">

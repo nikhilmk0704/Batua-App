@@ -100,7 +100,7 @@
         })
 
         .state('editOffer', {
-            url: '/editOffer',
+            url: '/editOffer/:offerId',
             templateUrl: 'app/views/offer/edit_offer.html',
             controller: 'editOfferController',
             controllerAs: 'vm',
