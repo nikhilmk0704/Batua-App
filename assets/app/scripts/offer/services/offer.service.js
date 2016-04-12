@@ -3,9 +3,9 @@
 
     angular.module('app').factory('offerService', offerService);
 
-    offerService.$inject = ['httpi', 'API', '$localStorage', '$cookieStore', '$state'];
+    offerService.$inject = ['httpi', 'API'];
 
-    function offerService(httpi, API, $localStorage, $cookieStore, $state) {
+    function offerService(httpi, API) {
 
         var service = {};
 

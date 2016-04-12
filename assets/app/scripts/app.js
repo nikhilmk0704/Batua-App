@@ -113,6 +113,13 @@
             templateUrl: 'app/views/promocode/add_promo.html',
             controller: 'addPromocodeController',
             controllerAs: 'vm'
+            /*Api need to be changed*/
+            // resolve: {
+            //     merchantList: ['merchantService', function(merchantService) {
+            //         return merchantService.getAllActiveMerchants();
+            //     }]
+            // }
+
         })
 
         .state('editPromocode', {

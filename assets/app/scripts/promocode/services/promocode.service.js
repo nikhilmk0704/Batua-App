@@ -3,9 +3,9 @@
 
     angular.module('app').factory('promocodeService', promocodeService);
 
-    promocodeService.$inject = ['httpi', 'API', '$localStorage', '$cookieStore', '$state'];
+    promocodeService.$inject = ['httpi', 'API'];
 
-    function promocodeService(httpi, API, $localStorage, $cookieStore, $state) {
+    function promocodeService(httpi, API) {
 
         var service = {};
 
