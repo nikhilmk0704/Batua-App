@@ -15,15 +15,17 @@
                                 <section class="form-group">
                                     <label class="control-label col-xs-3">Merchant Name: </label>
                                     <div class="col-xs-8">
-                                        <input name="text" type="text" class="form-control input-circle" id="Merchantname" name="Merchantname" placeholder="Enter the Merchant Name" style="margin-bottom:10px;" readonly ng-model="vm.editOfferData.merchants.name"/>
+                                        <label class="btn btn-default disabled input-circle" ng-repeat="merchant in vm.editOfferData.merchants" style="margin:0px 0px 0px 15px; padding:4px 10px;">
+                                            {{merchant.name}}
+                                        </label>
                                     </div>
                                 </section>
                                 <section class="form-group" ng-class="{'has-error': editOfferForm.offerPercent.$invalid && !editOfferForm.offerPercent.$pristine}">
-                                    <label class="control-label col-xs-3">Offer/Discount in %:
+                                    <label class="control-label col-xs-3" style="margin:6px 0px 0px 0px;">Offer/Discount in %:
                                         <span class="required"> * </span>
                                     </label>
                                     <div class="col-xs-8">
-                                        <input type="number" class="form-control input-circle" id="offerPercent" name="offerPercent" placeholder="Offer/Discount in Percentage" style="margin-bottom:15px;" required ng-pattern="/^(?=.*[1-9])\d{0,2}(?:\.\d{0,2})?$/" ng-model="vm.editOfferData.discountPercentage">
+                                        <input type="number" class="form-control input-circle" id="offerPercent" name="offerPercent" placeholder="Offer/Discount in Percentage" style="margin:10px 0px 15px 0px;" required ng-pattern="/^(?=.*[1-9])\d{0,2}(?:\.\d{0,2})?$/" ng-model="vm.editOfferData.discountPercentage">
                                         <span class="help-block text-danger" ng-if="!editOfferForm.offerPercent.$pristine && editOfferForm.offerPercent.$invalid" ng-messages="editOfferForm.offerPercent.$error">
                                         <span class="help-block text-danger" ng-if="editOfferForm.offerPercent.$error.pattern" ng-message="pattern">Offer must be between 1 to 99.99</span>
                                         <span class="help-block text-danger" ng-if="editOfferForm.offerPercent.$error.required" ng-message="required">Please enter a valid Offer Percentage</span>
@@ -31,9 +33,9 @@
                                     </div>
                                 </section>
                                 <section class="form-group" ng-class="{'has-error': editOfferForm.desc.$invalid && !editOfferForm.desc.$pristine}">
-                                    <label class="control-label col-xs-3">Description: </label>
+                                    <label class="control-label col-xs-3">Description: <span class="required"> * </span></label>
                                     <div class="col-xs-8">
-                                        <textarea class="form-control input-circle col-xs-12" rows="3" id="desc" name="desc" placeholder="Enter Offer Description" style="margin-bottom:15px;" value="" required ng-model="vm.editOfferData.description"></textarea>
+                                        <textarea class="form-control input-circle col-xs-12" rows="3" id="desc" name="desc" placeholder="Enter Offer Description" style="margin-bottom:15px;" required ng-model="vm.editOfferData.description"></textarea>
                                         <span class="help-block text-danger" ng-if="!editOfferForm.desc.$pristine && editOfferForm.desc.$invalid" ng-messages="editOfferForm.desc.$error">Please enter description for the offer </span>
                                     </div>
                                 </section>
@@ -42,7 +44,7 @@
                                         <span class="required"> * </span>
                                     </label>
                                     <div class="col-xs-8">
-                                        <input type="text" class="form-control input-circle" id="maxLimit" name="maxLimit" placeholder="Enter the Maximum Limit" style="margin-bottom:15px;" required ng-model="vm.editOfferData.maximumAmountLimit">
+                                        <input type="number" class="form-control input-circle" id="maxLimit" name="maxLimit" placeholder="Enter the Maximum Limit" style="margin-bottom:15px;" required ng-model="vm.editOfferData.maximumAmountLimit">
                                         <span class="help-block text-danger" ng-if="!editOfferForm.maxLimit.$pristine && editOfferForm.maxLimit.$invalid" ng-messages="editOfferForm.maxLimit.$error">Please enter a valid max limit </span>
                                     </div>
                                 </section>
@@ -50,9 +52,10 @@
                                     <label class="control-label col-xs-3">Offer Start Date:
                                         <span class="required"> * </span>
                                     </label>
-                                    <section class="input-group col-xs-8  offerstartdate" style="margin-bottom:15px;padding-left:15px;">
-                                        <div class="input-group-addon input-circle-left"><a ng-click="openFrom($event)">
-                                        <i class="fa fa-calendar"></i></a></div>
+                                    <section class="input-group col-xs-8 offerstartdate" style="margin-bottom:15px;padding-left:15px;">
+                                        <div class="input-group-addon input-circle-left">
+                                            <a ng-click="openFrom($event)" style="pointer-events: none; cursor: default;"><i class="fa fa-calendar"></i></a>
+                                        </div>
                                         <input type="text" class="form-control input-circle-right dateinput" uib-datepicker-popup="dd/MM/yyyy" is-open="status.opened1" min-date="minDate" max-date="maxDate" datepicker-mode="day" show-weeks="false" clear-text="false" show-button-bar="false" name="startDate" ng-model="vm.editOfferData.validFrom" readonly="true" placeholder="Offer Start Date as DD/MM/YYYY" style="width:97%" />
                                     </section>
                                     <span class="help-block text-danger col-xs-8 col-xs-push-3" ng-if="!editOfferForm.startDate.$pristine && editOfferForm.startDate.$invalid" ng-messages="editOfferForm.startDate.$error"> Please select a valid start date </span>
@@ -68,8 +71,8 @@
                                     <span class="help-block text-danger col-xs-8 col-xs-push-3" ng-if="!editOfferForm.endDate.$pristine && editOfferForm.endDate.$invalid" ng-messages="editOfferForm.endDate.$error"> Please select a valid end date </span>
                                 </section>
                                 <div class="form-actions rightshift" style="border-top-width:0px;">
-                                    <button type="button" class="btn default margin-form-btn" ui-sref="offerList">Cancel</button>
                                     <button type="submit" class="btn button-color margin-form-btn" ng-disabled="editOfferForm.$invalid">Submit</button>
+                                    <button type="button" class="btn default margin-form-btn" ui-sref="offerList">Cancel</button>
                                 </div>
                             </form>
                         </div>

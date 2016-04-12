@@ -32,7 +32,7 @@
                                         <div ng-dropdown-multiselect="" options="vm.merchantList" selected-model="vm.merchants" extra-settings="vm.merchantsDropdownSettings" style="margin-bottom:10px;" id="merchantName" name="merchantName" required></div>
                                         <span class="help-block text-danger" ng-if="!addPromocodeForm.merchantName.$pristine && addPromocodeForm.merchantName.$invalid" ng-messages="addPromocodeForm.merchantName.$error">Please enter a valid merchant name </span>
                                     </div>
-                                </section> 
+                                </section>
                                 <section class="form-group" ng-class="{'has-error': addPromocodeForm.offerPercent.$invalid && !addPromocodeForm.offerPercent.$pristine}">
                                     <label class="control-label col-xs-3">Offer/Discount in %:
                                         <span class="required"> * </span>
@@ -59,7 +59,7 @@
                                         <span class="required"> * </span>
                                     </label>
                                     <div class="col-xs-8">
-                                        <input type="text" class="form-control input-circle" id="maxlimit" name="maxlimit" placeholder="Enter the Maximum Limit" style="margin-bottom:15px;" required ng-model="promocodeData.maximumAmountLimit">
+                                        <input type="number" class="form-control input-circle" id="maxlimit" name="maxlimit" placeholder="Enter the Maximum Limit" style="margin-bottom:15px;" required ng-model="promocodeData.maximumAmountLimit">
                                         <span class="help-block text-danger" ng-if="!addPromocodeForm.maxlimit.$pristine && addPromocodeForm.maxlimit.$invalid" ng-messages="addPromocodeForm.maxlimit.$error">Please enter a valid Max limit </span>
                                     </div>
                                 </section>
@@ -69,7 +69,7 @@
                                     </label>
                                     <section class="input-group col-xs-8 offerstartdate" style="margin-bottom:15px; padding-left:15px;">
                                         <div class="input-group-addon input-circle-left"><a ng-click="openFrom($event)"><i class="fa fa-calendar"></i></a></div>
-                                        <input type="text" class="form-control input-circle-right dateinput" uib-datepicker-popup="dd/MM/yyyy" is-open="status.opened1" min-date="minDate" max-date="maxDate" datepicker-mode="day" show-weeks="false" clear-text="false" show-button-bar="false" name="startDate" ng-model="promocodeData.validFrom" required placeholder="Offer Start Date as DD/MM/YYYY" style="width:97%"/>
+                                        <input type="text" class="form-control input-circle-right dateinput" uib-datepicker-popup="dd/MM/yyyy" is-open="status.opened1" min-date="minDate" max-date="maxDate" datepicker-mode="day" show-weeks="false" clear-text="false" show-button-bar="false" name="startDate" ng-model="promocodeData.validFrom" required placeholder="Offer Start Date as DD/MM/YYYY" style="width:97%" />
                                     </section>
                                     <span class="help-block text-danger col-xs-8 col-xs-push-3" ng-if="!addPromocodeForm.startDate.$pristine && addPromocodeForm.startDate.$invalid" ng-messages="addPromocodeForm.startDate.$error"> Please select a valid end date </span>
                                 </section>
@@ -79,31 +79,36 @@
                                     </label>
                                     <section class="input-group col-xs-8  offerenddate" style="margin-bottom:15px;padding-left:15px;">
                                         <div class="input-group-addon input-circle-left"><a ng-click="openTo($event)"><i class="fa fa-calendar"></i></a></div>
-                                        <input type="text" class="form-control input-circle-right dateinput" uib-datepicker-popup="dd/MM/yyyy" is-open="status.opened2" min-date="promocodeData.validFrom" max-date="maxDate" datepicker-mode="day" show-weeks="false" clear-text="false" show-button-bar="false" name="endDate" ng-model="promocodeData.validTo" required placeholder="Offer End Date as DD/MM/YYYY" style="width:97%"/>
+                                        <input type="text" class="form-control input-circle-right dateinput" uib-datepicker-popup="dd/MM/yyyy" is-open="status.opened2" min-date="promocodeData.validFrom" max-date="maxDate" datepicker-mode="day" show-weeks="false" clear-text="false" show-button-bar="false" name="endDate" ng-model="promocodeData.validTo" required placeholder="Offer End Date as DD/MM/YYYY" style="width:97%" />
                                     </section>
                                     <span class="help-block text-danger col-xs-8 col-xs-push-3" ng-if="!addPromocodeForm.endDate.$pristine && addPromocodeForm.endDate.$invalid" ng-messages="addPromocodeForm.endDate.$error"> Please select a valid end date </span>
                                 </section>
                                 <section class="form-group" ng-class="{'has-error': addPromocodeForm.percentbatua.$invalid && !addPromocodeForm.percentbatua.$pristine}">
-                                    <label class="control-label col-xs-3">Percentage Cose Bourne by Batua(Rs):
+                                    <label class="control-label col-xs-3">Percentage Cost Bourne by Batua(Rs):
                                         <span class="required"> * </span>
                                     </label>
                                     <div class="col-xs-8">
-                                        <input type="text" class="form-control input-circle" id="percentbatua" name="percentbatua" placeholder="Enter the cost bourne by Batua" style="margin-bottom:15px;" required ng-model="promocodeData.percentageCostBourneByBatua">
-                                        <span class="help-block text-danger" ng-if="!addPromocodeForm.percentbatua.$pristine && addPromocodeForm.percentbatua.$invalid" ng-messages="addPromocodeForm.percentbatua.$error">Please enter a valid share bourne by batua </span>
+                                        <input type="number" class="form-control input-circle" id="percentbatua" name="percentbatua" placeholder="Enter the cost bourne by Batua" style="margin-bottom:15px;" required ng-model="promocodeData.percentageCostBourneByBatua">
+                                        <span class="help-block text-danger" ng-if="!addPromocodeForm.percentbatua.$pristine && addPromocodeForm.percentbatua.$invalid" ng-messages="addPromocodeForm.percentbatua.$error">
+                                        <span class="help-block text-danger" ng-if="addPromocodeForm.percentbatua.$error.required" ng-message="required">Please enter a valid share bourne by Batua</span>
+                                        </span>
                                     </div>
                                 </section>
                                 <section class="form-group" ng-class="{'has-error': addPromocodeForm.percentMerchant.$invalid && !addPromocodeForm.percentMerchant.$pristine}">
-                                    <label class="control-label col-xs-3">Percentage Cose Bourne by Merchant(Rs):
+                                    <label class="control-label col-xs-3">Percentage Cost Bourne by Merchant(Rs):
                                         <span class="required"> * </span>
                                     </label>
                                     <div class="col-xs-8">
-                                        <input type="text" class="form-control input-circle" id="percentMerchant" name="percentMerchant" placeholder="Enter the cost bourne by Merchant" style="margin-bottom:15px;" required ng-model="promocodeData.percentageCostBourneByMerchant">
-                                        <span class="help-block text-danger" ng-if="!addPromocodeForm.percentMerchant.$pristine && addPromocodeForm.percentMerchant.$invalid" ng-messages="addPromocodeForm.percentMerchant.$error">Please enter a valid share bourne by merchant </span>
+                                        <input type="number" class="form-control input-circle" id="percentMerchant" name="percentMerchant" placeholder="Enter the cost bourne by Merchant" style="margin-bottom:15px;" required ng-model="promocodeData.percentageCostBourneByMerchant" compare-to="promocodeData.percentageCostBourneByBatua">
+                                        <span class="help-block text-danger" ng-if="!addPromocodeForm.percentMerchant.$pristine && addPromocodeForm.percentMerchant.$invalid" ng-messages="addPromocodeForm.percentMerchant.$error">
+                                        <span class="help-block text-danger" ng-if="addPromocodeForm.percentMerchant.$error.required" ng-message="required">Please enter a valid share bourne by merchant</span>
+                                        <span class="help-block text-danger" ng-if="addPromocodeForm.percentMerchant.$error" ng-message="compareTo">Percentage share between Batua and merchants cannot be more than 100%</span>
+                                        </span>
                                     </div>
                                 </section>
                                 <div class="form-actions rightshift" style="border-top-width:0px;">
-                                    <button type="button" class="btn default margin-form-btn" ui-sref="promocodeList">Cancel</button>
                                     <button type="submit" class="btn button-color margin-form-btn" ng-disabled="addPromocodeForm.$invalid">Submit</button>
+                                    <button type="button" class="btn default margin-form-btn" ui-sref="promocodeList">Cancel</button>
                                 </div>
                             </form>
                             <!-- add promo form ends -->

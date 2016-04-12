@@ -29,7 +29,8 @@ angular.module('app').controller('addOfferController', ['$scope', '$state', 'off
             enableSearch: true,
             displayProp: 'name',
             idProp: 'id',
-            externalIdProp: 'id'
+            externalIdProp: 'id',
+            buttonClasses: 'form-control input-circle'
         };
 
         vm.merchants = [];
