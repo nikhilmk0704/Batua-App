@@ -91,14 +91,24 @@
             url: '/addOffer',
             templateUrl: 'app/views/offer/add_offer.html',
             controller: 'addOfferController',
-            controllerAs: 'vm'
+            controllerAs: 'vm',
+            resolve: {
+                merchantList: ['merchantService', function(merchantService) {
+                    return merchantService.getAllActiveMerchants();
+                }]
+            }
         })
 
         .state('editOffer', {
             url: '/editOffer',
             templateUrl: 'app/views/offer/edit_offer.html',
             controller: 'editOfferController',
-            controllerAs: 'vm'
+            controllerAs: 'vm',
+            resolve: {
+                merchantList: ['merchantService', function(merchantService) {
+                    return merchantService.getAllActiveMerchants();
+                }]
+            }
         })
 
         .state('offerList', {
@@ -112,13 +122,12 @@
             url: '/addPromocode',
             templateUrl: 'app/views/promocode/add_promo.html',
             controller: 'addPromocodeController',
-            controllerAs: 'vm'
-            /*Api need to be changed*/
-            // resolve: {
-            //     merchantList: ['merchantService', function(merchantService) {
-            //         return merchantService.getAllActiveMerchants();
-            //     }]
-            // }
+            controllerAs: 'vm',
+            resolve: {
+                merchantList: ['merchantService', function(merchantService) {
+                    return merchantService.getAllActiveMerchants();
+                }]
+            }
 
         })
 
@@ -126,7 +135,12 @@
             url: '/editPromocode/:promocodeId',
             templateUrl: 'app/views/promocode/edit_promo.html',
             controller: 'editPromocodeController',
-            controllerAs: 'vm'
+            controllerAs: 'vm',
+            resolve: {
+                merchantList: ['merchantService', function(merchantService) {
+                    return merchantService.getAllActiveMerchants();
+                }]
+            }
         })
 
         .state('promocodeList', {

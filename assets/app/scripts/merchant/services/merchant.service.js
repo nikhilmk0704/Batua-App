@@ -3,9 +3,9 @@
 
     angular.module('app').factory('merchantService', merchantService);
 
-    merchantService.$inject = ['httpi', 'API', '$cookieStore', '$state', '$q'];
+    merchantService.$inject = ['httpi', 'API', '$q'];
 
-    function merchantService(httpi, API, $cookieStore, $state, $q) {
+    function merchantService(httpi, API, $q) {
 
         var service = {};
 
@@ -15,6 +15,7 @@
         service.getCategories = getCategories;
         service.getCities = getCities;
         service.setStatus = setStatus;
+        service.getAllActiveMerchants = getAllActiveMerchants;
 
         return service;
 
@@ -46,9 +47,9 @@
                     imageGallery: imageGallery,
                     fees: merchant.fees,
                     categoryId: merchant.categoryId,
-                    cityId: cityId, 
+                    cityId: cityId,
                     address: merchant.address,
-                    pincode: merchant.location.pincode,
+                    pincode: merchant.locations.pincode,
                     latitude: coordinates[0],
                     longitude: coordinates[1],
                     accountHolder: merchant.accountHolder,
@@ -118,6 +119,16 @@
             });
         }
 
+        function getAllActiveMerchants(callback) {
+            var deferred = $q.defer();
+            httpi({
+                method: "get",
+                url: API.updateMerchant
+            }).then(function(response) {
+                deferred.resolve(response.data);
+            });
+            return deferred.promise;
+        }
 
     }
 

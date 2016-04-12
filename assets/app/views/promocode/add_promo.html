@@ -38,8 +38,12 @@
                                         <span class="required"> * </span>
                                     </label>
                                     <div class="col-xs-8">
-                                        <input type="number" class="form-control input-circle" id="offerpercent" name="offerpercent" placeholder="Offer/Discount in Percentage" min="0" max="100" step="0.1" style="margin-bottom:15px;" required ng-model="promocodeData.offerDiscountPercentage">
-                                        <span class="help-block text-danger" ng-if="!addPromocodeForm.offerpercent.$pristine && addPromocodeForm.offerpercent.$invalid" ng-messages="addPromocodeForm.offerpercent.$error">Please enter a valid Offer percentage </span>
+                                        <input type="number" class="form-control input-circle" id="offerPercent" name="offerPercent" placeholder="Offer/Discount in Percentage" style="margin-bottom:15px;" required ng-pattern="/^(?=.*[1-9])\d{0,2}(?:\.\d{0,2})?$/" ng-model="promocodeData.discountPercentage">
+                                        <span class="help-block text-danger" ng-if="!addPromocodeForm.offerPercent.$pristine && addPromocodeForm.offerPercent.$invalid" ng-messages="addPromocodeForm.offerPercent.$error">
+                                        <span class="help-block text-danger" ng-if="addPromocodeForm.offerPercent.$error.pattern" ng-message="pattern">Offer must be between 1 to 99.99</span>
+                                        <span class="help-block text-danger" ng-if="addPromocodeForm.offerPercent.$error.required" ng-message="required">Please enter a valid Offer Percentage</span>
+                                        </span>
+
                                     </div>
                                 </section>
                                 <section class="form-group" ng-class="{'has-error': addPromocodeForm.offerdesc.$invalid && !addPromocodeForm.offerdesc.$pristine}">
@@ -65,11 +69,8 @@
                                         <span class="required"> * </span>
                                     </label>
                                     <section class="input-group col-xs-8 offerstartdate" style="margin-bottom:15px; padding-left:15px;">
-                                        <div class="input-group-addon input-circle-left">
-                                            <i class="fa fa-calendar">
-                                </i>
-                                        </div>
-                                        <input class="form-control input-circle-right" id="startDate" name="startDate" placeholder="Offer Start Date as MM/DD/YYYY" type="text" style="width:97%" required ng-model="promocodeData.validFrom"/>
+                                        <div class="input-group-addon input-circle-left"><a ng-click="openFrom($event)"><i class="fa fa-calendar"></i></a></div>
+                                        <input type="text" class="form-control input-circle-right dateinput" uib-datepicker-popup="dd/MM/yyyy" is-open="status.opened1" min-date="minDate" max-date="maxDate" datepicker-mode="day" show-weeks="false" clear-text="false" show-button-bar="false" name="startDate" ng-model="promocodeData.validFrom" required placeholder="Offer Start Date as DD/MM/YYYY" style="width:97%"/>
                                     </section>
                                     <span class="help-block text-danger col-xs-8 col-xs-push-3" ng-if="!addPromocodeForm.startDate.$pristine && addPromocodeForm.startDate.$invalid" ng-messages="addPromocodeForm.startDate.$error"> Please select a valid end date </span>
                                 </section>
@@ -78,11 +79,8 @@
                                         <span class="required"> * </span>
                                     </label>
                                     <section class="input-group col-xs-8  offerenddate" style="margin-bottom:15px;padding-left:15px;">
-                                        <div class="input-group-addon input-circle-left">
-                                            <i class="fa fa-calendar">
-                                </i>
-                                        </div>
-                                        <input class="form-control input-circle-right" id="endDate" name="endDate" placeholder="Offer End Date as MM/DD/YYYY" type="text" style="width:97%" required ng-model="promocodeData.validTo"/>
+                                        <div class="input-group-addon input-circle-left"><a ng-click="openTo($event)"><i class="fa fa-calendar"></i></a></div>
+                                        <input type="text" class="form-control input-circle-right dateinput" uib-datepicker-popup="dd/MM/yyyy" is-open="status.opened2" min-date="promocodeData.validFrom" max-date="maxDate" datepicker-mode="day" show-weeks="false" clear-text="false" show-button-bar="false" name="endDate" ng-model="promocodeData.validTo" required placeholder="Offer End Date as DD/MM/YYYY" style="width:97%"/>
                                     </section>
                                     <span class="help-block text-danger col-xs-8 col-xs-push-3" ng-if="!addPromocodeForm.endDate.$pristine && addPromocodeForm.endDate.$invalid" ng-messages="addPromocodeForm.endDate.$error"> Please select a valid end date </span>
                                 </section>

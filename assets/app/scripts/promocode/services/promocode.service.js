@@ -28,7 +28,7 @@
             });
         }
 
-        function addPromocode(promocode, callback) {
+        function addPromocode(promocode, merchants, callback) {
             httpi({
                 method: "post",
                 url: API.promocode,
@@ -41,7 +41,7 @@
                     validTo: promocode.validTo,
                     percentageCostBourneByBatua: promocode.percentageCostBourneByBatua,
                     percentageCostBourneByMerchant: promocode.percentageCostBourneByMerchant,
-                    merchantId: promocode.merchantId //need to get it confirm array OR single 
+                    merchantId: merchants  
                 }
             }).then(function (response) {
                 callback(response);
@@ -50,7 +50,7 @@
             });
         }
 
-        function editPromocode(promocode, callback) {
+        function editPromocode(promocode, merchants, callback) {
             httpi({
                 method: "put",
                 url: API.updatePromocode,
@@ -63,7 +63,7 @@
                     validTo: promocode.validTo,
                     percentageCostBourneByBatua: promocode.percentageCostBourneByBatua,
                     percentageCostBourneByMerchant: promocode.percentageCostBourneByMerchant,
-                    merchantId: promocode.merchantId
+                    merchantId: merchants
                 },
                 params: {
                     id: promocode.id
