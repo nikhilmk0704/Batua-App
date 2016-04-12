@@ -73,7 +73,6 @@ module.exports = {
         },
         branchName: {
             type: Sequelize.STRING,
-            defaultValue: null,
         },
         accountHolder: {
             type: Sequelize.STRING,

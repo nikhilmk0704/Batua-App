@@ -31,7 +31,7 @@ class UserService {
     findUserByAdmin(params,callback){
         var findObject={};
         findObject.include=[{model:UserGroups,as:'userGroups',required:false}];
-        findObject.attributes=['id','name','phone','email','status'];
+        findObject.attributes=['id','name','phone','email','status','profileImageUrl'];
         var userRepository = new UserRepository();
         if(params.id){
         	findObject.where={};
@@ -72,6 +72,7 @@ class UserService {
     createUserAndSendEmailByAdmin(params,callback){
         var userService = new UserService();
         params.status="Active";
+        (params.profileImageUrl==undefined)?(params.profileImageUrl=null):(params);
         Users.create(params).then(function(result){
             var userData=JSON.parse(JSON.stringify(result));
             delete userData.isPhoneVerified;
@@ -330,6 +331,153 @@ class UserService {
             findObject.attributes=['id','name','profileImageUrl','email'];
         }
         userRepository.find(findObject,callback);
+    }
+
+    updateSalesAgentProfile(params,callback){
+        var userService = new UserService();
+        var salesagentId=params.salesagentId;
+        var id=params.id;
+        if(salesagentId==id)
+            return userService.validateAndUpdateSalesAgentProfile(params,callback);
+        return callback("Incorrect parameters");
+    }
+
+    validateAndUpdateSalesAgentProfile(params,callback){
+        var userService = new UserService();
+        if(userService.passwordExist(params)=='all')
+            return userService.updateProfileWithPassword(params,callback);
+        if(userService.passwordExist(params)=='none')
+            return userService.updateProfileWithoutPassword(params,callback);
+        return callback("Incorrect password parameters");
+    }
+
+    passwordExist(params){
+        var currentPassword=params.currentPassword;
+        var newPassword=params.newPassword;
+        var confirmPassword=params.confirmPassword;
+        if(currentPassword && newPassword && confirmPassword)
+            return 'all';
+        if(!currentPassword && !newPassword && !confirmPassword)
+            return 'none';
+        return 'some';
+    }
+
+    updateProfileWithPassword(params,callback){
+        var userService = new UserService();
+        var currentPassword=params.currentPassword;
+        var newPassword=params.newPassword;
+        var confirmPassword=params.confirmPassword;
+        var id=params.id;
+        var whereObject={};
+        whereObject.where={};
+        whereObject.where.id=id;
+        Users.find(whereObject).then(function(result){
+            if(result.password!=md5(currentPassword))
+                return callback('currentPassword incorrect');
+            if(confirmPassword!=newPassword)
+                return callback('New password and confirm password should be same');
+            if(currentPassword==newPassword)
+                return callback('New password and current password should be different');
+            userService.updateProfile(params,callback);
+            return null;
+        }).catch(function(exception){
+            return callback('incorrect id');
+        });
+    }
+
+    updateProfileWithoutPassword(params,callback){
+        var userService = new UserService();
+        return userService.updateProfile(params,callback);
+    }
+
+    updateProfile(params,callback){
+        var userRepository = new UserRepository();
+        var newParams={};
+        var profileImageUrl=params.profileImageUrl;
+        var newPassword=params.newPassword;
+        var name=params.name;
+        (name)?(newParams.name=name):(newParams);
+        (profileImageUrl)?(newParams.profileImageUrl=profileImageUrl):(newParams);
+        (newPassword)?(newParams.password=md5(newPassword)):(newParams);
+        var whereObject={};
+        var findObject={};
+        whereObject.where={};
+        whereObject.where.id=params.id;
+        findObject=whereObject;
+        findObject.attributes=['id','name','email','profileImageUrl','phone'];
+        userRepository.updateAndFind(newParams,whereObject,findObject,callback);
+    }
+
+    generateOtp() {
+        return token.generate(6,'0123456789');
+    };
+
+    salesAgentVerifyOtp(params,callback){
+        var userService = new UserService();
+        var otp=params.otp;
+        var phone=params.phone;
+        var whereObject={};
+        whereObject.where={};
+        whereObject.where.phone=phone;
+        Users.find(whereObject).then(function(result){
+            if(result.otp!=otp){
+                callback("Incorrect OTP");
+                return null;
+            }
+            userService.updatePasswordOnOtp(params,result,callback);
+            return null;
+        }).catch(function(exception){
+            callback(exception);
+        });
+    }
+
+    updatePasswordOnOtp(params,userData,callback){
+        var userService = new UserService();
+        var updateObject={};
+        updateObject.otp=null;
+        var whereObject={};
+        whereObject.where={};
+        whereObject.where.id=userData.id;
+        Users.update(updateObject,whereObject).then(function(result){
+            userService.updateAccessTokensOnOtp(params,userData,callback);
+            return null;
+        }).catch(function(exception){
+            return callback(exception);
+        });
+    }
+
+    updateAccessTokensOnOtp(params,userData,callback){
+        var userService = new UserService();
+        var deviceId=params.deviceId;
+        var updateObject={};
+        updateObject.token=null;
+        var whereObject={};
+        whereObject.where={};
+        whereObject.where.deviceId=deviceId;
+        AccessTokens.update(updateObject,whereObject).then(function(result){
+            var data={};
+            data.userId=userData.id;
+            callback(null,data);
+            return null;
+        }).catch(function(exception){
+            callback(exception);
+        });
+    }
+
+    salesAgentLogout(params,callback){
+        var userId=params.userId;
+        var token=params.token;
+        var deviceId=params.deviceId;
+        var whereObject={};
+        whereObject.where={};
+        whereObject.where.$or=[{deviceId:deviceId},{token:token}];
+        var updateObject={};
+        updateObject.token=null;
+        AccessTokens.update(updateObject,whereObject).then(function(result){
+            return callback(null,{message:"Logged out"});
+        }).catch(function(exception){
+            return callback(exception);
+        });
     }
 
     generateErrorMessage(messageOrObject){
