@@ -62,6 +62,19 @@ module.exports = {
             } 
             return res.json(200, result);
         });
-    }
+    },
+
+    getActiveMerchants:function(req,res){
+        var merchantService = new MerchantService();
+        var params={};
+        params.id=req.param('id');
+        merchantService.getActiveMerchants(params,function(err,result){
+            if (err)
+                return res.badRequest(merchantService.generateErrorMessage(err));
+            if(_.isEmpty(result))
+                return res.notFound(merchantService.generateErrorMessage("Does not exist"));
+            return res.json(200, result);
+        });
+    },
 
 };

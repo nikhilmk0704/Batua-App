@@ -336,6 +336,15 @@ class MerchantService {
         });
     }
 
+    getActiveMerchants(params,callback){
+        var id=params.id;
+        var whereObject={};
+        whereObject.where={};
+        (id)?(whereObject.where.id=id):(whereObject.where.status='Active');
+        var merchantRepository = new MerchantRepository();
+        merchantRepository.findAll(whereObject,callback);
+    }
+
     generateErrorMessage(messageOrObject){
         var messageObject={};
         if(typeof messageOrObject == "string")
