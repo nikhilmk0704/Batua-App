@@ -3,9 +3,9 @@
 
     angular.module('app').factory('userService', userService);
 
-    userService.$inject = ['httpi', 'API', '$localStorage', '$cookieStore', '$state', '$q'];
+    userService.$inject = ['httpi', 'API', '$q'];
 
-    function userService(httpi, API, $localStorage, $cookieStore, $state, $q) {
+    function userService(httpi, API, $q) {
 
         var service = {};
 

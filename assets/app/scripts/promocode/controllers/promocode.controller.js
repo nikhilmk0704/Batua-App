@@ -1,10 +1,11 @@
-angular.module('app').controller('userController', ['$state', 'userService', 'toastr', function($state, userService, toastr) {
+angular.module('app').controller('promocodeController', ['$state', 'promocodeService', 'toastr', function($state, promocodeService, toastr) {
 
     var vm = this;
 
-    userService.getUserList(function(response) {
+
+    promocodeService.getPromocodeList(function(response) {
         if (response.status === 200) {
-            vm.users = response.data;
+            vm.promocodes = response.data;
             return;
         }
         if (response.status === 400) {
@@ -13,10 +14,10 @@ angular.module('app').controller('userController', ['$state', 'userService', 'to
         return toastr.error(response.data);
     });
 
-    vm.setStatus = function(userId, status) {
-        userService.setStatus(userId, status, function(response) {
+    vm.setStatus = function(promocodeId, status) {
+        promocodeService.setStatus(promocodeId, status, function(response) {
             if (response.status === 200) {
-                return toastr.success('User status has been changed successfully.');
+                return toastr.success('Updated successfully.');
             }
             if (response.status === 400) {
                 return toastr.error(response.data.errors[0].message);
@@ -24,7 +25,6 @@ angular.module('app').controller('userController', ['$state', 'userService', 'to
             return toastr.error(response.data);
         });
     };
-
 
 
 }]);
