@@ -112,7 +112,9 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 
         {   
             "errors":[
-                        {"message": "Already exist"}
+                        {
+                            "message": "Already exist"
+                        }
                     ]
         }        
 
@@ -554,6 +556,48 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 
 + Response 401 (application/json)
 
+### Get Active Merchant [GET /api/merchant/:id?]
+
++ Response 200 (application/json)
+
+            [
+                {
+                    "id": 1,
+                    "name": "Kajal002",
+                    "shortCode": "kajal002",
+                    "profileImageUrl": null,
+                    "phone": 9886543672,
+                    "email": null,
+                    "address": null,
+                    "latitude": null,
+                    "longitude": null,
+                    "averageRating": null,
+                    "fees": 50,
+                    "bankName": "HDFC",
+                    "branchName": "Kormanagala",
+                    "accountHolder": "Kajal",
+                    "accountNumber": 9876543210987654,
+                    "ifscCode": "HDFC001",
+                    "status": "Active",
+                    "createdAt": "2016-04-04T11:31:06.000Z",
+                    "updatedAt": "2016-04-04T11:31:06.000Z",
+                    "locationId": 1,
+                    "createdSalesId": 2,
+                    "categoryId": 1
+                }
+            ]
+
++ Response 400 (application/json)
+    
+    + Body 
+    
+            {
+                "errors":[
+                    {
+                        "message": "Does not exist"
+                    }
+                ]
+            }
 
 ### Get Merchant For User [GET /api/user/:userId/merchant/:id?]
 
