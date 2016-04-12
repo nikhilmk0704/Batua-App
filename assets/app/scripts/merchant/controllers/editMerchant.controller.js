@@ -44,7 +44,7 @@ angular.module('app').controller('editMerchantController', ['$state', 'merchantS
             if (angular.isDefined(merchant.cityId)) {
                 cityId = merchant.cityId.originalObject.id;
             } else {
-                cityId = vm.editMerchantData.location.cityId;
+                cityId = vm.editMerchantData.locations.cityId;
             }
 
             coordinates = vm.coordinates;
@@ -74,7 +74,7 @@ angular.module('app').controller('editMerchantController', ['$state', 'merchantS
             if (angular.isDefined(merchant.cityId)) {
                 cityId = merchant.cityId.originalObject.id;
             } else {
-                cityId = vm.editMerchantData.location.cityId;
+                cityId = vm.editMerchantData.locations.cityId;
             }
 
             coordinates = vm.coordinates;
