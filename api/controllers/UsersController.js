@@ -155,6 +155,19 @@ module.exports = {
         });
     },
 
+    salesAgentResetPassword:function(req,res){
+        var params={};
+        params.userId=req.body.userId;
+        params.newPassword=req.body.newPassword;
+        params.confirmPassword=req.body.confirmPassword;
+        var userService = new UserService();
+        userService.salesAgentResetPassword(params,function(err,result){
+            if(err)
+                return res.badRequest(userService.generateErrorMessage(err));
+            return res.json(200,result);
+        });
+    },
+
     salesAgentLogout:function(req,res){
         var params={};
         params.token=req.headers['token'];

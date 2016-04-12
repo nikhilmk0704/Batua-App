@@ -2027,6 +2027,41 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 400 (application/json)
 
 
+## Sales Agent Password Reset [/api/salesagent/resetpassword]
+
+### Sales Agent Password Reset [PUT]
+
++ Request  (application/json)
+
+    + Body
+
+            {
+                "userId":14,
+                "newPassword":"12345678",
+                "confirmPassword":"12345678"
+            }
+
++ Response 200 (application/json)
+
+    + Body
+            
+            {
+                "message": "Password Reset"
+            }
+
++ Response 400 (application/json)
+
+    + Body
+    
+            {
+                "errors":[
+                    {
+                        "message": "New password and confirm password should be same"
+                    }
+                ]
+            }
+
+
 ### Sales Agent Logout [PUT /api/salesagent/logout]
 
 + Request  (application/json)
@@ -2051,27 +2086,6 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
             }
 
 + Response 400 (application/json)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 ## Normal SignUp [/user/normalSignUp]
