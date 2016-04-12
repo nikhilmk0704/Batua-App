@@ -60,7 +60,7 @@ module.exports = {
             }
         },
         fees: {
-            type: Sequelize.INTEGER(3),
+            type: Sequelize.FLOAT,
             required: true,
             allowNull: false,
             validate: {

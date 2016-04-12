@@ -482,7 +482,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
                 "accountHolder": "vikash singh",
                 "accountNumber":546879463132131644,
                 "ifscCode":"hdfc10554",
-                "bankBranch":"branch name of bank",
+                "branchName":"branch name of bank",
                 "bankName":"HDFC",
                 "status":"Active",
                 "createdSalesId": 3
@@ -1005,7 +1005,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
                 "accountHolder": "vikash singh",
                 "accountNumber":546879463132131644,
                 "ifscCode":"hdfc10554",
-                "bankBranch":"branch name of bank",
+                "branchName":"branch name of bank",
                 "bankName":"HDFC",
                 "status":"Active",
                 "createdSalesId": 3
