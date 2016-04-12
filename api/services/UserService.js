@@ -410,7 +410,32 @@ class UserService {
 
     generateOtp() {
         return token.generate(6,'0123456789');
-    };
+    }
+
+    salesAgentResetPassword(params,callback){
+        var userService = new UserService();
+        var newPassword=md5(params.newPassword);
+        var confirmPassword=md5(params.confirmPassword);
+        if(newPassword==confirmPassword)
+            return userService.salesAgentUpdatePassword(params,callback);
+        return callback("New password and confirm password should be same");
+    }
+
+    salesAgentUpdatePassword(params,callback){
+        var userId=params.userId;
+        var newPassword=md5(params.newPassword);
+        var updateObject={};
+        updateObject.password=newPassword;
+        var whereObject={};
+        whereObject.where={};
+        whereObject.where.id=userId;
+        Users.update(updateObject,whereObject).then(function(result){
+            callback(null,{message:"Password Reset"});
+            return null;
+        }).catch(function(exception){
+            return callback(exception);
+        });
+    }
 
     salesAgentVerifyOtp(params,callback){
         var userService = new UserService();
