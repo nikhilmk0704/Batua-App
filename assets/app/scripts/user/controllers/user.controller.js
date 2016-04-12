@@ -8,7 +8,7 @@ angular.module('app').controller('userController', ['$state', 'userService', 'to
             return;
         }
         if (response.status === 400) {
-            return toastr.error(response.data);
+            return toastr.error(response.data.errors[0].message);
         }
         return toastr.error(response.data);
     });
@@ -19,7 +19,7 @@ angular.module('app').controller('userController', ['$state', 'userService', 'to
                 return toastr.success('User status has been changed successfully.');
             }
             if (response.status === 400) {
-                return toastr.error(response.data);
+                return toastr.error(response.data.errors[0].message);
             }
             return toastr.error(response.data);
         });
