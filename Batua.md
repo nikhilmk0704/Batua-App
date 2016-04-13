@@ -1,8 +1,5 @@
 FORMAT: 1A
 HOST: "http://52.36.228.74:1337"
-Headers: {
-            Content-Type:application/json
-         }
 
 # Batua
 
@@ -2086,6 +2083,70 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
             }
 
 + Response 400 (application/json)
+
+
+### Sales Agent Normal Login [POST /api/salesagent/normal/login]
+
++ Request (application/json)
+    
+    + Body
+
+            {
+                "password":"123456",
+                "email":"kajal.jadhav@tecsolsoftware.com"
+            }
+        
++ Response 200 (application/json)
+
+            {
+                "id": 3,
+                "name": "Kajal Anant Jadhav",
+                "email": "kajal.jadhav@tecsolsoftware.com",
+                "token": "092slrhat8grS6hoE4DkhpvP",
+                "userGroup": "Field Sales Agent"
+            }
+
++ Response 400 (applicaiton)
+
+            {
+                "errors":[
+                    {
+                        "message": "Incorrect Password"
+                    }
+                ]
+            }
+
+
+### Sales Agent Social Login [POST /api/salesagent/social/login]
+
++ Request (application/json)
+    
+    + Body
+
+            {
+                "password":"123456",
+                "email":"kajal.jadhav@tecsolsoftware.com"
+            }
+        
++ Response 200 (application/json)
+
+            {
+                "id": 3,
+                "name": "Kajal Anant Jadhav",
+                "email": "kajal.jadhav@tecsolsoftware.com",
+                "token": "092slrhat8grS6hoE4DkhpvP",
+                "userGroup": "Field Sales Agent"
+            }
+
++ Response 400 (applicaiton)
+
+            {
+                "errors":[
+                    {
+                        "message": "Incorrect Password"
+                    }
+                ]
+            }
 
 
 ## Normal SignUp [/user/normalSignUp]
