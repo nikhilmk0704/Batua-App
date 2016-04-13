@@ -181,5 +181,17 @@ module.exports = {
         });
     },
 
+    salesAgentNormalLogin:function(req,res){
+        var params={};
+        params.email=req.body.email;
+        params.password=req.body.password;
+        var userService = new UserService();
+        userService.salesAgentNormalLogin(params,function(err,result){
+            if(err)
+                return res.badRequest(userService.generateErrorMessage(err));
+            return res.json(200,result);
+        });
+    },
+
 };
 

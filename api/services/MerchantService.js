@@ -15,7 +15,7 @@ class MerchantService {
         if (merchantService.validateAllRequest(params) && params.status == "Pending for approval") {
             return merchantService.validateLocationAndCreateMerchant(params, callback);
         } 
-        return callback(merchantService.generateErrorMessage("Mandatory fields missing"));
+        return callback("Mandatory fields missing");
     }
 
     validateLocationAndCreateMerchant(params,callback){
@@ -40,7 +40,7 @@ class MerchantService {
     validatePartialRequest(params){
         var merchantService = new MerchantService();
         return _.every(merchantService.getPartialMandatoryFields(), function(element) {
-            if (params[element] || params[element]==0) {
+            if (params[element] || params[element]==0 || params[element]==null) {
                 return true;
             } 
         });
@@ -92,7 +92,7 @@ class MerchantService {
         if (merchantService.validatePartialRequest(params) && status == "Drafted") {
             return merchantService.updateMerchant(params, options, callback);
         } 
-        return callback(merchantService.generateErrorMessage("Mandatory fields missing"));
+        return callback("Mandatory fields missing");
     }
 
     // delete the merchant based on shortcode (unique field)
@@ -120,7 +120,7 @@ class MerchantService {
     validateAllRequest(params) {
         var merchantService = new MerchantService();
         return _.every(merchantService.getAllMandatoryFields(), function(element) {
-            if (params[element] || params[element]==0) {
+            if (params[element] || params[element]==0 || params[element]==null) {
                 return true;
             } 
         });
@@ -157,7 +157,14 @@ class MerchantService {
 
     createLocations(params,result,merchantId,options,findObject,callback){
         var merchantService = new MerchantService();
-        Locations.create(params).then(function(result){
+        var createObject={};
+        var area=params.area;
+        var pincode=params.pincode;
+        var cityId=params.cityId;
+        (area)?(createObject.area=area):(createObject);
+        (pincode)?(createObject.pincode=pincode):(createObject);
+        (cityId)?(createObject.cityId=cityId):(createObject);
+        Locations.create(createObject).then(function(result){
             params.locationId=result.id;
             merchantService.updateMerchantAndGalleries(params,result,merchantId,options,findObject,callback);
             return null;
@@ -339,7 +346,7 @@ class MerchantService {
                 params.where.status.$not="Permanent Suspend";
                 return merchantRepository.findAll(params, callback);
             } 
-            return callback(merchantService.generateErrorMessage("Please provide correct id"));
+            return callback("Please provide correct id");
         });
     }
 
