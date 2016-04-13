@@ -77,7 +77,7 @@ BEGIN CONTENT BODY -->
                                             <span class="required"> * </span>
                                         </label>
                                         <div class="col-xs-8" mass-autocomplete>
-                                            <angucomplete-alt pause="100" selected-object="vm.editMerchantData.cityId" local-data="vm.cities" search-fields="name" title-field="name" minlength="1" input-class="form-control form-control-small input-circle" input-name="city" field-required="true" initial-value="vm.editMerchantData.location.city.name" id="city"/>
+                                            <angucomplete-alt pause="100" selected-object="vm.editMerchantData.cityId" local-data="vm.cities" search-fields="name" title-field="name" minlength="1" input-class="form-control form-control-small input-circle" input-name="city" field-required="true" initial-value="vm.editMerchantData.locations.cities.name" id="city"/>
                                             <span class="help-block text-danger" ng-if="!merchantForm.city.$pristine && merchantForm.city.$invalid" ng-messages="merchantForm.city.$error">Please select city</span>
                                         </div>
                                     </section>
