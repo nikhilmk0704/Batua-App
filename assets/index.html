@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <!--[if IE 8]> <html lang="en" class="ie8 no-js"> <![endif]-->
 <!--[if IE 9]> <html lang="en" class="ie9 no-js"> <![endif]-->
 <!--[if !IE]><!-->
@@ -63,6 +63,10 @@
 </head>
 
 <body ng-app="app" class="page-header-fixed page-sidebar-closed-hide-logo page-content-white">
+
+    <!--[if lte IE 8]>
+    <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
+    <![endif]-->
 
     <!-- MAIN CONTENT -->
     <div data-ng-include="'app/views/common/header/header.html'" style="width:100%;"></div>

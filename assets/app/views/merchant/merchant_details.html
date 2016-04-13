@@ -55,7 +55,7 @@ BEGIN CONTENT BODY -->
                                             <span class="required"> * </span>
                                         </label>
                                         <div class="col-xs-8">
-                                            <input type="tel" class="form-control input-circle" id="phonenumber" name="phonenumber" style="margin-bottom:10px;" required ng-model="vm.editMerchantData.phone" ng-maxlength="12" ng-pattern="/^[0-9]*$/" />
+                                            <input type="number" class="form-control input-circle" id="phonenumber" name="phonenumber" style="margin-bottom:10px;" required ng-model="vm.editMerchantData.phone" ng-maxlength="12" ng-pattern="/^[0-9]*$/" />
                                             <span class="help-block text-danger" ng-if="!merchantForm.phonenumber.$pristine && merchantForm.phonenumber.$invalid" ng-messages="merchantForm.phonenumber.$error">
                                             <span class="help-block text-danger" ng-if="merchantForm.phonenumber.$error.required" ng-message="required">Please enter phonenumber</span>
                                             <span class="help-block text-danger" ng-if="merchantForm.phonenumber.$error.pattern" ng-message="pattern">Enter only numbers!</span>
@@ -86,7 +86,7 @@ BEGIN CONTENT BODY -->
                                             <span class="required"> * </span>
                                         </label>
                                         <div class="col-xs-8">
-                                            <input type="tel" class="form-control input-circle" id="pincode" name="pincode" style="margin-bottom:10px;" required ng-model="vm.editMerchantData.locations.pincode" ng-maxlength="6" ng-pattern="/^[0-9]*$/" />
+                                            <input type="number" class="form-control input-circle" id="pincode" name="pincode" style="margin-bottom:10px;" required ng-model="vm.editMerchantData.locations.pincode" ng-maxlength="6" ng-pattern="/^[0-9]*$/" />
                                             <span class="help-block text-danger" ng-if="!merchantForm.pincode.$pristine && merchantForm.pincode.$invalid" ng-messages="merchantForm.pincode.$error">
                                             <span class="help-block text-danger" ng-if="merchantForm.pincode.$error.pattern" ng-message="pattern">Enter only numbers!</span>
                                             <span class="help-block text-danger" ng-if="merchantForm.pincode.$error.maxlength" ng-message="maxlength">Not matching standards!</span>
@@ -133,9 +133,15 @@ BEGIN CONTENT BODY -->
                                         </div>
                                     </section>
                                     <section class="form-group">
-                                        <label class="control-label col-xs-3">Bank name with branch: </label>
+                                        <label class="control-label col-xs-3">Bank name:</label>
                                         <div class="col-xs-8">
-                                            <input type="text" class="form-control input-circle" style="margin-bottom:10px;" readonly ng-model="vm.editMerchantData.bankName + '-' +vm.editMerchantData.branchName" />
+                                            <input type="text" class="form-control input-circle" style="margin-bottom:10px;" readonly ng-model="vm.editMerchantData.bankName" />
+                                        </div>
+                                    </section>
+                                    <section class="form-group">
+                                        <label class="control-label col-xs-3">Branch name:</label>
+                                        <div class="col-xs-8">
+                                            <input type="text" class="form-control input-circle" style="margin-bottom:10px;" readonly ng-model="vm.editMerchantData.branchName" />
                                         </div>
                                     </section>
                                     <section class="form-group form-md-line-input has-info " style="padding:0px;" ng-class="{'has-error': merchantForm.category.$invalid && !merchantForm.category.$pristine}">
