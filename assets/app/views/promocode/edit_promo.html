@@ -57,21 +57,21 @@
                                     </div>
                                 </section>
                                 <section class="form-group">
-                                    <label class="control-label col-xs-3">Offer Start Date: </label>
+                                    <label class="control-label col-xs-3">Promocode Start Date: </label>
                                     <section class="input-group col-xs-8  offerstartdate" style="margin-bottom:15px;padding-left:15px">
                                         <div class="input-group-addon input-circle-left">
                                             <a ng-click="openFrom($event)" style="pointer-events: none; cursor: default;"><i class="fa fa-calendar"></i></a>
                                         </div>
-                                        <input type="text" class="form-control input-circle-right dateinput" uib-datepicker-popup="dd/MM/yyyy" is-open="status.opened1" min-date="minDate" max-date="maxDate" datepicker-mode="day" show-weeks="false" clear-text="false" show-button-bar="false" name="startDate" ng-model="vm.editPromocodeData.validFrom" readonly placeholder="Offer Start Date as DD/MM/YYYY" style="width:97%" />
+                                        <input type="text" class="form-control input-circle-right dateinput" uib-datepicker-popup="dd/MM/yyyy" is-open="status.opened1" min-date="minDate" max-date="maxDate" datepicker-mode="day" show-weeks="false" clear-text="false" show-button-bar="false" name="startDate" ng-model="vm.editPromocodeData.validFrom" readonly placeholder="Promocode Start Date as DD/MM/YYYY" style="width:97%" />
                                     </section>
                                 </section>
                                 <section class="form-group" ng-class="{'has-error': editPromocodeForm.endDate.$invalid && !editPromocodeForm.endDate.$pristine}">
-                                    <label class="control-label col-xs-3">Offer End Date:
+                                    <label class="control-label col-xs-3">Promocode End Date:
                                         <span class="required"> * </span>
                                     </label>
                                     <section class="input-group col-xs-8  offerenddate" style="margin-bottom:15px;padding-left:15px">
                                         <div class="input-group-addon input-circle-left"><a ng-click="openTo($event)"><i class="fa fa-calendar"></i></a></div>
-                                        <input type="text" class="form-control input-circle-right dateinput" uib-datepicker-popup="dd/MM/yyyy" is-open="status.opened2" min-date="vm.editPromocodeData.validFrom" max-date="maxDate" datepicker-mode="day" show-weeks="false" clear-text="false" show-button-bar="false" name="endDate" ng-model="vm.editPromocodeData.validTo" required placeholder="Offer End Date as DD/MM/YYYY" style="width:97%" />
+                                        <input type="text" class="form-control input-circle-right dateinput" uib-datepicker-popup="dd/MM/yyyy" is-open="status.opened2" min-date="vm.editPromocodeData.validFrom" max-date="maxDate" datepicker-mode="day" show-weeks="false" clear-text="false" show-button-bar="false" name="endDate" ng-model="vm.editPromocodeData.validTo" required placeholder="Promocode End Date as DD/MM/YYYY" style="width:97%" />
                                     </section>
                                     <span class="help-block text-danger col-xs-8 col-xs-push-3" ng-if="!editPromocodeForm.endDate.$pristine && editPromocodeForm.endDate.$invalid" ng-messages="editPromocodeForm.endDate.$error"> Please select a valid end date </span>
                                 </section>
