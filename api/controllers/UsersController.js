@@ -193,5 +193,17 @@ module.exports = {
         });
     },
 
+    salesAgentSocialLogin:function(req,res){
+        var params={};
+        params.email=req.body.email;
+        params.googleId=req.body.googleId;
+        var userService = new UserService();
+        userService.salesAgentSocialLogin(params,function(err,result){
+            if(err)
+                return res.badRequest(userService.generateErrorMessage(err));
+            return res.json(200,result);
+        });
+    },
+
 };
 

@@ -191,9 +191,6 @@ class UserService {
         createObject.token=token;
         createObject.deviceId=null;
         createObject.deviceType=null;
-        var options={};
-        options.where={};
-        options.where.id=result.accessTokens.id;
         AccessTokens.create(createObject).then(function(data){
             userService.createUsersAccessTokensLogin(result,data,callback);
             return null;
@@ -557,6 +554,43 @@ class UserService {
             as:'accessTokens',
             required:false
         }];
+    }
+
+    salesAgentSocialLogin(params,callback){
+        var userService = new UserService();
+        var email=params.email;
+        var googleId=params.googleId;
+        var findObject={};
+        findObject.where={};
+        findObject.where.email=email;
+        findObject.include=userService.getIncludeModels();
+        Users.find(findObject).then(function(result){
+            if(result){
+                userService.updateGoogleId(params,result,callback);
+                return null;
+            }
+            callback("Incorrect Gmail Id");
+            return null;
+        }).catch(function(exception){
+            callback(exception);
+        });
+    }
+
+    updateGoogleId(params,userData,callback){
+        var userService = new UserService();
+        var userId=userData.id;
+        var googleId=params.googleId;
+        var updateObject={};
+        updateObject.googleId=googleId;
+        var whereObject={};
+        whereObject.where={};
+        whereObject.where.id=userId;
+        Users.update(updateObject,whereObject).then(function(result){
+            userService.updateAccessTokenAndShowResult(params,userData,callback);
+            return null;
+        }).catch(function(exception){
+            callback(exception);
+        });
     }
 
     generateErrorMessage(messageOrObject){
