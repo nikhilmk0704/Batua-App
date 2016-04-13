@@ -60,7 +60,7 @@
                                         <td>{{promocode.percentageCostBourneByBatua}}%</td>
                                         <td>{{promocode.percentageCostBourneByMerchant}}%</td>
                                         <td>
-                                            <select class="form-control input-circle" style="width:180px;" ng-change="vm.setStatus(promocode.id, promocode.status)" ng-model="promocode.status">
+                                            <select class="form-control input-circle" style="width:180px;" ng-change="vm.setStatus(promocode.id, promocode.status)" ng-model="promocode.status"  ng-disabled="promocode.status=='Expired'">
                                                 <option value="" disabled selected hidden>select status</option>
                                                 <option value="Active">Active</option>
                                                 <option value="Suspend">Suspend</option>
@@ -68,7 +68,8 @@
                                             </select>
                                         </td>
                                         <td>
-                                            <a type="button" class="btn button-color-table" ui-sref="editPromocode({promocodeId: promocode.id})"><i class="fa fa-pencil"></i></a>
+                                            <a type="button" class="btn button-color-table" ng-if="promocode.status!='Expired'" ui-sref="editPromocode({promocodeId: promocode.id})"><i class="fa fa-pencil"></i></a>
+                                            <a type="button" class="btn button-color-table" ng-if="promocode.status=='Expired'" ng-disabled="promocode.status=='Expired'"><i class="fa fa-pencil"></i></a>
                                         </td>
                                     </tr>
                                 </tbody>

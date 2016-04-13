@@ -28,7 +28,7 @@
             });
         }
 
-        function addOffer(offer, callback) {
+        function addOffer(offer, merchants, callback) {
             httpi({
                 method: "post",
                 url: API.offer,
@@ -38,7 +38,7 @@
                     maximumAmountLimit: offer.maximumAmountLimit,
                     validFrom: offer.validFrom,
                     validTo: offer.validTo,
-                    merchantId: offer.merchantId
+                    merchantId: merchants
                 }
             }).then(function (response) {
                 callback(response);
@@ -47,7 +47,7 @@
             });
         }
 
-        function editOffer(offer, callback) {
+        function editOffer(offer, merchants, callback) {
             httpi({
                 method: "put",
                 url: API.updateOffer,
@@ -57,7 +57,7 @@
                     maximumAmountLimit: offer.maximumAmountLimit,
                     validFrom: offer.validFrom,
                     validTo: offer.validTo,
-                    merchantId: offer.merchantId
+                    merchantId: merchants
                 },
                 params: {
                     id: offer.id

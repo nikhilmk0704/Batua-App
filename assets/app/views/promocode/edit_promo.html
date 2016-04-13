@@ -13,97 +13,94 @@
                         <div class="form-body">
                             <form class="editpromo-form" ng-submit="vm.editPromocode(vm.editPromocodeData)" name="editPromocodeForm" role="form" novalidate>
                                 <section class="form-group">
-                                    <label class="control-label col-xs-3">Promocode:
-                                        <span class="required"> * </span>
-                                    </label>
+                                    <label class="control-label col-xs-3">Promocode: </label>
                                     <div class="col-xs-8">
-                                        <input type="text" class="form-control input-circle" id="promocode" name="promocode" placeholder="Enter the Promocode" style="margin-bottom:15px;" readonly>
-                                        <span class="help-block text-danger">Please enter a valid promocode</span>
+                                        <input type="text" class="form-control input-circle" id="promocode" name="promocode" placeholder="Enter the Promocode" style="margin-bottom:15px;" readonly ng-model="vm.editPromocodeData.promocode">
                                     </div>
                                 </section>
                                 <section class="form-group">
-                                    <label class="control-label col-xs-3">Merchant Name:
+                                    <label class="control-label col-xs-3">Merchant Name: </label>
+                                    <div class="col-xs-8">
+                                        <label class="btn btn-default disabled input-circle" ng-repeat="merchant in vm.editPromocodeData.merchants" style="margin:0px 0px 0px 15px; padding:4px 10px;">
+                                            {{merchant.name}}
+                                        </label>
+                                    </div>
+                                </section>
+                                <section class="form-group" ng-class="{'has-error': editPromocodeForm.offerPercent.$invalid && !editPromocodeForm.offerPercent.$pristine}">
+                                    <label class="control-label col-xs-3" style="margin:6px 0px 0px 0px;">Offer/Discount in %:
                                         <span class="required"> * </span>
                                     </label>
                                     <div class="col-xs-8">
-                                        <input name="text" type="text" class="form-control input-circle" id="Merchantname" name="Merchantname" placeholder="Enter the Merchant Name" style="margin-bottom:10px;" readonly />
-                                        <span class="help-block text-danger">Please enter a valid merchant name </span>
+                                        <input type="number" class="form-control input-circle" id="offerPercent" name="offerPercent" placeholder="Offer/Discount in Percentage" style="margin:10px 0px 15px 0px;" required ng-pattern="/^(?=.*[1-9])\d{0,2}(?:\.\d{0,2})?$/" ng-model="vm.editPromocodeData.discountPercentage">
+                                        <span class="help-block text-danger" ng-if="!editPromocodeForm.offerPercent.$pristine && editPromocodeForm.offerPercent.$invalid" ng-messages="editPromocodeForm.offerPercent.$error">
+                                        <span class="help-block text-danger" ng-if="editPromocodeForm.offerPercent.$error.pattern" ng-message="pattern">Offer must be between 1 to 99.99</span>
+                                        <span class="help-block text-danger" ng-if="editPromocodeForm.offerPercent.$error.required" ng-message="required">Please enter a valid Offer Percentage</span>
+                                        </span>
                                     </div>
                                 </section>
-                                <section class="form-group">
-                                    <label class="control-label col-xs-3">Offer/Discount in %:
-                                        <span class="required"> * </span>
-                                    </label>
-                                    <div class="col-xs-8">
-                                        <input type="number" class="form-control input-circle" id="offerpercent" name="offerpercent" placeholder="Offer/Discount in Percentage" min="0" max="100" step="0.1" style="margin-bottom:15px;" required>
-                                        <span class="help-block text-danger">Please enter a valid Offer Percentage </span>
-                                    </div>
-                                </section>
-                                <section class="form-group">
+                                <section class="form-group" ng-class="{'has-error': editPromocodeForm.offerdesc.$invalid && !editPromocodeForm.offerdesc.$pristine}">
                                     <label class="control-label col-xs-3">Description:
                                         <span class="required"> * </span>
                                     </label>
                                     <div class="col-xs-8">
-                                        <textarea class="form-control input-circle col-xs-12" rows="3" id="offerdesc" name="offerdesc" placeholder="Enter Offer Description" style="margin-bottom:15px;" readonly></textarea>
-                                        <span class="help-block text-danger">Please enter valid description for the offer </span>
+                                        <textarea class="form-control input-circle col-xs-12" rows="3" id="offerdesc" name="offerdesc" placeholder="Enter Offer Description" style="margin-bottom:15px;" required ng-model="vm.editPromocodeData.description"></textarea>
+                                        <span class="help-block text-danger" ng-if="!editPromocodeForm.offerdesc.$pristine && editPromocodeForm.offerdesc.$invalid" ng-messages="editPromocodeForm.offerdesc.$error">Please enter valid description for the offer </span>
                                     </div>
                                 </section>
-                                <section class="form-group">
+                                <section class="form-group" ng-class="{'has-error': editPromocodeForm.maxlimit.$invalid && !editPromocodeForm.maxlimit.$pristine}">
                                     <label class="control-label col-xs-3">Maximum Limit(Rs):
                                         <span class="required"> * </span>
                                     </label>
                                     <div class="col-xs-8">
-                                        <input type="text" class="form-control input-circle" id="maxlimit" name="maxlimit" placeholder="Enter the Maximum Limit" style="margin-bottom:15px;" required>
-                                        <span class="help-block text-danger">Please enter a valid max limit </span>
+                                        <input type="number" class="form-control input-circle" id="maxlimit" name="maxlimit" placeholder="Enter the Maximum Limit" style="margin-bottom:15px;" required ng-model="vm.editPromocodeData.maximumAmountLimit">
+                                        <span class="help-block text-danger" ng-if="!editPromocodeForm.maxlimit.$pristine && editPromocodeForm.maxlimit.$invalid" ng-messages="editPromocodeForm.maxlimit.$error">Please enter a valid Max limit </span>
                                     </div>
                                 </section>
                                 <section class="form-group">
-                                    <label class="control-label col-xs-3">Offer Start Date:
-                                        <span class="required"> * </span>
-                                    </label>
+                                    <label class="control-label col-xs-3">Promocode Start Date: </label>
                                     <section class="input-group col-xs-8  offerstartdate" style="margin-bottom:15px;padding-left:15px">
                                         <div class="input-group-addon input-circle-left">
-                                            <i class="fa fa-calendar">
-                                </i>
+                                            <a ng-click="openFrom($event)" style="pointer-events: none; cursor: default;"><i class="fa fa-calendar"></i></a>
                                         </div>
-                                        <input class="form-control input-circle-right" id="date" name="date" placeholder="Offer Start Date as MM/DD/YYYY" type="text" style="width:97%" />
+                                        <input type="text" class="form-control input-circle-right dateinput" uib-datepicker-popup="dd/MM/yyyy" is-open="status.opened1" min-date="minDate" max-date="maxDate" datepicker-mode="day" show-weeks="false" clear-text="false" show-button-bar="false" name="startDate" ng-model="vm.editPromocodeData.validFrom" readonly placeholder="Promocode Start Date as DD/MM/YYYY" style="width:97%" />
                                     </section>
-                                    <span class="help-block text-danger col-xs-8 col-xs-push-3"> Please select a valid end date </span>
                                 </section>
-                                <section class="form-group">
-                                    <label class="control-label col-xs-3">Offer End Date:
+                                <section class="form-group" ng-class="{'has-error': editPromocodeForm.endDate.$invalid && !editPromocodeForm.endDate.$pristine}">
+                                    <label class="control-label col-xs-3">Promocode End Date:
                                         <span class="required"> * </span>
                                     </label>
                                     <section class="input-group col-xs-8  offerenddate" style="margin-bottom:15px;padding-left:15px">
-                                        <div class="input-group-addon input-circle-left">
-                                            <i class="fa fa-calendar">
-                                </i>
-                                        </div>
-                                        <input class="form-control input-circle-right" id="date" name="date" placeholder="Offer End Date as MM/DD/YYYY" type="text" style="width:97%" />
+                                        <div class="input-group-addon input-circle-left"><a ng-click="openTo($event)"><i class="fa fa-calendar"></i></a></div>
+                                        <input type="text" class="form-control input-circle-right dateinput" uib-datepicker-popup="dd/MM/yyyy" is-open="status.opened2" min-date="vm.editPromocodeData.validFrom" max-date="maxDate" datepicker-mode="day" show-weeks="false" clear-text="false" show-button-bar="false" name="endDate" ng-model="vm.editPromocodeData.validTo" required placeholder="Promocode End Date as DD/MM/YYYY" style="width:97%" />
                                     </section>
-                                    <span class="help-block text-danger col-xs-8 col-xs-push-3"> Please select a valid end date </span>
+                                    <span class="help-block text-danger col-xs-8 col-xs-push-3" ng-if="!editPromocodeForm.endDate.$pristine && editPromocodeForm.endDate.$invalid" ng-messages="editPromocodeForm.endDate.$error"> Please select a valid end date </span>
                                 </section>
-                                <section class="form-group">
-                                    <label class="control-label col-xs-3">Percentage Cose Bourne by Batua(Rs):
+                                <section class="form-group" ng-class="{'has-error': editPromocodeForm.percentBatua.$invalid && !editPromocodeForm.percentBatua.$pristine}">
+                                    <label class="control-label col-xs-3">Percentage Cost Bourne by Batua(Rs):
                                         <span class="required"> * </span>
                                     </label>
                                     <div class="col-xs-8">
-                                        <input type="text" class="form-control input-circle" id="percentbatua" name="percentbatua" placeholder="Enter the cost bourne by Batua" style="margin-bottom:15px;" required>
-                                        <span class="help-block text-danger">Please enter a valid share bourne by batua </span>
+                                        <input type="number" class="form-control input-circle" id="percentbatua" name="percentbatua" placeholder="Enter the cost bourne by Batua" style="margin-bottom:15px;" required ng-model="vm.editPromocodeData.percentageCostBourneByBatua">
+                                        <span class="help-block text-danger" ng-if="!editPromocodeForm.percentbatua.$pristine && editPromocodeForm.percentbatua.$invalid" ng-messages="editPromocodeForm.percentbatua.$error">
+                                        <span class="help-block text-danger" ng-if="editPromocodeForm.percentbatua.$error.required" ng-message="required">Please enter a valid share bourne by Batua</span>
+                                        </span>
                                     </div>
                                 </section>
-                                <section class="form-group">
-                                    <label class="control-label col-xs-3">Percentage Cose Bourne by Merchant(Rs):
+                                <section class="form-group" ng-class="{'has-error': editPromocodeForm.percentMerchant.$invalid && !editPromocodeForm.percentMerchant.$pristine}">
+                                    <label class="control-label col-xs-3">Percentage Cost Bourne by Merchant(Rs):
                                         <span class="required"> * </span>
                                     </label>
                                     <div class="col-xs-8">
-                                        <input type="text" class="form-control input-circle" id="percentmer" name="percentmer" placeholder="Enter the cost bourne by Merchant" style="margin-bottom:15px;" required>
-                                        <span class="help-block text-danger">Please enter a valid share bourne by merchant </span>
+                                        <input type="number" class="form-control input-circle" id="percentMerchant" name="percentMerchant" placeholder="Enter the cost bourne by Merchant" style="margin-bottom:15px;" required ng-model="vm.editPromocodeData.percentageCostBourneByMerchant" compare-to="vm.editPromocodeData.percentageCostBourneByBatua">
+                                        <span class="help-block text-danger" ng-if="!editPromocodeForm.percentMerchant.$pristine && editPromocodeForm.percentMerchant.$invalid" ng-messages="editPromocodeForm.percentMerchant.$error">
+                                        <span class="help-block text-danger" ng-if="editPromocodeForm.percentMerchant.$error.required" ng-message="required">Please enter a valid share bourne by merchant</span>
+                                        <span class="help-block text-danger" ng-if="editPromocodeForm.percentMerchant.$error" ng-message="compareTo">Percentage share between Batua and merchants cannot be more than 100%</span>
+                                        </span>
                                     </div>
                                 </section>
                                 <div class="form-actions rightshift" style="border-top-width:0px;">
-                                    <button type="button" class="btn default margin-form-btn" ui-sref="promocodeList">Cancel</button>
                                     <button type="submit" class="btn button-color margin-form-btn" ng-disabled="editPromocodeForm.$invalid">Submit</button>
+                                    <button type="button" class="btn default margin-form-btn" ui-sref="promocodeList">Cancel</button>
                                 </div>
                             </form>
                         </div>

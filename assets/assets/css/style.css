@@ -609,48 +609,8 @@ td {
     margin-bottom: 0px !important;
 }
 
-/*   testing Nav 
-
-.page-header.navbar.navbar-fixed-top, .page-header.navbar.navbar-static-top {
-    z-index: 9995;
+.dataTables_empty {
+    text-align: center;
+    /* visibility: collapse; */
+    display: none;
 }
-
-.page-header.navbar {
-    background-color: #2b3643;
-    box-shadow: none;
-}
-
-@media (max-width: 991px)
-.page-header.navbar {
-    padding: 0 20px;
-    position: relative;
-    clear: both;
-}
-
-.page-header.navbar {
-    width: 100%;
-    margin: 0;
-    border: 0;
-    padding: 0;
-    height: 46px;
-    min-height: 46px;
-    filter: none;
-    background-image: none;
-}
-
-@media (max-width: 991px)
-.page-header.navbar .page-logo {
-    width: auto;
-    padding: 0;
-    margin-right: 10px;
-    margin-left: 0!important;
-    padding-left: 0!important;
-}
-.page-header.navbar .page-logo {
-    float: left;
-    display: block;
-    width: 235px;
-    height: 46px;
-    padding-left: 20px;
-    padding-right: 20px;
-} */

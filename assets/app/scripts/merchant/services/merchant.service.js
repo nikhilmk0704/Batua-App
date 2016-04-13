@@ -15,6 +15,7 @@
         service.getCategories = getCategories;
         service.getCities = getCities;
         service.setStatus = setStatus;
+        service.getAllActiveMerchants = getAllActiveMerchants;
 
         return service;
 
@@ -118,17 +119,16 @@
             });
         }
 
-        // function getAllActiveMerchants(callback) {
-        //     var deferred = $q.defer();
-        //     httpi({
-        //         method: "get",
-        //         url: API.getActiveMerchants
-        //     }).then(function(response) {
-        //         deferred.resolve(response.data);
-        //     });
-        //     return deferred.promise;
-        // }
-
+        function getAllActiveMerchants(callback) {
+            var deferred = $q.defer();
+            httpi({
+                method: "get",
+                url: API.updateMerchant
+            }).then(function(response) {
+                deferred.resolve(response.data);
+            });
+            return deferred.promise;
+        }
 
     }
 
