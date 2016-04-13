@@ -404,41 +404,6 @@ class UserService {
         userRepository.updateAndFind(newParams,whereObject,findObject,callback);
     }
 
-    saleAgentForgotPassword(params,callback){
-        var phone=params.phone;
-        var userService = new UserService();
-        var awsSnsService=new AwsSnsService();
-        var whereObject={};
-        whereObject.where={};
-        whereObject.where.phone=phone;
-        Users.find(whereObject).then(function(result){
-            if(result){
-                userService.sendAndUpdateOtp(params,result,callback);
-                return null;
-            }
-            return callback("Incorrect Phone");
-        }).catch(function(exception){
-            return callback(exception);
-        })
-    }
-
-    sendAndUpdateOtp(params,userData,callback){
-        var userService = new UserService();
-        var otp=userService.generateOtp();
-        userService.sendOtp();
-        var updateObject={};
-        updateObject.otp=otp;
-        var whereObject={};
-        whereObject.where={};
-        whereObject.where.id=userData.id;
-        Users.update(updateObject,whereObject).then(function(result){
-            return callback(null,"OTP Sent");
-        }).catch(function(exception){
-            return callback(exception);
-        })
-
-    }
-
     generateOtp() {
         return token.generate(6,'0123456789');
     }

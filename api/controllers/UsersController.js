@@ -142,18 +142,6 @@ module.exports = {
         });
     },
 
-    saleAgentForgotPassword:function(req,res){
-        var params={};
-        params.phone=req.body.phone;
-        params.deviceId=req.body.deviceId;
-        var userService = new UserService();
-        userService.saleAgentForgotPassword(params,function(err,result){
-            if(err)
-                return res.badRequest(userService.generateErrorMessage(err));
-            return res.json(200,result);
-        });
-    },
-
     salesAgentVerifyOtp:function(req,res){
         var params={};
         params.otp=req.body.otp;

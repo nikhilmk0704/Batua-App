@@ -60,7 +60,6 @@ module.exports.routes = {
     
     'get /api/salesagent/:salesagentId/profile':'UsersController.getProfile',
     'put /api/salesagent/:salesagentId/profile':'UsersController.updateSalesAgentProfile',
-    'put /api/salesagent/forgotpassword':'UsersController.saleAgentForgotPassword',//pending
     'put /api/salesagent/resetpassword':'UsersController.salesAgentResetPassword',
     'put /api/salesagent/verifyotp':'UsersController.salesAgentVerifyOtp',
     'put /api/salesagent/logout':'UsersController.salesAgentLogout',
