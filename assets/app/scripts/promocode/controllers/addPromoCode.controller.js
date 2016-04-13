@@ -1,45 +1,100 @@
-angular.module('app').controller('addPromocodeController', ['$state', 'promocodeService', 'toastr', function($state, promocodeService, toastr) {
+angular.module('app').controller('addPromocodeController', ['$scope', '$state', 'promocodeService', 'toastr', 'merchantList',
 
-    var vm = this;
-    // vm.merchantList = merchantList;
+    function($scope, $state, promocodeService, toastr, merchantList) {
 
-    vm.addPromocode = function(promocode) {
+        var vm = this;
+        vm.merchantList = merchantList;
 
-        promocodeService.addPromocode(promocode, function(response) {
-            if (response.status === 200) {
-                $state.go('promocodeList');
-                return toastr.success('Promocode has been created successfully.');
-            }
-            if (response.status === 400) {
-                return toastr.error(response.data.errors[0].message);
-            }
-            return toastr.error(response.data);
-        });
-    };
+        vm.addPromocode = function(promocode) {
 
-    vm.merchantsDropdownSettings = {
-        scrollableHeight: '300px',
-        scrollable: true,
-        enableSearch: true,
-        displayProp: 'label', 
-        idProp: 'id', 
-        externalIdProp: 'id'
-    };
+            var merchants = _.map(vm.merchants, 'id');
 
-    vm.merchants = [];
+            promocodeService.addPromocode(promocode, merchants, function(response) {
+                if (response.status === 201) {
+                    $state.go('promocodeList');
+                    return toastr.success('Promocode has been created successfully.');
+                }
+                if (response.status === 400) {
+                    return toastr.error(response.data.errors[0].message);
+                }
+                return toastr.error(response.data);
+            });
+        };
 
-    vm.merchantList = [
-        { id: 1, label: "David" },
-        { id: 2, label: "Jhon" },
-        { id: 3, label: "Lisa" },
-        { id: 4, label: "Nicole" },
-        { id: 5, label: "Danny" },
-        { id: 6, label: "Dan" },
-        { id: 7, label: "Dean" },
-        { id: 8, label: "Adam" },
-        { id: 9, label: "Uri" },
-        { id: 10, label: "Phil" }
-    ];
+        /* START merchants multi-select-dropdown */
+
+        vm.merchantsDropdownSettings = {
+            scrollableHeight: '300px',
+            scrollable: true,
+            enableSearch: true,
+            displayProp: 'name',
+            idProp: 'id',
+            externalIdProp: 'id',
+            buttonClasses: 'form-control input-circle'
+        };
+
+        vm.merchants = [];
+
+        /* END merchants multi-select-dropdown */
 
 
-}]);
+        /* START ui-bootstrap datepicker */
+
+        $scope.today = function() {
+            $scope.dt = new Date();
+        };
+        $scope.today();
+
+        $scope.toggleMin = function() {
+            $scope.minDate = new Date();
+        };
+        $scope.toggleMin();
+
+        $scope.maxDate = new Date(2050, 12, 31);
+
+        $scope.openFrom = function($event) {
+            $scope.status.opened1 = true;
+            $scope.status.opened2 = false;
+        };
+
+        $scope.openTo = function($event) {
+            $scope.status.opened1 = false;
+            $scope.status.opened2 = true;
+        };
+
+        $scope.setDate = function(year, month, day) {
+            $scope.dt = new Date(year, month, day);
+        };
+
+        $scope.dateOptions = {
+            formatYear: 'yy',
+            startingDay: 1
+        };
+
+        $scope.formats = ['yyyy-MM-dd', 'yyyy/MM/dd', 'dd.MM.yyyy', 'shortDate'];
+        $scope.format = $scope.formats[0];
+
+        $scope.status = {
+            opened1: false,
+            opened2: false
+        };
+
+        var tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+
+        var afterTomorrow = new Date();
+        afterTomorrow.setDate(tomorrow.getDate() + 2);
+
+        $scope.events = [{
+            date: tomorrow,
+            status: 'full'
+        }, {
+            date: afterTomorrow,
+            status: 'partially'
+        }];
+
+        /* END ui-bootstrap datepicker */
+
+
+    }
+]);
