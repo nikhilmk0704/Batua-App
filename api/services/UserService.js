@@ -12,7 +12,7 @@ class UserService {
         if(userService.validateRequestAdmin(params)){
         	return userService.createUserAndSendEmailByAdmin(params,callback);
         }
-        return callback(userService.generateErrorMessage("Mandatory fields missing"));
+        return callback("Mandatory fields missing");
     }
 
     validateRequestAdmin(params){
@@ -161,14 +161,13 @@ class UserService {
         options.where={};
         options.where.email=params.email;
         findObject=options;
-        findObject.include=[{model:UserGroups,as:'userGroups',required:false},
-                            {model:AccessTokens,as:'accessTokens',required:false}];
+        findObject.include=userService.getIncludeModels();
         Users.find(findObject).then(function(result){
             if(userService.validateAdminLogin(params,result)){
                 userService.updateAccessTokenAndShowResult(params,result,callback);
                 return null;
             }
-            return callback(userService.generateErrorMessage("Does not exist"));
+            return callback("Does not exist");
         }).catch(function(exception){
             callback(exception);
         });
@@ -503,6 +502,61 @@ class UserService {
         }).catch(function(exception){
             return callback(exception);
         });
+    }
+
+    salesAgentNormalLogin(params,callback){
+        var userService = new UserService();
+        var findObject={};
+        findObject.where={};
+        findObject.where.email=params.email;
+        findObject.include=userService.getIncludeModels();
+        Users.find(findObject).then(function(result){
+            if(result){
+                userService.validateSalesLogin(params,result,callback);
+                return null;
+            }
+            callback("Incorrect Email");
+            return null;
+        }).catch(function(exception){
+            callback(exception);
+        });
+    }
+
+    validateSalesLogin(params,userData,callback){
+        var userService = new UserService();
+        var requestedPassword=params.password;
+        var resultedPassword=userData.password;
+        var isValidPassword=(resultedPassword==md5(requestedPassword));
+        var isValidSales=userService.validateSalesAgent(params,userData);
+        if(isValidSales && isValidPassword){
+            userService.updateAccessTokenAndShowResult(params,userData,callback);
+            return null;
+        }
+        callback("Incorrect Password");
+        return null;
+    }
+
+    validateSalesAgent(params,result){
+        var name=result.userGroups.name;
+        var status=result.status;
+        var isValidGroupName= (name == 'Field Sales Agent');
+        var isValidStatus= (status=='Active');
+        if(result && isValidGroupName && isValidStatus)
+            return true;
+        return false;
+    }
+
+    getIncludeModels(){
+        return [{
+            model:UserGroups,
+            as:'userGroups',
+            required:false
+        },
+        {
+            model:AccessTokens,
+            as:'accessTokens',
+            required:false
+        }];
     }
 
     generateErrorMessage(messageOrObject){
