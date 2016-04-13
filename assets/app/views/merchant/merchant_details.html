@@ -161,7 +161,7 @@ BEGIN CONTENT BODY -->
                                             <div class="image-group col-xs-12" style="margin-bottom:15px; overflow-y: scroll; height: 350px;">
                                                 <div class="galleryholder col-sm-3 col-xs-4 gallery" ng-repeat="image in vm.editMerchantData.galleries">
                                                     <div class="thumbnail">
-                                                        <img class="img-responsive" ng-src="{{image.url}}" style="width:inherit; height:inherit;" />
+                                                        <img class="img-responsive" ng-src="{{image.url}}" style="width:auto; height:120px;" />
                                                         <div class="caption">
                                                             <a ng-click="vm.deleteImage(vm.editMerchantData, image.url)" uib-tooltip="delete"><i class="fa fa-trash fa-lg"></i></a>
                                                         </div>
