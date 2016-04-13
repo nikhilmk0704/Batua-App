@@ -57,13 +57,17 @@ module.exports.routes = {
     'put /api/admin/user/logout':'UsersController.adminLogout',
     'put /api/admin/user/forgotpassword':'UsersController.adminForgotPassword',
     'put /api/admin/user/resetpassword':'UsersController.adminResetPassword',
+    
     'get /api/salesagent/:salesagentId/profile':'UsersController.getProfile',
-    'get /api/user/:userId/profile':'UsersController.getProfile',
     'put /api/salesagent/:salesagentId/profile':'UsersController.updateSalesAgentProfile',
+    'put /api/salesagent/forgotpassword':'UsersController.saleAgentForgotPassword',//pending
     'put /api/salesagent/resetpassword':'UsersController.salesAgentResetPassword',
     'put /api/salesagent/verifyotp':'UsersController.salesAgentVerifyOtp',
     'put /api/salesagent/logout':'UsersController.salesAgentLogout',
     'post /api/salesagent/normal/login':'UsersController.salesAgentNormalLogin',
+    'post /api/salesagent/social/login':'UsersController.salesAgentSocialLogin',
+    
+    'get /api/user/:userId/profile':'UsersController.getProfile',
 
 
     'post /api/image/upload':'ImageUploadController.upload',
