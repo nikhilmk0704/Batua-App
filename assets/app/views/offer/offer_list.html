@@ -54,7 +54,7 @@
                                         <td>{{offer.validTo |date : "mediumDate"}}</td>
                                         <td class="desc">{{offer.description}}</td>
                                         <td>
-                                            <select class="form-control input-circle" style="width:180px;" ng-change="vm.setStatus(offer.id, offer.status)" ng-model="offer.status"> 
+                                            <select class="form-control input-circle" style="width:180px;" ng-change="vm.setStatus(offer.id, offer.status)" ng-model="offer.status" ng-disabled="offer.status=='Expired'"> 
                                                 <option value="" disabled selected hidden>select status</option>
                                                 <option value="Active">Active</option>
                                                 <option value="Suspend">Suspend</option>
@@ -62,7 +62,8 @@
                                             </select>
                                         </td>
                                         <td>
-                                            <a type="submit" class="btn button-color-table" style="float:left;" ui-sref="editOffer({offerId: offer.id})"><i class="fa fa-pencil"></i></a>
+                                            <a type="button" class="btn button-color-table" ng-if="offer.status!='Expired'" ui-sref="editOffer({offerId: offer.id})"><i class="fa fa-pencil"></i></a>
+                                            <a type="button" class="btn button-color-table" ng-if="offer.status=='Expired'" ng-disabled="offer.status=='Expired'"><i class="fa fa-pencil"></i></a>
                                         </td>
                                     </tr>
                                 </tbody>
