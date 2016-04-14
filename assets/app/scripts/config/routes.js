@@ -5,7 +5,9 @@
     function routes() {
 
         return {
-            login: "/user/login",
+            login: "/admin/user/login",
+            forgetPassword: "/admin/user/forgotpassword",
+            resetPassword: "/admin/user/resetpassword",
             category: "/category",
             updateCategory: "/category/:id",
             getMerchants: "/admin/:adminId/merchant",

@@ -76,6 +76,7 @@ table.dataTable thead .sorting {
 .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu>li>a {
     border: 0;
     color: #b4bcc8
+    font-size:30px;
 }
 
 .page-header.navbar {
@@ -139,11 +140,11 @@ table.dataTable thead .sorting {
 }
 
 
-/*
-.nav-item :hover {
-    background-color: #3949AB;
+
+.nav-item {
+    font-size: 30px;
 }
-*/
+
 
 .dpholder {
     margin-top: 25%;
