@@ -33,6 +33,7 @@
         var params = {};
         var include = [{
             model: Merchants,
+            as:'merchants',
             required: false
         }];
         params.include = include;

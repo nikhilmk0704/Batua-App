@@ -274,29 +274,37 @@ class UserService {
     adminResetPassword(params,callback){
         var userService = new UserService();
         var userRepository = new UserRepository();
-        var password=md5(params.password);
-        var confirmPassword=md5(params.confirmPassword);
+        var password=params.password;
         var accessToken=params.accessToken;
         var email=params.email;
-        if(password==confirmPassword){
-            var rawQueryString="select Users.id as userId from Users inner join (UsersAccessTokens "+
-            "inner join AccessTokens on UsersAccessTokens.accessTokenId=AccessTokens.id) "+
-            "on UsersAccessTokens.userId=Users.id where AccessTokens.token='" + accessToken + 
-            "' and Users.email='" + email +"'" ;
+        if(email && password && accessToken){
+            password=md5(password);
+            var rawQueryString = userService.getAdminResetPasswordQueryString(accessToken,email);
             sequelize.query(rawQueryString).spread(function(metaResult,result){
                 var userId=(result.length)?(result[0].userId):(null);
                 if(result.length && userId){
                     userService.updatePassword(userId,password,callback);
+                    return null;
                 }
-                if(!result.length)
-                    return callback("Give correct accessToken");
+                if(!result.length){
+                    callback("Incorrect accessToken and email");
+                    return null;
+                }
                 return null;
             }).catch(function(exception){
-                return callback(exception);
+                callback(exception);
             });
         }else{
-            return callback("Password not matched");
+            callback("Email, Password And AccessToken Required");
         }
+    }
+
+    getAdminResetPasswordQueryString(accessToken,email){
+        return  " SELECT  Users.id AS userId  FROM  Users "+
+                " INNER JOIN  ( UsersAccessTokens  INNER JOIN  AccessTokens  ON "+
+                " UsersAccessTokens.accessTokenId = AccessTokens.id )  ON  "+
+                " UsersAccessTokens.userId = Users.id  WHERE  AccessTokens.token = " + 
+                "'" + accessToken + "'  AND  Users.email = '" + email +"'" ;
     }
 
     updatePassword(userId,password,callback){
@@ -306,9 +314,10 @@ class UserService {
         updateOptions.where={};
         updateOptions.where.id=userId;
         Users.update(updateObject,updateOptions).then(function(result){
-            return callback(null,{message:"Password reset"});
+            callback(null,{message:"Password reset"});
+            return null;
         }).catch(function(exception){
-            return callback(exception);
+            callback(exception);
         });
     }
 
@@ -335,34 +344,24 @@ class UserService {
         var id=params.id;
         if(salesagentId==id)
             return userService.validateAndUpdateSalesAgentProfile(params,callback);
-        return callback("Incorrect parameters");
+        return callback("Incorrect Id");
     }
 
     validateAndUpdateSalesAgentProfile(params,callback){
         var userService = new UserService();
-        if(userService.passwordExist(params)=='all')
-            return userService.updateProfileWithPassword(params,callback);
-        if(userService.passwordExist(params)=='none')
-            return userService.updateProfileWithoutPassword(params,callback);
-        return callback("Incorrect password parameters");
-    }
-
-    passwordExist(params){
         var currentPassword=params.currentPassword;
         var newPassword=params.newPassword;
-        var confirmPassword=params.confirmPassword;
-        if(currentPassword && newPassword && confirmPassword)
-            return 'all';
-        if(!currentPassword && !newPassword && !confirmPassword)
-            return 'none';
-        return 'some';
+        if(currentPassword && newPassword)
+            return userService.updateProfileWithPassword(params,callback);
+        if(!currentPassword && !newPassword)
+            return userService.updateProfileWithoutPassword(params,callback);
+        return callback("Incorrect parameters");
     }
 
     updateProfileWithPassword(params,callback){
         var userService = new UserService();
         var currentPassword=params.currentPassword;
         var newPassword=params.newPassword;
-        var confirmPassword=params.confirmPassword;
         var id=params.id;
         var whereObject={};
         whereObject.where={};
@@ -370,8 +369,6 @@ class UserService {
         Users.find(whereObject).then(function(result){
             if(result.password!=md5(currentPassword))
                 return callback('currentPassword incorrect');
-            if(confirmPassword!=newPassword)
-                return callback('New password and confirm password should be same');
             if(currentPassword==newPassword)
                 return callback('New password and current password should be different');
             userService.updateProfile(params,callback);
@@ -410,11 +407,11 @@ class UserService {
 
     salesAgentResetPassword(params,callback){
         var userService = new UserService();
-        var newPassword=md5(params.newPassword);
-        var confirmPassword=md5(params.confirmPassword);
-        if(newPassword==confirmPassword)
+        var userId=params.userId;
+        var newPassword=params.password;
+        if(userId && newPassword)
             return userService.salesAgentUpdatePassword(params,callback);
-        return callback("New password and confirm password should be same");
+        return callback("UserId And New Password Required");
     }
 
     salesAgentUpdatePassword(params,callback){
@@ -486,6 +483,18 @@ class UserService {
     }
 
     salesAgentLogout(params,callback){
+        var userService = new UserService();
+        var userId=params.userId;
+        var token=params.token;
+        var deviceId=params.deviceId;
+        if(userId && token && deviceId){
+            userService.updateTokensOnSalesLogout(params,callback);
+            return null;
+        }
+        callback("UserId, Token And DeviceId Required");
+    }
+
+    updateTokensOnSalesLogout(params,callback){
         var userId=params.userId;
         var token=params.token;
         var deviceId=params.deviceId;
@@ -495,13 +504,23 @@ class UserService {
         var updateObject={};
         updateObject.token=null;
         AccessTokens.update(updateObject,whereObject).then(function(result){
-            return callback(null,{message:"Logged out"});
+            callback(null,{message:"Logged out"});
+            return null;
         }).catch(function(exception){
-            return callback(exception);
+            callback(exception);
         });
     }
 
     salesAgentNormalLogin(params,callback){
+        var userService = new UserService();
+        var email=params.email;
+        var password=params.password;
+        if(email && password)
+            return userService.findUserAndValidateLogin(params,callback);
+        return callback("Email And Password Required")
+    }
+
+    findUserAndValidateLogin(params,callback){
         var userService = new UserService();
         var findObject={};
         findObject.where={};
@@ -560,20 +579,39 @@ class UserService {
         var userService = new UserService();
         var email=params.email;
         var googleId=params.googleId;
+        if(email && googleId)
+            return userService.findAndUpdateGoogleId(params,callback);
+        return callback("Email And Google Id Required");
+    }
+
+    findAndUpdateGoogleId(params,callback){
+        var userService = new UserService();
+        var email=params.email;
+        var googleId=params.googleId;
         var findObject={};
         findObject.where={};
         findObject.where.email=email;
         findObject.include=userService.getIncludeModels();
         Users.find(findObject).then(function(result){
-            if(result){
-                userService.updateGoogleId(params,result,callback);
-                return null;
-            }
-            callback("Incorrect Gmail Id");
+            userService.validateGoogleId(params,result,callback);
             return null;
         }).catch(function(exception){
             callback(exception);
         });
+    }
+
+    validateGoogleId(params,userData,callback){
+        var userService = new UserService();
+        var googleId=params.googleId;
+        var resultedGoogleId=(userData)?(userData.googleId):(null);
+        var isValidGoogleId=(resultedGoogleId==googleId);
+        if(userData && !resultedGoogleId)
+            return userService.updateGoogleId(params,userData,callback);
+        if(userData && resultedGoogleId && isValidGoogleId)
+            return userService.updateAccessTokenAndShowResult(params,userData,callback);
+        if(userData && resultedGoogleId && !isValidGoogleId)
+            return callback("Incorrect Google Id");
+        callback("Incorrect Gmail Id");
     }
 
     updateGoogleId(params,userData,callback){
@@ -591,6 +629,55 @@ class UserService {
         }).catch(function(exception){
             callback(exception);
         });
+    }
+
+    validateAndUpdateUserProfile(params,callback){
+        var userService = new UserService();
+        var whereObject={};
+        whereObject.where={};
+        whereObject.where.id=params.id;
+        whereObject.include=userService.getIncludeModels();
+        Users.find(whereObject).then(function(result){
+            if(result){
+                userService.validateUserProfile(params,result,callback);
+                return null;
+            }
+            callback("Incorrect Id");
+            return null;
+        }).catch(function(exception){
+            callback(exception);
+        });
+    }
+
+    validateUserProfile(params,userData,callback){
+        var userService = new UserService();
+        var email=params.email;
+        var resultedEmail=userData.email;
+        var userGroupName=userData.userGroups.name;
+        if(userData && userGroupName!="User")
+            return callback("Not a User");
+        if(userData && email && resultedEmail)
+            return callback("Email Is One Time Editable");
+        if(userData && ((!resultedEmail && email) || (resultedEmail && !email)))
+            return userService.updateUserProfile(params,userData,callback);
+    }
+
+    updateUserProfile(params,userData,callback){
+        var updateObject={};
+        var name=params.name;
+        var email=params.email;
+        var profileImageUrl=params.profileImageUrl;
+        (name)?(updateObject.name=name):(updateObject);
+        (profileImageUrl)?(updateObject.profileImageUrl=profileImageUrl):(updateObject);
+        (email)?(updateObject.email=email):(updateObject);
+        var whereObject={};
+        whereObject.where={};
+        whereObject.where.id=params.id;
+        var findObject={};
+        findObject.where=whereObject.where;
+        findObject.attributes=['id','name','phone','profileImageUrl','email','isPinActivated'];
+        var userRepository=new UserRepository();
+        userRepository.updateAndFind(updateObject,whereObject,findObject,callback);
     }
 
     generateErrorMessage(messageOrObject){
