@@ -67,6 +67,7 @@ module.exports.routes = {
     'post /api/salesagent/social/login':'UsersController.salesAgentSocialLogin',
     
     'get /api/user/:userId/profile':'UsersController.getProfile',
+    'put /api/user/profile':'UsersController.updateUserProfile',
 
 
     'post /api/image/upload':'ImageUploadController.upload',

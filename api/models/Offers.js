@@ -68,6 +68,7 @@ module.exports = {
     },
     associations: function () {
         Offers.belongsToMany(Merchants, {
+            as:'merchants',
             through: MerchantsOffers,
             foreignKey: {
                 name: 'offerId'

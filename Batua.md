@@ -1,16 +1,11 @@
 FORMAT: 1A
-HOST: "http://52.36.228.74:1337"
-Headers: {
-            Content-Type:application/json
-         }
+HOST: http://52.36.228.74:1337
 
 # Batua
 
 Batua is a Payment Andriod Mobile Application targeting the general public users, using which payments can be made across merchants shops like restaurants, coffee shops etc.
 
-# User Authentication
-
-## User By Admin [ /api/admin/user]
+## Admin API [/api/admin/]
 
 ### Create New User [POST /api/admin/user]
 
@@ -147,9 +142,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 400 (applicaiton)
 
 
-## Admin Login [/api/admin/user/login]
-
-### Admin Login [POST]
+### Admin Login [POST /api/admin/user/login]
 
 + Request (application/json)
             
@@ -173,15 +166,13 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 400 (applicaiton)
 
 
-## Admin Logout [/api/admin/user/logout]
-
-### Admin Logout [PUT]
+### Admin Logout [PUT /api/admin/user/logout]
 
 + Request (application/json)
             
     + Header
     
-            token:"092B7NhDGwEwjf77xjaFJgeP"
+            Access-Token:"092B7NhDGwEwjf77xjaFJgeP"
         
 + Response 200 (application/json)
     
@@ -194,10 +185,8 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 400 (applicaiton)
 
 
-## Admin Forgot Password [/api/admin/user/forgotpassword]
+### Admin Forgot Password [PUT /api/admin/user/forgotpassword]
     
-### Admin forgotPassword [PUT]
-
 + Request  (application/json)
 
     + Body
@@ -219,23 +208,19 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 404 (application/json)
 
 
-## Admin Reset Password [/api/admin/user/resetpassword]
-
-### Admin Reset Password [PUT]
+### Admin Reset Password [PUT /api/admin/user/resetpassword]
 
 + Request  (application/json)
 
     + Headers
         
-            accessToken: "092B7NhDGwEwjf77xjaFJgeP"
+            Access-Token: "092B7NhDGwEwjf77xjaFJgeP"
             
     + Body
 
             {
                   "email":"vikash.baghel@tecsolsoftware.com",
-                  "password":"123456",
-                  "confirmPassword":"123456",
-                  "accessToken":"092B7NhDGwEwjf77xjaFJgeP"
+                  "password":"123456"
             }
 
 + Response 200 (application/json)
@@ -243,49 +228,9 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 400 (application/json)
 
 
-## Image Upload [/api/image/upload]
+## Sales Agent API [/api/salesagent/]
 
-### Upload Image [POST]
-
-+ Request (multipart/form-data)
-
-    + Headers
-
-            Access-Token: "ABCDEFGH12345678"
-
-    + Body
-    
-            {
-                "image":$image,
-            }
-            
-        
-+ Response 200 (application/json)
-
-        {
-            "url" : "http://i1.wp.com/www.techrepublic.com/bundles/techrepubliccore/images/icons/standard/icon-user-default.png"
-        }
-
-+ Response 400 (application/json)
-    
-
-### Get Salesagent Profile [GET /api/salesagent/{:salesagentId}/profile]
-    
-+ Response 200 (application/json)
-
-    + Body 
-        
-            {
-                "id": 14,
-                "name": "vikash",
-                "profileImageUrl": "url",
-                "email": "vikash.baghel@tecsolsoftware.com"
-            }
-
-+ Response 400 (application/json)
-
-
-### Get Users Profile [GET /api/user/:userId/profile]
+### Get Salesagent Profile [GET /api/salesagent/{salesagentId}/profile]
     
 + Response 200 (application/json)
 
@@ -312,8 +257,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
                 "name":"vikash singh",
                 "profileImageUrl":"https://batua-test.s3.amazonaws.com/1d44bf1e-b507-43cd-8515-4f5211135373.jpg",
                 "currentPassword":"1234567",
-                "newPassword":"123456",
-                "confirmPassword":"123456"
+                "newPassword":"123456"
             }
             
         
@@ -326,6 +270,231 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
                 "profileImageUrl": "https://batua-test.s3.amazonaws.com/1d44bf1e-b507-43cd-8515-4f5211135373.jpg",
                 "phone": 123457856
             }
+
++ Response 400 (application/json)
+
+
+### Sales Agent OTP Verification [PUT /api/salesagent/verifyotp]
+
++ Request  (application/json)
+
+    + Body
+
+            {
+                "otp": 123456,
+                "phone":123457856,
+                "deviceId":"device1"
+            }
+
++ Response 200 (application/json)
+
+    + Body
+            
+            {
+                "userId": 14
+            }
+
++ Response 400 (application/json)
+
+
+### Sales Agent Password Reset [PUT /api/salesagent/resetpassword]
+
++ Request  (application/json)
+
+    + Body
+
+            {
+                "userId":14,
+                "password":"12345678"
+            }
+
++ Response 200 (application/json)
+
+    + Body
+            
+            {
+                "message": "Password Reset"
+            }
+
++ Response 400 (application/json)
+
+    + Body
+    
+            {
+                "errors":[
+                    {
+                        "message": "New password and confirm password should be same"
+                    }
+                ]
+            }
+
+
+### Sales Agent Logout [PUT /api/salesagent/logout]
+
++ Request  (application/json)
+    
+    + Header
+    
+            Access-Token:"092E8vstN81XjO62tJIPdnt6"
+    
+    + Body
+
+            {
+                "deviceId":"device1",
+                "userId":14
+            }
+
++ Response 200 (application/json)
+
+    + Body
+            
+            {
+                "message": "Logged out"
+            }
+
++ Response 400 (application/json)
+
+
+### Sales Agent Normal Login [POST /api/salesagent/normal/login]
+
++ Request (application/json)
+    
+    + Body
+
+            {
+                "password":"123456",
+                "email":"kajal.jadhav@tecsolsoftware.com"
+            }
+        
++ Response 200 (application/json)
+
+            {
+                "id": 3,
+                "name": "Kajal Anant Jadhav",
+                "email": "kajal.jadhav@tecsolsoftware.com",
+                "token": "092slrhat8grS6hoE4DkhpvP",
+                "userGroup": "Field Sales Agent"
+            }
+
++ Response 400 (applicaiton)
+
+            {
+                "errors":[
+                    {
+                        "message": "Incorrect Password"
+                    }
+                ]
+            }
+
+
+### Sales Agent Social Login [POST /api/salesagent/social/login]
+
++ Request (application/json)
+    
+    + Body
+
+            {
+                "password":"123456",
+                "email":"kajal.jadhav@tecsolsoftware.com"
+            }
+        
++ Response 200 (application/json)
+
+            {
+                "id": 3,
+                "name": "Kajal Anant Jadhav",
+                "email": "kajal.jadhav@tecsolsoftware.com",
+                "token": "092slrhat8grS6hoE4DkhpvP",
+                "userGroup": "Field Sales Agent"
+            }
+
++ Response 400 (applicaiton)
+
+            {
+                "errors":[
+                    {
+                        "message": "Incorrect Password"
+                    }
+                ]
+            }
+            
+            
+## User API [/api/user/]
+
+### Get Users Profile [GET /api/user/:userId/profile]
+    
++ Response 200 (application/json)
+
+    + Body 
+        
+            {
+                "id": 14,
+                "name": "vikash",
+                "profileImageUrl": "url",
+                "email": "vikash.baghel@tecsolsoftware.com"
+            }
+
++ Response 400 (application/json)
+
+
+### Update User Profile [PUT /api/user/profile]
+
++ Request (application/json)
+
+    + Body
+    
+            {
+                "id":14,
+                "name":"vikash singh",
+                "email":"vikash.baghel@tecsolsoftware.com",
+                "profileImageUrl":"https://batua-test.s3.amazonaws.com/1d44bf1e-b507-43cd-8515-4f5211135373.jpg",
+            }
+            
+        
++ Response 200 (application/json)
+
+            {
+                "id": 1,
+                "name": "vikash",
+                "phone": 9479897807,
+                "profileImageUrl": "someUrl",
+                "email": "vikash.baghel@tecsolsoftware.com",
+                "isPinActivated": false
+            }
+            
++ Response 400 (application/json)
+    
+            {
+                "errors":[
+                    {
+                        "message": "Email Is One Time Editable"
+                    }
+                ]
+            }
+
+
+## Upload Image [/api/image/upload]
+
+### Upload Image [POST /api/image/upload]
+
++ Request (multipart/form-data)
+
+    + Headers
+
+            Access-Token: "ABCDEFGH12345678"
+
+    + Body
+    
+            {
+                "image":$image,
+            }
+            
+        
++ Response 200 (application/json)
+
+        {
+            "url" : "http://i1.wp.com/www.techrepublic.com/bundles/techrepubliccore/images/icons/standard/icon-user-default.png"
+        }
 
 + Response 400 (application/json)
     
@@ -453,38 +622,20 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
                 "profileImageUrl":"someUrl",
                 "email":"username@domain.com",
                 "phone":9876543210,
-                "Galleries":[
-                                {"id": 10, "url": "1", "type": "image"},
-                                {"id": 11, "url": "2", "type": "image"},
-                                {"id": 12, "url": "3", "type": "image"}
-                            ],
-                "Location":{
-                                "id": 4,
-                                "area": null,
-                                "pincode": 123456,
-                                "createdAt": "2016-04-04T12:07:21.000Z",
-                                "updatedAt": "2016-04-04T12:07:21.000Z",
-                                "cityId": 1,
-                                "City":{
-                                            "id": 1,
-                                            "name": "Ajmer",
-                                            "state": null,
-                                            "country": null,
-                                            "createdAt": "2016-04-04T11:28:20.000Z",
-                                            "updatedAt": "2016-04-04T11:28:20.000Z"
-                                        }
-                            },
+                "imageGallery":[ "imageUrl1","imageUrl2","imageUrl3"],
                 "fee":50,
                 "categoryId":1,
+                "cityId":1,
                 "address":"give some address ",
-                "latitude":17.7426,
+                "pincode":485001,
+                "latitude":17.7426
                 "longitude":75.1546,
                 "accountHolder": "vikash singh",
                 "accountNumber":546879463132131644,
                 "ifscCode":"hdfc10554",
                 "branchName":"branch name of bank",
                 "bankName":"HDFC",
-                "status":"Active",
+                "status":"Drafted",
                 "createdSalesId": 3
             }
             
@@ -1077,9 +1228,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 
 + Response 401 (application/json)
 
-## Suspend/Activate/Permanent Suspend Merchant [/api/merchant/setstatus]
-
-### Suspend/Activate/Permanent Suspend [PUT]
+### Suspend/Activate/Permanent Suspend Merchant [PUT /api/merchant/setstatus]
 
 + Request  (application/json)
 
@@ -1559,7 +1708,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
                     "status": "active",
                     "createdAt": "2016-04-05T05:16:25.000Z",
                     "updatedAt": "2016-04-05T12:15:22.000Z",
-                    "Merchants": [
+                    "merchants": [
                         {
                             "id": 8,
                             "name": "Kajal",
@@ -1606,7 +1755,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
                     "status": "active",
                     "createdAt": "2016-04-05T05:32:46.000Z",
                     "updatedAt": "2016-04-05T05:32:46.000Z",
-                    "Merchants": [
+                    "merchants": [
                         {
                             "id": 7,
                             "name": "Hashim123",
@@ -1684,7 +1833,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
                     "status": "active",
                     "createdAt": "2016-04-05T05:41:58.000Z",
                     "updatedAt": "2016-04-05T05:41:58.000Z",
-                    "Merchants": [
+                    "merchants": [
                         {
                             "id": 7,
                             "name": "Hashim123",
@@ -1794,7 +1943,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 
 ## Offer Discount Management [/api/offer]
 
-### Create Offer Discount [POST]
+### Create Offer Discount [POST /api/offer]
 
 + Request (application/json)
 
@@ -1878,7 +2027,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 401 (application/json)
 
 
-### Get Offer Discount [GET]
+### Get Offer Discount [GET /api/offer/{id}]
 
 + Response 200 (application/json)
     
@@ -1894,7 +2043,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
                 "status": "Active",
                 "createdAt": "2016-04-06T08:54:20.000Z",
                 "updatedAt": "2016-04-06T08:54:20.000Z",
-                "Merchants": [
+                "merchants": [
                     {
                         "id": 7,
                         "name": "Hashim123",
@@ -1969,9 +2118,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 401 (application/json)
 
 
-## Suspend/Activate/Permanent Suspend Offer Discount [/offer/{id}/status]
-
-### Suspend/Activate/Permanent Suspend [PUT /offer/{id}/status]
+### Suspend/Activate/Permanent Suspend Offer Discount [PUT /api/offer/{id}/status]
 
 + Request  (application/json)
 
@@ -1999,92 +2146,6 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 401 (application/json)
 
         
-+ Response 400 (application/json)
-
-
-## Sales Agent OTP Verification [/api/salesagent/verifyotp]
-
-### Sales Agent OTP Verification [PUT]
-
-+ Request  (application/json)
-
-    + Body
-
-            {
-                "otp": 123456,
-                "phone":123457856,
-                "deviceId":"device1"
-            }
-
-+ Response 200 (application/json)
-
-    + Body
-            
-            {
-                "userId": 14
-            }
-
-+ Response 400 (application/json)
-
-
-## Sales Agent Password Reset [/api/salesagent/resetpassword]
-
-### Sales Agent Password Reset [PUT]
-
-+ Request  (application/json)
-
-    + Body
-
-            {
-                "userId":14,
-                "newPassword":"12345678",
-                "confirmPassword":"12345678"
-            }
-
-+ Response 200 (application/json)
-
-    + Body
-            
-            {
-                "message": "Password Reset"
-            }
-
-+ Response 400 (application/json)
-
-    + Body
-    
-            {
-                "errors":[
-                    {
-                        "message": "New password and confirm password should be same"
-                    }
-                ]
-            }
-
-
-### Sales Agent Logout [PUT /api/salesagent/logout]
-
-+ Request  (application/json)
-    
-    + Header
-    
-            token:"092E8vstN81XjO62tJIPdnt6"
-    
-    + Body
-
-            {
-                "deviceId":"device1",
-                "userId":14
-            }
-
-+ Response 200 (application/json)
-
-    + Body
-            
-            {
-                "message": "Logged out"
-            }
-
 + Response 400 (application/json)
 
 
