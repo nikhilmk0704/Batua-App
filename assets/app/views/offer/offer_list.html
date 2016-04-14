@@ -47,7 +47,7 @@
                                 <tbody class="datatablecustom">
                                     <tr class="gradeX odd" role="row" ng-repeat="offer in vm.offers">
                                         <td>{{$index+1}}</td>
-                                        <td>{{offer.merchants.name}}</td> 
+                                        <td><span ng-repeat="merchant in offer.merchants">{{merchant.name}}{{$last?' ': ', '}}</span></td> 
                                         <td>{{offer.discountPercentage}}%</td>
                                         <td>{{offer.maximumAmountLimit |currency : "₹ "}}</td>
                                         <td>{{offer.validFrom |date : "mediumDate"}}</td>
