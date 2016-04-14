@@ -27,7 +27,8 @@
     "angularjs-dropdown-multiselect": "~1.5.2",
     "angular-sanitize": "~1.5.3",
     "ng-flow": "~2.7.1",
-    "angucomplete-alt": "~2.2.0"
+    "angucomplete-alt": "~2.2.0",
+    "angular": "~1.5.3"
   },
   "resolutions": {
     "angular": "~1",
