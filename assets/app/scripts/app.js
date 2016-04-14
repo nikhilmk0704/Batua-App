@@ -18,6 +18,34 @@
         // Now set up the states
         $stateProvider
 
+        .state('login', {
+            url: '/login',
+            templateUrl: 'app/views/login/login.html',
+            controller: 'loginController',
+            controllerAs: 'vm'
+        })
+
+        .state('changePassword', {
+            url: '/changePassword',
+            templateUrl: 'app/views/changePassword/change_password.html',
+            controller: 'changePasswordController',
+            controllerAs: 'vm'
+        })
+
+        .state('forgetPassword', {
+            url: '/forgetPassword',
+            templateUrl: 'app/views/login/forgot_password.html',
+            controller: 'forgetPasswordController',
+            controllerAs: 'vm'
+        })
+
+        .state('resetPassword', {
+            url: '/resetpassword/:email/:auth',
+            templateUrl: 'app/views/resetPassword/reset_password.html',
+            controller: 'resetPasswordController',
+            controllerAs: 'vm'
+        })
+
         .state('addCategory', {
             url: '/addCategory',
             templateUrl: 'app/views/category/add_category.html',
@@ -152,8 +180,27 @@
 
     }
 
-    run.$inject = [];
+    run.$inject = ['$rootScope', '$cookieStore', '$http', '$location', 'authenticationService', '$state'];
 
-    function run() {}
+    function run($rootScope, $cookieStore, $http, $location, authenticationService, $state) {
+
+        // keep user logged in after page refresh
+        $rootScope.globals = $cookieStore.get('globals') || {};
+        // if ($rootScope.globals.currentUser) {
+        //     $http.defaults.headers.common['accessToken'] = $rootScope.globals.currentUser.userData.accessToken;
+        // }
+
+        $rootScope.$auth = authenticationService;
+
+        $rootScope.$on('$locationChangeStart', function(event, next, current) {
+            var restrictedRoutes = ['/login', '/forgetPassword'];
+            var restrictedPage = $.inArray($location.path(), restrictedRoutes) === -1;
+            var loggedIn = $rootScope.globals.currentUser;
+            if (restrictedPage && !loggedIn) {
+                $location.path('/login');
+            }
+        });
+
+    }
 
 })();

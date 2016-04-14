@@ -14,9 +14,9 @@
         .module('app')
         .factory('authenticationService', authenticationService);
 
-    authenticationService.$inject = ['$http', '$cookieStore', '$rootScope', '$timeout', '$localStorage', 'lodash'];
+    authenticationService.$inject = ['$http', '$cookieStore', '$rootScope'];
 
-    function authenticationService($http, $cookieStore, $rootScope, $timeout, $localStorage, lodash) {
+    function authenticationService($http, $cookieStore, $rootScope) {
 
         var service = {};
 
@@ -32,7 +32,7 @@
                     userData: userData,
                 }
             };
-            $localStorage.setObject('admin', userData);
+            // $localStorage.setObject('admin', userData);
             // $http.defaults.headers.common['accessToken'] = userData.accessToken; // jshint ignore:line
             $cookieStore.put('globals', $rootScope.globals);
         }
@@ -40,12 +40,11 @@
         function clearCredentials() {
             $rootScope.globals = {};
             $cookieStore.remove('globals');
-            $localStorage.remove('admin');
-            $localStorage.clearAll();
+            // $http.defaults.headers.common.accessToken = 'Basic ';
         }
 
         function isAuthenticated() {
-            var isLoggedIn = !(_.isEmpty($localStorage.getObject('admin')));
+            var isLoggedIn = $cookieStore.get('globals') ? true : false;
             return isLoggedIn;
         }
 

@@ -3,7 +3,7 @@ angular.module('app').controller('headerController', ['$state', 'authenticationS
     var vm = this;
 
     vm.logout = function() {
-        authenticationService.ClearCredentials();
+        authenticationService.clearCredentials();
         $state.go('login', { reload: true });
     }
 

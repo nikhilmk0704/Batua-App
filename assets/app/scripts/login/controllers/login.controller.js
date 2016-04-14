@@ -1,13 +1,20 @@
-  angular.module('app').controller('loginController', ['$location', 'loginService', 'toastr', '$state', 'authenticationService', function($location, loginService, toastr, $state, authenticationService) {
+  angular.module('app').controller('loginController', ['loginService', 'toastr', '$state', 'authenticationService', function(loginService, toastr, $state, authenticationService) {
 
       var vm = this;
 
       vm.login = function(user) {
 
-          loginService.Login(user, function(response) {
+          loginService.login(user, function(response) {
               if (response.status === 200) {
-                  authenticationService.SetCredentials(response.data);
-                  $state.go('userList');
+                  authenticationService.setCredentials(response.data);
+                  // if () {
+                  //   $state.go('userList');
+                  // }
+
+                  // if () {
+                  //   $state.go('merchantList');
+                  // }
+                  $state.go('merchantList');
                   return toastr.success('You have successfully signed in!');
               }
 
