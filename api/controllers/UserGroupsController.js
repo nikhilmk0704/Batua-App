@@ -7,6 +7,8 @@
 
 'use strict';
 
+var error=require('../errors/error.js');
+
 module.exports = {
 
     create: function(req, res) {
@@ -14,7 +16,7 @@ module.exports = {
         var userGroupService = new UserGroupService();
         userGroupService.save(params, function(err, result) {
             if (err) {
-                return res.badRequest(userGroupService.generateErrorMessage(err));
+                return res.badRequest(error.send(err));
             } 
             return res.json(201,result);
         });
@@ -25,10 +27,10 @@ module.exports = {
         var userGroupService = new UserGroupService();
         userGroupService.find(id, function(err, result) {
             if (err) {
-                return res.badRequest(userGroupService.generateErrorMessage(err));
+                return res.badRequest(error.send(err));
             } 
             if(_.isEmpty(result)){
-                return res.notFound(userGroupService.generateErrorMessage("Does not exist"));
+                return res.notFound(error.send("Does not exist"));
             }
             return res.json(200,result);
         });
@@ -39,7 +41,7 @@ module.exports = {
         var userGroupService = new UserGroupService();
         userGroupService.updateAndFind(params, function(err, result) {
             if (err) {
-                return res.badRequest(userGroupService.generateErrorMessage(err));
+                return res.badRequest(error.send(err));
             } 
             return res.json(200,result);
         });
@@ -50,7 +52,7 @@ module.exports = {
         var userGroupService = new UserGroupService();
         userGroupService.delete(id, function(err, result) {
             if (err) {
-                return res.badRequest(userGroupService.generateErrorMessage(err));
+                return res.badRequest(error.send(err));
             } 
             return res.jsonx(200,result);
         });

@@ -7,6 +7,8 @@
 
  'use strict';
 
+var error=require('../errors/error.js');
+
  module.exports = {
 
     create: function(req, res) {
@@ -17,9 +19,9 @@
 
         promocodesService.save(params, function(err, result) {
             if (err) {
-                return res.badRequest(err);
+                return res.badRequest(error.send(err));
             } else if(_.isEmpty(result)){
-                return res.notFound("Does not exist");
+                return res.notFound(error.send("Does not exist"));
             } 
             else {
                 return res.json(201,result);
@@ -43,9 +45,9 @@
             params.where.id = id;
             promocodesService.find(params, function(err, result) {
                 if (err) {
-                    return res.badRequest(err);
+                    return res.badRequest(error.send(err));
                 } else if(_.isEmpty(result)){
-                    return res.notFound("Does not exist");
+                    return res.notFound(error.send("Does not exist"));
                 }
                 else {
                     return res.json(200, result);
@@ -54,9 +56,9 @@
         } else {
             promocodesService.findAll(params, function(err, result) {
                 if (err) {
-                    return res.badRequest(err);
+                    return res.badRequest(error.send(err));
                 } else if(_.isEmpty(result)){
-                    return res.notFound("Does not exist");
+                    return res.notFound(error.send("Does not exist"));
                 }
                 else {
                     return res.json(200,result);
@@ -74,9 +76,9 @@
         
         promocodesService.updateAndFind(params, function(err, result) {
             if (err) {
-                return res.badRequest(err);
+                return res.badRequest(error.send(err));
             } else if(_.isEmpty(result)){
-                return res.notFound("Does not exist");
+                return res.notFound(error.send("Does not exist"));
             }
             else {
                 return res.json(200, result);
@@ -93,9 +95,9 @@
         
         promocodesService.statusUpdateAndFind(params, function(err, result) {
             if (err) {
-                return res.badRequest(err);
+                return res.badRequest(error.send(err));
             } else if(_.isEmpty(result)){
-                return res.notFound("Does not exist");
+                return res.notFound(error.send("Does not exist"));
             } 
             else {
                 return res.json(200, result);
