@@ -62,7 +62,8 @@
     <script src="app/scripts/config/api/api.js"></script>
 </head>
 
-<body ng-app="app" class="page-header-fixed page-sidebar-closed-hide-logo page-content-white">
+<!-- <body ng-app="app" class="page-header-fixed page-sidebar-closed-hide-logo page-content-white"> -->
+<body ng-app="app" ng-class="!isAuthenticated?'login':'page-header-fixed page-sidebar-closed-hide-logo page-content-white'">
 
     <!--[if lte IE 8]>
     <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
@@ -80,11 +81,24 @@
     <div data-ng-include="'app/views/common/footer/footer.html'" class="page-footer"></div>
     <!-- END OF MAIN CONTENT -->
 
+
+    <script src="app/scripts/login/services/login.service.js"></script>
+    <script src="app/scripts/login/controllers/login.controller.js"></script>
+    <script src="app/scripts/login/controllers/forgotPassword.controller.js"></script>
+
+    <script src="app/scripts/resetPassword/controllers/resetPassword.controller.js"></script>
+
+    <script src="app/scripts/common/header/controllers/header.controller.js"></script> 
+
+    <script src="app/scripts/changePassword/controllers/changePassword.controller.js"></script> 
+
     <script src="app/scripts/common/services/imageUpload.service.js"></script>
     <script src="app/scripts/common/services/local.storage.js"></script>
+    <script src="app/scripts/common/services/authentication.service.js"></script>
 
     <script src="app/scripts/common/directives/map.directive.js"></script>
     <script src="app/scripts/common/directives/compareTo.directive.js"></script>
+    <script src="app/scripts/common/directives/passwordMatch.directive.js"></script>
 
     <script src="app/scripts/category/services/category.service.js"></script>
     <script src="app/scripts/category/controllers/category.controller.js"></script>
