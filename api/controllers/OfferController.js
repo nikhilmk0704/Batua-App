@@ -7,6 +7,8 @@
 
  'use strict';
 
+var error=require('../errors/error.js');
+
  module.exports = {
 
     create: function(req, res) {
@@ -17,9 +19,9 @@
 
         offerService.save(params, function(err, result) {
             if (err) {
-                return res.badRequest(err);
+                return res.badRequest(error.send(err));
             }else if(_.isEmpty(result)){
-                return res.notFound("Does not exist");
+                return res.notFound(error.send("Does not exist"));
             }
             else {
                 return res.json(201,result);
@@ -43,9 +45,9 @@
             params.where.id = id;
             offerService.find(params, function(err, result) {
                 if (err) {
-                    return res.badRequest(err);
+                    return res.badRequest(error.send(err));
                 } else if(_.isEmpty(result)){
-                    return res.notFound("Does not exist");
+                    return res.notFound(error.send("Does not exist"));
                 } else {
                     return res.json(200, result);
                 }
@@ -54,11 +56,11 @@
             offerService.findAll(params, function(err, result) {
                 if (err) {
 
-                    return res.badRequest(err);
+                    return res.badRequest(error.send(err));
 
                 } else if(_.isEmpty(result)){
 
-                    return res.notFound("Does not exist");
+                    return res.notFound(error.send("Does not exist"));
 
                 } else {
 
@@ -79,11 +81,11 @@
         offerService.updateAndFind(params, function(err, result) {
             if (err) {
                 
-                return res.badRequest(err);
+                return res.badRequest(error.send(err));
             
             } else if(_.isEmpty(result)){
                 
-                return res.notFound("Does not exist");
+                return res.notFound(error.send("Does not exist"));
             
             }
             else {
@@ -102,11 +104,11 @@
         offerService.statusUpdateAndFind(params, function(err, result) {
             if (err) {
                 
-                return res.badRequest(err);
+                return res.badRequest(error.send(err));
             
             } else if(_.isEmpty(result)){
 
-                return res.notFound("Does not exist");
+                return res.notFound(error.send("Does not exist"));
             
             }
             else {

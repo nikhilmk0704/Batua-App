@@ -7,6 +7,8 @@
 
 'use strict';
 
+var error=require('../errors/error.js');
+
 module.exports = {
 
     createUserByAdmin: function(req, res) {
@@ -19,7 +21,7 @@ module.exports = {
         var userService = new UserService();
         userService.createUserByAdmin(params, function(err, result) {
             if (err) {
-                return res.badRequest(userService.generateErrorMessage(err));
+                return res.badRequest(error.send(err));
             }
             return res.json(201, result);
         });
@@ -31,9 +33,9 @@ module.exports = {
         var userService = new UserService();
         userService.findUserByAdmin(params, function(err, result) {
             if (err)
-                return res.badRequest(userService.generateErrorMessage(err));
+                return res.badRequest(error.send(err));
             if (_.isEmpty(result))
-                return res.notFound(userService.generateErrorMessage("Does not exist"));
+                return res.notFound(error.send("Does not exist"));
             return res.json(200, result);
         })
     },
@@ -48,7 +50,7 @@ module.exports = {
         var userService = new UserService();
         userService.updateUserByAdmin(params, function(err, result) {
             if (err)
-                return res.badRequest(userService.generateErrorMessage(err));
+                return res.badRequest(error.send(err));
             return res.json(200, result);
         });
     },
@@ -60,7 +62,7 @@ module.exports = {
         var userService = new UserService();
         userService.setUserStatusByAdmin(params, function(err, result) {
             if (err)
-                return res.badRequest(userService.generateErrorMessage(err));
+                return res.badRequest(error.send(err));
             return res.json(200, result);
         });
     },
@@ -72,7 +74,7 @@ module.exports = {
         var userService = new UserService();
         userService.adminLogin(params, function(err, result) {
             if (err)
-                return res.badRequest(userService.generateErrorMessage(err));
+                return res.badRequest(error.send(err));
             return res.json(200, result);
         });
     },
@@ -83,7 +85,7 @@ module.exports = {
         var userService = new UserService();
         userService.adminLogout(params, function(err, result) {
             if (err)
-                return res.badRequest(userService.generateErrorMessage(err));
+                return res.badRequest(error.send(err));
             return res.json(200, result);
         });
     },
@@ -94,7 +96,7 @@ module.exports = {
         var userService = new UserService();
         userService.adminForgotPassword(params, function(err, result) {
             if (err)
-                return res.badRequest(userService.generateErrorMessage(err));
+                return res.badRequest(error.send(err));
             return res.json(200, result);
         });
     },
@@ -107,10 +109,23 @@ module.exports = {
         var userService = new UserService();
         userService.adminResetPassword(params, function(err, result) {
             if (err)
-                return res.badRequest(userService.generateErrorMessage(err));
+                return res.badRequest(error.send(err));
             return res.json(200, result);
         });
     },
+
+    adminChangePassword:function(req,res){
+        var params={};
+        params.userId=req.body.userId;
+        params.currentPassword=req.body.currentPassword;
+        params.newPassword=req.body.newPassword;
+        var userService = new UserService();
+        userService.adminChangePassword(params, function(err, result) {
+            if (err)
+                return res.badRequest(error.send(err));
+            return res.json(200, result);
+        });
+    }, 
 
     getProfile: function(req, res) {
         var params = {};
@@ -119,7 +134,7 @@ module.exports = {
         var userService = new UserService();
         userService.getProfile(params, function(err, result) {
             if (err)
-                return res.badRequest(userService.generateErrorMessage(err));
+                return res.badRequest(error.send(err));
             return res.json(200, result);
         })
     },
@@ -135,7 +150,7 @@ module.exports = {
         var userService = new UserService();
         userService.updateSalesAgentProfile(params, function(err, result) {
             if (err)
-                return res.badRequest(userService.generateErrorMessage(err));
+                return res.badRequest(error.send(err));
             return res.json(200, result);
         });
     },
@@ -148,7 +163,7 @@ module.exports = {
         var userService = new UserService();
         userService.salesAgentVerifyOtp(params, function(err, result) {
             if (err)
-                return res.badRequest(userService.generateErrorMessage(err));
+                return res.badRequest(error.send(err));
             return res.json(200, result);
         });
     },
@@ -160,7 +175,7 @@ module.exports = {
         var userService = new UserService();
         userService.salesAgentResetPassword(params, function(err, result) {
             if (err)
-                return res.badRequest(userService.generateErrorMessage(err));
+                return res.badRequest(error.send(err));
             return res.json(200, result);
         });
     },
@@ -173,7 +188,7 @@ module.exports = {
         var userService = new UserService();
         userService.salesAgentLogout(params, function(err, result) {
             if (err)
-                return res.badRequest(userService.generateErrorMessage(err));
+                return res.badRequest(error.send(err));
             return res.json(200, result);
         });
     },
@@ -185,7 +200,7 @@ module.exports = {
         var userService = new UserService();
         userService.salesAgentNormalLogin(params, function(err, result) {
             if (err)
-                return res.badRequest(userService.generateErrorMessage(err));
+                return res.badRequest(error.send(err));
             return res.json(200, result);
         });
     },
@@ -197,7 +212,7 @@ module.exports = {
         var userService = new UserService();
         userService.salesAgentSocialLogin(params, function(err, result) {
             if (err)
-                return res.badRequest(userService.generateErrorMessage(err));
+                return res.badRequest(error.send(err));
             return res.json(200, result);
         });
     },
@@ -211,7 +226,32 @@ module.exports = {
         var userService = new UserService();
         userService.validateAndUpdateUserProfile(params, function(err, result) {
             if (err)
-                return res.badRequest(userService.generateErrorMessage(err));
+                return res.badRequest(error.send(err));
+            return res.json(200, result);
+        });
+    },
+
+    updatePinStatus:function(req,res){
+        var params={};
+        params.userId=req.body.userId;
+        params.isPinActivated=req.body.isPinActivated;
+        var userService = new UserService();
+        userService.updatePinStatus(params,function(err,result){
+            if (err)
+                return res.badRequest(error.send(err));
+            return res.json(200, result);
+        });
+    },
+
+    resetPin:function(req,res){
+        var params={};
+        params.userId=req.body.userId;
+        params.currentPin=req.body.currentPin;
+        params.newPin=req.body.newPin;
+        var userService = new UserService();
+        userService.resetPin(params,function(err,result){
+            if (err)
+                return res.badRequest(error.send(err));
             return res.json(200, result);
         });
     }

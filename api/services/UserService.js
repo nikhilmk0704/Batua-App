@@ -4,6 +4,7 @@ var UserRepository = require('../repositories/UserRepository.js');
 var token=require('rand-token');
 var md5 = require('md5');
 var fs = require('fs');
+var _=require('lodash');
 
 class UserService {
 
@@ -95,7 +96,7 @@ class UserService {
             newParams.userId=userData.id;
             var email=userData.email;
             var urlToken=result.token;
-            var passwordGenerationUrl="http://52.36.228.74:1337/api/"+ email + "/" + urlToken;
+            var passwordGenerationUrl="http://52.36.228.74:1337/resetpassword/"+ email + "/" + urlToken;
             userService.createUsersAccessToken(newParams,userData,passwordGenerationUrl,callback);
             return null;
         }).catch(function(exception){
@@ -208,6 +209,8 @@ class UserService {
             loggedinResult.id=result.id;
             loggedinResult.name=result.name;
             loggedinResult.email=result.email;
+            loggedinResult.profileImageUrl=result.profileImageUrl;
+            loggedinResult.phone=result.phone;
             loggedinResult.token=data.token;
             loggedinResult.userGroup=result.userGroups.name;
             return callback(null,loggedinResult);
@@ -234,7 +237,7 @@ class UserService {
         var userService = new UserService();
         var token=userService.generateToken();
         var email=params.email;
-        var passwordGenerationUrl="http://52.36.228.74:1337/api/"+ email + "/" + token;
+        var passwordGenerationUrl="http://52.36.228.74:1337/resetpassword/"+ email + "/" + token;
         Users.find({where:{email:email}}).then(function(result){
             if(result){
                 var userId=result.id;
@@ -320,6 +323,68 @@ class UserService {
             callback(exception);
         });
     }
+
+    adminChangePassword(params,callback){
+        var userService = new UserService();
+        var userId=params.userId;
+        var currentPassword=params.currentPassword;
+        var newPassword=params.newPassword;
+        if(!userId || !currentPassword || !newPassword)
+            return callback("User Id, Current Password And New Password Required");
+        if(userId && ((/\s/g.test(currentPassword)) || currentPassword.length<6))
+            return callback("Incorrect Current Password");
+        if(userId && (/\s/g.test(newPassword)))
+            return callback("Spaces are not Allowed");
+        if(userId && newPassword.length<6)
+            return callback("Minimum Password Length is 6");
+        if(userId && (currentPassword==newPassword))
+            return callback("Current Password And New Password should be different");
+        return userService.validatePassword(userId,currentPassword,newPassword,callback);
+    }
+
+    validatePassword(userId,currentPassword,newPassword,callback){
+        var userService = new UserService();
+        var findObject={};
+        findObject.where={};
+        findObject.where.id=userId;
+        findObject.include=userService.getIncludeModels();
+        Users.find(findObject).then(function(result){
+            if(!result){
+                callback("Incorrect User Id");
+                return null;
+            }
+            if(result.userGroups.name!=('Admin'||'Super Admin') || result.status!="Active"){
+                callback("Not an Active Admin");
+                return null;
+            }
+            if(result.password!=md5(currentPassword)){
+                callback("Incorrect Current Password");
+                return null;
+            }
+            if(result.password==md5(currentPassword)){
+                userService.setNewPassword(userId,newPassword,callback);
+                return null;
+            }
+            callback("Something Went Wrong");
+            return null;
+        }).catch(function(exception){
+            callback(exception);
+        });
+    }
+
+    setNewPassword(userId,newPassword,callback){
+        var updateObject={};
+        var whereObject={};
+        whereObject.where={};
+        whereObject.where.id=userId;
+        updateObject.password=md5(newPassword);
+        Users.update(updateObject,whereObject).then(function(result){
+            callback(null,{message:"Password Changed"});
+            return null;
+        }).catch(function(exception){
+            callback(exception);
+        });
+    }   
 
     getProfile(params,callback){
         var salesagentId=params.salesagentId;
@@ -680,20 +745,100 @@ class UserService {
         userRepository.updateAndFind(updateObject,whereObject,findObject,callback);
     }
 
-    generateErrorMessage(messageOrObject){
-        var messageObject={};
-        if(typeof messageOrObject == "string")
-            messageObject.message=messageOrObject;
-        else if(typeof messageOrObject == "object" && messageOrObject.errors)
-            messageObject.message=messageOrObject.errors[0].message;
-        else if(typeof messageOrObject=="object" && messageOrObject.message)
-            messageObject.message=(messageOrObject.message).split(":")[1];
-        var array=[];
-        array.push(messageObject);
-        var errorObject={};
-        errorObject.errors=array;
-        return errorObject;
+    updatePinStatus(params,callback){
+        var userService = new UserService();
+        var userId=params.userId;
+        var isPinActivated=params.isPinActivated;
+        if(!_.isBoolean(isPinActivated))
+            return callback("isPinActivated should be Boolean");
+        if(userId && !(isPinActivated==null || undefined))
+            return userService.updateUsersPinStatus(params,callback);
+        return callback("userId And isPinActivated Required");  
     }
+
+    updateUsersPinStatus(params,callback){
+        var userId=params.userId;
+        var isPinActivated=params.isPinActivated;
+        var userRepository=new UserRepository();
+        var updateObject={};
+        var whereObject={};
+        var findObject={};
+        whereObject.where={};
+        whereObject.where.id=userId;
+        findObject.where=whereObject.where;
+        findObject.attributes=['id','name','email','profileImageUrl','phone','isPinActivated'];
+        updateObject.isPinActivated=isPinActivated;
+        userRepository.updateAndFind(updateObject,whereObject,findObject,callback);
+    }
+
+    resetPin(params,callback){
+        var userService = new UserService();
+        var userId=params.userId;
+        var currentPin=params.currentPin;
+        var newPin=params.newPin;
+        if(!userId && !currentPin && newPin)
+            return callback("User Id, Current PIN And New PIN Required");
+        if(userId && !_.isInteger(currentPin))
+            return callback("Current PIN should be Integer");
+        if(userId && !_.isInteger(newPin))
+            return callback("New PIN should be Integer");
+        if(userId && !_.inRange(currentPin,1000,10000))
+            return callback("Incorrect Current PIN");
+        if(userId && !_.inRange(newPin,1000,10000))
+            return callback("New PIN should be 4 Digit Integer");
+        if(userId && (newPin==currentPin))
+            return callback("New PIN And Current PIN should be different");
+        return userService.validatePin(userId,currentPin,newPin,callback);
+    }
+
+    validatePin(userId,currentPin,newPin,callback){
+        var userService = new UserService();
+        var findObject={};
+        findObject.where={};
+        findObject.where.id=userId;
+        findObject.include=userService.getIncludeModels();
+        Users.find(findObject).then(function(result){
+            if(!result){
+                callback("Incorrect User Id");
+                return null;
+            }
+            if(result.userGroups.name!='User' || result.status!="Active"){
+                callback("Not an Active User");
+                return null;
+            }
+            if(!result.isPinActivated){
+                callback("Please Enable PIN Settings");
+                return null;
+            }
+            if(currentPin!=result.pin){
+                callback("Incorrect Current PIN");
+                return null;
+            }
+            if(currentPin==result.pin){
+                userService.updatePin(userId,newPin,callback);
+                return null;
+            }
+            callback("Something Went Wrong");
+            return null;
+        }).catch(function(exception){
+            callback(exception);
+        });
+    }
+
+    updatePin(userId,newPin,callback){
+        var updateObject={};
+        var whereObject={};
+        whereObject.where={};
+        whereObject.where.id=userId;
+        updateObject.pin=newPin;
+        Users.update(updateObject,whereObject).then(function(result){
+            callback(null,{message:"PIN Reset"});
+            return null;
+        }).catch(function(exception){
+            callback(exception);
+        });
+    }
+
 }
 
 module.exports = UserService;
