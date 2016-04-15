@@ -135,6 +135,8 @@ module.exports = {
         userService.getProfile(params, function(err, result) {
             if (err)
                 return res.badRequest(error.send(err));
+            if (_.isEmpty(result))
+                return res.notFound(error.send("Does not exist"));
             return res.json(200, result);
         })
     },
