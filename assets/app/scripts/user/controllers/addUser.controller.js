@@ -3,6 +3,7 @@ angular.module('app').controller('addUserController', ['$state', '$scope', '$tim
     function($state, $scope, $timeout, userService, toastr, imageUpload, userGroups) {
 
         var vm = this;
+        vm.addUserData = {};
         vm.userGroups = userGroups;
 
         vm.addUser = function(user) {

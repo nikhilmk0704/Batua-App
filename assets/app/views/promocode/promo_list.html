@@ -51,7 +51,7 @@
                                 <tbody class="datatablecustom">
                                     <tr class="gradeX odd" role="row" ng-repeat="promocode in vm.promocodes">
                                         <td>{{promocode.promocode}}</td>
-                                        <td>{{promocode.merchants.name}}</td> <!-- get it confirm from backend-->
+                                        <td><span ng-repeat="merchant in promocode.merchants">{{merchant.name}}{{$last?' ': ', '}}</span></td> 
                                         <td>{{promocode.discountPercentage}}%</td>
                                         <td>{{promocode.maximumAmountLimit |currency : "₹ "}}</td>
                                         <td>{{promocode.validFrom |date : "mediumDate"}}</td>
