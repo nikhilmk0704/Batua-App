@@ -3,9 +3,9 @@
 
     angular.module('app').factory('loginService', loginService);
 
-    loginService.$inject = ['httpi', 'API'];
+    loginService.$inject = ['httpi', 'API', '$localStorage'];
 
-    function loginService(httpi, API) {
+    function loginService(httpi, API, $localStorage) {
 
         var service = {};
 
@@ -13,6 +13,8 @@
         service.forgetPassword = forgetPassword;
         service.resetPassword = resetPassword;
         service.changePassword = changePassword;
+        service.setUserDetails = setUserDetails;
+        service.getUserDetails = getUserDetails;
 
         return service;
 
@@ -24,9 +26,9 @@
                     email: user.email,
                     password: user.password
                 }
-            }).then(function (response) {
+            }).then(function(response) {
                 callback(response);
-            }, function (response) {
+            }, function(response) {
                 callback(response);
             });
         }
@@ -38,9 +40,9 @@
                 data: {
                     email: email
                 }
-            }).then(function (response) {
+            }).then(function(response) {
                 callback(response);
-            }, function (response) {
+            }, function(response) {
                 callback(response);
             });
         }
@@ -56,26 +58,35 @@
                 headers: {
                     'Access-Token': auth
                 }
-            }).then(function (response) {
+            }).then(function(response) {
                 callback(response);
-            }, function (response) {
+            }, function(response) {
                 callback(response);
             });
         }
 
-        function changePassword(oldPassword, newPassword, callback) {
+        function changePassword(userId, oldPassword, newPassword, callback) {
             httpi({
-                method: "post",
+                method: "put",
                 url: API.login,
                 data: {
+                    userId: userId,
                     password: newPassword,
                     oldPassword: oldPassword
                 }
-            }).then(function (response) {
+            }).then(function(response) {
                 callback(response);
-            }, function (response) {
+            }, function(response) {
                 callback(response);
             });
+        }
+
+        function setUserDetails(data) {
+            $localStorage.setObject("userData", data);
+        }
+
+        function getUserDetails() {
+            return $localStorage.getObject("userData");
         }
 
     }

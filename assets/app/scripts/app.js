@@ -13,7 +13,7 @@
         cfpLoadingBarProvider.includeSpinner = false;
 
         // For any unmatched url, redirect to /state1
-        $urlRouterProvider.otherwise("/categoryList");
+        $urlRouterProvider.otherwise("/login");
 
         // Now set up the states
         $stateProvider
@@ -97,6 +97,13 @@
             resolve: {
                 userGroups: ['userService', function(userService) {
                     return userService.getUserGroups();
+                }],
+                loggedInUser: ['loginService', 'authenticationService', function(loginService, authenticationService){
+                    if(loginService.getUserDetails().userGroup == 'Super Admin') {
+                        return loginService.getUserDetails().userGroup;
+                    }
+                    authenticationService.clearCredentials();
+                    return;
                 }]
             }
         })
@@ -105,14 +112,32 @@
             url: '/editUser/:userId',
             templateUrl: 'app/views/user/edit_user.html',
             controller: 'editUserController',
-            controllerAs: 'vm'
+            controllerAs: 'vm',
+            resolve: {
+                loggedInUser: ['loginService', 'authenticationService', function(loginService, authenticationService){
+                    if(loginService.getUserDetails().userGroup == 'Super Admin') {
+                        return loginService.getUserDetails().userGroup;
+                    }
+                    authenticationService.clearCredentials();
+                    return;
+                }]
+            }
         })
 
         .state('userList', {
             url: '/userList',
             templateUrl: 'app/views/user/user_list.html',
             controller: 'userController',
-            controllerAs: 'vm'
+            controllerAs: 'vm',
+            resolve: {
+                loggedInUser: ['loginService', 'authenticationService', function(loginService, authenticationService){
+                    if(loginService.getUserDetails().userGroup == 'Super Admin') {
+                        return loginService.getUserDetails().userGroup;
+                    }
+                    authenticationService.clearCredentials();
+                    return;
+                }]
+            }
         })
 
         .state('addOffer', {
@@ -180,17 +205,22 @@
 
     }
 
-    run.$inject = ['$rootScope', '$cookieStore', '$http', '$location', 'authenticationService', '$state'];
+    run.$inject = ['$rootScope', '$cookieStore', '$http', '$location', 'authenticationService', '$state', 'loginService'];
 
-    function run($rootScope, $cookieStore, $http, $location, authenticationService, $state) {
+    function run($rootScope, $cookieStore, $http, $location, authenticationService, $state, loginService) {
 
         // keep user logged in after page refresh
         $rootScope.globals = $cookieStore.get('globals') || {};
-        // if ($rootScope.globals.currentUser) {
-        //     $http.defaults.headers.common['accessToken'] = $rootScope.globals.currentUser.userData.accessToken;
-        // }
+        if ($rootScope.globals.currentUser) {
+            // $http.defaults.headers.common['accessToken'] = $rootScope.globals.currentUser.userData.accessToken;
+            // $http.defaults.headers.common['Cache-Control'] = 'no-cache';
+            // $http.defaults.headers.common['Pragma'] = 'no-cache';
+            $http.defaults.headers.common['content-type'] = 'application/json';
+        }
 
         $rootScope.$auth = authenticationService;
+
+        $rootScope.userGroup = loginService;
 
         $rootScope.$on('$locationChangeStart', function(event, next, current) {
             var restrictedRoutes = ['/login', '/forgetPassword'];
