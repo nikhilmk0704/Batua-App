@@ -1,14 +1,15 @@
 'use strict';
 
-angular.module('app').controller('changePasswordController', ['$state', 'loginService', 'toastr', 'authenticationService'
+angular.module('app').controller('changePasswordController', ['$state', 'loginService', 'toastr', 'authenticationService',
 
     function($state, loginService, toastr, authenticationService) {
 
         var vm = this;
+        vm.userId = loginService.getUserDetails().id;
 
         vm.changePassword = function(oldPassword, newPassword) {
 
-            loginService.changePassword(oldPassword, newPassword, function(response) {
+            loginService.changePassword(vm.userId, oldPassword, newPassword, function(response) {
                 if (response.status === 200) {
                     authenticationService.clearCredentials();
                     $state.go('login');

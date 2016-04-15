@@ -1,6 +1,6 @@
-angular.module('app').controller('editMerchantController', ['$state', 'merchantService', 'toastr', '$stateParams', 'categories', 'cities', 'imageUpload', '$scope', '$timeout',
+angular.module('app').controller('editMerchantController', ['$state', 'merchantService', 'toastr', '$stateParams', 'categories', 'cities', 'imageUpload', '$scope', '$timeout', 'loginService',
 
-    function($state, merchantService, toastr, $stateParams, categories, cities, imageUpload, $scope, $timeout) {
+    function($state, merchantService, toastr, $stateParams, categories, cities, imageUpload, $scope, $timeout, loginService) {
 
         var vm = this;
 
@@ -9,7 +9,7 @@ angular.module('app').controller('editMerchantController', ['$state', 'merchantS
         vm.cities = cities;
         vm.uploadedImages = [];
 
-        var adminId = 2; //adminId is static after login module make it dynamic
+        var adminId = loginService.getUserDetails().id;
 
         merchantService.getMerchantData(vm.merchantId, adminId, function(response) {
             if (response.status === 200) {

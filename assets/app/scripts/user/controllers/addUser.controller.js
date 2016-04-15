@@ -1,10 +1,11 @@
-angular.module('app').controller('addUserController', ['$state', '$scope', '$timeout', 'userService', 'toastr', 'imageUpload', 'userGroups',
+angular.module('app').controller('addUserController', ['$state', '$scope', '$timeout', 'userService', 'toastr', 'imageUpload', 'userGroups', 'loggedInUser',
 
-    function($state, $scope, $timeout, userService, toastr, imageUpload, userGroups) {
+    function($state, $scope, $timeout, userService, toastr, imageUpload, userGroups, loggedInUser) {
 
         var vm = this;
         vm.addUserData = {};
         vm.userGroups = userGroups;
+        vm.loggedInUser = loggedInUser;
 
         vm.addUser = function(user) {
 
