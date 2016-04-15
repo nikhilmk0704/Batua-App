@@ -1,10 +1,11 @@
-angular.module('app').controller('editUserController', ['$scope', '$state', '$timeout', '$stateParams', 'userService', 'toastr', 'imageUpload',
+angular.module('app').controller('editUserController', ['$scope', '$state', '$timeout', '$stateParams', 'userService', 'toastr', 'imageUpload', 'loggedInUser',
 
-    function($scope, $state, $timeout, $stateParams, userService, toastr, imageUpload) {
+    function($scope, $state, $timeout, $stateParams, userService, toastr, imageUpload, loggedInUser) {
 
         var vm = this;
 
         vm.userId = $stateParams.userId;
+        vm.loggedInUser = loggedInUser;
 
         userService.getUserData(vm.userId, function(response) {
             if (response.status === 200) {

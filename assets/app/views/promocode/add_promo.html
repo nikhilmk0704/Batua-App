@@ -102,7 +102,7 @@
                                         <input type="number" class="form-control input-circle" id="percentMerchant" name="percentMerchant" placeholder="Enter the cost bourne by Merchant" style="margin-bottom:15px;" required ng-model="promocodeData.percentageCostBourneByMerchant" compare-to="promocodeData.percentageCostBourneByBatua">
                                         <span class="help-block text-danger" ng-if="!addPromocodeForm.percentMerchant.$pristine && addPromocodeForm.percentMerchant.$invalid" ng-messages="addPromocodeForm.percentMerchant.$error">
                                         <span class="help-block text-danger" ng-if="addPromocodeForm.percentMerchant.$error.required" ng-message="required">Please enter a valid share bourne by merchant</span>
-                                        <span class="help-block text-danger" ng-if="addPromocodeForm.percentMerchant.$error" ng-message="compareTo">Percentage share between Batua and merchants cannot be more than 100%</span>
+                                        <span class="help-block text-danger" ng-if="addPromocodeForm.percentMerchant.$error" ng-message="compareTo">Sum of Percentage share between Batua and merchants should be 100%</span>
                                         </span>
                                     </div>
                                 </section>

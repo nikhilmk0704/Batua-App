@@ -1,29 +1,34 @@
-  angular.module('app').controller('loginController', ['loginService', 'toastr', '$state', 'authenticationService', function(loginService, toastr, $state, authenticationService) {
+  angular.module('app').controller('loginController', ['loginService', 'toastr', '$state', 'authenticationService',
 
-      var vm = this;
+      function(loginService, toastr, $state, authenticationService) {
 
-      vm.login = function(user) {
+          var vm = this;
 
-          loginService.login(user, function(response) {
-              if (response.status === 200) {
-                  authenticationService.setCredentials(response.data);
-                  // if () {
-                  //   $state.go('userList');
-                  // }
+          vm.login = function(user) {
 
-                  // if () {
-                  //   $state.go('merchantList');
-                  // }
-                  $state.go('merchantList');
-                  return toastr.success('You have successfully signed in!');
-              }
+              loginService.login(user, function(response) {
+                  if (response.status === 200) {
+                      authenticationService.setCredentials(response.data);
+                      if (response.data.userGroup == 'Super Admin') {
+                        $state.go('userList');
+                        // window.location.reload(true);
+                        return toastr.success('You have successfully signed in!');
+                      }
 
-              if (response.status === 400) {
-                  return toastr.error('The admin Credentials are incorrect. Please provide the correct email id / password');
-              }
-  
-              return toastr.error(response.data);
-          });
+                      if (response.data.userGroup == 'Admin') {
+                        $state.go('merchantList');
+                        // window.location.reload(true);
+                        return toastr.success('You have successfully signed in!');
+                      }
+                  }
+
+                  if (response.status === 400) {
+                      return toastr.error('The admin Credentials are incorrect. Please provide the correct email id / password');
+                  }
+
+                  return toastr.error(response.data);
+              });
+          }
+
       }
-
-  }]);
+  ]);

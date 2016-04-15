@@ -14,9 +14,9 @@
         .module('app')
         .factory('authenticationService', authenticationService);
 
-    authenticationService.$inject = ['$http', '$cookieStore', '$rootScope'];
+    authenticationService.$inject = ['$http', '$cookieStore', '$rootScope', 'loginService'];
 
-    function authenticationService($http, $cookieStore, $rootScope) {
+    function authenticationService($http, $cookieStore, $rootScope, loginService) {
 
         var service = {};
 
@@ -29,11 +29,11 @@
         function setCredentials(userData) {
             $rootScope.globals = {
                 currentUser: {
-                    userData: userData,
+                    accessToken: userData.token,
                 }
             };
-            // $localStorage.setObject('admin', userData);
-            // $http.defaults.headers.common['accessToken'] = userData.accessToken; // jshint ignore:line
+            loginService.setUserDetails(userData);
+            // $http.defaults.headers.common['Access-Token'] = userData.token; // jshint ignore:line
             $cookieStore.put('globals', $rootScope.globals);
         }
 

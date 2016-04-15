@@ -6,7 +6,7 @@
                 <div class="sidebar-toggler"> </div>
                 <!-- END SIDEBAR TOGGLER BUTTON -->
             </li>
-            <li class="nav-item start marginnav" style="padding-bottom:10px;">
+            <li class="nav-item start marginnav" style="padding-bottom:10px;" ng-show="userGroup.getUserDetails().userGroup == 'Super Admin'">
                 <a class="nav-link nav-toggle" ui-sref="userList" ui-sref-active="userList">
                     <i class="fa fa-user"></i>
                     <span class="title">User</span>

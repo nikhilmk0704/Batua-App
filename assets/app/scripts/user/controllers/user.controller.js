@@ -1,6 +1,7 @@
-angular.module('app').controller('userController', ['$state', 'userService', 'toastr', function($state, userService, toastr) {
+angular.module('app').controller('userController', ['$state', 'userService', 'toastr', 'loggedInUser', function($state, userService, toastr, loggedInUser) {
 
     var vm = this;
+    vm.loggedInUser = loggedInUser;
 
     userService.getUserList(function(response) {
         if (response.status === 200) {
@@ -24,7 +25,5 @@ angular.module('app').controller('userController', ['$state', 'userService', 'to
             return toastr.error(response.data);
         });
     };
-
-
 
 }]);
