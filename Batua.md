@@ -225,8 +225,40 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 
 + Response 200 (application/json)
  
+            {
+                "message": "Password reset"
+            }
+ 
 + Response 400 (application/json)
 
+
+### Admin Change Password [PUT /api/admin/user/changepassword]
+
++ Request  (application/json)
+            
+    + Body
+
+            {
+                "userId":1,
+                "currentPassword":"1234567",
+                "newPassword":"123456"
+            }
+
++ Response 200 (application/json)
+            
+            {
+                "message": "Password Changed"
+            }
+            
++ Response 400 (application/json)
+
+            {
+                "errors":[
+                    {
+                        "message": "Minimum Password Length is 6"
+                    }
+                ]
+            }
 
 ## Sales Agent API [/api/salesagent/]
 
@@ -373,6 +405,8 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
                 "name": "Kajal Anant Jadhav",
                 "email": "kajal.jadhav@tecsolsoftware.com",
                 "token": "092slrhat8grS6hoE4DkhpvP",
+                "profileImageUrl": "https://batua-test.s3.amazonaws.com/7512d4e3-3731-4699-a3fb-d60ee215fc6a.jpg",
+                "phone": 9345246567,
                 "userGroup": "Field Sales Agent"
             }
 
@@ -405,7 +439,9 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
                 "name": "Kajal Anant Jadhav",
                 "email": "kajal.jadhav@tecsolsoftware.com",
                 "token": "092slrhat8grS6hoE4DkhpvP",
-                "userGroup": "Field Sales Agent"
+                "userGroup": "Field Sales Agent",
+                "profileImageUrl": "https://batua-test.s3.amazonaws.com/7512d4e3-3731-4699-a3fb-d60ee215fc6a.jpg",
+                "phone": 9345246567,
             }
 
 + Response 400 (applicaiton)
@@ -472,6 +508,70 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
                 ]
             }
 
+
+### Update PIN Status [PUT /api/user/pin/status]
+
++ Request (application/json)
+
+    + Body
+    
+            {
+                "userId":1,
+                "isPinActivated":true
+            }
+            
+        
++ Response 200 (application/json)
+
+        {
+            "id": 1,
+            "name": "vikash singh",
+            "email": "vikash.baghel@tecsolsoftware.com",
+            "profileImageUrl": "https://batua-test.s3.amazonaws.com/1d44bf1e-b507-43cd-8515-4f5211135373.jpg",
+            "phone": 9479897807,
+            "isPinActivated": true
+        }
+            
++ Response 400 (application/json)
+    
+            {
+                "errors":[
+                    {
+                        "message": "isPinActivated should be Boolean"
+                    }
+                ]
+            }
+            
+
+### Reset PIN [PUT /api/user/pin/reset]
+
++ Request (application/json)
+
+    + Body
+    
+            {
+                "userId":3,
+                "currentPin":4321,
+                "newPin":1234
+            }
+            
+        
++ Response 200 (application/json)
+
+        {
+            "message":"PIN Reset"
+        }
+            
++ Response 400 (application/json)
+    
+            {
+                "errors":[
+                    {
+                        "message": "New PIN should be 4 Digit Integer"
+                    }
+                ]
+            }
+            
 
 ## Upload Image [/api/image/upload]
 
