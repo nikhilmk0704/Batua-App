@@ -11,6 +11,8 @@ var error=require('../errors/error.js');
 
 module.exports = {
 
+    /********************* Admin API ************************/
+
     createUserByAdmin: function(req, res) {
         var params = {};
         params.name = req.body.name;
@@ -127,6 +129,8 @@ module.exports = {
         });
     }, 
 
+    /********************* Field Sales Agent API ************************/
+
     getProfile: function(req, res) {
         var params = {};
         params.salesagentId = req.param('salesagentId');
@@ -165,7 +169,7 @@ module.exports = {
         var userService = new UserService();
         userService.salesAgentVerifyOtp(params, function(err, result) {
             if (err)
-                return res.badRequest(error.send(err));
+                return res.json(401,error.send(err));
             return res.json(200, result);
         });
     },
@@ -176,6 +180,17 @@ module.exports = {
         params.password = req.body.password;
         var userService = new UserService();
         userService.salesAgentResetPassword(params, function(err, result) {
+            if (err)
+                return res.badRequest(error.send(err));
+            return res.json(200, result);
+        });
+    },
+
+    salesAgentForgotPassword: function(req, res) {
+        var params = {};
+        params.phone = req.body.phone;
+        var userService = new UserService();
+        userService.salesAgentForgotPassword(params, function(err, result) {
             if (err)
                 return res.badRequest(error.send(err));
             return res.json(200, result);
@@ -202,7 +217,7 @@ module.exports = {
         var userService = new UserService();
         userService.salesAgentNormalLogin(params, function(err, result) {
             if (err)
-                return res.badRequest(error.send(err));
+                return res.json(401,error.send(err));
             return res.json(200, result);
         });
     },
@@ -214,10 +229,12 @@ module.exports = {
         var userService = new UserService();
         userService.salesAgentSocialLogin(params, function(err, result) {
             if (err)
-                return res.badRequest(error.send(err));
+                return res.json(401,error.send(err));
             return res.json(200, result);
         });
     },
+
+    /********************* User API ************************/
 
     updateUserProfile: function(req, res) {
         var params = {};
@@ -256,6 +273,95 @@ module.exports = {
                 return res.badRequest(error.send(err));
             return res.json(200, result);
         });
-    }
+    },
+
+    normalSignup:function(req,res){
+        var params={};
+        params.phone=req.body.phone;
+        params.email=req.body.email;
+        params.password=req.body.password;
+        var userService = new UserService();
+        userService.normalSignup(params,function(err,result){
+            if (err)
+                return res.badRequest(error.send(err));
+            return res.json(201, result);
+        });
+    },
+
+    verifyOtpForSignup:function(req,res){
+        var params={};
+        params.phone=req.body.phone;
+        params.otp=req.body.otp;
+        var userService = new UserService();
+        userService.verifyOtpForSignup(params,function(err,result){
+            if (err)
+                return res.json(401,error.send(err));
+            return res.json(200, result);
+        });
+    },
+
+    socialSignup:function(req,res){
+        var params={};
+        params.name=req.body.name;
+        params.email=req.body.email;
+        params.googleId=req.body.googleId;
+        params.facebookId=req.body.facebookId;
+        var userService = new UserService();
+        userService.socialSignup(params,function(err,result){
+            if (err)
+                return res.badRequest(error.send(err));
+            return res.json(201, result);
+        });
+    },
+
+    sendOtpForSignup:function(req,res){
+        var params={};
+        params.phone=req.body.phone;
+        params.userId=req.body.userId;
+        var userService = new UserService();
+        userService.sendOtpForSignup(params,function(err,result){
+            if(err)
+                return res.badRequest(error.send(err));
+            return res.json(200,result);
+        });
+    },
+
+    normalLogin:function(req,res){
+        var params={};
+        params.email=req.body.email;
+        params.password=req.body.password;
+        var userService = new UserService();
+        userService.normalLogin(params,function(err,result){
+            if(err)
+                return res.json(401,error.send(err));
+            return res.json(200,result);
+        });
+    },
+
+    socialLogin:function(req,res){
+        var params={};
+        params.email=req.body.email;
+        params.googleId=req.body.googleId;
+        params.facebookId=req.body.facebookId;
+        var userService = new UserService();
+        userService.socialLogin(params,function(err,result){
+            if(err)
+                return res.json(401,error.send(err));
+            return res.json(200,result);
+        });
+    },
+
+    logout: function(req, res) {
+        var params = {};
+        params.token = req.headers['access-token'];
+        params.deviceId = req.body.deviceId;
+        params.userId = req.body.userId;
+        var userService = new UserService();
+        userService.logout(params, function(err, result) {
+            if (err)
+                return res.badRequest(error.send(err));
+            return res.json(200, result);
+        });
+    },
 
 };
