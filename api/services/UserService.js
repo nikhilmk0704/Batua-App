@@ -192,8 +192,10 @@ class UserService {
         var token = userService.generateToken();
         var createObject={};
         createObject.token=token;
-        createObject.deviceId=null;
-        createObject.deviceType=null;
+        var deviceId=params.deviceId;
+        var deviceType=params.deviceType;
+        createObject.deviceId=(deviceId)?(deviceId):(null);
+        createObject.deviceType=(deviceType)?(deviceType):(null);
         AccessTokens.create(createObject).then(function(data){
             userService.createUsersAccessTokensLogin(result,data,callback);
             return null;
@@ -465,7 +467,10 @@ class UserService {
     }
 
     generateOtp() {
-        return token.generate(6,'0123456789');
+        var otp=token.generate(6,'0123456789');
+        if(otp<100000)
+            return otp+100000;
+        return otp;
     }
 
     salesAgentForgotPassword(params,callback){
@@ -962,11 +967,12 @@ class UserService {
         findObject.where.$and.phone=phone;
         findObject.where.$and.status='Drafted';
         findObject.include=userService.getIncludeModels();
-        userService.validateOtpVerification(findObject,callback);
+        userService.validateOtpVerification(params,findObject,callback);
     }
 
-    validateOtpVerification(findObject,callback){
+    validateOtpVerification(params,findObject,callback){
         var userService = new UserService();
+        var otp=params.otp;
         Users.find(findObject).then(function(result){
             if(!result)
                 return callback("Incorrect Phone");
@@ -987,6 +993,8 @@ class UserService {
         whereObject.where={};
         whereObject.where.id=userId;
         updateObject.otp=null;
+        updateObject.status='Active';
+        updateObject.isPhoneVerified=true;
         Users.update(updateObject,whereObject);
     }
 
