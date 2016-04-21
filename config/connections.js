@@ -121,4 +121,8 @@ module.exports.connections = {
             "region":"us-east-1"
         },
 
+    sms:{
+            key:"2yDNx1TIeqmsh8AAUtU3xe90WKSGp18p7yejsnWPdImffvhtCT"
+    }
+
 };

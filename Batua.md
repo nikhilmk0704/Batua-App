@@ -7,6 +7,106 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 
 ## Admin API [/api/admin/]
 
+### Admin Login [POST /api/admin/user/login]
+
++ Request (application/json)
+            
+    + Body
+
+            {
+                "email":"aditya@tecsolsoftware.com",
+                "password":"123456"
+            }
+        
++ Response 200 (application/json)
+
+            {
+                "id": 7,
+                "name": "Aditya",
+                "email": "aditya@tecsolsoftware.com",
+                "token": "0922QvJiT8DkZDtVuwrs6SoZ",
+                "userGroup":"Admin"
+            }
+
++ Response 400 (applicaiton)
+
+
+### Admin Forgot Password [PUT /api/admin/user/forgotpassword]
+    
++ Request  (application/json)
+
+    + Body
+
+            {
+                "email": "username@domain.com"
+            }
+
++ Response 200 (application/json)
+    
+    + Body
+    
+            {
+                "message": "Email sent"
+            }
+            
++ Response 400 (application/json)
+
++ Response 404 (application/json)
+
+
+### Admin Reset Password [PUT /api/admin/user/resetpassword]
+
++ Request  (application/json)
+
+    + Headers
+        
+            Access-Token: "092B7NhDGwEwjf77xjaFJgeP"
+            
+    + Body
+
+            {
+                  "email":"vikash.baghel@tecsolsoftware.com",
+                  "password":"123456"
+            }
+
++ Response 200 (application/json)
+ 
+            {
+                "message": "Password reset"
+            }
+ 
++ Response 400 (application/json)
+
+
+### Admin Change Password [PUT /api/admin/user/changepassword]
+
++ Request  (application/json)
+            
+    + Body
+
+            {
+                "userId":1,
+                "currentPassword":"1234567",
+                "newPassword":"123456"
+            }
+
++ Response 200 (application/json)
+            
+            {
+                "message": "Password Changed"
+            }
+            
++ Response 400 (application/json)
+
+            {
+                "errors":[
+                    {
+                        "message": "Minimum Password Length is 6"
+                    }
+                ]
+            }
+
+
 ### Create New User [POST /api/admin/user]
 
 + Request (application/json)
@@ -113,7 +213,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
                     ]
         }        
 
-### Active/Suspend User [PUT /api/admin/user/setstatus]
+### Activate/Suspend User [PUT /api/admin/user/setstatus]
 
 + Request (application/json)
 
@@ -142,30 +242,6 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 400 (applicaiton)
 
 
-### Admin Login [POST /api/admin/user/login]
-
-+ Request (application/json)
-            
-    + Body
-
-            {
-                "email":"aditya@tecsolsoftware.com",
-                "password":"123456"
-            }
-        
-+ Response 200 (application/json)
-
-            {
-                "id": 7,
-                "name": "Aditya",
-                "email": "aditya@tecsolsoftware.com",
-                "token": "0922QvJiT8DkZDtVuwrs6SoZ",
-                "userGroup":"Admin"
-            }
-
-+ Response 400 (applicaiton)
-
-
 ### Admin Logout [PUT /api/admin/user/logout]
 
 + Request (application/json)
@@ -185,105 +261,86 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 400 (applicaiton)
 
 
-### Admin Forgot Password [PUT /api/admin/user/forgotpassword]
-    
-+ Request  (application/json)
-
-    + Body
-
-            {
-                "email": "username@domain.com"
-            }
-
-+ Response 200 (application/json)
-    
-    + Body
-    
-            {
-                "message": "Email sent"
-            }
-            
-+ Response 400 (application/json)
-
-+ Response 404 (application/json)
-
-
-### Admin Reset Password [PUT /api/admin/user/resetpassword]
-
-+ Request  (application/json)
-
-    + Headers
-        
-            Access-Token: "092B7NhDGwEwjf77xjaFJgeP"
-            
-    + Body
-
-            {
-                  "email":"vikash.baghel@tecsolsoftware.com",
-                  "password":"123456"
-            }
-
-+ Response 200 (application/json)
- 
-+ Response 400 (application/json)
-
-
 ## Sales Agent API [/api/salesagent/]
 
-### Get Salesagent Profile [GET /api/salesagent/{salesagentId}/profile]
-    
-+ Response 200 (application/json)
-
-    + Body 
-        
-            {
-                "id": 14,
-                "name": "vikash",
-                "profileImageUrl": "url",
-                "email": "vikash.baghel@tecsolsoftware.com"
-            }
-
-+ Response 400 (application/json)
-
-
-### Update Salesagent Profile [PUT /api/salesagent/{:salesagentId}/profile]
+### Sales Agent Normal Login [POST /api/salesagent/normal/login]
 
 + Request (application/json)
-
-    + Body
     
+    + Body
+
             {
-                "id":14,
-                "name":"vikash singh",
-                "profileImageUrl":"https://batua-test.s3.amazonaws.com/1d44bf1e-b507-43cd-8515-4f5211135373.jpg",
-                "currentPassword":"1234567",
-                "newPassword":"123456"
+                "password":"123456",
+                "email":"kajal.jadhav@tecsolsoftware.com",
+                "deviceId":"device1"
             }
-            
         
 + Response 200 (application/json)
 
             {
-                "id": 14,
-                "name": "vikash singh",
-                "email": "vikash.baghel@tecsolsoftware.com",
-                "profileImageUrl": "https://batua-test.s3.amazonaws.com/1d44bf1e-b507-43cd-8515-4f5211135373.jpg",
-                "phone": 123457856
+                "id": 3,
+                "name": "Kajal Anant Jadhav",
+                "email": "kajal.jadhav@tecsolsoftware.com",
+                "token": "092slrhat8grS6hoE4DkhpvP",
+                "profileImageUrl": "https://batua-test.s3.amazonaws.com/7512d4e3-3731-4699-a3fb-d60ee215fc6a.jpg",
+                "phone": 9345246567,
+                "userGroup": "Field Sales Agent"
             }
 
-+ Response 400 (application/json)
++ Response 401 (applicaiton)
+
+            {
+                "errors":[
+                    {
+                        "message": "Incorrect Password"
+                    }
+                ]
+            }
 
 
-### Sales Agent OTP Verification [PUT /api/salesagent/verifyotp]
+### Sales Agent Social Login [POST /api/salesagent/social/login]
+
++ Request (application/json)
+    
+    + Body
+
+            {
+                "googleId":"123456",
+                "email":"kajal.jadhav@tecsolsoftware.com",
+                "deviceId":"device1"
+            }
+        
++ Response 200 (application/json)
+
+            {
+                "id": 3,
+                "name": "Kajal Anant Jadhav",
+                "email": "kajal.jadhav@tecsolsoftware.com",
+                "token": "092slrhat8grS6hoE4DkhpvP",
+                "userGroup": "Field Sales Agent",
+                "profileImageUrl": "https://batua-test.s3.amazonaws.com/7512d4e3-3731-4699-a3fb-d60ee215fc6a.jpg",
+                "phone": 9345246567,
+            }
+
++ Response 401 (applicaiton)
+
+            {
+                "errors":[
+                    {
+                        "message": "Incorrect Email"
+                    }
+                ]
+            }
+            
+
+### Sales Agent Forgot Password/Resend OTP [PUT /api/salesagent/forgotpassword]
 
 + Request  (application/json)
 
     + Body
 
             {
-                "otp": 123456,
-                "phone":123457856,
-                "deviceId":"device1"
+                "phone":"9479897807"
             }
 
 + Response 200 (application/json)
@@ -291,13 +348,23 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
     + Body
             
             {
-                "userId": 14
+                "message": "OTP Sent"
             }
 
 + Response 400 (application/json)
 
+    + Body
+    
+            {
+                "errors":[
+                    {
+                        "message": "Incorrect Phone"
+                    }
+                ]
+            }
 
-### Sales Agent Password Reset [PUT /api/salesagent/resetpassword]
+
+### Sales Agent Reset Password [PUT /api/salesagent/resetpassword]
 
 + Request  (application/json)
 
@@ -323,10 +390,77 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
             {
                 "errors":[
                     {
-                        "message": "New password and confirm password should be same"
+                        "message": "Incorrect Password"
                     }
                 ]
             }
+
+
+### Sales Agent OTP Verification [PUT /api/salesagent/verifyotp]
+
++ Request  (application/json)
+
+    + Body
+
+            {
+                "otp": 123456,
+                "phone":123457856,
+                "deviceId":"device1"
+            }
+
++ Response 200 (application/json)
+
+    + Body
+            
+            {
+                "userId": 14
+            }
+
++ Response 401 (application/json)
+
+
+### Salesagent Get Profile [GET /api/salesagent/{salesagentId}/profile]
+    
++ Response 200 (application/json)
+
+    + Body 
+        
+            {
+                "id": 14,
+                "name": "vikash",
+                "profileImageUrl": "url",
+                "email": "vikash.baghel@tecsolsoftware.com"
+            }
+
++ Response 400 (application/json)
+
+
+### Salesagent Update Profile [PUT /api/salesagent/{:salesagentId}/profile]
+
++ Request (application/json)
+
+    + Body
+    
+            {
+                "id":14,
+                "name":"vikash singh",
+                "profileImageUrl":"https://batua-test.s3.amazonaws.com/1d44bf1e-b507-43cd-8515-4f5211135373.jpg",
+                "currentPassword":"1234567",
+                "newPassword":"123456"
+            }
+            
+        
++ Response 200 (application/json)
+
+            {
+                "id": 14,
+                "name": "vikash singh",
+                "email": "vikash.baghel@tecsolsoftware.com",
+                "profileImageUrl": "https://batua-test.s3.amazonaws.com/1d44bf1e-b507-43cd-8515-4f5211135373.jpg",
+                "phone": 123457856
+            }
+
++ Response 400 (application/json)
 
 
 ### Sales Agent Logout [PUT /api/salesagent/logout]
@@ -355,71 +489,203 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 400 (application/json)
 
 
-### Sales Agent Normal Login [POST /api/salesagent/normal/login]
-
-+ Request (application/json)
-    
-    + Body
-
-            {
-                "password":"123456",
-                "email":"kajal.jadhav@tecsolsoftware.com"
-            }
-        
-+ Response 200 (application/json)
-
-            {
-                "id": 3,
-                "name": "Kajal Anant Jadhav",
-                "email": "kajal.jadhav@tecsolsoftware.com",
-                "token": "092slrhat8grS6hoE4DkhpvP",
-                "userGroup": "Field Sales Agent"
-            }
-
-+ Response 400 (applicaiton)
-
-            {
-                "errors":[
-                    {
-                        "message": "Incorrect Password"
-                    }
-                ]
-            }
-
-
-### Sales Agent Social Login [POST /api/salesagent/social/login]
-
-+ Request (application/json)
-    
-    + Body
-
-            {
-                "password":"123456",
-                "email":"kajal.jadhav@tecsolsoftware.com"
-            }
-        
-+ Response 200 (application/json)
-
-            {
-                "id": 3,
-                "name": "Kajal Anant Jadhav",
-                "email": "kajal.jadhav@tecsolsoftware.com",
-                "token": "092slrhat8grS6hoE4DkhpvP",
-                "userGroup": "Field Sales Agent"
-            }
-
-+ Response 400 (applicaiton)
-
-            {
-                "errors":[
-                    {
-                        "message": "Incorrect Password"
-                    }
-                ]
-            }
-            
-            
 ## User API [/api/user/]
+
+### Normal Signup [POST /api/user/normal/signup]
+
++ Request (application/json)
+
+    + Body
+    
+            {
+                "phone":9876543211,
+                "email":"abc@abc.com",
+                "password":"123456"
+            }
+            
+        
++ Response 201 (application/json)
+
+            {
+                "message":"Registered Successfuly.Please verify phone and Signin."
+            }
+            
++ Response 400 (application/json)
+    
+            {
+                "errors":[
+                    {
+                        "message": "Already Registered"
+                    }
+                ]
+            }
+
+
+### Social Signup [POST /api/user/social/signup]
+
++ Request (application/json)
+
+    + Body
+    
+            {
+                "email":"abcaa@abc.com",
+                "name":"vikash",
+                "googleId":"1234567"
+            }
+            
+        
++ Response 201 (application/json)
+
+            {
+                "userId": 29
+            }
+            
++ Response 400 (application/json)
+    
+            {
+                "errors":[
+                    {
+                        "message": "Invalid Email"
+                    }
+                ]
+            }
+
+
+### Send OTP after Signup [PUT /api/user/signup/sendotp]
+
++ Request (application/json)
+
+    + Body
+    
+            {
+                "userId":28,
+                "phone":9479897802
+            }
+            
+        
++ Response 200 (application/json)
+
+            {
+                "message": "OTP Sent"
+            }
+            
++ Response 400 (application/json)
+    
+            {
+                "errors":[
+                    {
+                        "message": "Phone is already Registered"
+                    }
+                ]
+            }
+
+
+### OTP Verification after Signup [PUT /api/user/signup/verifyotp]
+
++ Request (application/json)
+
+    + Body
+    
+            {
+                "otp":442586,
+                "phone":9479897802
+            }
+            
+        
++ Response 200 (application/json)
+
+            {
+                "id": 28,
+                "name": null,
+                "email": "abca@abc.com",
+                "profileImageUrl": null,
+                "phone": 9479897802,
+                "token": "093eGGfnGDvtstZ3juHxgeBH",
+                "userGroup": "User"
+            }
+            
++ Response 401 (application/json)
+    
+            {
+                "errors":[
+                    {
+                        "message": "Incorrect OTP"
+                    }
+                ]
+            }
+
+
+### Normal Login [POST /api/user/normal/login]
+
++ Request (application/json)
+
+    + Body
+    
+            {
+                "email":"abc@abc.com",
+                "password":"123456",
+                "deviceId":"device1"
+            }
+            
+        
++ Response 200 (application/json)
+
+            {
+                "id": 27,
+                "name": null,
+                "email": "abc@abc.com",
+                "profileImageUrl": null,
+                "phone": 9876543211,
+                "token": "093eJJO6uGSpP5bp0vuAR4vR",
+                "userGroup": "User"
+            }
+            
++ Response 401 (application/json)
+    
+            {
+                "errors":[
+                    {
+                        "message": "Incorrect Credentials"
+                    }
+                ]
+            }
+
+
+### Social Login [POST /api/user/social/login]
+
++ Request (application/json)
+
+    + Body
+    
+            {
+                "email":"abc@abc.com",
+                "facebookId":"123456",
+                "deviceId":"device1"
+            }
+            
+        
++ Response 200 (application/json)
+
+            {
+                "id": 27,
+                "name": null,
+                "email": "abc@abc.com",
+                "profileImageUrl": null,
+                "phone": 9876543211,
+                "token": "093eJJO6uGSpP5bp0vuAR4vR",
+                "userGroup": "User"
+            }
+            
++ Response 401 (application/json)
+    
+            {
+                "errors":[
+                    {
+                        "message": "Incorrect Credentials"
+                    }
+                ]
+            }
+            
 
 ### Get Users Profile [GET /api/user/:userId/profile]
     
@@ -471,6 +737,96 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
                     }
                 ]
             }
+
+
+### Update PIN Status [PUT /api/user/pin/status]
+
++ Request (application/json)
+
+    + Body
+    
+            {
+                "userId":1,
+                "isPinActivated":true
+            }
+            
+        
++ Response 200 (application/json)
+
+        {
+            "id": 1,
+            "name": "vikash singh",
+            "email": "vikash.baghel@tecsolsoftware.com",
+            "profileImageUrl": "https://batua-test.s3.amazonaws.com/1d44bf1e-b507-43cd-8515-4f5211135373.jpg",
+            "phone": 9479897807,
+            "isPinActivated": true
+        }
+            
++ Response 400 (application/json)
+    
+            {
+                "errors":[
+                    {
+                        "message": "isPinActivated should be Boolean"
+                    }
+                ]
+            }
+            
+
+### Reset PIN [PUT /api/user/pin/reset]
+
++ Request (application/json)
+
+    + Body
+    
+            {
+                "userId":3,
+                "currentPin":4321,
+                "newPin":1234
+            }
+            
+        
++ Response 200 (application/json)
+
+        {
+            "message":"PIN Reset"
+        }
+            
++ Response 400 (application/json)
+    
+        {
+            "errors":[
+                {
+                    "message": "New PIN should be 4 Digit Integer"
+                }
+            ]
+        }
+
+
+### Logout [PUT /api/user/logout]
+
++ Request  (application/json)
+    
+    + Header
+    
+            Access-Token:"092E8vstN81XjO62tJIPdnt6"
+    
+    + Body
+
+            {
+                "deviceId":"device1",
+                "userId":14
+            }
+
++ Response 200 (application/json)
+
+    + Body
+            
+            {
+                "message": "Logged out"
+            }
+
++ Response 400 (application/json)
 
 
 ## Upload Image [/api/image/upload]
