@@ -47,13 +47,13 @@ module.exports.routes = {
     'get /api/offer/:id?': 'OfferController.find',
     'put /api/offer/:id?': 'OfferController.update',
     'put /api/offer/:id/status': 'OfferController.updateStatus',
-   
+
     /********************* Rate Review API ************************/
 
     'post /api/ratereview': 'RateReviewsController.create',
-    'get /api/ratereview/user/:userId/merchant/:merchantId':'RateReviewsController.find',
-    'put /api/ratereview':'RateReviewsController.update',
-    'delete /api/ratereview/:id':'RateReviewsController.delete',
+    'get /api/ratereview/user/:userId/merchant/:merchantId': 'RateReviewsController.find',
+    'put /api/ratereview': 'RateReviewsController.update',
+    'delete /api/ratereview/:id': 'RateReviewsController.delete',
 
     /********************* User Groups API ************************/
 
@@ -64,43 +64,48 @@ module.exports.routes = {
 
     /********************* Admin Portal API ************************/
 
-    'post /api/admin/user/login':'UsersController.adminLogin',
-    'put /api/admin/user/forgotpassword':'UsersController.adminForgotPassword',
-    'put /api/admin/user/resetpassword':'UsersController.adminResetPassword',
-    'put /api/admin/user/changepassword':'UsersController.adminChangePassword',
+    'post /api/admin/user/login': 'UsersController.adminLogin',
+    'put /api/admin/user/forgotpassword': 'UsersController.adminForgotPassword',
+    'put /api/admin/user/resetpassword': 'UsersController.adminResetPassword',
+    'put /api/admin/user/changepassword': 'UsersController.adminChangePassword',
     'post /api/admin/user': 'UsersController.createUserByAdmin',
     'get /api/admin/user/:id?': 'UsersController.findUserByAdmin',
     'put /api/admin/user': 'UsersController.updateUserByAdmin',
     'put /api/admin/user/setstatus': 'UsersController.setUserStatusByAdmin',
-    'put /api/admin/user/logout':'UsersController.adminLogout',
+    'put /api/admin/user/logout': 'UsersController.adminLogout',
 
     /********************* Field Sales Agent App API ************************/
-    
-    'post /api/salesagent/normal/login':'UsersController.salesAgentNormalLogin',
-    'post /api/salesagent/social/login':'UsersController.salesAgentSocialLogin',
-    'put /api/salesagent/forgotpassword':'UsersController.salesAgentForgotPassword',
-    'put /api/salesagent/verifyotp':'UsersController.salesAgentVerifyOtp',
-    'put /api/salesagent/resetpassword':'UsersController.salesAgentResetPassword',
-    'get /api/salesagent/:salesagentId/profile':'UsersController.getProfile',
-    'put /api/salesagent/:salesagentId/profile':'UsersController.updateSalesAgentProfile',
-    'put /api/salesagent/logout':'UsersController.salesAgentLogout',
+
+    'post /api/salesagent/normal/login': 'UsersController.salesAgentNormalLogin',
+    'post /api/salesagent/social/login': 'UsersController.salesAgentSocialLogin',
+    'put /api/salesagent/forgotpassword': 'UsersController.salesAgentForgotPassword',
+    'put /api/salesagent/verifyotp': 'UsersController.salesAgentVerifyOtp',
+    'put /api/salesagent/resetpassword': 'UsersController.salesAgentResetPassword',
+    'get /api/salesagent/:salesagentId/profile': 'UsersController.getProfile',
+    'put /api/salesagent/:salesagentId/profile': 'UsersController.updateSalesAgentProfile',
+    'put /api/salesagent/logout': 'UsersController.salesAgentLogout',
 
     /********************* User App API ************************/
 
-    'post /api/user/normal/signup':'UsersController.normalSignup',
-    'post /api/user/social/signup':'UsersController.socialSignup',
-    'put /api/user/signup/sendotp':'UsersController.sendOtpForSignup',
-    'put /api/user/signup/verifyotp':'UsersController.verifyOtpForSignup',
-    'post /api/user/normal/login':'UsersController.normalLogin',
-    'post /api/user/social/login':'UsersController.socialLogin',
-    'get /api/user/:userId/profile':'UsersController.getProfile',
-    'put /api/user/profile':'UsersController.updateUserProfile',
-    'put /api/user/pin/status':'UsersController.updatePinStatus',
-    'put /api/user/pin/reset':'UsersController.resetPin',
-    'put /api/user/logout':'UsersController.logout',
+    'post /api/user/normal/signup': 'UsersController.normalSignup',
+    'post /api/user/social/signup': 'UsersController.socialSignup',
+    'put /api/user/signup/sendotp': 'UsersController.sendOtpForSignup',
+    'put /api/user/signup/verifyotp': 'UsersController.verifyOtpForSignup',
+    'post /api/user/normal/login': 'UsersController.normalLogin',
+    'post /api/user/social/login': 'UsersController.socialLogin',
+    'put /api/user/forgotpassword': 'UsersController.forgotPassword',
+    'put /api/user/verifyotp': 'UsersController.verifyOtp',
+    'put /api/user/resetpassword': 'UsersController.resetPassword',
+    'get /api/user/:userId/profile': 'UsersController.getProfile',
+    'put /api/user/profile': 'UsersController.updateUserProfile',
+    'put /api/user/changepassword': 'UsersController.changePassword',
+    'put /api/user/pin/status': 'UsersController.updatePinStatus',
+    'put /api/user/pin/forgot': 'UsersController.forgotPin',
+    'put /api/user/pin/change': 'UsersController.changePin',
+    'put /api/user/logout': 'UsersController.logout',
 
     /********************* Image Upload API ************************/
 
-    'post /api/image/upload':'ImageUploadController.upload',
-    
+    'post /api/image/upload': 'ImageUploadController.upload',
+
 }
