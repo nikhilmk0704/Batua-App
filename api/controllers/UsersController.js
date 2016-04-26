@@ -175,7 +175,7 @@ module.exports = {
         var userService = new UserService();
         userService.salesAgentForgotPassword(params, function(err, result) {
             if (err)
-                return res.badRequest(error.send(err));
+                return res.json(401,error.send(err));
             return res.json(200, result);
         });
     },
@@ -387,6 +387,20 @@ module.exports = {
         userService.updatePinStatus(params, function(err, result) {
             if (err)
                 return res.badRequest(error.send(err));
+            return res.json(200, result);
+        });
+    },
+
+    pinLogin: function(req, res) {
+        var params = {};
+        params.token = req.headers['access-token'];
+        params.deviceId=req.body.deviceId;
+        params.userId=req.body.userId;
+        params.pin=req.body.pin;
+        var userService = new UserService();
+        userService.pinLogin(params, function(err, result) {
+            if (err)
+                return res.json(401, error.send(err));
             return res.json(200, result);
         });
     },

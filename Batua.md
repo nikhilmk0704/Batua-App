@@ -351,7 +351,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
                 "message": "OTP Sent"
             }
 
-+ Response 400 (application/json)
++ Response 401 (application/json)
 
     + Body
     
@@ -685,7 +685,96 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
                     }
                 ]
             }
+
+
+### Forgot Password/Resend OTP [PUT /api/user/forgotpassword]
+
++ Request (application/json)
+
+    + Body
+    
+            {
+                "phone": "9479897807"
+            }
             
+        
++ Response 200 (application/json)
+
+            {
+                "message": "OTP Sent"
+            }
+            
++ Response 400 (application/json)
+    
+            {
+                "errors":[
+                    {
+                        "message": "Incorrect Phone"
+                    }
+                ]
+            }
+
+
+### Verify OTP [PUT /api/user/verifyotp]
+
++ Request (application/json)
+
+    + Body
+    
+            {
+                "otp": 123456,
+                "phone": 123457856,
+                "deviceId": "device1"
+            }
+            
+        
++ Response 200 (application/json)
+
+            
+            {
+                "userId": 14
+            }
+            
++ Response 401 (application/json)
+    
+            {
+                "errors":[
+                    {
+                        "message": "Incorrect OTP"
+                    }
+                ]
+            }
+
+
+### Reset Password [PUT /api/user/resetpassword]
+
++ Request (application/json)
+
+    + Body
+    
+            {
+                "userId": 14,
+                "password": "12345678"
+            }
+            
+        
++ Response 200 (application/json)
+
+            
+            {
+                "message": "Password Reset"
+            }
+            
++ Response 401 (application/json)
+    
+            {
+                "errors":[
+                    {
+                        "message": "Incorrect Password"
+                    }
+                ]
+            }
+
 
 ### Get Users Profile [GET /api/user/:userId/profile]
     
@@ -739,6 +828,36 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
             }
 
 
+### Change Password [PUT /api/user/changepassword]
+
++ Request (application/json)
+
+    + Body
+    
+            {
+                "userId":30,
+                "currentPassword":"1234567",
+                "newPassword":"123456"
+            }
+            
+        
++ Response 200 (application/json)
+
+            {
+                "message": "Password Changed"
+            }
+            
++ Response 400 (application/json)
+    
+            {
+                "errors":[
+                    {
+                        "message": "Incorrect Current Password"
+                    }
+                ]
+            }
+            
+
 ### Update PIN Status [PUT /api/user/pin/status]
 
 + Request (application/json)
@@ -771,7 +890,74 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
                     }
                 ]
             }
+
+
+### PIN Login [PUT /api/user/pin/login]
+
++ Request (application/json)
+
+    + Header
+    
+            Access-Token:"092E8vstN81XjO62tJIPdnt6"
+    
+    + Body
+    
+            {
+                "userId":1,
+                "pin":"1234",
+                "deviceId":"device1"
+            }
             
+        
++ Response 200 (application/json)
+
+            {
+                "id": 1,
+                "name": "vikash baghel",
+                "email": "vikash.baghel@tecsolsoftware.com",
+                "profileImageUrl": "url",
+                "phone": 9479897807,
+                "userGroup": "User"
+            }
+            
++ Response 400 (application/json)
+    
+            {
+                "errors":[
+                    {
+                        "message": "Incorrect PIN"
+                    }
+                ]
+            }
+
+            
+### Forgot PIN [PUT /api/user/pin/forgot]
+
++ Request (application/json)
+
+    + Body
+    
+            {
+                "phone": "9479897807"
+            }
+            
+        
++ Response 200 (application/json)
+
+            {
+                "message": "OTP Sent"
+            }
+            
++ Response 400 (application/json)
+    
+            {
+                "errors":[
+                    {
+                        "message": "Incorrect Phone"
+                    }
+                ]
+            }
+
 
 ### Reset PIN [PUT /api/user/pin/reset]
 

@@ -53,6 +53,12 @@ class UserService {
         return false;
     }
 
+    isValidPin(pin) {
+        if (pin && _.toString(pin).length == 4 && _.inRange(pin, 1000, 10000))
+            return true;
+        return false;
+    }
+
     getIncludeModels() {
         return [{
             model: UserGroups,
@@ -1263,6 +1269,55 @@ class UserService {
         userRepository.updateAndFind(updateObject, whereObject, findObject, callback);
     }
 
+    /****************** PIN Login In User App **********************/
+
+    pinLogin(params, callback) {
+        var userService = new UserService();
+        var userId = params.userId;
+        var pin = params.pin;
+        var deviceId = params.deviceId;
+        var token = params.token;
+        if (!userId && !pin && !deviceId && !token)
+            return callback("Please give userId,pin,deviceId,Access-Token");
+        if (!userService.isValidPin(pin))
+            return callback("Invalid PIN");
+        userService.findUserAndValidatePin(params,callback);
+    }
+
+    findUserAndValidatePin(params,callback){
+        var userId = params.userId;
+        var pin = params.pin;
+        var deviceId = params.deviceId;
+        var token = params.token;
+        var findObject = {};
+        findObject.where = {};
+        findObject.where.id = userId;
+        findObject.include = [{ model: UserGroups, as: 'userGroups', required: false },
+            { model: AccessTokens, as: 'accessTokens', required: false, where: { $and: { token: token, deviceId: deviceId } } }
+        ];
+        Users.find(findObject).then(function(result) {
+            if (!result)
+                return callback("Incorrect userId or Access Token or DeviceId");
+            var loggedinResult = {};
+            loggedinResult.id = result.id;
+            loggedinResult.name = result.name;
+            loggedinResult.email = result.email;
+            loggedinResult.profileImageUrl = result.profileImageUrl;
+            loggedinResult.phone = result.phone;
+            loggedinResult.userGroup = result.userGroups.name;
+            if (result.userGroups.name != 'User' || result.status != 'Active')
+                return callback("Inactive User");
+            if (!result.isPinActivated)
+                return callback("PIN is not Active");
+            if (result.pin != pin)
+                return callback("Incorrect PIN");
+            if (result.pin == pin)
+                return callback(null, loggedinResult);
+            return callback("Something went Wrong");
+        }).catch(function(exception) {
+            callback(exception);
+        });
+    }
 
     /****************** Sends OTP On Forgot PIN In User App **********************/
 
