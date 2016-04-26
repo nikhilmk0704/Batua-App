@@ -100,6 +100,7 @@ module.exports.routes = {
     'put /api/user/profile': 'UsersController.updateUserProfile',
     'put /api/user/changepassword': 'UsersController.changePassword',
     'put /api/user/pin/status': 'UsersController.updatePinStatus',
+    'put /api/user/pin/Login': 'UsersController.pinLogin',
     'put /api/user/pin/forgot': 'UsersController.forgotPin',
     'put /api/user/pin/change': 'UsersController.changePin',
     'put /api/user/logout': 'UsersController.logout',
