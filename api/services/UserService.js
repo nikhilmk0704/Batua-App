@@ -1,1201 +1,1348 @@
 'use strict';
 
 var UserRepository = require('../repositories/UserRepository.js');
-var token=require('rand-token');
+var token = require('rand-token');
 var md5 = require('md5');
 var fs = require('fs');
-var _=require('lodash');
+var _ = require('lodash');
 
 class UserService {
 
-    createUserByAdmin(params, callback) {
-        var userService = new UserService();
-        if(userService.validateRequestAdmin(params)){
-        	return userService.createUserAndSendEmailByAdmin(params,callback);
-        }
-        return callback("Mandatory fields missing");
-    }
-
-    validateRequestAdmin(params){
-        var userService = new UserService();
-    	return _.every(userService.getMandatoryFieldsAdmin(), function(element) {
-            if (params[element]) {
-                return true;
-            } 
-        });
-    }
+    /*********************** Common Functions ****************************/
 
     getMandatoryFieldsAdmin() {
         return ['name', 'email', 'phone', 'userGroupId'];
     }
 
-    findUserByAdmin(params,callback){
+    validateRequestAdmin(params) {
         var userService = new UserService();
-        var findObject={};
-        findObject.include=userService.getIncludeModels();
-        findObject.attributes=['id','name','phone','email','status','profileImageUrl'];
-        var userRepository = new UserRepository();
-        if(params.id){
-        	findObject.where={};
-		    findObject.where.id=params.id;
-			userRepository.find(findObject,callback);	
-        }else{
-        	userRepository.findAll(findObject,callback);
-        }
-    }
-
-    updateUserByAdmin(params,callback){
-        var userService = new UserService();
-    	var options={};
-    	var findObject={};
-    	options.where={};
-    	options.where.id=params.id;
-    	findObject=options;
-        findObject.include=userService.getIncludeModels();
-        findObject.attributes=['id','name','phone','email','status'];
-        var userRepository = new UserRepository();
-    	userRepository.update(params,options,function(err,result){
-    		if(err)
-    			return callback(err);
-    		return userRepository.find(findObject,callback);
-    	});
-    }
-
-    setUserStatusByAdmin(params,callback){
-    	var options={};
-    	var findObject={};
-    	options.where={};
-    	options.where.id=params.id;
-    	findObject=options;
-        findObject.attributes=['id','name','phone','email','status'];
-        var userRepository = new UserRepository();
-    	userRepository.updateAndFind(params,options,findObject,callback);
-    }
-
-    createUserAndSendEmailByAdmin(params,callback){
-        var userService = new UserService();
-        params.status="Active";
-        (params.profileImageUrl==undefined)?(params.profileImageUrl=null):(params);
-        Users.create(params).then(function(result){
-            var userData=JSON.parse(JSON.stringify(result));
-            delete userData.isPhoneVerified;
-            delete userData.isPinActivated;
-            userService.createAccessToken(userData,callback);
-            return null;
-        }).catch(function(exception){
-            callback(exception);
+        return _.every(userService.getMandatoryFieldsAdmin(), function(element) {
+            if (params[element]) {
+                return true;
+            }
         });
     }
 
-    createAccessToken(userData,callback){
-        var userService = new UserService();
-        var accessToken=userService.generateToken();
-        var params={};
-        params.token=accessToken;
-        AccessTokens.create(params).then(function(result){
-            var newParams={};
-            newParams.accessTokenId=result.id;
-            newParams.userId=userData.id;
-            var email=userData.email;
-            var urlToken=result.token;
-            var passwordGenerationUrl="http://52.36.228.74:1337/resetpassword/"+ email + "/" + urlToken;
-            userService.createUsersAccessToken(newParams,userData,passwordGenerationUrl,callback);
-            return null;
-        }).catch(function(exception){
-            userService.deleteUser(userData);
-            callback(exception);
-        });
+    generateToken() {
+        return token.suid(16);
     }
 
-    createUsersAccessToken(params,userData,passwordGenerationUrl,callback){
-        var userService = new UserService();
-        UsersAccessTokens.create(params).then(function(result){
-            var email=userData.email;
-            var name=userData.name;
-            userService.sendEmail(email,name,passwordGenerationUrl);
-            return callback(null,userData);
-        }).catch(function(exception){
-            userService.deleteUser(userData);
-            callback(exception);
-        });
+    generateOtp() {
+        var otp = token.generate(6, '0123456789');
+        if (otp < 100000)
+            return otp + 100000;
+        return otp;
     }
 
-    deleteUser(params){
-        var options={};
-        options.where={};
-        options.where.id=params.id;
-        Users.destroy(options);
+    isValidPhone(phone) {
+        if (phone && _.isInteger(phone) && _.toString(phone).length == 10)
+            return true;
+        return false;
     }
 
-    sendEmail(email,name,passwordGenerationUrl){
+    isValidPassword(password) {
+        if (password && password.length > 5 && !(/\s/g.test(password)))
+            return true;
+        return false;
+    }
+
+    isValidEmail(email) {
+        var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        if (email && _.isString(email) && re.test(email))
+            return true;
+        return false;
+    }
+
+    getIncludeModels() {
+        return [{
+            model: UserGroups,
+            as: 'userGroups',
+            required: false
+        }];
+    }
+
+    sendEmail(email, name, passwordGenerationUrl) {
         var awsSesService = new AwsSesService();
-        var params={};
-        params.sender='support@thebatua.com';
-        params.receivers=[];
+        var params = {};
+        params.sender = 'support@thebatua.com';
+        params.receivers = [];
         params.receivers.push(email);
-        params.subjectText='Welcome to Batua !!!';
-        params.bodyText='Welcome to Batua !!!';
-        var template = fs.readFileSync('./api/templates/forgot-password/forget_password_mail.ejs',"utf-8");
-        var mapObject={};
-        mapObject.FIRSTNAME=name;                       // Capital case because of template is using the same 
-        mapObject.LASTNAME="";
-        mapObject.URL=passwordGenerationUrl;
-        var regExp=new RegExp(Object.keys(mapObject).join("|"),"gi");
-        var htmlTemplate=template.replace(regExp,function(matched){
+        params.subjectText = 'Welcome to Batua !!!';
+        params.bodyText = 'Welcome to Batua !!!';
+        var template = fs.readFileSync('./api/templates/forgot-password/forget_password_mail.ejs', "utf-8");
+        var mapObject = {};
+        mapObject.FIRSTNAME = name; // Capital case because of template is using the same 
+        mapObject.LASTNAME = "";
+        mapObject.URL = passwordGenerationUrl;
+        var regExp = new RegExp(Object.keys(mapObject).join("|"), "gi");
+        var htmlTemplate = template.replace(regExp, function(matched) {
             return mapObject[matched];
         });
-        params.htmlTemplate=htmlTemplate;
-        awsSesService.sendEmail(params,function(err,result){
-            if(err)
+        params.htmlTemplate = htmlTemplate;
+        awsSesService.sendEmail(params, function(err, result) {
+            if (err)
                 console.log(err);
             else
                 console.log(result);
         });
     }
 
-    generateToken(){
-        return token.suid(16);
-    }
+    /********************** Login Through Admin CMS *************************/
 
-    adminLogin(params,callback){
+    adminLogin(params, callback) {
         var userService = new UserService();
-        var options={};
-        var findObject={};
-        options.where={};
-        options.where.email=params.email;
-        findObject=options;
-        findObject.include=userService.getIncludeModels();
-        Users.find(findObject).then(function(result){
-            if(userService.validateAdminLogin(params,result)){
-                userService.updateAccessTokenAndShowResult(params,result,callback);
+        var options = {};
+        var findObject = {};
+        options.where = {};
+        options.where.email = params.email;
+        findObject = options;
+        findObject.include = userService.getIncludeModels();
+        Users.find(findObject).then(function(result) {
+            if (userService.validateAdminLogin(params, result)) {
+                userService.updateAccessTokenAndShowResult(params, result, callback);
                 return null;
             }
             return callback("Does not exist");
-        }).catch(function(exception){
+        }).catch(function(exception) {
             callback(exception);
         });
     }
 
-    validateAdminLogin(params,result){
-        var name=result.userGroups.name;
-        var status=result.status;
-        var isValidGroupName= (name == 'Admin'||name=='Super Admin');
-        var isValidStatus= (status=='Active');
-        var isValidPassword=(result.password==md5(params.password));
-        if(result && isValidGroupName && isValidStatus && isValidPassword)
+    validateAdminLogin(params, result) {
+        var name = result.userGroups.name;
+        var status = result.status;
+        var isValidGroupName = (name == 'Admin' || name == 'Super Admin');
+        var isValidStatus = (status == 'Active');
+        var isValidPassword = (result.password == md5(params.password));
+        if (result && isValidGroupName && isValidStatus && isValidPassword)
             return true;
         return false;
     }
 
-    updateAccessTokenAndShowResult(params,result,callback){
+    updateAccessTokenAndShowResult(params, result, callback) {
         var userService = new UserService();
         var token = userService.generateToken();
-        var createObject={};
-        createObject.token=token;
-        var deviceId=params.deviceId;
-        var deviceType=params.deviceType;
-        createObject.deviceId=(deviceId)?(deviceId):(null);
-        createObject.deviceType=(deviceType)?(deviceType):(null);
-        AccessTokens.create(createObject).then(function(data){
-            userService.createUsersAccessTokensLogin(result,data,callback);
+        var createObject = {};
+        createObject.token = token;
+        var deviceId = params.deviceId;
+        var deviceType = params.deviceType;
+        createObject.deviceId = (deviceId) ? (deviceId) : (null);
+        createObject.deviceType = (deviceType) ? (deviceType) : (null);
+        AccessTokens.create(createObject).then(function(data) {
+            userService.createUsersAccessTokensLogin(result, data, callback);
             return null;
-        }).catch(function(exception){
+        }).catch(function(exception) {
             callback(exception);
         });
     }
 
-    createUsersAccessTokensLogin(result,data,callback){
-        var createObject={};
-        createObject.accessTokenId=data.id;
-        createObject.userId=result.id;
-        UsersAccessTokens.create(createObject).then(function(createdData){
-            var loggedinResult={};
-            loggedinResult.id=result.id;
-            loggedinResult.name=result.name;
-            loggedinResult.email=result.email;
-            loggedinResult.profileImageUrl=result.profileImageUrl;
-            loggedinResult.phone=result.phone;
-            loggedinResult.token=data.token;
-            loggedinResult.userGroup=result.userGroups.name;
-            return callback(null,loggedinResult);
-        }).catch(function(exception){
+    createUsersAccessTokensLogin(result, data, callback) {
+        var createObject = {};
+        createObject.accessTokenId = data.id;
+        createObject.userId = result.id;
+        UsersAccessTokens.create(createObject).then(function(createdData) {
+            var loggedinResult = {};
+            loggedinResult.id = result.id;
+            loggedinResult.name = result.name;
+            loggedinResult.email = result.email;
+            loggedinResult.profileImageUrl = result.profileImageUrl;
+            loggedinResult.phone = result.phone;
+            loggedinResult.token = data.token;
+            loggedinResult.userGroup = result.userGroups.name;
+            return callback(null, loggedinResult);
+        }).catch(function(exception) {
             callback(exception);
         });
     }
 
-    adminLogout(params,callback){
-        var accessTokensService=new AccessTokensService();
-        var newParams={};
-        newParams.token=null;
-        var options={};
-        options.where={};
-        options.where.token=params.token;
-        accessTokensService.update(newParams,options,function(err,result){
-            if(err)
-                return callback(err);
-            return callback(null,{message:"Logged out"});
-        });
-    }
+    /********************* URL With Access Token And Email Will ***********************
+     ********************** be Sent To Admin CMS User Through SES **********************/
 
-    adminForgotPassword(params,callback){
+    adminForgotPassword(params, callback) {
         var userService = new UserService();
-        var token=userService.generateToken();
-        var email=params.email;
-        var findObject={};
-        findObject.where={};
-        findObject.include=userService.getIncludeModels();
-        findObject.where.$and={};
-        findObject.where.$and.email=email;
-        findObject.where.$and.status='Active';
-        var passwordGenerationUrl="http://52.36.228.74:1337/resetpassword/"+ email + "/" + token;
-        Users.find(findObject).then(function(result){
-            var group=(result)?(result.userGroups.name):(null);
-            if(result && (group=='Admin' || group=='Super Admin')){
-                var userId=result.id;
-                var name=result.name;
-                userService.createAccessTokenAndSendEmail(userId,email,token,name,passwordGenerationUrl,callback);
+        var token = userService.generateToken();
+        var email = params.email;
+        var findObject = {};
+        findObject.where = {};
+        findObject.include = userService.getIncludeModels();
+        findObject.where.$and = {};
+        findObject.where.$and.email = email;
+        findObject.where.$and.status = 'Active';
+        var passwordGenerationUrl = "http://52.36.228.74:1337/resetpassword/" + email + "/" + token;
+        Users.find(findObject).then(function(result) {
+            var group = (result) ? (result.userGroups.name) : (null);
+            if (result && (group == 'Admin' || group == 'Super Admin')) {
+                var userId = result.id;
+                var name = result.name;
+                userService.createAccessTokenAndSendEmail(userId, email, token, name, passwordGenerationUrl, callback);
                 return null;
             }
             return callback("Invalid Email");
-        }).catch(function(exception){
+        }).catch(function(exception) {
             callback(exception);
         });
     }
 
-    createAccessTokenAndSendEmail(userId,email,token,name,passwordGenerationUrl,callback){
+    createAccessTokenAndSendEmail(userId, email, token, name, passwordGenerationUrl, callback) {
         var userService = new UserService();
-        AccessTokens.create({token:token}).then(function(result){
-            var accessTokenId=result.id;
-            userService.updateUsersAccessTokens(userId,accessTokenId,email,name,passwordGenerationUrl,callback);
+        AccessTokens.create({ token: token }).then(function(result) {
+            var accessTokenId = result.id;
+            userService.updateUsersAccessTokens(userId, accessTokenId, email, name, passwordGenerationUrl, callback);
             return null;
-        }).catch(function(exception){
+        }).catch(function(exception) {
             callback(exception);
         });
     }
 
-    updateUsersAccessTokens(userId,accessTokenId,email,name,passwordGenerationUrl,callback){
+    updateUsersAccessTokens(userId, accessTokenId, email, name, passwordGenerationUrl, callback) {
         var userService = new UserService();
-        UsersAccessTokens.create({userId:userId,accessTokenId:accessTokenId}).then(function(result){
-            userService.sendEmail(email,name,passwordGenerationUrl);
-            return callback(null,{message:"Email sent"});
-        }).catch(function(exception){
+        UsersAccessTokens.create({ userId: userId, accessTokenId: accessTokenId }).then(function(result) {
+            userService.sendEmail(email, name, passwordGenerationUrl);
+            return callback(null, { message: "Email sent" });
+        }).catch(function(exception) {
             callback(exception);
         });
     }
 
-    adminResetPassword(params,callback){
+    /********************* Validates Access Token ************************
+     ************************ And Reset Password ****************************/
+
+    adminResetPassword(params, callback) {
         var userService = new UserService();
         var userRepository = new UserRepository();
-        var password=params.password;
-        var accessToken=params.accessToken;
-        var email=params.email;
-        if(email && password && accessToken){
-            password=md5(password);
-            var rawQueryString = userService.getAdminResetPasswordQueryString(accessToken,email);
-            sequelize.query(rawQueryString).spread(function(metaResult,result){
-                var userId=(result.length)?(result[0].userId):(null);
-                if(result.length && userId){
-                    userService.updatePassword(userId,password,callback);
+        var password = params.password;
+        var accessToken = params.accessToken;
+        var email = params.email;
+        if (email && password && accessToken) {
+            password = md5(password);
+            var rawQueryString = userService.getAdminResetPasswordQueryString(accessToken, email);
+            sequelize.query(rawQueryString).spread(function(metaResult, result) {
+                var userId = (result.length) ? (result[0].userId) : (null);
+                if (result.length && userId) {
+                    userService.updatePassword(userId, password, callback);
                     return null;
                 }
-                if(!result.length)
+                if (!result.length)
                     return callback("Incorrect accessToken and email");
                 return null;
-            }).catch(function(exception){
+            }).catch(function(exception) {
                 callback(exception);
             });
-        }else{
+        } else {
             callback("Email, Password And AccessToken Required");
         }
     }
 
-    getAdminResetPasswordQueryString(accessToken,email){
-        return  " SELECT  Users.id AS userId  FROM  Users "+
-                " INNER JOIN  ( UsersAccessTokens  INNER JOIN  AccessTokens  ON "+
-                " UsersAccessTokens.accessTokenId = AccessTokens.id )  ON  "+
-                " UsersAccessTokens.userId = Users.id  WHERE  AccessTokens.token = " + 
-                "'" + accessToken + "'  AND  Users.email = '" + email +"'" ;
+    getAdminResetPasswordQueryString(accessToken, email) {
+        return " SELECT  Users.id AS userId  FROM  Users " +
+            " INNER JOIN  ( UsersAccessTokens  INNER JOIN  AccessTokens  ON " +
+            " UsersAccessTokens.accessTokenId = AccessTokens.id )  ON  " +
+            " UsersAccessTokens.userId = Users.id  WHERE  AccessTokens.token = " +
+            "'" + accessToken + "'  AND  Users.email = '" + email + "'";
     }
 
-    updatePassword(userId,password,callback){
-        var updateObject={};
-        updateObject.password=password;
-        var updateOptions={};
-        updateOptions.where={};
-        updateOptions.where.id=userId;
-        Users.update(updateObject,updateOptions).then(function(result){
-            return callback(null,{message:"Password reset"});
-        }).catch(function(exception){
+    updatePassword(userId, password, callback) {
+        var updateObject = {};
+        updateObject.password = password;
+        var updateOptions = {};
+        updateOptions.where = {};
+        updateOptions.where.id = userId;
+        Users.update(updateObject, updateOptions).then(function(result) {
+            return callback(null, { message: "Password reset" });
+        }).catch(function(exception) {
             callback(exception);
         });
     }
 
-    adminChangePassword(params,callback){
+    /*********************** Validates Old Password And *************************
+     ********************** Allows Admin To Change Password *********************/
+
+    adminChangePassword(params, callback) {
         var userService = new UserService();
-        var userId=params.userId;
-        var currentPassword=params.currentPassword;
-        var newPassword=params.newPassword;
-        if(!userId || !currentPassword || !newPassword)
-            return callback("User Id, Current Password And New Password Required");
-        if(userId && ((/\s/g.test(currentPassword)) || currentPassword.length<6))
-            return callback("Incorrect Current Password");
-        if(userId && (/\s/g.test(newPassword)))
-            return callback("Spaces are not Allowed");
-        if(userId && newPassword.length<6)
-            return callback("Minimum Password Length is 6");
-        if(userId && (currentPassword==newPassword))
-            return callback("Current Password And New Password should be different");
-        return userService.validatePassword(userId,currentPassword,newPassword,callback);
+        userService.isValidParamsToChangePassword(params, callback);
     }
 
-    validatePassword(userId,currentPassword,newPassword,callback){
+    isValidParamsToChangePassword(params, callback) {
         var userService = new UserService();
-        var findObject={};
-        findObject.where={};
-        findObject.where.id=userId;
-        findObject.include=userService.getIncludeModels();
-        Users.find(findObject).then(function(result){
-            if(!result)
+        var userId = params.userId;
+        var currentPassword = params.currentPassword;
+        var newPassword = params.newPassword;
+        if (!userId || !currentPassword || !newPassword)
+            return callback("User Id, Current Password And New Password Required");
+        if (userId && ((/\s/g.test(currentPassword)) || currentPassword.length < 6))
+            return callback("Incorrect Current Password");
+        if (userId && (/\s/g.test(newPassword)))
+            return callback("Spaces are not Allowed");
+        if (userId && newPassword.length < 6)
+            return callback("Minimum Password Length is 6");
+        if (userId && (currentPassword == newPassword))
+            return callback("Current Password And New Password should be different");
+        return userService.validatePassword(params, callback);
+    }
+
+    validatePassword(params, callback) {
+        var userService = new UserService();
+        var userId = params.userId;
+        var currentPassword = params.currentPassword;
+        var newPassword = params.newPassword;
+        var findObject = {};
+        findObject.where = {};
+        findObject.where.id = userId;
+        findObject.include = userService.getIncludeModels();
+        Users.find(findObject).then(function(result) {
+            if (!result)
                 return callback("Incorrect User Id");
-            var group=result.userGroups.name;
-            var status=result.status;
-            if(group!=('Admin'||'Super Admin') || status!="Active")
-                return callback("Not an Active Admin");
-            if(result.password!=md5(currentPassword))
+            var group = result.userGroups.name;
+            var status = result.status;
+            if (group == 'Field Sales Agent' || status != "Active")
+                return callback("Not Active !");
+            if (result.password != md5(currentPassword))
                 return callback("Incorrect Current Password");
-            if(result.password==md5(currentPassword)){
-                userService.setNewPassword(userId,newPassword,callback);
+            if (result.password == md5(currentPassword)) {
+                userService.setNewPassword(userId, newPassword, callback);
                 return null;
             }
             return callback("Something Went Wrong");
-        }).catch(function(exception){
+        }).catch(function(exception) {
             callback(exception);
         });
     }
 
-    setNewPassword(userId,newPassword,callback){
-        var updateObject={};
-        var whereObject={};
-        whereObject.where={};
-        whereObject.where.id=userId;
-        updateObject.password=md5(newPassword);
-        Users.update(updateObject,whereObject).then(function(result){
-            return callback(null,{message:"Password Changed"});
-        }).catch(function(exception){
+    setNewPassword(userId, newPassword, callback) {
+        var updateObject = {};
+        var whereObject = {};
+        whereObject.where = {};
+        whereObject.where.id = userId;
+        updateObject.password = md5(newPassword);
+        Users.update(updateObject, whereObject).then(function(result) {
+            return callback(null, { message: "Password Changed" });
+        }).catch(function(exception) {
             callback(exception);
         });
-    }   
+    }
 
-    getProfile(params,callback){
-        var salesagentId=params.salesagentId;
-        var userId=params.userId;
-        var userRepository = new UserRepository();
-        var findObject={};
-        findObject.where={};
-        if(userId){
-            findObject.where.id=userId;
-            findObject.attributes=['id','name','phone','profileImageUrl','email','isPinActivated'];
+    /***************** [Super Admin/Admin/Field Sales Agent] *****************
+     *************************** Creation By Admin ***************************/
+
+    createUserByAdmin(params, callback) {
+        var userService = new UserService();
+        if (userService.validateRequestAdmin(params)) {
+            return userService.createUserAndSendEmailByAdmin(params, callback);
         }
-        if(salesagentId){
-            findObject.where.id=salesagentId;
-            findObject.attributes=['id','name','profileImageUrl','email'];
-        }
-        userRepository.find(findObject,callback);
+        return callback("Mandatory fields missing");
     }
 
-    updateSalesAgentProfile(params,callback){
+    createUserAndSendEmailByAdmin(params, callback) {
         var userService = new UserService();
-        var salesagentId=params.salesagentId;
-        var id=params.id;
-        if(salesagentId==id)
-            return userService.validateAndUpdateSalesAgentProfile(params,callback);
-        return callback("Incorrect Id");
-    }
-
-    validateAndUpdateSalesAgentProfile(params,callback){
-        var userService = new UserService();
-        var currentPassword=params.currentPassword;
-        var newPassword=params.newPassword;
-        if(currentPassword && newPassword)
-            return userService.updateProfileWithPassword(params,callback);
-        if(!currentPassword && !newPassword)
-            return userService.updateProfileWithoutPassword(params,callback);
-        return callback("Incorrect parameters");
-    }
-
-    updateProfileWithPassword(params,callback){
-        var userService = new UserService();
-        var currentPassword=params.currentPassword;
-        var newPassword=params.newPassword;
-        var id=params.id;
-        var whereObject={};
-        whereObject.where={};
-        whereObject.where.id=id;
-        Users.find(whereObject).then(function(result){
-            if(result.password!=md5(currentPassword))
-                return callback('currentPassword incorrect');
-            if(currentPassword==newPassword)
-                return callback('New password and current password should be different');
-            userService.updateProfile(params,callback);
+        params.status = "Active";
+        (params.profileImageUrl == undefined) ? (params.profileImageUrl = null) : (params);
+        Users.create(params).then(function(result) {
+            var userData = JSON.parse(JSON.stringify(result));
+            delete userData.isPhoneVerified;
+            delete userData.isPinActivated;
+            userService.createAccessToken(userData, callback);
             return null;
-        }).catch(function(exception){
-            return callback('incorrect id');
+        }).catch(function(exception) {
+            callback(exception);
         });
     }
 
-    updateProfileWithoutPassword(params,callback){
+    createAccessToken(userData, callback) {
         var userService = new UserService();
-        return userService.updateProfile(params,callback);
+        var accessToken = userService.generateToken();
+        var params = {};
+        params.token = accessToken;
+        AccessTokens.create(params).then(function(result) {
+            var newParams = {};
+            newParams.accessTokenId = result.id;
+            newParams.userId = userData.id;
+            var email = userData.email;
+            var urlToken = result.token;
+            var passwordGenerationUrl = "http://52.36.228.74:1337/resetpassword/" + email + "/" + urlToken;
+            userService.createUsersAccessToken(newParams, userData, passwordGenerationUrl, callback);
+            return null;
+        }).catch(function(exception) {
+            userService.deleteUser(userData);
+            callback(exception);
+        });
     }
 
-    updateProfile(params,callback){
+    createUsersAccessToken(params, userData, passwordGenerationUrl, callback) {
+        var userService = new UserService();
+        UsersAccessTokens.create(params).then(function(result) {
+            var email = userData.email;
+            var name = userData.name;
+            userService.sendEmail(email, name, passwordGenerationUrl);
+            return callback(null, userData);
+        }).catch(function(exception) {
+            userService.deleteUser(userData);
+            callback(exception);
+        });
+    }
+
+    deleteUser(params) {
+        var options = {};
+        options.where = {};
+        options.where.id = params.id;
+        Users.destroy(options);
+    }
+
+    /*************************** Lists All ***************************
+     ***************** [Super Admin/Admin/Field Sales Agent] *****************/
+
+    findUserByAdmin(params, callback) {
+        var userService = new UserService();
+        var findObject = {};
+        findObject.include = userService.getIncludeModels();
+        findObject.attributes = ['id', 'name', 'phone', 'email', 'status', 'profileImageUrl'];
         var userRepository = new UserRepository();
-        var newParams={};
-        var profileImageUrl=params.profileImageUrl;
-        var newPassword=params.newPassword;
-        var name=params.name;
-        (name)?(newParams.name=name):(newParams);
-        (profileImageUrl)?(newParams.profileImageUrl=profileImageUrl):(newParams);
-        (newPassword)?(newParams.password=md5(newPassword)):(newParams);
-        var whereObject={};
-        var findObject={};
-        whereObject.where={};
-        whereObject.where.id=params.id;
-        findObject=whereObject;
-        findObject.attributes=['id','name','email','profileImageUrl','phone'];
-        userRepository.updateAndFind(newParams,whereObject,findObject,callback);
+        if (params.id) {
+            findObject.where = {};
+            findObject.where.id = params.id;
+            userRepository.find(findObject, callback);
+        } else {
+            userRepository.findAll(findObject, callback);
+        }
     }
 
-    generateOtp() {
-        var otp=token.generate(6,'0123456789');
-        if(otp<100000)
-            return otp+100000;
-        return otp;
-    }
+    /*************** Update [Super Admin/Admin/Field Sales Agent] ***************/
 
-    salesAgentForgotPassword(params,callback){
+    updateUserByAdmin(params, callback) {
         var userService = new UserService();
-        var phone=params.phone;
-        var isValidPhone=userService.isValidPhone(phone);
-        if(!isValidPhone)
-            return callback("10 Digit Phone is Required");
-        return userService.validateUserBeforeOtp(phone,callback);
-    }
-
-    validateUserBeforeOtp(phone,callback){
-        var userService = new UserService();
-        var findObject={};
-        findObject.where={};
-        findObject.where.phone=phone;
-        findObject.include=userService.getIncludeModels();
-        Users.find(findObject).then(function(result){
-            if(!result)
-                return callback("Unregistered Phone");
-            var group=result.userGroups.name;
-            var status=result.status;
-            if(group!='User' || status!='Active')
-                return callback("Not an Active User");
-            userService.sendOtp(phone,callback);
-            return null;
-        }).catch(function(exception){
-            callback(exception);
+        var options = {};
+        var findObject = {};
+        options.where = {};
+        options.where.id = params.id;
+        findObject = options;
+        findObject.include = userService.getIncludeModels();
+        findObject.attributes = ['id', 'name', 'phone', 'email', 'status'];
+        var userRepository = new UserRepository();
+        userRepository.update(params, options, function(err, result) {
+            if (err)
+                return callback(err);
+            return userRepository.find(findObject, callback);
         });
     }
 
-    sendOtp(phone,callback){
+    /**************** [Activate/Suspend/Permanent Suspend]  ******************
+     ***************** [Super Admin/Admin/Field Sales Agent] *****************/
+
+    setUserStatusByAdmin(params, callback) {
+        var options = {};
+        var findObject = {};
+        options.where = {};
+        options.where.id = params.id;
+        findObject = options;
+        findObject.attributes = ['id', 'name', 'phone', 'email', 'status'];
+        var userRepository = new UserRepository();
+        userRepository.updateAndFind(params, options, findObject, callback);
+    }
+
+    /*********************** Logout From Admin CMS ****************************/
+
+    adminLogout(params, callback) {
+        var accessTokensService = new AccessTokensService();
+        var newParams = {};
+        newParams.token = null;
+        var options = {};
+        options.where = {};
+        options.where.token = params.token;
+        accessTokensService.update(newParams, options, function(err, result) {
+            if (err)
+                return callback(err);
+            return callback(null, { message: "Logged out" });
+        });
+    }
+
+
+    /****************** Normal Login Into Field Sales Agent App *******************/
+
+    salesAgentNormalLogin(params, callback) {
         var userService = new UserService();
-        var smsService = new SmsService();
-        var params={};
-        params.phone=phone;
-        var otp=userService.generateOtp();
-        params.message="Your One Time Password for Batua App is " + otp;
-        smsService.send(params,function(err,result){
-            if(err){
-                console.log(err);
-                return null;;
-            }
-            console.log(result);
-        });
-        userService.updateOtp(phone,otp,callback);
-    }
-
-    updateOtp(phone,otp,callback){
-        var updateObject={};
-        updateObject.otp=otp;
-        var whereObject={};
-        whereObject.where={};
-        whereObject.where.phone=phone;
-        Users.update(updateObject,whereObject).then(function(result){
-            return callback(null,{message:"Otp Sent"});
-        }).catch(function(exception){
-            callback(exception);
-        });
-    }
-
-    salesAgentResetPassword(params,callback){
-        var userService = new UserService();
-        var userId=params.userId;
-        var newPassword=params.password;
-        if(!userId || !newPassword)
-            return callback("UserId And New Password Required");
-        var isValidPassword=userService.isValidPassword(newPassword);
-        if(!isValidPassword)
-            return callback("Incorrect Password");
-        return userService.salesAgentUpdatePassword(params,callback);
-    }
-
-    salesAgentUpdatePassword(params,callback){
-        var userId=params.userId;
-        var newPassword=md5(params.password);
-        var updateObject={};
-        updateObject.password=newPassword;
-        var whereObject={};
-        whereObject.where={};
-        whereObject.where.id=userId;
-        Users.update(updateObject,whereObject).then(function(result){
-            return callback(null,{message:"Password Reset"});
-        }).catch(function(exception){
-            callback(exception);
-        });
-    }
-
-    salesAgentVerifyOtp(params,callback){
-        var userService = new UserService();
-        var otp=params.otp;
-        var phone=params.phone;
-        var whereObject={};
-        whereObject.where={};
-        whereObject.where.phone=phone;
-        Users.find(whereObject).then(function(result){
-            if(result.otp!=otp)
-                return callback("Incorrect OTP");
-            userService.updateSalesOnOtp(params,result,callback);
-            return null;
-        }).catch(function(exception){
-            callback(exception);
-        });
-    }
-
-    updateSalesOnOtp(params,userData,callback){
-        var userService = new UserService();
-        var updateObject={};
-        updateObject.otp=null;
-        var whereObject={};
-        whereObject.where={};
-        whereObject.where.id=userData.id;
-        Users.update(updateObject,whereObject).then(function(result){
-            userService.updateAccessTokensOnOtp(params,userData,callback);
-            return null;
-        }).catch(function(exception){
-            callback(exception);
-        });
-    }
-
-    updateAccessTokensOnOtp(params,userData,callback){
-        var deviceId=params.deviceId;
-        var updateObject={};
-        updateObject.token=null;
-        var whereObject={};
-        whereObject.where={};
-        whereObject.where.deviceId=deviceId;
-        AccessTokens.update(updateObject,whereObject).then(function(result){
-            var data={};
-            data.userId=userData.id;
-            return callback(null,data);
-        }).catch(function(exception){
-            callback(exception);
-        });
-    }
-
-    salesAgentLogout(params,callback){
-        var userService = new UserService();
-        var userId=params.userId;
-        var token=params.token;
-        var deviceId=params.deviceId;
-        if(userId && token && deviceId)
-            return userService.updateTokensOnLogout(params,callback);
-        return callback("UserId, Token And DeviceId Required");
-    }
-
-    updateTokensOnLogout(params,callback){
-        var userId=params.userId;
-        var token=params.token;
-        var deviceId=params.deviceId;
-        var whereObject={};
-        whereObject.where={};
-        whereObject.where.$or=[{deviceId:deviceId},{token:token}];
-        var updateObject={};
-        updateObject.token=null;
-        AccessTokens.update(updateObject,whereObject).then(function(result){
-            return callback(null,{message:"Logged out"});
-        }).catch(function(exception){
-            callback(exception);
-        });
-    }
-
-    salesAgentNormalLogin(params,callback){
-        var userService = new UserService();
-        var email=params.email;
-        var password=params.password;
-        if(email && password)
-            return userService.findUserAndValidateLogin(params,callback);
+        var email = params.email;
+        var password = params.password;
+        if (email && password)
+            return userService.findUserAndValidateLogin(params, callback);
         return callback("Email And Password Required")
     }
 
-    findUserAndValidateLogin(params,callback){
+    findUserAndValidateLogin(params, callback) {
         var userService = new UserService();
-        var findObject={};
-        findObject.where={};
-        findObject.where.email=params.email;
-        findObject.include=userService.getIncludeModels();
-        Users.find(findObject).then(function(result){
-            if(!result)
+        var findObject = {};
+        findObject.where = {};
+        findObject.where.email = params.email;
+        findObject.include = userService.getIncludeModels();
+        Users.find(findObject).then(function(result) {
+            if (!result)
                 return callback("Incorrect Email");
-            userService.validateSalesLogin(params,result,callback);
+            userService.validateSalesLogin(params, result, callback);
             return null;
-        }).catch(function(exception){
+        }).catch(function(exception) {
             callback(exception);
         });
     }
 
-    validateSalesLogin(params,userData,callback){
+    validateSalesLogin(params, userData, callback) {
         var userService = new UserService();
-        var requestedPassword=params.password;
-        var resultedPassword=userData.password;
-        var isValidPassword=(resultedPassword==md5(requestedPassword));
-        var isValidSales=userService.validateSalesAgent(params,userData);
-        if(isValidSales && isValidPassword){
-            userService.updateAccessTokenAndShowResult(params,userData,callback);
+        var requestedPassword = params.password;
+        var resultedPassword = userData.password;
+        var isValidPassword = (resultedPassword == md5(requestedPassword));
+        var isValidSales = userService.validateSalesAgent(params, userData);
+        if (isValidSales && isValidPassword) {
+            userService.updateAccessTokenAndShowResult(params, userData, callback);
             return null;
         }
         callback("Incorrect Password");
         return null;
     }
 
-    validateSalesAgent(params,result){
-        var name=result.userGroups.name;
-        var status=result.status;
-        var isValidGroupName= (name == 'Field Sales Agent');
-        var isValidStatus= (status=='Active');
-        if(result && isValidGroupName && isValidStatus)
+    validateSalesAgent(params, result) {
+        var name = result.userGroups.name;
+        var status = result.status;
+        var isValidGroupName = (name == 'Field Sales Agent');
+        var isValidStatus = (status == 'Active');
+        if (result && isValidGroupName && isValidStatus)
             return true;
         return false;
     }
 
-    getIncludeModels(){
-        return [{
-            model:UserGroups,
-            as:'userGroups',
-            required:false
-        }];
-    }
+    /******************* Field Sales Agent App Login Through G+ *******************/
 
-    salesAgentSocialLogin(params,callback){
+    salesAgentSocialLogin(params, callback) {
         var userService = new UserService();
-        var email=params.email;
-        var googleId=params.googleId;
-        if(email && googleId)
-            return userService.findAndUpdateGoogleId(params,callback);
+        var email = params.email;
+        var googleId = params.googleId;
+        if (email && googleId)
+            return userService.findAndUpdateGoogleId(params, callback);
         return callback("Email And Google Id Required");
     }
 
-    findAndUpdateGoogleId(params,callback){
+    findAndUpdateGoogleId(params, callback) {
         var userService = new UserService();
-        var email=params.email;
-        var googleId=params.googleId;
-        var findObject={};
-        findObject.where={};
-        findObject.where.email=email;
-        findObject.include=userService.getIncludeModels();
-        Users.find(findObject).then(function(result){
-            userService.validateGoogleId(params,result,callback);
+        var email = params.email;
+        var googleId = params.googleId;
+        var findObject = {};
+        findObject.where = {};
+        findObject.where.email = email;
+        findObject.include = userService.getIncludeModels();
+        Users.find(findObject).then(function(result) {
+            userService.validateGoogleId(params, result, callback);
             return null;
-        }).catch(function(exception){
+        }).catch(function(exception) {
             callback(exception);
         });
     }
 
-    validateGoogleId(params,userData,callback){
+    validateGoogleId(params, userData, callback) {
         var userService = new UserService();
-        var googleId=params.googleId;
-        var resultedGoogleId=(userData)?(userData.googleId):(null);
-        var isValidGoogleId=(resultedGoogleId==googleId);
-        if(userData && !resultedGoogleId)
-            return userService.updateGoogleId(params,userData,callback);
-        if(userData && resultedGoogleId && isValidGoogleId)
-            return userService.updateAccessTokenAndShowResult(params,userData,callback);
-        if(userData && resultedGoogleId && !isValidGoogleId)
+        var googleId = params.googleId;
+        var resultedGoogleId = (userData) ? (userData.googleId) : (null);
+        var isValidGoogleId = (resultedGoogleId == googleId);
+        if (userData && !resultedGoogleId)
+            return userService.updateGoogleId(params, userData, callback);
+        if (userData && resultedGoogleId && isValidGoogleId)
+            return userService.updateAccessTokenAndShowResult(params, userData, callback);
+        if (userData && resultedGoogleId && !isValidGoogleId)
             return callback("Incorrect Google Id");
         callback("Incorrect Gmail Id");
     }
 
-    updateGoogleId(params,userData,callback){
+    updateGoogleId(params, userData, callback) {
         var userService = new UserService();
-        var userId=userData.id;
-        var googleId=params.googleId;
-        var updateObject={};
-        updateObject.googleId=googleId;
-        var whereObject={};
-        whereObject.where={};
-        whereObject.where.id=userId;
-        Users.update(updateObject,whereObject).then(function(result){
-            userService.updateAccessTokenAndShowResult(params,userData,callback);
+        var userId = userData.id;
+        var googleId = params.googleId;
+        var updateObject = {};
+        updateObject.googleId = googleId;
+        var whereObject = {};
+        whereObject.where = {};
+        whereObject.where.id = userId;
+        Users.update(updateObject, whereObject).then(function(result) {
+            userService.updateAccessTokenAndShowResult(params, userData, callback);
             return null;
-        }).catch(function(exception){
+        }).catch(function(exception) {
             callback(exception);
         });
     }
 
-    validateAndUpdateUserProfile(params,callback){
+    /******************** Sends OTP To Sales Agent Phone ***********************/
+
+    salesAgentForgotPassword(params, callback) {
         var userService = new UserService();
-        var whereObject={};
-        whereObject.where={};
-        whereObject.where.id=params.id;
-        whereObject.include=userService.getIncludeModels();
-        Users.find(whereObject).then(function(result){
-            if(result)
-                return callback("Incorrect Id");
-            userService.validateUserProfile(params,result,callback);
+        var phone = params.phone;
+        var isValidPhone = userService.isValidPhone(phone);
+        if (!isValidPhone)
+            return callback("10 Digit Phone is Required");
+        var userType = 'Field sales Agent';
+        return userService.validateUserBeforeOtp(phone, userType, callback);
+    }
+
+    validateUserBeforeOtp(phone, userType, callback) {
+        var userService = new UserService();
+        var findObject = {};
+        findObject.where = {};
+        findObject.where.phone = phone;
+        findObject.include = userService.getIncludeModels();
+        Users.find(findObject).then(function(result) {
+            if (!result)
+                return callback("Unregistered Phone");
+            var group = result.userGroups.name;
+            var status = result.status;
+            if (group != userType || status != 'Active')
+                return callback("Not an Active " + userType + " !");
+            userService.sendOtp(phone, callback);
             return null;
-        }).catch(function(exception){
+        }).catch(function(exception) {
             callback(exception);
         });
     }
 
-    validateUserProfile(params,userData,callback){
-        var userService = new UserService();
-        var email=params.email;
-        var resultedEmail=userData.email;
-        var userGroupName=userData.userGroups.name;
-        if(userData && userGroupName!="User")
-            return callback("Not a User");
-        if(userData && email && resultedEmail)
-            return callback("Email Is One Time Editable");
-        if(userData && ((!resultedEmail && email) || (resultedEmail && !email)))
-            return userService.updateUserProfile(params,userData,callback);
-    }
-
-    updateUserProfile(params,userData,callback){
-        var updateObject={};
-        var name=params.name;
-        var email=params.email;
-        var profileImageUrl=params.profileImageUrl;
-        (name)?(updateObject.name=name):(updateObject);
-        (profileImageUrl)?(updateObject.profileImageUrl=profileImageUrl):(updateObject);
-        (email)?(updateObject.email=email):(updateObject);
-        var whereObject={};
-        whereObject.where={};
-        whereObject.where.id=params.id;
-        var findObject={};
-        findObject.where=whereObject.where;
-        findObject.attributes=['id','name','phone','profileImageUrl','email','isPinActivated'];
-        var userRepository=new UserRepository();
-        userRepository.updateAndFind(updateObject,whereObject,findObject,callback);
-    }
-
-    updatePinStatus(params,callback){
-        var userService = new UserService();
-        var userId=params.userId;
-        var isPinActivated=params.isPinActivated;
-        if(!_.isBoolean(isPinActivated))
-            return callback("isPinActivated should be Boolean");
-        if(userId && !(isPinActivated==null || undefined))
-            return userService.updateUsersPinStatus(params,callback);
-        return callback("userId And isPinActivated Required");  
-    }
-
-    updateUsersPinStatus(params,callback){
-        var userId=params.userId;
-        var isPinActivated=params.isPinActivated;
-        var userRepository=new UserRepository();
-        var updateObject={};
-        var whereObject={};
-        var findObject={};
-        whereObject.where={};
-        whereObject.where.id=userId;
-        findObject.where=whereObject.where;
-        findObject.attributes=['id','name','email','profileImageUrl','phone','isPinActivated'];
-        updateObject.isPinActivated=isPinActivated;
-        userRepository.updateAndFind(updateObject,whereObject,findObject,callback);
-    }
-
-    resetPin(params,callback){
-        var userService = new UserService();
-        var userId=params.userId;
-        var currentPin=params.currentPin;
-        var newPin=params.newPin;
-        if(!userId && !currentPin && newPin)
-            return callback("User Id, Current PIN And New PIN Required");
-        if(userId && !_.isInteger(currentPin))
-            return callback("Current PIN should be Integer");
-        if(userId && !_.isInteger(newPin))
-            return callback("New PIN should be Integer");
-        if(userId && !_.inRange(currentPin,1000,10000))
-            return callback("Incorrect Current PIN");
-        if(userId && !_.inRange(newPin,1000,10000))
-            return callback("New PIN should be 4 Digit Integer");
-        if(userId && (newPin==currentPin))
-            return callback("New PIN And Current PIN should be different");
-        return userService.validatePin(userId,currentPin,newPin,callback);
-    }
-
-    validatePin(userId,currentPin,newPin,callback){
-        var userService = new UserService();
-        var findObject={};
-        findObject.where={};
-        findObject.where.id=userId;
-        findObject.include=userService.getIncludeModels();
-        Users.find(findObject).then(function(result){
-            if(!result)
-                return callback("Incorrect User Id");
-            if(result.userGroups.name!='User' || result.status!="Active")
-                return callback("Not an Active User");
-            if(!result.isPinActivated)
-                return callback("Please Enable PIN Settings");
-            if(currentPin!=result.pin)
-                return callback("Incorrect Current PIN");
-            if(currentPin==result.pin)
-                return userService.updatePin(userId,newPin,callback);
-            return callback("Something Went Wrong");
-        }).catch(function(exception){
-            callback(exception);
-        });
-    }
-
-    updatePin(userId,newPin,callback){
-        var updateObject={};
-        var whereObject={};
-        whereObject.where={};
-        whereObject.where.id=userId;
-        updateObject.pin=newPin;
-        Users.update(updateObject,whereObject).then(function(result){
-            return callback(null,{message:"PIN Reset"});
-        }).catch(function(exception){
-            callback(exception);
-        });
-    }
-
-    normalSignup(params,callback){
-        var userService = new UserService();
-        var phone=params.phone;
-        var email=params.email;
-        email=(email)?(email):(null);
-        var password=params.password;
-        var isValidPhone=userService.isValidPhone(phone);
-        var isValidPassword=userService.isValidPassword(password);
-        if(!isValidPhone)
-            return callback("Invalid Phone");
-        if(!isValidPassword)
-            return callback("Invalid Password");
-        var newParams={};
-        newParams.phone=phone;
-        newParams.email=email;
-        newParams.password=password;
-        newParams.userGroupId=4;
-        newParams.status='Drafted';
-        userService.signupAndSendSms(newParams,callback);
-    }
-
-    signupAndSendSms(params,callback){
-        var userService = new UserService();
-        var email=params.email;
-        var phone=params.phone;
-        var findObject={};
-        findObject.where={};
-        (email)?(findObject.where.$or=[{'phone':phone},{'email':email}]):(findObject);
-        (!email)?(findObject.where.phone=phone):(findObject);
-        Users.find(findObject).then(function(result){
-            if(result)
-                return callback("Already Registered");
-            userService.createNewUser(params,callback);
-            return null;
-        }).catch(function(exception){
-            callback(exception);
-        });
-    }
-
-    createNewUser(params,callback){
-        var userService = new UserService();
-        Users.create(params).then(function(result){
-            var phone=params.phone;
-            userService.sendSms(phone,callback);
-            return null;
-        }).catch(function(exception){
-            callback(exception);
-        });
-    }
-
-    sendSms(phone,callback){
+    sendOtp(phone, callback) {
         var userService = new UserService();
         var smsService = new SmsService();
-        var params={};
-        params.phone=phone;
-        var otp=userService.generateOtp();
-        params.message="Welcom to Batua!!! Your One Time Password for verification is " + otp;
-        smsService.send(params,function(err,result){
-            if(err){
+        var params = {};
+        params.phone = phone;
+        var otp = userService.generateOtp();
+        params.message = "Your One Time Password for Batua App is " + otp;
+        smsService.send(params, function(err, result) {
+            if (err) {
                 console.log(err);
                 return null;;
             }
             console.log(result);
         });
-        userService.updateOtpForSignup(phone,otp,callback);
+        userService.updateOtp(phone, otp, callback);
     }
 
-    updateOtpForSignup(phone,otp,callback){
-        var updateObject={};
-        updateObject.otp=otp;
-        var whereObject={};
-        whereObject.where={};
-        whereObject.where.phone=phone;
-        Users.update(updateObject,whereObject).then(function(result){
-            return callback(null,{
-                message:"Registered Successfuly.Please verify phone and Signin."
-            });
-        }).catch(function(exception){
+    updateOtp(phone, otp, callback) {
+        var updateObject = {};
+        updateObject.otp = otp;
+        var whereObject = {};
+        whereObject.where = {};
+        whereObject.where.phone = phone;
+        Users.update(updateObject, whereObject).then(function(result) {
+            return callback(null, { message: "Otp Sent" });
+        }).catch(function(exception) {
             callback(exception);
         });
     }
 
-    verifyOtpForSignup(params,callback){
-        var userService = new UserService();
-        var otp=params.otp;
-        var phone=params.phone;
-        var findObject={};
-        findObject.where={};
-        findObject.where.$and={};
-        findObject.where.$and.phone=phone;
-        findObject.where.$and.status='Drafted';
-        findObject.include=userService.getIncludeModels();
-        userService.validateOtpVerification(params,findObject,callback);
-    }
+    /******************** OTP Verification is done here ***********************/
 
-    validateOtpVerification(params,findObject,callback){
+    salesAgentVerifyOtp(params, callback) {
         var userService = new UserService();
-        var otp=params.otp;
-        Users.find(findObject).then(function(result){
-            if(!result)
-                return callback("Incorrect Phone");
-            if(result.otp!=otp)
+        var otp = params.otp;
+        var phone = params.phone;
+        var whereObject = {};
+        whereObject.where = {};
+        whereObject.where.phone = phone;
+        Users.find(whereObject).then(function(result) {
+            if (!result)
+                return callback("Incorrect phone");
+            if (result.otp != otp)
                 return callback("Incorrect OTP");
-            userService.updateAccessTokenAndShowResult(params,result,callback);
-            var userId=result.id;
-            userService.deleteOtp(userId);
+            userService.updateSalesOnOtp(params, result, callback);
             return null;
-        }).catch(function(exception){
+        }).catch(function(exception) {
             callback(exception);
         });
     }
 
-    deleteOtp(userId){
-        var updateObject={};
-        var whereObject={};
-        whereObject.where={};
-        whereObject.where.id=userId;
-        updateObject.otp=null;
-        updateObject.status='Active';
-        updateObject.isPhoneVerified=true;
-        Users.update(updateObject,whereObject);
-    }
-
-    isValidPhone(phone){
-        if(phone && _.isInteger(phone) && _.toString(phone).length==10)
-            return true;
-        return false;
-    }
-
-    isValidPassword(password){
-        if(password && password.length>5 && !(/\s/g.test(password)))
-            return true;
-        return false;
-    }
-
-    isValidEmail(email){
-        var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
-        if(email && _.isString(email) && re.test(email))
-            return true;
-        return false;
-    }
-
-    socialSignup(params,callback){
+    updateSalesOnOtp(params, userData, callback) {
         var userService = new UserService();
-        var email=params.email;
-        var name=params.name;
-        var googleId=params.googleId;
-        var facebookId=params.facebookId;
-        var isValidEmail=userService.isValidEmail(email);
-        var findObject={};
-        findObject.where={};
-        (googleId)?(findObject.where.$or=[{email:email},{googleId:googleId}]):(findObject);
-        (facebookId)?(findObject.where.$or=[{email:email},{facebookId:facebookId}]):(findObject);
-        if(!isValidEmail)
-            return callback("Invalid Email");
-        userService.validateUserSignup(params,findObject,callback);
-    }
-
-    validateUserSignup(params,findObject,callback){
-        var userService = new UserService();
-        var email=params.email;
-        var name=params.name;
-        var googleId=params.googleId;
-        var facebookId=params.facebookId;
-        Users.find(findObject).then(function(result){
-            if(result)
-                return callback("Already Exist");
-            var newParams={};
-            newParams.name==name;
-            newParams.email=email;
-            (googleId)?(newParams.googleId=googleId):(newParams);
-            (facebookId)?(newParams.facebookId=facebookId):(newParams);
-            newParams.userGroupId=4;
-            newParams.status='Drafted';
-            userService.createUserForSocialSignup(newParams,callback);
+        var updateObject = {};
+        updateObject.otp = null;
+        var whereObject = {};
+        whereObject.where = {};
+        whereObject.where.id = userData.id;
+        Users.update(updateObject, whereObject).then(function(result) {
+            userService.updateAccessTokensOnOtp(params, userData, callback);
             return null;
-        }).catch(function(exception){
+        }).catch(function(exception) {
             callback(exception);
         });
     }
 
-    createUserForSocialSignup(params,callback){
-        Users.create(params).then(function(result){
-            return callback(null,{userId:result.id});
-        }).catch(function(exception){
+    updateAccessTokensOnOtp(params, userData, callback) {
+        var deviceId = params.deviceId;
+        var updateObject = {};
+        updateObject.token = null;
+        var whereObject = {};
+        whereObject.where = {};
+        whereObject.where.deviceId = deviceId;
+        AccessTokens.update(updateObject, whereObject).then(function(result) {
+            var data = {};
+            data.userId = userData.id;
+            return callback(null, data);
+        }).catch(function(exception) {
             callback(exception);
         });
     }
 
-    sendOtpForSignup(params,callback){
+    /*********************** Allows Sales Agent Reset ***************************
+     ******************** Password After OTP Verification ************************/
+
+    salesAgentResetPassword(params, callback) {
         var userService = new UserService();
-        var userId=params.userId;
-        var phone=params.phone;
-        var otp=userService.generateOtp();
-        var isValidPhone=userService.isValidPhone(phone);
-        var findObject={};
-        findObject.include=userService.getIncludeModels();
-        findObject.where={};
-        findObject.where.$and={};
-        findObject.where.$and.id=userId;
-        findObject.where.$and.$or=[{googleId:{$ne:null}},{facebookId:{$ne:null}}];
-        findObject.where.$and.status='Drafted';
-        if(!userId)
-            return callback("Please give userId");
-        if(!isValidPhone)
+        var userType = 'Field Sales Agent';
+        userService.isValidUserToResetPassword(params, userType, callback);
+    }
+
+    isValidUserToResetPassword(params, userType, callback) {
+        var userService = new UserService();
+        var userId = params.userId;
+        var newPassword = params.password;
+        if (!userId || !newPassword)
+            return callback("UserId And New Password Required");
+        var isValidPassword = userService.isValidPassword(newPassword);
+        if (!isValidPassword)
+            return callback("Incorrect Password");
+        var findObject = {};
+        findObject.where = {};
+        findObject.include = userService.getIncludeModels();
+        findObject.where.$and = {};
+        findObject.where.$and.id = userId;
+        findObject.where.$and.status = 'Active';
+        Users.find(findObject).then(function(result) {
+            if (!result)
+                return callback("Incorrect userId");
+            if (result.userGroups.name != userType)
+                return callback("Not a " + userType + " !");
+            userService.salesAgentUpdatePassword(params, callback);
+            return null;
+        }).catch(function(exception) {
+            callback(exception);
+        });
+    }
+
+    salesAgentUpdatePassword(params, callback) {
+        var userId = params.userId;
+        var newPassword = md5(params.password);
+        var updateObject = {};
+        updateObject.password = newPassword;
+        var whereObject = {};
+        whereObject.where = {};
+        whereObject.where.id = userId;
+        Users.update(updateObject, whereObject).then(function(result) {
+            return callback(null, { message: "Password Reset" });
+        }).catch(function(exception) {
+            callback(exception);
+        });
+    }
+
+    /**************** Gets User's Or Field Sales Agent's Profile ****************/
+
+    getProfile(params, callback) {
+        var salesagentId = params.salesagentId;
+        var userId = params.userId;
+        var userRepository = new UserRepository();
+        var findObject = {};
+        findObject.where = {};
+        if (userId) {
+            findObject.where.id = userId;
+            findObject.attributes = ['id', 'name', 'phone', 'profileImageUrl', 'email', 'isPinActivated'];
+        }
+        if (salesagentId) {
+            findObject.where.id = salesagentId;
+            findObject.attributes = ['id', 'name', 'profileImageUrl', 'email'];
+        }
+        userRepository.find(findObject, callback);
+    }
+
+    /**************** Updates User's Or Field Sales Agent's Profile ****************/
+
+    updateSalesAgentProfile(params, callback) {
+        var userService = new UserService();
+        var salesagentId = params.salesagentId;
+        var id = params.id;
+        if (salesagentId == id)
+            return userService.validateAndUpdateSalesAgentProfile(params, callback);
+        return callback("Incorrect Id");
+    }
+
+    validateAndUpdateSalesAgentProfile(params, callback) {
+        var userService = new UserService();
+        var currentPassword = params.currentPassword;
+        var newPassword = params.newPassword;
+        if (currentPassword && newPassword)
+            return userService.updateProfileWithPassword(params, callback);
+        if (!currentPassword && !newPassword)
+            return userService.updateProfileWithoutPassword(params, callback);
+        return callback("Incorrect parameters");
+    }
+
+    updateProfileWithPassword(params, callback) {
+        var userService = new UserService();
+        var currentPassword = params.currentPassword;
+        var newPassword = params.newPassword;
+        var id = params.id;
+        var whereObject = {};
+        whereObject.where = {};
+        whereObject.where.id = id;
+        Users.find(whereObject).then(function(result) {
+            if (result.password != md5(currentPassword))
+                return callback('currentPassword incorrect');
+            if (currentPassword == newPassword)
+                return callback('New password and current password should be different');
+            userService.updateProfile(params, callback);
+            return null;
+        }).catch(function(exception) {
+            return callback('incorrect id');
+        });
+    }
+
+    updateProfileWithoutPassword(params, callback) {
+        var userService = new UserService();
+        return userService.updateProfile(params, callback);
+    }
+
+    updateProfile(params, callback) {
+        var userRepository = new UserRepository();
+        var newParams = {};
+        var profileImageUrl = params.profileImageUrl;
+        var newPassword = params.newPassword;
+        var name = params.name;
+        (name) ? (newParams.name = name) : (newParams);
+        (profileImageUrl) ? (newParams.profileImageUrl = profileImageUrl) : (newParams);
+        (newPassword) ? (newParams.password = md5(newPassword)) : (newParams);
+        var whereObject = {};
+        var findObject = {};
+        whereObject.where = {};
+        whereObject.where.id = params.id;
+        findObject = whereObject;
+        findObject.attributes = ['id', 'name', 'email', 'profileImageUrl', 'phone'];
+        userRepository.updateAndFind(newParams, whereObject, findObject, callback);
+    }
+
+    /******************* Logout From Sales Agent App ************************/
+
+    salesAgentLogout(params, callback) {
+        var userService = new UserService();
+        var userId = params.userId;
+        var token = params.token;
+        var deviceId = params.deviceId;
+        if (userId && token && deviceId)
+            return userService.updateTokensOnLogout(params, callback);
+        return callback("UserId, Token And DeviceId Required");
+    }
+
+    updateTokensOnLogout(params, callback) {
+        var userId = params.userId;
+        var token = params.token;
+        var deviceId = params.deviceId;
+        var whereObject = {};
+        whereObject.where = {};
+        whereObject.where.$or = [{ deviceId: deviceId }, { token: token }];
+        var updateObject = {};
+        updateObject.token = null;
+        AccessTokens.update(updateObject, whereObject).then(function(result) {
+            return callback(null, { message: "Logged out" });
+        }).catch(function(exception) {
+            callback(exception);
+        });
+    }
+
+    /********************* Normal Sign In User's App **************************/
+
+    normalSignup(params, callback) {
+        var userService = new UserService();
+        var phone = params.phone;
+        var email = params.email;
+        email = (email) ? (email) : (null);
+        var password = params.password;
+        var isValidPhone = userService.isValidPhone(phone);
+        var isValidPassword = userService.isValidPassword(password);
+        if (!isValidPhone)
             return callback("Invalid Phone");
-        userService.isPhoneExist(params,findObject,callback);
+        if (!isValidPassword)
+            return callback("Invalid Password");
+        var newParams = {};
+        newParams.phone = phone;
+        newParams.email = email;
+        newParams.password = password;
+        newParams.userGroupId = 4;
+        newParams.status = 'Drafted';
+        userService.signupAndSendSms(newParams, callback);
     }
 
-    isPhoneExist(params,findObject,callback){
+    signupAndSendSms(params, callback) {
         var userService = new UserService();
-        var phone=params.phone;
-        Users.count({where:{phone:phone}}).then(function(result){
-            if(result)
+        var email = params.email;
+        var phone = params.phone;
+        var findObject = {};
+        findObject.where = {};
+        (email) ? (findObject.where.$or = [{ 'phone': phone }, { 'email': email }]) : (findObject);
+        (!email) ? (findObject.where.phone = phone) : (findObject);
+        Users.find(findObject).then(function(result) {
+            if (result)
+                return callback("Already Registered");
+            userService.createNewUser(params, callback);
+            return null;
+        }).catch(function(exception) {
+            callback(exception);
+        });
+    }
+
+    createNewUser(params, callback) {
+        var userService = new UserService();
+        Users.create(params).then(function(result) {
+            var phone = params.phone;
+            userService.sendSms(phone, callback);
+            return null;
+        }).catch(function(exception) {
+            callback(exception);
+        });
+    }
+
+    sendSms(phone, callback) {
+        var userService = new UserService();
+        var smsService = new SmsService();
+        var params = {};
+        params.phone = phone;
+        var otp = userService.generateOtp();
+        params.message = "Welcom to Batua!!! Your One Time Password for verification is " + otp;
+        smsService.send(params, function(err, result) {
+            if (err) {
+                console.log(err);
+                return null;;
+            }
+            console.log(result);
+        });
+        userService.updateOtpForSignup(phone, otp, callback);
+    }
+
+    updateOtpForSignup(phone, otp, callback) {
+        var updateObject = {};
+        updateObject.otp = otp;
+        var whereObject = {};
+        whereObject.where = {};
+        whereObject.where.phone = phone;
+        Users.update(updateObject, whereObject).then(function(result) {
+            return callback(null, {
+                message: "Registered Successfuly.Please verify phone and Signin."
+            });
+        }).catch(function(exception) {
+            callback(exception);
+        });
+    }
+
+    /******************** Facebook And G+ Signup In User's App **********************/
+
+    socialSignup(params, callback) {
+        var userService = new UserService();
+        var email = params.email;
+        var name = params.name;
+        var googleId = params.googleId;
+        var facebookId = params.facebookId;
+        var isValidEmail = userService.isValidEmail(email);
+        var findObject = {};
+        findObject.where = {};
+        (googleId) ? (findObject.where.$or = [{ email: email }, { googleId: googleId }]) : (findObject);
+        (facebookId) ? (findObject.where.$or = [{ email: email }, { facebookId: facebookId }]) : (findObject);
+        if (!isValidEmail)
+            return callback("Invalid Email");
+        userService.validateUserSignup(params, findObject, callback);
+    }
+
+    validateUserSignup(params, findObject, callback) {
+        var userService = new UserService();
+        var email = params.email;
+        var name = params.name;
+        var googleId = params.googleId;
+        var facebookId = params.facebookId;
+        Users.find(findObject).then(function(result) {
+            if (result)
+                return callback("Already Exist");
+            var newParams = {};
+            newParams.name == name;
+            newParams.email = email;
+            (googleId) ? (newParams.googleId = googleId) : (newParams);
+            (facebookId) ? (newParams.facebookId = facebookId) : (newParams);
+            newParams.userGroupId = 4;
+            newParams.status = 'Drafted';
+            userService.createUserForSocialSignup(newParams, callback);
+            return null;
+        }).catch(function(exception) {
+            callback(exception);
+        });
+    }
+
+    createUserForSocialSignup(params, callback) {
+        Users.create(params).then(function(result) {
+            return callback(null, { userId: result.id });
+        }).catch(function(exception) {
+            callback(exception);
+        });
+    }
+
+    /********************* Sends OTP After Signup In User App ***********************/
+
+    sendOtpForSignup(params, callback) {
+        var userService = new UserService();
+        var userId = params.userId;
+        var phone = params.phone;
+        var otp = userService.generateOtp();
+        var isValidPhone = userService.isValidPhone(phone);
+        var findObject = {};
+        findObject.include = userService.getIncludeModels();
+        findObject.where = {};
+        findObject.where.$and = {};
+        findObject.where.$and.id = userId;
+        findObject.where.$and.$or = [{ googleId: { $ne: null } }, { facebookId: { $ne: null } }];
+        findObject.where.$and.status = 'Drafted';
+        if (!userId)
+            return callback("Please give userId");
+        if (!isValidPhone)
+            return callback("Invalid Phone");
+        userService.isPhoneExist(params, findObject, callback);
+    }
+
+    isPhoneExist(params, findObject, callback) {
+        var userService = new UserService();
+        var phone = params.phone;
+        Users.count({ where: { phone: phone } }).then(function(result) {
+            if (result)
                 return callback("Phone is already Registered");
-            userService.validateOtpForSignup(params,findObject,callback);
+            userService.validateOtpForSignup(params, findObject, callback);
             return null;
-        }).catch(function(exception){
+        }).catch(function(exception) {
             callback(exception);
         });
     }
 
-    validateOtpForSignup(params,findObject,callback){
+    validateOtpForSignup(params, findObject, callback) {
         var userService = new UserService();
-        Users.find(findObject).then(function(result){
-            if(!result)
+        Users.find(findObject).then(function(result) {
+            if (!result)
                 return callback("Incorrect Id");
-            if(result.phone)
+            if (result.phone)
                 return callback("Phone is already registered with id");
-            if(result && result.userGroups.name!='User')
+            if (result && result.userGroups.name != 'User')
                 return callback("Not a User");
-            userService.updatePhoneForSendOtp(params,callback);
+            userService.updatePhoneForSendOtp(params, callback);
             return null;
-        }).catch(function(exception){
+        }).catch(function(exception) {
             callback(exception);
         });
     }
 
-    updatePhoneForSendOtp(params,callback){
+    updatePhoneForSendOtp(params, callback) {
         var userService = new UserService();
-        var userId=params.userId;
-        var phone=params.phone;
-        var updateObject={};
-        var whereObject={};
-        updateObject.phone=phone;
-        whereObject.where={};
-        whereObject.where.id=userId;
-        Users.update(updateObject,whereObject).then(function(result){
-            userService.sendSms(phone,function(err,result){
-                if(result)
-                    return callback(null,{message:"OTP Sent"});
+        var userId = params.userId;
+        var phone = params.phone;
+        var updateObject = {};
+        var whereObject = {};
+        updateObject.phone = phone;
+        whereObject.where = {};
+        whereObject.where.id = userId;
+        Users.update(updateObject, whereObject).then(function(result) {
+            userService.sendSms(phone, function(err, result) {
+                if (result)
+                    return callback(null, { message: "OTP Sent" });
                 return callback(err);
             });
             return null;
-        }).catch(function(exception){
+        }).catch(function(exception) {
             callback(exception);
         });
-    } 
-
-    normalLogin(params,callback){
-        var userService = new UserService();
-        var email=params.email;
-        var password=params.password;
-        var isValidEmail=userService.isValidEmail(email);
-        var isValidPassword=userService.isValidPassword(password);
-        var findObject={};
-        findObject.include=userService.getIncludeModels();
-        findObject.where={};
-        findObject.where.$and={};
-        if(!isValidEmail)
-            return callback("Incorrect Email");
-        if(!isValidPassword)
-            return callback("Incorrect Password");
-        findObject.where.$and.email=email;
-        findObject.where.$and.password=md5(password);
-        findObject.where.$and.status='Active';
-        userService.validateUserLogin(params,findObject,callback);
     }
 
-    validateUserLogin(params,findObject,callback){
+    /****************** OTP Verification After Signup In User App ********************/
+
+    verifyOtpForSignup(params, callback) {
         var userService = new UserService();
-        Users.find(findObject).then(function(result){
-            if(!result)
-                return callback("Incorrect Credentials");
-            var group=result.userGroups.name;
-            if(result && group!='User')
-                return callback("Not a User");
-            userService.updateAccessTokenAndShowResult(params,result,callback);
+        var otp = params.otp;
+        var phone = params.phone;
+        var findObject = {};
+        findObject.where = {};
+        findObject.where.$and = {};
+        findObject.where.$and.phone = phone;
+        findObject.where.$and.status = 'Drafted';
+        findObject.include = userService.getIncludeModels();
+        userService.validateOtpVerification(params, findObject, callback);
+    }
+
+    validateOtpVerification(params, findObject, callback) {
+        var userService = new UserService();
+        var otp = params.otp;
+        Users.find(findObject).then(function(result) {
+            if (!result)
+                return callback("Incorrect Phone");
+            if (result.otp != otp)
+                return callback("Incorrect OTP");
+            userService.updateAccessTokenAndShowResult(params, result, callback);
+            var userId = result.id;
+            userService.deleteOtp(userId);
             return null;
-        }).catch(function(exception){
+        }).catch(function(exception) {
             callback(exception);
         });
     }
 
-    socialLogin(params,callback){
-        var userService = new UserService();
-        var email=params.email;
-        var googleId=params.googleId;
-        var facebookId=params.facebookId;
-        var isValidEmail=userService.isValidEmail(email);
-        if(!isValidEmail)
-            return callback("Incorrect Email");
-        var findObject={};
-        findObject.where={};
-        findObject.include=userService.getIncludeModels();
-        (googleId)?(findObject.where.$or=[{email:email},{googleId:googleId}]):(findObject);
-        (facebookId)?(findObject.where.$or=[{email:email},{facebookId:facebookId}]):(findObject);
-        findObject.where.$and={};
-        findObject.where.$and.status='Active';
-        userService.validateUserLogin(params,findObject,callback);
+    deleteOtp(userId) {
+        var updateObject = {};
+        var whereObject = {};
+        whereObject.where = {};
+        whereObject.where.id = userId;
+        updateObject.otp = null;
+        updateObject.status = 'Active';
+        updateObject.isPhoneVerified = true;
+        Users.update(updateObject, whereObject);
     }
 
-    logout(params,callback){
+    /******************** Normal Login In User App ************************/
+
+    normalLogin(params, callback) {
         var userService = new UserService();
-        var userId=params.userId;
-        var token=params.token;
-        var deviceId=params.deviceId;
-        if(userId && token && deviceId)
-            return userService.updateTokensOnLogout(params,callback);
+        var userName = params.userName;
+        var password = params.password;
+        var isValidPassword = userService.isValidPassword(password);
+        var findObject = {};
+        findObject.include = userService.getIncludeModels();
+        findObject.where = {};
+        findObject.where.$and = {};
+        if (!userName)
+            return callback("Please give phone or email");
+        if (!isValidPassword)
+            return callback("Incorrect Password");
+        if (!isNaN(+userName) && !userService.isValidPhone(+userName))
+            return callback("Incorrect Phone");
+        if (isNaN(+userName) && !userService.isValidEmail(userName))
+            return callback("Incorrect Email");
+        if (!isNaN(+userName) && userService.isValidPhone(+userName))
+            findObject.where.$and.phone = userName;
+        if (isNaN(+userName) && userService.isValidEmail(userName))
+            findObject.where.$and.email = userName;
+        findObject.where.$and.password = md5(password);
+        findObject.where.$and.status = 'Active';
+        userService.validateUserLogin(params, findObject, callback);
+    }
+
+    validateUserLogin(params, findObject, callback) {
+        var userService = new UserService();
+        Users.find(findObject).then(function(result) {
+            if (!result)
+                return callback("Incorrect Credentials");
+            var group = result.userGroups.name;
+            if (result && group != 'User')
+                return callback("Not a User");
+            userService.updateAccessTokenAndShowResult(params, result, callback);
+            return null;
+        }).catch(function(exception) {
+            callback(exception);
+        });
+    }
+
+    /******************** Social Login In User App ************************/
+
+    socialLogin(params, callback) {
+        var userService = new UserService();
+        var email = params.email;
+        var googleId = params.googleId;
+        var facebookId = params.facebookId;
+        var isValidEmail = userService.isValidEmail(email);
+        if (!isValidEmail)
+            return callback("Incorrect Email");
+        var findObject = {};
+        findObject.where = {};
+        findObject.include = userService.getIncludeModels();
+        (googleId) ? (findObject.where.$or = [{ email: email }, { googleId: googleId }]) : (findObject);
+        (facebookId) ? (findObject.where.$or = [{ email: email }, { facebookId: facebookId }]) : (findObject);
+        findObject.where.$and = {};
+        findObject.where.$and.status = 'Active';
+        userService.validateUserLogin(params, findObject, callback);
+    }
+
+    /******************** Sends OTP On Forgot Password In User App ***********************/
+
+    forgotPassword(params, callback) {
+        var userService = new UserService();
+        var phone = params.phone;
+        var isValidPhone = userService.isValidPhone(phone);
+        if (!isValidPhone)
+            return callback("Invalid Phone");
+        var userType = 'User';
+        return userService.validateUserBeforeOtp(phone, userType, callback);
+    }
+
+    /***************** Verify OTP After Forgot Password In User App ********************/
+
+    verifyOtp(params, callback) {
+        var userService = new UserService();
+        userService.salesAgentVerifyOtp(params, callback);
+    }
+
+    /******************** Reset Password After OTP Verification ***********************/
+
+    resetPassword(params, callback) {
+        var userService = new UserService();
+        var userType = 'User';
+        userService.isValidUserToResetPassword(params, userType, callback);
+    }
+
+    /***************** Updates User's Profile Information **********************/
+
+    validateAndUpdateUserProfile(params, callback) {
+        var userService = new UserService();
+        var whereObject = {};
+        whereObject.where = {};
+        whereObject.where.id = params.id;
+        whereObject.include = userService.getIncludeModels();
+        Users.find(whereObject).then(function(result) {
+            if (result)
+                return callback("Incorrect Id");
+            userService.validateUserProfile(params, result, callback);
+            return null;
+        }).catch(function(exception) {
+            callback(exception);
+        });
+    }
+
+    validateUserProfile(params, userData, callback) {
+        var userService = new UserService();
+        var email = params.email;
+        var resultedEmail = userData.email;
+        var userGroupName = userData.userGroups.name;
+        if (userData && userGroupName != "User")
+            return callback("Not a User");
+        if (userData && email && resultedEmail)
+            return callback("Email Is One Time Editable");
+        if (userData && ((!resultedEmail && email) || (resultedEmail && !email)))
+            return userService.updateUserProfile(params, userData, callback);
+    }
+
+    updateUserProfile(params, userData, callback) {
+        var updateObject = {};
+        var name = params.name;
+        var email = params.email;
+        var profileImageUrl = params.profileImageUrl;
+        (name) ? (updateObject.name = name) : (updateObject);
+        (profileImageUrl) ? (updateObject.profileImageUrl = profileImageUrl) : (updateObject);
+        (email) ? (updateObject.email = email) : (updateObject);
+        var whereObject = {};
+        whereObject.where = {};
+        whereObject.where.id = params.id;
+        var findObject = {};
+        findObject.where = whereObject.where;
+        findObject.attributes = ['id', 'name', 'phone', 'profileImageUrl', 'email', 'isPinActivated'];
+        var userRepository = new UserRepository();
+        userRepository.updateAndFind(updateObject, whereObject, findObject, callback);
+    }
+
+    /******************* Validates Old Password And Set New Password *******************/
+
+    changePassword(params, callback) {
+        var userService = new UserService();
+        userService.isValidParamsToChangePassword(params, callback);
+    }
+
+    /******************** Enable/Disable PIN Lock ***************************/
+
+    updatePinStatus(params, callback) {
+        var userService = new UserService();
+        var userId = params.userId;
+        var isPinActivated = params.isPinActivated;
+        if (!_.isBoolean(isPinActivated))
+            return callback("isPinActivated should be Boolean");
+        if (userId && !(isPinActivated == null || undefined))
+            return userService.updateUsersPinStatus(params, callback);
+        return callback("userId And isPinActivated Required");
+    }
+
+    updateUsersPinStatus(params, callback) {
+        var userId = params.userId;
+        var isPinActivated = params.isPinActivated;
+        var userRepository = new UserRepository();
+        var updateObject = {};
+        var whereObject = {};
+        var findObject = {};
+        whereObject.where = {};
+        whereObject.where.id = userId;
+        findObject.where = whereObject.where;
+        findObject.attributes = ['id', 'name', 'email', 'profileImageUrl', 'phone', 'isPinActivated'];
+        updateObject.isPinActivated = isPinActivated;
+        userRepository.updateAndFind(updateObject, whereObject, findObject, callback);
+    }
+
+
+    /****************** Sends OTP On Forgot PIN In User App **********************/
+
+    forgotPin(params, callback) {
+        var userService = new UserService();
+        userService.forgotPassword(params, callback);
+    }
+
+    /****************** Validates Old PIN And Set New PIN ***********************/
+
+    changePin(params, callback) {
+        var userService = new UserService();
+        var userId = params.userId;
+        var currentPin = params.currentPin;
+        var newPin = params.newPin;
+        if (!userId && !currentPin && newPin)
+            return callback("User Id, Current PIN And New PIN Required");
+        if (userId && !_.isInteger(currentPin))
+            return callback("Current PIN should be Integer");
+        if (userId && !_.isInteger(newPin))
+            return callback("New PIN should be Integer");
+        if (userId && !_.inRange(currentPin, 1000, 10000))
+            return callback("Incorrect Current PIN");
+        if (userId && !_.inRange(newPin, 1000, 10000))
+            return callback("New PIN should be 4 Digit Integer");
+        if (userId && (newPin == currentPin))
+            return callback("New PIN And Current PIN should be different");
+        return userService.validatePin(userId, currentPin, newPin, callback);
+    }
+
+    validatePin(userId, currentPin, newPin, callback) {
+        var userService = new UserService();
+        var findObject = {};
+        findObject.where = {};
+        findObject.where.id = userId;
+        findObject.include = userService.getIncludeModels();
+        Users.find(findObject).then(function(result) {
+            if (!result)
+                return callback("Incorrect User Id");
+            if (result.userGroups.name != 'User' || result.status != "Active")
+                return callback("Not an Active User");
+            if (!result.isPinActivated)
+                return callback("Please Enable PIN Settings");
+            if (currentPin != result.pin)
+                return callback("Incorrect Current PIN");
+            if (currentPin == result.pin)
+                return userService.updatePin(userId, newPin, callback);
+            return callback("Something Went Wrong");
+        }).catch(function(exception) {
+            callback(exception);
+        });
+    }
+
+    updatePin(userId, newPin, callback) {
+        var updateObject = {};
+        var whereObject = {};
+        whereObject.where = {};
+        whereObject.where.id = userId;
+        updateObject.pin = newPin;
+        Users.update(updateObject, whereObject).then(function(result) {
+            return callback(null, { message: "PIN Reset" });
+        }).catch(function(exception) {
+            callback(exception);
+        });
+    }
+
+    /********************** Logout From User App ***********************/
+
+    logout(params, callback) {
+        var userService = new UserService();
+        var userId = params.userId;
+        var token = params.token;
+        var deviceId = params.deviceId;
+        if (userId && token && deviceId)
+            return userService.updateTokensOnLogout(params, callback);
         return callback("UserId, Token And DeviceId Required");
     }
+
+    /********************************************************************/
+
 }
 
 module.exports = UserService;

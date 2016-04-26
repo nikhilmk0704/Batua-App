@@ -622,7 +622,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
     + Body
     
             {
-                "email":"abc@abc.com",
+                "userName":"abc@abc.com",
                 "password":"123456",
                 "deviceId":"device1"
             }
