@@ -68,11 +68,11 @@
         function changePassword(userId, oldPassword, newPassword, callback) {
             httpi({
                 method: "put",
-                url: API.login,
+                url: API.changepassword,
                 data: {
                     userId: userId,
-                    password: newPassword,
-                    oldPassword: oldPassword
+                    newPassword: newPassword,
+                    currentPassword: oldPassword
                 }
             }).then(function(response) {
                 callback(response);
