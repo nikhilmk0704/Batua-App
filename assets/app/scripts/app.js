@@ -225,6 +225,12 @@
         $rootScope.$on('$locationChangeStart', function(event, next, current) {
             var restrictedRoutes = ['/login', '/forgetPassword'];
             var restrictedPage = $.inArray($location.path(), restrictedRoutes) === -1;
+            var restrictedPagesWithIds = ['/resetpassword'];
+            restrictedPagesWithIds.forEach(function (route) {
+                if ($location.path().substring(0, route.length) === route) {
+                    restrictedPage = false;
+                }
+            });
             var loggedIn = $rootScope.globals.currentUser;
             if (restrictedPage && !loggedIn) {
                 $location.path('/login');
