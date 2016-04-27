@@ -88,7 +88,7 @@ module.exports = {
             if (_.isEmpty(result))
                 return res.notFound(error.send("Does not exist"));
             return res.json(200, result);
-        })
+        });
     },
 
     updateUserByAdmin: function(req, res) {
@@ -112,6 +112,31 @@ module.exports = {
         params.status = req.body.status;
         var userService = new UserService();
         userService.setUserStatusByAdmin(params, function(err, result) {
+            if (err)
+                return res.badRequest(error.send(err));
+            return res.json(200, result);
+        });
+    },
+
+    getActiveUsers:function(req,res){
+        var params = {};
+        params.id = req.param('id');
+        var userService = new UserService();
+        userService.getActiveUsers(params, function(err, result) {
+            if (err)
+                return res.badRequest(error.send(err));
+            if (_.isEmpty(result))
+                return res.notFound(error.send("Does not exist"));
+            return res.json(200, result);
+        });
+    },
+
+    sendPushNotificationByAdmin: function(req, res) {
+        var params = {};
+        params.message = req.body.message;
+        params.id = req.body.id;            // id should be in Array.
+        var userService = new UserService();
+        userService.sendPushNotificationByAdmin(params, function(err, result) {
             if (err)
                 return res.badRequest(error.send(err));
             return res.json(200, result);
@@ -175,7 +200,7 @@ module.exports = {
         var userService = new UserService();
         userService.salesAgentForgotPassword(params, function(err, result) {
             if (err)
-                return res.json(401,error.send(err));
+                return res.json(401, error.send(err));
             return res.json(200, result);
         });
     },
@@ -394,9 +419,9 @@ module.exports = {
     pinLogin: function(req, res) {
         var params = {};
         params.token = req.headers['access-token'];
-        params.deviceId=req.body.deviceId;
-        params.userId=req.body.userId;
-        params.pin=req.body.pin;
+        params.deviceId = req.body.deviceId;
+        params.userId = req.body.userId;
+        params.pin = req.body.pin;
         var userService = new UserService();
         userService.pinLogin(params, function(err, result) {
             if (err)

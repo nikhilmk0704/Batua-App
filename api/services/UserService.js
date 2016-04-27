@@ -93,6 +93,21 @@ class UserService {
         });
     }
 
+    sendNotification(params) {
+        var awsSnsService = new AwsSnsService();
+        var arrayOfDeviceId = params.arrayOfDeviceId;
+        var message = params.message;
+        var title = params.title;
+        async.each(arrayOfDeviceId,function(deviceId){
+            awsSnsService.sendNotification(deviceId, message, title, function(err, result) {
+                if (err)
+                    console.log(err);
+                else
+                    console.log(result);
+            });
+        });
+    }
+
     /********************** Login Through Admin CMS *************************/
 
     adminLogin(params, callback) {
@@ -442,6 +457,63 @@ class UserService {
         findObject.attributes = ['id', 'name', 'phone', 'email', 'status'];
         var userRepository = new UserRepository();
         userRepository.updateAndFind(params, options, findObject, callback);
+    }
+
+    /**************** Send Push Notification From Admin CMS ****************/
+
+    getActiveUsers(params, callback) {
+        var id = params.id;
+        var findObject = {};
+        findObject.where = {};
+        findObject.include = [{ model: UserGroups, as: 'userGroups', required: true, where: { name: 'User' } }];
+        findObject.attributes = ['id', 'name', 'phone', 'email', 'status', 'profileImageUrl'];
+        var userRepository = new UserRepository();
+        if (id) {
+            findObject.where.$and = {};
+            findObject.where.$and.id = id;
+            findObject.where.$and.status = 'Active';
+            userRepository.find(findObject, callback);
+        } else {
+            findObject.where.status = 'Active';
+            userRepository.findAll(findObject, callback);
+        }
+    }
+
+    /**************** Send Push Notification From Admin CMS ****************/
+
+    sendPushNotificationByAdmin(params, callback) {
+        var userService = new UserService();
+        var message = params.message;
+        var userIds = params.id;
+        if (!message || !userIds)
+            return callback("Please give message and id");
+        if (!_.isString(message))
+            return callback("Message should be String");
+        if (!_.isArray(userIds))
+            return callback("Id should be an Array");
+        if (_.isEmpty(userIds))
+            return callback("Id Array should not be Empty");
+        userService.getDeviceIds(params, callback);
+    }
+
+    getDeviceIds(params, callback) {
+        var userService = new UserService();
+        var getDeviceIdQueryString = "SELECT DISTINCT at.deviceId FROM Users " +
+            "AS u INNER JOIN (UsersAccessTokens AS uat INNER JOIN AccessTokens " +
+            "AS at ON at.id=uat.accessTokenId AND at.token IS NOT NULL) ON " +
+            "u.id=uat.userId INNER JOIN UserGroups AS ug ON ug.id=u.userGroupId " +
+            "AND ug.name='User' WHERE u.status='Active' AND u.id IN (" + params.id + ")";
+        sequelize.query(getDeviceIdQueryString).spread(function(metaResult, result) {
+            var notifyObject = {};
+            var arrayOfDeviceId = _.map(result, 'deviceId');
+            notifyObject.arrayOfDeviceId = arrayOfDeviceId;
+            notifyObject.message = params.message;
+            notifyObject.title = "Batua";
+            userService.sendNotification(notifyObject);
+            return callback(null, "Notification Sent");
+        }).catch(function(exception) {
+            callback(exception);
+        });
     }
 
     /*********************** Logout From Admin CMS ****************************/
@@ -1277,14 +1349,14 @@ class UserService {
         var pin = params.pin;
         var deviceId = params.deviceId;
         var token = params.token;
-        if (!userId && !pin && !deviceId && !token)
+        if (!userId || !pin || !deviceId || !token)
             return callback("Please give userId,pin,deviceId,Access-Token");
         if (!userService.isValidPin(pin))
             return callback("Invalid PIN");
-        userService.findUserAndValidatePin(params,callback);
+        userService.findUserAndValidatePin(params, callback);
     }
 
-    findUserAndValidatePin(params,callback){
+    findUserAndValidatePin(params, callback) {
         var userId = params.userId;
         var pin = params.pin;
         var deviceId = params.deviceId;
@@ -1333,7 +1405,7 @@ class UserService {
         var userId = params.userId;
         var currentPin = params.currentPin;
         var newPin = params.newPin;
-        if (!userId && !currentPin && newPin)
+        if (!userId || !currentPin || !newPin)
             return callback("User Id, Current PIN And New PIN Required");
         if (userId && !_.isInteger(currentPin))
             return callback("Current PIN should be Integer");
