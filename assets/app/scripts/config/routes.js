@@ -8,6 +8,7 @@
             login: "/admin/user/login",
             forgetPassword: "/admin/user/forgotpassword",
             resetPassword: "/admin/user/resetpassword",
+            changepassword: "/admin/user/changepassword",
             category: "/category",
             updateCategory: "/category/:id",
             getMerchants: "/admin/:adminId/merchant",

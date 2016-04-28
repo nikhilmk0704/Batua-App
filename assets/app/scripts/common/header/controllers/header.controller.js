@@ -6,6 +6,5 @@ angular.module('app').controller('headerController', ['$state', 'authenticationS
         authenticationService.clearCredentials();
         $state.go('login', { reload: true });
     }
-
-
+    
 }]);

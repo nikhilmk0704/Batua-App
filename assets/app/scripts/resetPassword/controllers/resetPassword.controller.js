@@ -11,7 +11,7 @@ angular.module('app').controller('resetPasswordController', ['$state', '$statePa
 
         vm.resetPassword = function(password) {
 
-            loginService.resetPassword(password, email, auth, function(response) {
+            loginService.resetPassword(password, vm.email, vm.auth, function(response) {
                 if (response.status === 200) {
                     authenticationService.clearCredentials();
                     $state.go('login');
