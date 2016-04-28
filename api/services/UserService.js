@@ -189,7 +189,7 @@ class UserService {
         findObject.where.$and = {};
         findObject.where.$and.email = email;
         findObject.where.$and.status = 'Active';
-        var passwordGenerationUrl = "http://52.36.228.74:1337/resetpassword/" + email + "/" + token;
+        var passwordGenerationUrl = "http://52.36.228.74:1337/#/resetpassword/" + email + "/" + token;
         Users.find(findObject).then(function(result) {
             var group = (result) ? (result.userGroups.name) : (null);
             if (result && (group == 'Admin' || group == 'Super Admin')) {
@@ -379,7 +379,7 @@ class UserService {
             newParams.userId = userData.id;
             var email = userData.email;
             var urlToken = result.token;
-            var passwordGenerationUrl = "http://52.36.228.74:1337/resetpassword/" + email + "/" + urlToken;
+            var passwordGenerationUrl = "http://52.36.228.74:1337/#/resetpassword/" + email + "/" + urlToken;
             userService.createUsersAccessToken(newParams, userData, passwordGenerationUrl, callback);
             return null;
         }).catch(function(exception) {

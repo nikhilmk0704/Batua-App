@@ -6,11 +6,14 @@ class AwsSns {
 
     sendNotification(deviceToken, message, title, callback) {
         var sns = new aws.SNS();
-        aws.config.update(sails.config.connections.sns);
+        aws.config.update({
+            accessKeyId: 'AKIAJ6S42QQEPALPV7DQ',
+            secretAccessKey: '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',
+            region: 'us-east-1'
+        });
         var param = {};
         param.PlatformApplicationArn = sails.config.connections.snsPlatformArn.PlatformApplicationArn;
         param.Token = deviceToken;
-        console.log(param);
         sns.createPlatformEndpoint(param, function(err, data) {
             if (err)
                 return callback(err);
