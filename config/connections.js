@@ -105,14 +105,8 @@ module.exports.connections = {
                 bucket: 'batua-test'
             },
 
-    sns:{
-            accessKeyId: 'AKIAJ6S42QQEPALPV7DQ',
-            secretAccessKey: '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',
-            region: 'us-east-1'
-        },
-
     snsPlatformArn:{
-                        PlatformApplicationArn:'arn:aws:sns:us-east-1:058033277605:app/GCM/Beatniks'
+                        PlatformApplicationArn:'arn:aws:sns:us-east-1:711489290099:app/GCM/Batua'
                     },
 
     ses:{

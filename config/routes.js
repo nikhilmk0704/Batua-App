@@ -72,6 +72,8 @@ module.exports.routes = {
     'get /api/admin/user/:id?': 'UsersController.findUserByAdmin',
     'put /api/admin/user': 'UsersController.updateUserByAdmin',
     'put /api/admin/user/setstatus': 'UsersController.setUserStatusByAdmin',
+    'get /api/admin/activeuser/:id?': 'UsersController.getActiveUsers',
+    'put /api/admin/activeuser/notify': 'UsersController.sendPushNotificationByAdmin',
     'put /api/admin/user/logout': 'UsersController.adminLogout',
 
     /********************* Field Sales Agent App API ************************/
