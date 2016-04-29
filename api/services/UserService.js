@@ -98,7 +98,7 @@ class UserService {
         var arrayOfDeviceId = params.arrayOfDeviceId;
         var message = params.message;
         var title = params.title;
-        async.each(arrayOfDeviceId,function(deviceId){
+        async.each(arrayOfDeviceId, function(deviceId) {
             awsSnsService.sendNotification(deviceId, message, title, function(err, result) {
                 if (err)
                     console.log(err);
@@ -466,7 +466,7 @@ class UserService {
         var findObject = {};
         findObject.where = {};
         findObject.include = [{ model: UserGroups, as: 'userGroups', required: true, where: { name: 'User' } }];
-        findObject.attributes = ['id', 'name', 'phone', 'email', 'status', 'profileImageUrl'];
+        findObject.attributes = ['id', 'name', 'phone', 'email', 'status', 'profileImageUrl', 'latitude', 'longitude'];
         var userRepository = new UserRepository();
         if (id) {
             findObject.where.$and = {};
@@ -510,7 +510,7 @@ class UserService {
             notifyObject.message = params.message;
             notifyObject.title = "Batua";
             userService.sendNotification(notifyObject);
-            return callback(null, "Notification Sent");
+            return callback(null, { message: "Notification Sent" });
         }).catch(function(exception) {
             callback(exception);
         });

@@ -242,6 +242,67 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 400 (applicaiton)
 
 
+### Push Notification For Active Users [GET /api/admin/activeuser/{id}]
+        
++ Response 200 (application/json)
+    
+    + Body
+
+            [
+                {
+                    "id": 1,
+                    "name": "vikash baghel",
+                    "phone": 9479897807,
+                    "email": "vikash.baghel@tecsolsoftware.com",
+                    "status": "Active",
+                    "profileImageUrl": "url",
+                    "userGroups": null
+                },
+                {
+                    "id": 2,
+                    "name": "Varsha Udasi",
+                    "phone": 9876543210,
+                    "email": "varsha.udasi@tecsolsoftware.com",
+                    "status": "Active",
+                    "profileImageUrl": "url",
+                    "userGroups": null
+                },
+                {
+                    "id": 3,
+                    "name": "Kajal Anant Jadhav",
+                    "phone": 9008952987,
+                    "email": "kajal.jadhav@tecsolsoftware.com",
+                    "status": "Active",
+                    "profileImageUrl": "https://batua-test.s3.amazonaws.com/c92f8ae8-886f-4b25-ba43-ab445ec889e7.jpg",
+                    "userGroups": null
+                }
+            ]
+            
++ Response 400 (applicaiton)
+
+
+### Send Push Notification [PUT /api/admin/activeuser/notify]
+
++ Request (application/json)
+ 
+    + Body
+    
+            {
+                "id":[27,28,30],
+                "message":"hello"
+            }
+        
++ Response 200 (application/json)
+    
+    + Body
+
+            {
+                "message": "Notification Sent"
+            }
+            
++ Response 400 (applicaiton)
+
+
 ### Admin Logout [PUT /api/admin/user/logout]
 
 + Request (application/json)
@@ -3905,7 +3966,5 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 
 
 + Response 401 (application/json)
-
-                
 
                 
