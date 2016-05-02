@@ -929,8 +929,12 @@ class UserService {
         var password = params.password;
         var isValidPhone = userService.isValidPhone(phone);
         var isValidPassword = userService.isValidPassword(password);
+        if (!phone)
+            return callback("Phone Number Required")
         if (!isValidPhone)
             return callback("Invalid Phone");
+        if (email && !userService.isValidEmail(email))
+            return callback("Invalid Email")
         if (!isValidPassword)
             return callback("Invalid Password");
         var newParams = {};
@@ -951,8 +955,10 @@ class UserService {
         (email) ? (findObject.where.$or = [{ 'phone': phone }, { 'email': email }]) : (findObject);
         (!email) ? (findObject.where.phone = phone) : (findObject);
         Users.find(findObject).then(function(result) {
-            if (result)
-                return callback("Already Registered");
+            if (result && (!email || (email && result.phone == phone)))
+                return callback("Phone Number Already Registered");
+            if (result && email && result.email == email)
+                return callback("Email Already Registered");
             userService.createNewUser(params, callback);
             return null;
         }).catch(function(exception) {
@@ -1463,7 +1469,7 @@ class UserService {
         var userService = new UserService();
         var email = params.email;
         var query = params.query;
-        var mailObject={};
+        var mailObject = {};
         mailObject.sender = 'support@thebatua.com';
         mailObject.receivers = [];
         mailObject.receivers.push(email);
