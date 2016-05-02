@@ -25,7 +25,7 @@ angular.module('app').controller('notificationController', ['$state', 'notificat
             });
             notificationData.users = vm.listOfUsersId;
             notificationData.message = notificationMessage;
-            if (notificationData.users && notificationData.users.length > 0) {
+            if (notificationData.users.length > 0) {
                 notificationService.sendNotification(notificationData, function(response) {
                     if (response.status === 200) {
                         $state.go('notification');
@@ -36,8 +36,9 @@ angular.module('app').controller('notificationController', ['$state', 'notificat
                     }
                     return toastr.error(response.data);
                 });
+            } else {
+                return toastr.error('Please select at least one user!');
             }
-            return toastr.error('Please select at least one user!');
         };
 
         vm.checkAll = function() {
