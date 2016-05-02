@@ -203,6 +203,13 @@
             controllerAs: 'vm'
         })
 
+        .state('notification', {
+            url: '/notification',
+            templateUrl: 'app/views/notification/notification.html',
+            controller: 'notificationController',
+            controllerAs: 'vm'
+        })
+
     }
 
     run.$inject = ['$rootScope', '$cookieStore', '$http', '$location', 'authenticationService', '$state', 'loginService'];

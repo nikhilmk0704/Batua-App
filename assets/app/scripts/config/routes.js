@@ -25,7 +25,9 @@
             offerStatus: "/offer/:id/status",
             promocode: "/promocode",
             updatePromocode: "/promocode/:id",
-            promocodeStatus: "/promocode/:id/status"
+            promocodeStatus: "/promocode/:id/status",
+            pushNotification: "/admin/active/notify",
+            activeMobileUsers: "/admin/activeuser"
         }
 
     }
