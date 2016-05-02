@@ -20,7 +20,7 @@ angular.module('app').controller('notificationController', ['$state', 'notificat
 
             vm.listOfUsersId = [];
             var notificationData = {};
-            angular.forEach(vm.items, function(item) {
+            angular.forEach(vm.mobileUsers, function(item) {
                 if (item.selected) vm.listOfUsersId.push(item.userId);
             });
             notificationData.users = vm.listOfUsersId;
@@ -46,7 +46,7 @@ angular.module('app').controller('notificationController', ['$state', 'notificat
             } else {
                 vm.selectedAll = false;
             }
-            angular.forEach(vm.items, function(item) {
+            angular.forEach(vm.mobileUsers, function(item) {
                 item.selected = vm.selectedAll;
             });
         };
