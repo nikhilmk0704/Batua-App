@@ -118,7 +118,7 @@ module.exports = {
         });
     },
 
-    getActiveUsers:function(req,res){
+    getActiveUsers: function(req, res) {
         var params = {};
         params.id = req.param('id');
         var userService = new UserService();
@@ -134,7 +134,7 @@ module.exports = {
     sendPushNotificationByAdmin: function(req, res) {
         var params = {};
         params.message = req.body.message;
-        params.id = req.body.id;            // id should be in Array.
+        params.id = req.body.id; // id should be in Array.
         var userService = new UserService();
         userService.sendPushNotificationByAdmin(params, function(err, result) {
             if (err)
@@ -448,6 +448,18 @@ module.exports = {
         params.newPin = req.body.newPin;
         var userService = new UserService();
         userService.changePin(params, function(err, result) {
+            if (err)
+                return res.badRequest(error.send(err));
+            return res.json(200, result);
+        });
+    },
+
+    contactus: function(req, res) {
+        var params = {};
+        params.query = req.body.query;
+        params.email = req.body.email;
+        var userService = new UserService();
+        userService.contactus(params, function(err, result) {
             if (err)
                 return res.badRequest(error.send(err));
             return res.json(200, result);

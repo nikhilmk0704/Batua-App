@@ -650,7 +650,7 @@ class UserService {
         var isValidPhone = userService.isValidPhone(phone);
         if (!isValidPhone)
             return callback("10 Digit Phone is Required");
-        var userType = 'Field sales Agent';
+        var userType = 'Field Sales Agent';
         return userService.validateUserBeforeOtp(phone, userType, callback);
     }
 
@@ -919,7 +919,7 @@ class UserService {
         });
     }
 
-    /********************* Normal Sign In User's App **************************/
+    /********************* Normal SignUp In User's App **************************/
 
     normalSignup(params, callback) {
         var userService = new UserService();
@@ -1453,6 +1453,26 @@ class UserService {
             return callback(null, { message: "PIN Reset" });
         }).catch(function(exception) {
             callback(exception);
+        });
+    }
+
+    /********************** Contact Us User App ***********************/
+
+    contactus(params, callback) {
+        var awsSesService = new AwsSesService();
+        var userService = new UserService();
+        var email = params.email;
+        var query = params.query;
+        var mailObject={};
+        mailObject.sender = 'support@thebatua.com';
+        mailObject.receivers = [];
+        mailObject.receivers.push(email);
+        mailObject.subjectText = 'Welcome to Batua !!!';
+        mailObject.bodyText = 'Welcome to Batua !!!';
+        awsSesService.sendEmail(mailObject, function(err, result) {
+            if (err)
+                return callback(err);
+            return callback(null, { message: "We are processing your query" });
         });
     }
 
