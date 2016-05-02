@@ -27,7 +27,7 @@
             promocode: "/promocode",
             updatePromocode: "/promocode/:id",
             promocodeStatus: "/promocode/:id/status",
-            pushNotification: "/admin/active/notify",
+            pushNotification: "/admin/activeuser/notify",
             activeMobileUsers: "/admin/activeuser"
         }
 

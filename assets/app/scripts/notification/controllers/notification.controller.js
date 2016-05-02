@@ -21,7 +21,7 @@ angular.module('app').controller('notificationController', ['$state', 'notificat
             vm.listOfUsersId = [];
             var notificationData = {};
             angular.forEach(vm.mobileUsers, function(item) {
-                if (item.selected) vm.listOfUsersId.push(item.userId);
+                if (item.selected) vm.listOfUsersId.push(item.id);
             });
             notificationData.users = vm.listOfUsersId;
             notificationData.message = notificationMessage;
