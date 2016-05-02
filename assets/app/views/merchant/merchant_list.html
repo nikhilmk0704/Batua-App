@@ -14,16 +14,16 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="btn-group" style="padding-left:30px;">
-                                    <a class="btn sbold green" href=""> Export to Excels
-                           <i class="fa fa-exchange"></i>
-                         </a>
+                                    <button class="btn sbold green" ng-click="vm.exportData()" type="button"> Export to Excels
+                                        <i class="fa fa-exchange"></i>
+                                    </button>
                                 </div>
                             </div>
                         </div>
                     </section>
                     <div class="dataTables_wrapper no-footer" ng-show="vm.merchants.length">
                         <div class="table-scrollable">
-                            <table class="table table-striped table-bordered table-hover order-column dataTable no-footer responsive" datatable="ng">
+                            <table class="table table-striped table-bordered table-hover order-column dataTable no-footer responsive" datatable="ng" id="merchantTable">
                                 <thead>
                                     <tr role="row">
                                         <th tabindex="0" aria-controls="sample_1" aria-label="activate to sort column ascending" style="width: 50px;">Sr No. </th>
@@ -53,7 +53,7 @@
                                             <a type="button" class="btn button-color-table" ng-click="vm.editMerchantData(merchant)" ng-disabled="vm.checkMerchantStatus(merchant)"><i class="fa fa-pencil"></i></a>
                                         </td>
                                         <td>
-                                            <span ng-hide = "vm.showActions(merchant)">
+                                            <span ng-hide="vm.showActions(merchant)">
                                             <a style="float:left; font-size:14px;" class="btn" ng-if="merchant.status == 'Suspend'" ng-click="vm.setStatus(merchant.id, 'Active')"><i class="fa fa-unlock"></i> Active </a>
                                             <a style="float:left; font-size:14px;" class="btn" ng-if="merchant.status == 'Active'" ng-click="vm.setStatus(merchant.id, 'Suspend')"><i class="fa fa-lock"></i> Suspend </a>
                                             <a style="float:left; font-size:14px;" class="btn" ng-click="vm.setStatus(merchant.id, 'Permanent Suspend')"><i class="fa fa-ban"></i> Permanent Suspend </a>
