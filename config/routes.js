@@ -27,7 +27,7 @@ module.exports.routes = {
     /********************* Merchants Module API ************************/
 
     'post /api/merchant': 'MerchantsController.create',
-    'get /api/user/:userId/merchant/:id?': 'MerchantsController.find',
+    'get /api/user/:userId/merchant/:id?/latitude/:latitude/longitude/:longitude': 'MerchantsController.find',
     'get /api/salesagent/:salesAgentId/merchant/:id?': 'MerchantsController.find',
     'get /api/admin/:adminId/merchant/:id?': 'MerchantsController.find',
     'get /api/merchant/:id?': 'MerchantsController.getActiveMerchants',

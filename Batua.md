@@ -698,7 +698,9 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
                 "profileImageUrl": null,
                 "phone": 9876543211,
                 "token": "093eJJO6uGSpP5bp0vuAR4vR",
-                "userGroup": "User"
+                "userGroup": "User",
+                "isPinActivated":true,
+                "isPinSet":true
             }
             
 + Response 401 (application/json)
@@ -734,7 +736,9 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
                 "profileImageUrl": null,
                 "phone": 9876543211,
                 "token": "093eJJO6uGSpP5bp0vuAR4vR",
-                "userGroup": "User"
+                "userGroup": "User",
+                "isPinActivated":true,
+                "isPinSet":true
             }
             
 + Response 401 (application/json)
@@ -847,7 +851,9 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
                 "id": 14,
                 "name": "vikash",
                 "profileImageUrl": "url",
-                "email": "vikash.baghel@tecsolsoftware.com"
+                "email": "vikash.baghel@tecsolsoftware.com",
+                "isPinActivated":true,
+                "isPinSet":true
             }
 
 + Response 400 (application/json)
@@ -1353,7 +1359,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
                 ]
             }
 
-### Get Merchant For User [GET /api/user/:userId/merchant/:id?]
+### Get Merchant For User [GET /api/user/:userId/merchant/{:id}/latitude/{:latitude}/longitude/{:longitude}]
 
 + Response 200 (application/json)
 
@@ -3966,5 +3972,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 
 
 + Response 401 (application/json)
+
+                
 
                 
