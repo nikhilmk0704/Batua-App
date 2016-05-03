@@ -168,6 +168,8 @@ class UserService {
             loggedinResult.email = result.email;
             loggedinResult.profileImageUrl = result.profileImageUrl;
             loggedinResult.phone = result.phone;
+            loggedinResult.isPinActivated = result.isPinActivated;
+            loggedinResult.isPinSet = (result.pin) ? (true) : (false);
             loggedinResult.token = data.token;
             loggedinResult.userGroup = result.userGroups.name;
             return callback(null, loggedinResult);
@@ -817,13 +819,21 @@ class UserService {
         findObject.where = {};
         if (userId) {
             findObject.where.id = userId;
-            findObject.attributes = ['id', 'name', 'phone', 'profileImageUrl', 'email', 'isPinActivated'];
+            findObject.attributes = ['id', 'name', 'phone', 'profileImageUrl', 'email', 'isPinActivated', 'pin'];
         }
         if (salesagentId) {
             findObject.where.id = salesagentId;
-            findObject.attributes = ['id', 'name', 'profileImageUrl', 'email'];
+            findObject.attributes = ['id', 'name', 'profileImageUrl', 'email', 'pin'];
         }
-        userRepository.find(findObject, callback);
+        userRepository.find(findObject, function(err, result) {
+            if (err)
+                callback(err);
+            if (!result)
+                callback(null, result);
+            result.dataValues.isPinSet = (result.pin) ? (true) : (false);
+            delete result.dataValues.pin;
+            callback(null, result);
+        });
     }
 
     /**************** Updates User's Or Field Sales Agent's Profile ****************/
@@ -887,7 +897,7 @@ class UserService {
         whereObject.where = {};
         whereObject.where.id = params.id;
         findObject = whereObject;
-        findObject.attributes = ['id', 'name', 'email', 'profileImageUrl', 'phone'];
+        findObject.attributes = ['id', 'name', 'email', 'profileImageUrl', 'phone', 'isPinActivated'];
         userRepository.updateAndFind(newParams, whereObject, findObject, callback);
     }
 
@@ -1022,8 +1032,12 @@ class UserService {
         findObject.where = {};
         (googleId) ? (findObject.where.$or = [{ email: email }, { googleId: googleId }]) : (findObject);
         (facebookId) ? (findObject.where.$or = [{ email: email }, { facebookId: facebookId }]) : (findObject);
+        if (!email)
+            return callback("Email Required");
         if (!isValidEmail)
             return callback("Invalid Email");
+        if ((googleId && facebookId) || (!googleId && !facebookId))
+            return callback("Please give either googleId or facebookId");
         userService.validateUserSignup(params, findObject, callback);
     }
 
@@ -1034,8 +1048,10 @@ class UserService {
         var googleId = params.googleId;
         var facebookId = params.facebookId;
         Users.find(findObject).then(function(result) {
-            if (result)
-                return callback("Already Exist");
+            if (result && googleId && (result.googleId == googleId || result.email == email))
+                return callback("Gmail Already Registered");
+            if (result && facebookId && (result.facebookId == facebookId || result.email == email))
+                return callback("Facebook Email Already Registered");
             var newParams = {};
             newParams.name == name;
             newParams.email = email;
