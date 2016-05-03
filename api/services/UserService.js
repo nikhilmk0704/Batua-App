@@ -28,7 +28,7 @@ class UserService {
     }
 
     generateOtp() {
-        var otp = token.generate(6, '0123456789');
+        var otp = +(token.generate(6, '0123456789'));
         if (otp < 100000)
             return otp + 100000;
         return otp;

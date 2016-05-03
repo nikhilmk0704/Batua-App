@@ -4,14 +4,12 @@ var unirest = require('unirest');
 
 class Sms {
     send(params, callback) {
-        var message = params.message;
+        var message = encodeURI(params.message);
         var phone = params.phone;
-        var baseUrl = "https://webaroo-send-message-v1.p.mashape.com";
-        var url = baseUrl + "/sendMessage?message=" + message + "&phone=" + phone + "";
-        var key = sails.config.connections.sms.key;
-        unirest.get(url).header("X-Mashape-Key", key).end(function(result) {
-            var status = result.body.status;
-            if (status)
+        var url="http://enterprise.smsgupshup.com/GatewayAPI/rest?method=SendMessage&send_to="+ phone + "&msg="+ message +"&msg_type=TEXT&userid=2000157029&auth_scheme=plain&password=gULqmly5L&v=1.1&format=text";
+        unirest.get(url).end(function(result) {
+            var status = result.status;
+            if (status==200)
                 return callback(null, "Message Sent");
             return callback("Cannot Send Message");
         });
