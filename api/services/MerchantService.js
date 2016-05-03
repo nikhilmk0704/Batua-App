@@ -68,7 +68,7 @@ class MerchantService {
     // shows only those merchants created by particular sales agent
     find(params, callback) {
         var merchantService = new MerchantService();
-        var id = params.id;
+        var id = (params.id)?(+params.id):(null);
         var userId = params.userId;
         var salesAgentId = params.salesAgentId;
         var adminId = params.adminId;

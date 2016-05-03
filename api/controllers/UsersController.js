@@ -159,6 +159,7 @@ module.exports = {
     salesAgentNormalLogin: function(req, res) {
         var params = {};
         params.email = req.body.email;
+        params.phone = req.body.phone;
         params.password = req.body.password;
         params.deviceId = req.body.deviceId;
         var userService = new UserService();

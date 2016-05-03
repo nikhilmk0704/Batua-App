@@ -540,21 +540,35 @@ class UserService {
     salesAgentNormalLogin(params, callback) {
         var userService = new UserService();
         var email = params.email;
+        var phone = +params.phone;
         var password = params.password;
-        if (email && password)
+        var isValidEmail = userService.isValidEmail(email);
+        var isValidPhone = userService.isValidPhone(phone);
+        if ((email && phone) || (!email && !phone))
+            return callback("Either phone or email is required !");
+        if (phone && !isValidPhone)
+            return callback("Invalid Phone !");
+        if (email && !isValidEmail)
+            return callback("Invalid Email !")
+        if ((isValidEmail && password) || (isValidPhone && password))
             return userService.findUserAndValidateLogin(params, callback);
-        return callback("Email And Password Required")
+        return callback("Email And Password Or Phone And Password Required !")
     }
 
     findUserAndValidateLogin(params, callback) {
         var userService = new UserService();
+        var email = params.email;
+        var phone = +params.phone;
         var findObject = {};
         findObject.where = {};
-        findObject.where.email = params.email;
+        (email) ? (findObject.where.email = email) : (findObject);
+        (phone) ? (findObject.where.phone = phone) : (findObject);
         findObject.include = userService.getIncludeModels();
         Users.find(findObject).then(function(result) {
-            if (!result)
+            if (!result && email)
                 return callback("Incorrect Email");
+            if (!result && phone)
+                return callback("Incorrect Phone");
             userService.validateSalesLogin(params, result, callback);
             return null;
         }).catch(function(exception) {
@@ -731,6 +745,7 @@ class UserService {
         var userService = new UserService();
         var updateObject = {};
         updateObject.otp = null;
+        updateObject.isPhoneVerified = true;
         var whereObject = {};
         whereObject.where = {};
         whereObject.where.id = userData.id;
