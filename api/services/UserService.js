@@ -1457,8 +1457,6 @@ class UserService {
             var status = result.status;
             if (group != 'User' || status != 'Active')
                 return callback("Not an Active User");
-            if (!result.isPinActivated)
-                return callback("PIN is not Enabled");
             userService.updatePinForResetPin(params, callback);
             return null;
         }).catch(function(exception) {
