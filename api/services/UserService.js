@@ -546,9 +546,9 @@ class UserService {
         var isValidPhone = userService.isValidPhone(phone);
         if ((email && phone) || (!email && !phone))
             return callback("Either phone or email is required !");
-        if(phone && !isValidPhone)
+        if (phone && !isValidPhone)
             return callback("Invalid Phone !");
-        if(email && !isValidEmail)
+        if (email && !isValidEmail)
             return callback("Invalid Email !")
         if ((isValidEmail && password) || (isValidPhone && password))
             return userService.findUserAndValidateLogin(params, callback);
@@ -557,12 +557,12 @@ class UserService {
 
     findUserAndValidateLogin(params, callback) {
         var userService = new UserService();
-        var email=params.email;
-        var phone= +params.phone;
+        var email = params.email;
+        var phone = +params.phone;
         var findObject = {};
         findObject.where = {};
-        (email)?(findObject.where.email = email):(findObject);
-        (phone)?(findObject.where.phone = phone):(findObject);
+        (email) ? (findObject.where.email = email) : (findObject);
+        (phone) ? (findObject.where.phone = phone) : (findObject);
         findObject.include = userService.getIncludeModels();
         Users.find(findObject).then(function(result) {
             if (!result && email)
@@ -745,6 +745,7 @@ class UserService {
         var userService = new UserService();
         var updateObject = {};
         updateObject.otp = null;
+        updateObject.isPhoneVerified = true;
         var whereObject = {};
         whereObject.where = {};
         whereObject.where.id = userData.id;
