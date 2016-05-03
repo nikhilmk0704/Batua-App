@@ -1437,6 +1437,50 @@ class UserService {
 
     /****************** Validates Old PIN And Set New PIN ***********************/
 
+    resetPin(params, callback) {
+        var userService = new UserService();
+        var userId = params.userId;
+        var pin = params.pin;
+        if (!userId && !pin)
+            return callback("userId and pin is required");
+        var isValidPin = userService.isValidPin(pin);
+        if (!isValidPin)
+            return callback("Invalid Pin");
+        var findObject = {};
+        findObject.where = {};
+        findObject.where.id = userId;
+        findObject.include = userService.getIncludeModels();
+        Users.find(findObject).then(function(result) {
+            if (!result)
+                return callback("Incorrect userId");
+            var group = result.userGroups.name;
+            var status = result.status;
+            if (group != 'User' || status != 'Active')
+                return callback("Not an Active User");
+            if (!result.isPinActivated)
+                return callback("PIN is not Enabled");
+            userService.updatePinForResetPin(params, callback);
+            return null;
+        }).catch(function(exception) {
+            callback(exception);
+        });
+    }
+
+    updatePinForResetPin(params, callback) {
+        var updateObject = {};
+        updateObject.pin = params.pin;
+        var whereObject = {};
+        whereObject.where = {};
+        whereObject.where.id = params.userId;
+        Users.update(updateObject, whereObject).then(function(result) {
+            callback(null, "PIN is Reset");
+        }).catch(function(exception) {
+            callback(exception);
+        });
+    }
+
+    /****************** Validates Old PIN And Set New PIN ***********************/
+
     changePin(params, callback) {
         var userService = new UserService();
         var userId = params.userId;
