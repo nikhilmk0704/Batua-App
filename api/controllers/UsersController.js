@@ -442,6 +442,18 @@ module.exports = {
         });
     },
 
+    resetPin: function(req, res) {
+        var params = {};
+        params.userId = req.body.userId;
+        params.pin = req.body.pin;
+        var userService = new UserService();
+        userService.resetPin(params, function(err, result) {
+            if (err)
+                return res.badRequest(error.send(err));
+            return res.json(200, result);
+        });
+    },
+
     changePin: function(req, res) {
         var params = {};
         params.userId = req.body.userId;

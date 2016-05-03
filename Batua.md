@@ -1034,6 +1034,35 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
     
             {
                 "userId":3,
+                "pin":1234
+            }
+            
+        
++ Response 200 (application/json)
+
+        {
+            "message":"PIN Reset"
+        }
+            
++ Response 400 (application/json)
+    
+        {
+            "errors":[
+                {
+                    "message": "Invalid PIN"
+                }
+            ]
+        }
+
+
+### Change PIN [PUT /api/user/pin/change]
+
++ Request (application/json)
+
+    + Body
+    
+            {
+                "userId":3,
                 "currentPin":4321,
                 "newPin":1234
             }
