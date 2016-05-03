@@ -1,8 +1,8 @@
-angular.module('app').controller('merchantController', ['$state', 'merchantService', 'toastr', function($state, merchantService, toastr) {
+angular.module('app').controller('merchantController', ['$state', 'merchantService', 'loginService', 'toastr', function($state, merchantService, loginService, toastr) {
 
     var vm = this;
 
-    var adminId = 2; //adminId is static after login module make it dynamic
+    var adminId = loginService.getUserDetails().id;
 
     merchantService.getMerchantList(adminId, function(response) {
         if (response.status === 200) {
@@ -48,6 +48,19 @@ angular.module('app').controller('merchantController', ['$state', 'merchantServi
             return toastr.error(response.data);
         });
     };
+
+    vm.exportData = function() {
+
+        vm.listOfMerchants = angular.copy(vm.merchants);
+
+        vm.filteredData = _.map(vm.listOfMerchants, function(data){
+            var cityName = ((data.locations && data.locations.cities) ? data.locations.cities.name : '');
+            var merchants = {'Name': data.name, 'Category': data.categories.name, 'ShortCode': data.shortCode, 'City': cityName, 'Created By': data.users.name, 'Status':data.status}
+            return merchants;
+        });
+
+        alasql('SELECT * INTO XLSX("download.xlsx",{headers:true}) FROM ?', [vm.filteredData]);
+    }
 
 
 }]);
