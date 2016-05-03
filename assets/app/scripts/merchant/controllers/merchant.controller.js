@@ -1,8 +1,8 @@
-angular.module('app').controller('merchantController', ['$state', 'merchantService', 'toastr', function($state, merchantService, toastr) {
+angular.module('app').controller('merchantController', ['$state', 'merchantService', 'loginService', 'toastr', function($state, merchantService, loginService, toastr) {
 
     var vm = this;
 
-    var adminId = 2; //adminId is static after login module make it dynamic
+    var adminId = loginService.getUserDetails().id;
 
     merchantService.getMerchantList(adminId, function(response) {
         if (response.status === 200) {
