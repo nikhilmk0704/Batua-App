@@ -19,6 +19,9 @@ var error=require('../errors/error.js');
 
         offerService.save(params, function(err, result) {
             if (err) {
+                if(err==406){
+                   return res.json(406,result); 
+                }
                 return res.badRequest(error.send(err));
             }else if(_.isEmpty(result)){
                 return res.notFound(error.send("Does not exist"));
@@ -80,7 +83,9 @@ var error=require('../errors/error.js');
         
         offerService.updateAndFind(params, function(err, result) {
             if (err) {
-                
+                if(err==406){
+                   return res.json(406,result); 
+                }
                 return res.badRequest(error.send(err));
             
             } else if(_.isEmpty(result)){
