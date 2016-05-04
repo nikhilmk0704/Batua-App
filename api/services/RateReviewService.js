@@ -10,30 +10,36 @@ class RateReviewService {
         var rateReviewRepository = new RateReviewRepository();
         var merchantRepository = new MerchantRepository();
         var rateReviewService = new RateReviewService();
-        var rateReviewObject={};
+        var rateReviewObject = {};
         async.waterfall([
-            function(callback){
+            function(callback) {
                 rateReviewRepository.save(params, callback);
             },
-            function(rateReviewResult,callback){
-                rateReviewObject=rateReviewResult;
-                rateReviewService.getAverageRating(rateReviewResult.dataValues,callback);
+            function(rateReviewResult, callback) {
+                rateReviewObject = rateReviewResult;
+                rateReviewService.getAverageRating(rateReviewResult, callback);
             },
-            function(averageRating,callback){
-                var merchantId=rateReviewObject.dataValues.merchantId;
-                merchantRepository.update({averageRating:averageRating},{where:{id:merchantId}},callback);
+            function(averageRating, callback) {
+                var merchantId = rateReviewObject.merchantId;
+                var updateObject = {};
+                updateObject.averageRating = averageRating;
+                updateObject.reviewersCount = sequelize.literal('reviewersCount + 1');
+                var whereObject = {};
+                whereObject.where = {};
+                whereObject.where.id = merchantId;
+                merchantRepository.update(updateObject, whereObject, callback); // age:sequelize.col('age')+1;
             }
-        ],function(err,result){
-            if(err){
+        ], function(err, result) {
+            if (err) {
                 return callback(err);
             }
-            return callback(null,rateReviewObject.dataValues);
+            return callback(null, rateReviewObject.dataValues);
         });
     }
 
     // get all rate and reviews made by user
     find(usrId, merchantId, callback) {
-        var params={};
+        var params = {};
         params.where = {};
         var rateReviewRepository = new RateReviewRepository();
         if (userId && merchantId) {
@@ -41,15 +47,14 @@ class RateReviewService {
             params.where.merchantId = merchantId;
             rateReviewRepository.find(params, callback);
         }
-        if(userId && !merchantId) {
-            params.where.userId=userId;
+        if (userId && !merchantId) {
+            params.where.userId = userId;
             rateReviewRepository.findAll(params, callback);
-        } 
-        if(merchantId && !userId){
-            params.where.merchantId=merchantId;
+        }
+        if (merchantId && !userId) {
+            params.where.merchantId = merchantId;
             rateReviewRepository.findAll(params, callback);
-        } 
-        else{
+        } else {
             callback("Please provide id");
         }
     }
@@ -59,25 +64,30 @@ class RateReviewService {
         var options = {};
         options.where = {};
         options.where.id = params.id;
-        var findObject=options;
+        var findObject = options;
         var rateReviewRepository = new RateReviewRepository();
         async.waterfall([
-            function(callback){
-               rateReviewRepository.updateAndFind(params, options, findObject, callback);
+            function(callback) {
+                rateReviewRepository.updateAndFind(params, options, findObject, callback);
             },
-            function(rateReviewResult,callback){
-                rateReviewObject=rateReviewResult;
-                rateReviewService.getAverageRating(rateReviewResult.dataValues,callback);
+            function(rateReviewResult, callback) {
+                rateReviewObject = rateReviewResult;
+                rateReviewService.getAverageRating(rateReviewResult, callback);
             },
-            function(averageRating,callback){
-                var merchantId=rateReviewObject.dataValues.merchantId;
-                merchantRepository.update({averageRating:averageRating},{where:{id:merchantId}},callback);
+            function(averageRating, callback) {
+                var merchantId = rateReviewObject.merchantId;
+                var updateObject = {};
+                updateObject.averageRating = averageRating;
+                var whereObject = {};
+                whereObject.where = {};
+                whereObject.where.id = merchantId;
+                merchantRepository.update(updateObject, whereObject, callback);
             }
-        ],function(err,result){
-            if(err){
+        ], function(err, result) {
+            if (err) {
                 return callback(err);
             }
-            return callback(null,rateReviewObject.dataValues);
+            return callback(null, rateReviewObject.dataValues);
         });
     }
 
@@ -88,38 +98,47 @@ class RateReviewService {
         options.where.id = id;
         var rateReviewRepository = new RateReviewRepository();
         async.waterfall([
-            function(callback){
-                rateReviewRepository.remove(options, callback);
-            },
-            function(rateReviewResult,callback){
-                rateReviewObject=rateReviewResult;
-                rateReviewService.getAverageRating(rateReviewResult.dataValues,callback);
-            },
-            function(averageRating,callback){
-                var merchantId=rateReviewObject.dataValues.merchantId;
-                merchantRepository.update({averageRating:averageRating},{where:{id:merchantId}},callback);
-            }
-        ],function(err,result){
-            if(err){
-                return callback(err);
-            }
-            return callback(null,rateReviewObject.dataValues);
-        });
+                function(callback) {
+                    rateReviewRepository.remove(options, callback);
+                },
+                function(rateReviewResult, callback) {
+                    rateReviewObject = rateReviewResult;
+                    rateReviewService.getAverageRating(rateReviewResult, callback);
+                },
+                function(averageRating, callback) {
+                    var merchantId = rateReviewObject.merchantId;
+                    var updateObject = {};
+                    updateObject.averageRating = averageRating;
+                    updateObject.reviewersCount = sequelize.literal('reviewersCount - 1');
+                    var whereObject = {};
+                    whereObject.where = {};
+                    whereObject.where.id = merchantId;
+                    merchantRepository.update(updateObject, whereObject, callback);
+                }
+            ],
+            function(err, result) {
+                if (err) {
+                    return callback(err);
+                }
+                return callback(null, rateReviewObject.dataValues);
+            });
     }
 
     // calculates average rating of a merchant
-    getAverageRating(rateReviewResult,callback){
-        var merchantId=rateReviewResult.merchantId;
+    getAverageRating(rateReviewResult, callback) {
+        var merchantId = rateReviewResult.merchantId;
         var rateReviewRepository = new RateReviewRepository();
         rateReviewRepository.findAll({
-            attributes:[[Sequelize.fn('AVG','rating'),'averageRating']],
-            group:['merchantId'],
-            where:{merchantId:merchantId}
-        },function(err,result){
-            if(err){
+            attributes: [
+                [Sequelize.fn('AVG', 'rating'), 'averageRating']
+            ],
+            group: ['merchantId'],
+            where: { merchantId: merchantId }
+        }, function(err, result) {
+            if (err) {
                 return callback(err);
             }
-            return callback(null,result.averageRating);
+            return callback(null, result.averageRating);
         });
     }
 

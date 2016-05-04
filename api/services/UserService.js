@@ -748,6 +748,7 @@ class UserService {
         var updateObject = {};
         updateObject.otp = null;
         updateObject.isPhoneVerified = true;
+        updateObject.status = 'Active';
         var whereObject = {};
         whereObject.where = {};
         whereObject.where.id = userData.id;
@@ -1186,16 +1187,15 @@ class UserService {
                 return callback("Incorrect Phone");
             if (result.otp != otp)
                 return callback("Incorrect OTP");
-            userService.updateAccessTokenAndShowResult(params, result, callback);
             var userId = result.id;
-            userService.deleteOtp(userId);
+            userService.deleteOtp(userId,callback);
             return null;
         }).catch(function(exception) {
             callback(exception);
         });
     }
 
-    deleteOtp(userId) {
+    deleteOtp(userId, callback) {
         var updateObject = {};
         var whereObject = {};
         whereObject.where = {};
@@ -1203,7 +1203,11 @@ class UserService {
         updateObject.otp = null;
         updateObject.status = 'Active';
         updateObject.isPhoneVerified = true;
-        Users.update(updateObject, whereObject);
+        Users.update(updateObject, whereObject).then(function(result) {
+            callback(null, { message: "Phone Number Verified" });
+        }).catch(function(exception){
+            callback(exception);
+        });
     }
 
     /******************** Normal Login In User App ************************/
@@ -1437,7 +1441,7 @@ class UserService {
         userService.forgotPassword(params, callback);
     }
 
-    /****************** Validates Old PIN And Set New PIN ***********************/
+    /****************** Set Or Reset PIN ***********************/
 
     resetPin(params, callback) {
         var userService = new UserService();
