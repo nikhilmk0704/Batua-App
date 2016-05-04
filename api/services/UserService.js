@@ -28,7 +28,7 @@ class UserService {
     }
 
     generateOtp() {
-        var otp = token.generate(6, '0123456789');
+        var otp = +(token.generate(6, '0123456789'));
         if (otp < 100000)
             return otp + 100000;
         return otp;
@@ -168,6 +168,8 @@ class UserService {
             loggedinResult.email = result.email;
             loggedinResult.profileImageUrl = result.profileImageUrl;
             loggedinResult.phone = result.phone;
+            loggedinResult.isPinActivated = result.isPinActivated;
+            loggedinResult.isPinSet = (result.pin) ? (true) : (false);
             loggedinResult.token = data.token;
             loggedinResult.userGroup = result.userGroups.name;
             return callback(null, loggedinResult);
@@ -538,21 +540,35 @@ class UserService {
     salesAgentNormalLogin(params, callback) {
         var userService = new UserService();
         var email = params.email;
+        var phone = +params.phone;
         var password = params.password;
-        if (email && password)
+        var isValidEmail = userService.isValidEmail(email);
+        var isValidPhone = userService.isValidPhone(phone);
+        if ((email && phone) || (!email && !phone))
+            return callback("Either phone or email is required !");
+        if (phone && !isValidPhone)
+            return callback("Invalid Phone !");
+        if (email && !isValidEmail)
+            return callback("Invalid Email !")
+        if ((isValidEmail && password) || (isValidPhone && password))
             return userService.findUserAndValidateLogin(params, callback);
-        return callback("Email And Password Required")
+        return callback("Email And Password Or Phone And Password Required !")
     }
 
     findUserAndValidateLogin(params, callback) {
         var userService = new UserService();
+        var email = params.email;
+        var phone = +params.phone;
         var findObject = {};
         findObject.where = {};
-        findObject.where.email = params.email;
+        (email) ? (findObject.where.email = email) : (findObject);
+        (phone) ? (findObject.where.phone = phone) : (findObject);
         findObject.include = userService.getIncludeModels();
         Users.find(findObject).then(function(result) {
-            if (!result)
+            if (!result && email)
                 return callback("Incorrect Email");
+            if (!result && phone)
+                return callback("Incorrect Phone");
             userService.validateSalesLogin(params, result, callback);
             return null;
         }).catch(function(exception) {
@@ -729,6 +745,7 @@ class UserService {
         var userService = new UserService();
         var updateObject = {};
         updateObject.otp = null;
+        updateObject.isPhoneVerified = true;
         var whereObject = {};
         whereObject.where = {};
         whereObject.where.id = userData.id;
@@ -817,13 +834,21 @@ class UserService {
         findObject.where = {};
         if (userId) {
             findObject.where.id = userId;
-            findObject.attributes = ['id', 'name', 'phone', 'profileImageUrl', 'email', 'isPinActivated'];
+            findObject.attributes = ['id', 'name', 'phone', 'profileImageUrl', 'email', 'isPinActivated', 'pin'];
         }
         if (salesagentId) {
             findObject.where.id = salesagentId;
-            findObject.attributes = ['id', 'name', 'profileImageUrl', 'email'];
+            findObject.attributes = ['id', 'name', 'profileImageUrl', 'email', 'pin'];
         }
-        userRepository.find(findObject, callback);
+        userRepository.find(findObject, function(err, result) {
+            if (err)
+                callback(err);
+            if (!result)
+                callback(null, result);
+            result.dataValues.isPinSet = (result.pin) ? (true) : (false);
+            delete result.dataValues.pin;
+            callback(null, result);
+        });
     }
 
     /**************** Updates User's Or Field Sales Agent's Profile ****************/
@@ -887,7 +912,7 @@ class UserService {
         whereObject.where = {};
         whereObject.where.id = params.id;
         findObject = whereObject;
-        findObject.attributes = ['id', 'name', 'email', 'profileImageUrl', 'phone'];
+        findObject.attributes = ['id', 'name', 'email', 'profileImageUrl', 'phone', 'isPinActivated'];
         userRepository.updateAndFind(newParams, whereObject, findObject, callback);
     }
 
@@ -1022,8 +1047,12 @@ class UserService {
         findObject.where = {};
         (googleId) ? (findObject.where.$or = [{ email: email }, { googleId: googleId }]) : (findObject);
         (facebookId) ? (findObject.where.$or = [{ email: email }, { facebookId: facebookId }]) : (findObject);
+        if (!email)
+            return callback("Email Required");
         if (!isValidEmail)
             return callback("Invalid Email");
+        if ((googleId && facebookId) || (!googleId && !facebookId))
+            return callback("Please give either googleId or facebookId");
         userService.validateUserSignup(params, findObject, callback);
     }
 
@@ -1034,8 +1063,10 @@ class UserService {
         var googleId = params.googleId;
         var facebookId = params.facebookId;
         Users.find(findObject).then(function(result) {
-            if (result)
-                return callback("Already Exist");
+            if (result && googleId && (result.googleId == googleId || result.email == email))
+                return callback("Gmail Already Registered");
+            if (result && facebookId && (result.facebookId == facebookId || result.email == email))
+                return callback("Facebook Email Already Registered");
             var newParams = {};
             newParams.name == name;
             newParams.email = email;
@@ -1402,6 +1433,48 @@ class UserService {
     forgotPin(params, callback) {
         var userService = new UserService();
         userService.forgotPassword(params, callback);
+    }
+
+    /****************** Validates Old PIN And Set New PIN ***********************/
+
+    resetPin(params, callback) {
+        var userService = new UserService();
+        var userId = params.userId;
+        var pin = params.pin;
+        if (!userId && !pin)
+            return callback("userId and pin is required");
+        var isValidPin = userService.isValidPin(pin);
+        if (!isValidPin)
+            return callback("Invalid Pin");
+        var findObject = {};
+        findObject.where = {};
+        findObject.where.id = userId;
+        findObject.include = userService.getIncludeModels();
+        Users.find(findObject).then(function(result) {
+            if (!result)
+                return callback("Incorrect userId");
+            var group = result.userGroups.name;
+            var status = result.status;
+            if (group != 'User' || status != 'Active')
+                return callback("Not an Active User");
+            userService.updatePinForResetPin(params, callback);
+            return null;
+        }).catch(function(exception) {
+            callback(exception);
+        });
+    }
+
+    updatePinForResetPin(params, callback) {
+        var updateObject = {};
+        updateObject.pin = params.pin;
+        var whereObject = {};
+        whereObject.where = {};
+        whereObject.where.id = params.userId;
+        Users.update(updateObject, whereObject).then(function(result) {
+            callback(null, "PIN is Reset");
+        }).catch(function(exception) {
+            callback(exception);
+        });
     }
 
     /****************** Validates Old PIN And Set New PIN ***********************/

@@ -27,7 +27,7 @@ module.exports.routes = {
     /********************* Merchants Module API ************************/
 
     'post /api/merchant': 'MerchantsController.create',
-    'get /api/user/:userId/merchant/:id?': 'MerchantsController.find',
+    'get /api/user/:userId/merchant/:id?/latitude/:latitude/longitude/:longitude': 'MerchantsController.find',
     'get /api/salesagent/:salesAgentId/merchant/:id?': 'MerchantsController.find',
     'get /api/admin/:adminId/merchant/:id?': 'MerchantsController.find',
     'get /api/merchant/:id?': 'MerchantsController.getActiveMerchants',
@@ -104,6 +104,7 @@ module.exports.routes = {
     'put /api/user/pin/status': 'UsersController.updatePinStatus',
     'put /api/user/pin/Login': 'UsersController.pinLogin',
     'put /api/user/pin/forgot': 'UsersController.forgotPin',
+    'put /api/user/pin/reset': 'UsersController.resetPin',
     'put /api/user/pin/change': 'UsersController.changePin',
     'post /api/user/contactus': 'UsersController.contactus',
     'put /api/user/logout': 'UsersController.logout',

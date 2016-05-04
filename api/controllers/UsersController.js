@@ -159,6 +159,7 @@ module.exports = {
     salesAgentNormalLogin: function(req, res) {
         var params = {};
         params.email = req.body.email;
+        params.phone = req.body.phone;
         params.password = req.body.password;
         params.deviceId = req.body.deviceId;
         var userService = new UserService();
@@ -435,6 +436,18 @@ module.exports = {
         params.phone = req.body.phone;
         var userService = new UserService();
         userService.forgotPin(params, function(err, result) {
+            if (err)
+                return res.badRequest(error.send(err));
+            return res.json(200, result);
+        });
+    },
+
+    resetPin: function(req, res) {
+        var params = {};
+        params.userId = req.body.userId;
+        params.pin = req.body.pin;
+        var userService = new UserService();
+        userService.resetPin(params, function(err, result) {
             if (err)
                 return res.badRequest(error.send(err));
             return res.json(200, result);

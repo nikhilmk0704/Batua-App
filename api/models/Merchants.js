@@ -32,9 +32,9 @@ module.exports = {
             required: true,
             unique: true,
             allowNull: false,
-            validate:{
-                min:0,
-                max:9999999999
+            validate: {
+                min: 0,
+                max: 9999999999
             }
         },
         email: {
@@ -58,6 +58,9 @@ module.exports = {
                 min: 0,
                 max: 5
             }
+        },
+        reviewersCount: {
+            type: Sequelize.INTEGER,
         },
         fees: {
             type: Sequelize.FLOAT,
@@ -91,16 +94,16 @@ module.exports = {
     },
     associations: function() {
         Merchants.belongsTo(Locations, {
-            as:'locations',
+            as: 'locations',
             foreignKey: {
                 name: 'locationId',
-                defaultValue:null,
+                defaultValue: null,
                 onDelete: 'RESTRICT',
                 onUpdate: 'CASCADE'
             }
         });
         Merchants.belongsTo(Users, {
-            as:'users',
+            as: 'users',
             foreignKey: {
                 name: 'createdSalesId',
                 allowNull: false,
@@ -109,7 +112,7 @@ module.exports = {
             }
         });
         Merchants.belongsTo(Categories, {
-            as:'categories',
+            as: 'categories',
             foreignKey: {
                 name: 'categoryId',
                 allowNull: false,
@@ -118,7 +121,7 @@ module.exports = {
             }
         });
         Merchants.belongsToMany(Galleries, {
-            as:'galleries',
+            as: 'galleries',
             through: 'MerchantsGalleries',
             foreignKey: {
                 name: 'merchantId',
@@ -132,5 +135,3 @@ module.exports = {
         });
     }
 };
-
-
