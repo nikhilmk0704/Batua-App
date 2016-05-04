@@ -1,6 +1,6 @@
-angular.module('app').controller('addOfferController', ['$scope', '$state', 'offerService', 'toastr', 'merchantList',
+angular.module('app').controller('addOfferController', ['$scope', '$state', 'offerService', 'toastr', 'merchantList', '$uibModal',
 
-    function($scope, $state, offerService, toastr, merchantList) {
+    function($scope, $state, offerService, toastr, merchantList, $uibModal) {
 
         var vm = this;
         vm.merchantList = merchantList;
@@ -17,7 +17,29 @@ angular.module('app').controller('addOfferController', ['$scope', '$state', 'off
                 if (response.status === 400) {
                     return toastr.error(response.data.errors[0].message);
                 }
+                if (response.status === 406) {
+                    vm.merchantsHaveOffer = response.data;
+                    return vm.showListOfMerchantsModal();
+                }
                 return toastr.error(response.data);
+            });
+        };
+
+        vm.showListOfMerchantsModal = function() {
+
+            var scope = $scope.$new();
+            scope.merchantsHaveOffer = vm.merchantsHaveOffer;
+
+            vm.modalInstance = $uibModal.open({
+                animate: true,
+                templateUrl: 'app/views/offer/merchants-have-offer-modal.html',
+                scope: scope,
+                windowClass: 'd-modal modalWindow',
+                resolve: {
+                    merchantsHaveOffer: function() {
+                        return vm.merchantsHaveOffer;
+                    }
+                }
             });
         };
 
