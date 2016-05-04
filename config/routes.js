@@ -108,6 +108,7 @@ module.exports.routes = {
     'put /api/user/pin/change': 'UsersController.changePin',
     'post /api/user/contactus': 'UsersController.contactus',
     'put /api/user/logout': 'UsersController.logout',
+    'post /api/user/validatePromocode':'PromocodesValidateController.validatePromocode',
 
     /********************* Image Upload API ************************/
 
