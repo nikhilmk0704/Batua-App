@@ -656,13 +656,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 200 (application/json)
 
             {
-                "id": 28,
-                "name": null,
-                "email": "abca@abc.com",
-                "profileImageUrl": null,
-                "phone": 9479897802,
-                "token": "093eGGfnGDvtstZ3juHxgeBH",
-                "userGroup": "User"
+                "message": "Phone Number Verified"
             }
             
 + Response 401 (application/json)
@@ -3650,3 +3644,5 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 
 
 + Response 401 (application/json)
+
+                

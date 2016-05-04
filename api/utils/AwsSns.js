@@ -12,7 +12,7 @@ class AwsSns {
             region: 'us-east-1'
         });
         var param = {};
-        param.PlatformApplicationArn = sails.config.connections.snsPlatformArn.PlatformApplicationArn;
+        param.PlatformApplicationArn = 'arn:aws:sns:us-east-1:711489290099:app/GCM/Batua_test';
         param.Token = deviceToken;
         sns.createPlatformEndpoint(param, function(err, data) {
             if (err)

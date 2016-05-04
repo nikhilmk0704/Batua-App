@@ -504,7 +504,7 @@ class UserService {
         var userService = new UserService();
         var getDeviceIdQueryString = "SELECT DISTINCT at.deviceId FROM Users " +
             "AS u INNER JOIN (UsersAccessTokens AS uat INNER JOIN AccessTokens " +
-            "AS at ON at.id=uat.accessTokenId AND at.token IS NOT NULL) ON " +
+            "AS at ON at.id=uat.accessTokenId AND at.token IS NOT NULL AND at.deviceId IS NOT NULL) ON " +
             "u.id=uat.userId INNER JOIN UserGroups AS ug ON ug.id=u.userGroupId " +
             "AND ug.name='User' WHERE u.status='Active' AND u.id IN (" + params.id + ")";
         sequelize.query(getDeviceIdQueryString).spread(function(metaResult, result) {

@@ -5,7 +5,11 @@ module.exports={
         if(typeof errorParams == "string")
             messageObject.message=errorParams;
         if(typeof errorParams=="object"){
-            var messageError=(_.pick(errorParams,'message').message);
+            var isErrorsArrayExist=(errorParams.errors[0].message)?(true):(false);
+            if(isErrorsArrayExist)
+                var messageError=(_.pick(errorParams.errors[0],'message').message);
+            if(!isErrorsArrayExist)
+                var messageError=(_.pick(errorParams,'message').message);
             var exceptionError=(_.pick(errorParams,'exception'));
             var contextError=(_.pick(errorParams,'error@context'));
             var sqlError="Unable to perform operation";

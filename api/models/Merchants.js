@@ -33,8 +33,10 @@ module.exports = {
             unique: true,
             allowNull: false,
             validate: {
-                min: 0,
-                max: 9999999999
+                validateLength: function(value) {
+                    if (("" + "" + value).length != 10)
+                        throw new Error("Give 10 digit Integer");
+                }
             }
         },
         email: {
