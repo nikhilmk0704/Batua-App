@@ -75,8 +75,7 @@ table.dataTable thead .sorting {
 .page-sidebar .page-sidebar-menu>li>a,
 .page-sidebar-closed.page-sidebar-fixed .page-sidebar:hover .page-sidebar-menu>li>a {
     border: 0;
-    color: #b4bcc8
-    font-size:30px;
+    color: #b4bcc8 font-size: 30px;
 }
 
 .page-header.navbar {
@@ -139,12 +138,9 @@ table.dataTable thead .sorting {
     color: white;
 }
 
-
-
 .nav-item {
     font-size: 30px;
 }
-
 
 .dpholder {
     margin-top: 25%;
@@ -583,12 +579,12 @@ td {
     max-width: 20px;
 }
 
-.dataTables_length > label{
-    margin:15px;
+.dataTables_length > label {
+    margin: 15px;
 }
 
 .dataTables_filter > label {
-    margin:15px;
+    margin: 15px;
 }
 
 .dataTables_filter > label > input {
@@ -596,14 +592,14 @@ td {
 }
 
 .dataTables_paginate {
-    margin:15px !important;
+    margin: 15px !important;
 }
 
 .dataTables_info {
-    padding:0px !important;
-    margin:15px;
-    width:60%;
-    float:left;
+    padding: 0px !important;
+    margin: 15px;
+    width: 60%;
+    float: left;
 }
 
 .table-scrollable {
@@ -614,4 +610,9 @@ td {
     text-align: center;
     /* visibility: collapse; */
     display: none;
+}
+
+.modalWindow {
+    position: absolute;
+    margin: 100px;
 }
