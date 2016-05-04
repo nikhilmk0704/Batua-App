@@ -2,7 +2,7 @@
     'use strict';
 
     angular
-        .module('app', ['ui.router', 'ui.bootstrap', 'ngAnimate', 'ngSanitize', 'ngCookies', 'ngLodash', 'datatables', 'httpi', 'toastr', 'angular-loading-bar', 'flow', 'angucomplete-alt', 'angularjs-dropdown-multiselect'])
+        .module('app', ['ui.router', 'ui.bootstrap', 'ui.bootstrap.modal', 'ngAnimate', 'ngSanitize', 'ngCookies', 'ngLodash', 'datatables', 'httpi', 'toastr', 'angular-loading-bar', 'flow', 'angucomplete-alt', 'angularjs-dropdown-multiselect'])
         .config(config)
         .run(run);
 
