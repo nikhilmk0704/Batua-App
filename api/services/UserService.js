@@ -5,6 +5,7 @@ var token = require('rand-token');
 var md5 = require('md5');
 var fs = require('fs');
 var _ = require('lodash');
+var moment = require('moment');
 
 class UserService {
 
@@ -80,6 +81,7 @@ class UserService {
         mapObject.FIRSTNAME = name; // Capital case because of template is using the same 
         mapObject.LASTNAME = "";
         mapObject.URL = passwordGenerationUrl;
+        mapObject.CURRENT_DATE = moment().format('DD/MM/YYYY');
         var regExp = new RegExp(Object.keys(mapObject).join("|"), "gi");
         var htmlTemplate = template.replace(regExp, function(matched) {
             return mapObject[matched];
@@ -1303,7 +1305,7 @@ class UserService {
         whereObject.where.id = params.id;
         whereObject.include = userService.getIncludeModels();
         Users.find(whereObject).then(function(result) {
-            if (result)
+            if (!result)
                 return callback("Incorrect Id");
             userService.validateUserProfile(params, result, callback);
             return null;
