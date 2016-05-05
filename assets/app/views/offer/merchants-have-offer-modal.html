@@ -1,0 +1,23 @@
+<div class="modal-header portlet-title">
+    <button type="button" class="close" aria-hidden="true" ng-click="$close()">&times;</button>
+    <div class="caption font-dark">
+        <span class="caption-subject bold uppercase"> Error : Cannot create an Offer </span>
+    </div>
+</div>
+<div class="modal-body">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-lg-12">
+                <p>These merchants have an existing offer, so offer cannot be created.</p>
+                <ul ng-repeat="merchants in vm.merchantsHaveOffer">
+                    <li class="medium">{{merchants.name}}</li>
+                </ul>
+                <div class="clearfix-height10"></div>
+                <p>To create an offer, please un-select these merchants.</p>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-footer col-center">
+    <button type="button" class="btn btn-primary" ng-click="$close()">OK</button>
+</div>

@@ -242,6 +242,67 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 400 (applicaiton)
 
 
+### Get Active Users For Push Notification [GET /api/admin/activeuser/{id}]
+        
++ Response 200 (application/json)
+    
+    + Body
+
+            [
+                {
+                    "id": 1,
+                    "name": "vikash baghel",
+                    "phone": 9479897807,
+                    "email": "vikash.baghel@tecsolsoftware.com",
+                    "status": "Active",
+                    "profileImageUrl": "url",
+                    "userGroups": null
+                },
+                {
+                    "id": 2,
+                    "name": "Varsha Udasi",
+                    "phone": 9876543210,
+                    "email": "varsha.udasi@tecsolsoftware.com",
+                    "status": "Active",
+                    "profileImageUrl": "url",
+                    "userGroups": null
+                },
+                {
+                    "id": 3,
+                    "name": "Kajal Anant Jadhav",
+                    "phone": 9008952987,
+                    "email": "kajal.jadhav@tecsolsoftware.com",
+                    "status": "Active",
+                    "profileImageUrl": "https://batua-test.s3.amazonaws.com/c92f8ae8-886f-4b25-ba43-ab445ec889e7.jpg",
+                    "userGroups": null
+                }
+            ]
+            
++ Response 400 (applicaiton)
+
+
+### Send Push Notification To Active Users [PUT /api/admin/activeuser/notify]
+
++ Request (application/json)
+ 
+    + Body
+    
+            {
+                "id":[27,28,30],
+                "message":"hello"
+            }
+        
++ Response 200 (application/json)
+    
+    + Body
+
+            {
+                "message": "Notification Sent"
+            }
+            
++ Response 400 (applicaiton)
+
+
 ### Admin Logout [PUT /api/admin/user/logout]
 
 + Request (application/json)
@@ -595,13 +656,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 200 (application/json)
 
             {
-                "id": 28,
-                "name": null,
-                "email": "abca@abc.com",
-                "profileImageUrl": null,
-                "phone": 9479897802,
-                "token": "093eGGfnGDvtstZ3juHxgeBH",
-                "userGroup": "User"
+                "message": "Phone Number Verified"
             }
             
 + Response 401 (application/json)
@@ -637,7 +692,9 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
                 "profileImageUrl": null,
                 "phone": 9876543211,
                 "token": "093eJJO6uGSpP5bp0vuAR4vR",
-                "userGroup": "User"
+                "userGroup": "User",
+                "isPinActivated":true,
+                "isPinSet":true
             }
             
 + Response 401 (application/json)
@@ -673,7 +730,9 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
                 "profileImageUrl": null,
                 "phone": 9876543211,
                 "token": "093eJJO6uGSpP5bp0vuAR4vR",
-                "userGroup": "User"
+                "userGroup": "User",
+                "isPinActivated":true,
+                "isPinSet":true
             }
             
 + Response 401 (application/json)
@@ -786,7 +845,9 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
                 "id": 14,
                 "name": "vikash",
                 "profileImageUrl": "url",
-                "email": "vikash.baghel@tecsolsoftware.com"
+                "email": "vikash.baghel@tecsolsoftware.com",
+                "isPinActivated":true,
+                "isPinSet":true
             }
 
 + Response 400 (application/json)
@@ -959,7 +1020,36 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
             }
 
 
-### Reset PIN [PUT /api/user/pin/reset]
+### Set/Reset PIN [PUT /api/user/pin/reset]
+
++ Request (application/json)
+
+    + Body
+    
+            {
+                "userId":3,
+                "pin":1234
+            }
+            
+        
++ Response 200 (application/json)
+
+        {
+            "message":"PIN Reset"
+        }
+            
++ Response 400 (application/json)
+    
+        {
+            "errors":[
+                {
+                    "message": "Invalid PIN"
+                }
+            ]
+        }
+
+
+### Change PIN [PUT /api/user/pin/change]
 
 + Request (application/json)
 
@@ -1292,7 +1382,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
                 ]
             }
 
-### Get Merchant For User [GET /api/user/:userId/merchant/:id?]
+### Get Merchant For User [GET /api/user/:userId/merchant/{:id}/latitude/{:latitude}/longitude/{:longitude}]
 
 + Response 200 (application/json)
 
@@ -2691,357 +2781,6 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 400 (application/json)
 
 
-## Normal SignUp [/user/normalSignUp]
-
-### Normal SignUp [POST]
-
-+ Request (application/json)
-    
-    + Body
-
-            {
-                "name":"vikash singh",
-                "email":"username@domain.com",
-                "phone":9876543210,
-                "password":"123456",
-                "groupId":1,
-                "deviceToken":"APA91bGl8H-kxi4eEVIcNHExgbsI5zB32Aj42340iAkL7_D6g2VYTlTvYDKIqfKeiX9eDswg7xFifVhOmrJtmRAtzviDKZEVlaq3FiWAzNB8jpyaEv8d22uH04MyUn_XwsUs4kwV88ZC"
-            }
-        
-+ Response 201 (application/json)
-
-            {
-                "id": 1,
-                "name":"vikash singh",
-                "email":"username@domain.com",
-                "phone":9876543210,
-                "accessToken": "dgfjsdgjkbdjkbvs",
-                "profileImageUrl": null
-            }
-
-+ Response 400 (applicaiton)
-
-        {
-            "success": false,
-            "message": "Already exist"
-        }
-
-## Social SignUp [/user/socialSignUp]
-
-### Social SignUp [POST]
-
-+ Request (application/json)
-    
-    + Body
-
-            {
-                "name":"vikash singh",
-                "email":"username@domain.com",
-                "socialId": "hehdbdhbchvywegduahsjxnsajbcdjscvcbjdsbn@facebook.com",
-                "socialType": "FACEBOOK",
-                "profileImageUrl":"https://beatniks-s3.s3.amazonaws.com/e4207a81-2dd1-4c49-b4e5-0391380e235f.jpg",
-                "deviceToken":"APA91bGl8H-kxi4eEVIcNHExgbsI5zB32Aj42340iAkL7_D6g2VYTlTvYDKIqfKeiX9eDswg7xFifVhOmrJtmRAtzviDKZEVlaq3FiWAzNB8jpyaEv8d22uH04MyUn_XwsUs4kwV88ZC"
-            }
-        
-+ Response 201 (application/json)
-
-            {
-                "id": 1,
-                "name":"vikash singh",
-                "email":"username@domain.com",
-                "phone":9876543210,
-                "accessToken": "dgfjsdgjkbdjkbvs",
-                "profileImageUrl": "https://beatniws.com/e4207a81e235f.jpg"
-            }
-
-+ Response 400 (applicaiton)
-
-        {
-            "success": false,
-            "message": "Already exist"
-        }
-
-## Mobile verification [/user/mobileVerification]
-
-### Verify Mobile Number [POST]
-
-+ Request (application/json)
-    
-    + Body
-
-            {
-                "phone": 9876543210,
-                "otp": 123456
-            }
-            
-+ Response 200 (application/json)
-
-        {
-            "success": true,
-            "accessToken": "08yGxPpUNeRcF8UK18g0lnHW"
-        }
-
-+ Response 400 (applicaiton)
-
-        {
-            "success": false,
-            "message": "Bad Request"
-        }
-
-## Login [/user/login]
-
-### Login [POST]
-
-+ Request (application/json)
-    
-    + Body
-
-            {
-                "email":"username@domain.com",
-                "password":"123456",
-                "deviceToken": "bdkjgbekjgbjksbgvjsnb",
-                "groupId": 1
-            }
-            
-+ Response 200 (application/json)
-
-            {
-                "id": 1,
-                "name":"vikash singh",
-                "email":"username@domain.com",
-                "phone":9876543210,
-                "accessToken": "dgfjsdgjkbdjkbvs",
-                "profileImageUrl": "https://beatniws.com/e4207a81e235f.jpg"
-            }
-
-+ Response 400 (applicaiton)
-
-        {
-            "success": false,
-            "message": "Already exist"
-        }
-
-## PIN Login [/user/{id}/pinlogin]
-
-### PIN Login [POST]
-
-+ Request (application/json)
-    
-    + Body
-
-            {
-                "userId":24,
-                "pin":1234,
-                "deviceToken": "bdkjgbekjgbjksbgvjsnb",
-                "groupId": 1
-            }
-            
-+ Response 200 (application/json)
-
-            {   
-                "id":1,
-                "name":"vikash singh",
-                "email":"username@domain.com",
-                "phone":9876543210,
-                "accessToken": "dhfvhjevfhjvbhgfvhsdvsjv"
-            }
-
-+ Response 400 (applicaiton)
-
-            {
-                "success": false,
-                "message": "Bad Request"
-            }
-            
-
-## Logout [/user/{id}/logout]
-
-### Logout [PUT]
-
-+ Request  (application/json)
-
-    + Headers
-        
-            Access-Token: "ABCDEFGH12345678"
-            
-    + Body
-
-            {
-                "id": "1"
-            }
-
-+ Response 200 (application/json)
-       
-
-+ Response 400 (application/json)
-    
-            {
-                "message":"Unable to logout"
-            }
-
-## Forgot Password [/user/forgotPassword]
-    
-    Used for resend otp also.
-    
-### forgotPassword [POST]
-
-+ Request  (application/json)
-
-    + Body
-
-            {
-                "mobile": 9876543210
-            }
-
-+ Response 201 (application/json)
-
-
-+ Response 401 (application/json)
-
-        
-+ Response 400 (application/json)
-
-
-## Set New Password [/user/setNewPassword]
-
-### Set New Password [POST]
-
-+ Request  (application/json)
-
-    + Body
-
-            {
-                "mobile": 9876543210
-                "newPassword" : "1234",
-                "otp": 123456
-            }
-
-+ Response 201 (application/json)
-
-
-+ Response 401 (application/json)
-
- 
-+ Response 400 (application/json)
-
-
-
-
-
-## Save PIN [/user/savePin]
-
-### Save PIN [POST]
-
-+ Request  (application/json)
-
-    + Headers
-        
-             Access-Token: "ABCDEFGH12345678"
-            
-    + Body
-
-            {
-                "userId": "1",
-                "PIN" : "1234"
-            }
-
-+ Response 201 (application/json)
-
-
-+ Response 401 (application/json)
-
- 
-+ Response 400 (application/json)
-
-
-
-## Reset PIN [/user/resetPin]
-
-### Reset PIN [POST]
-
-+ Request  (application/json)
-
-    + Headers
-        
-            Access-Token: "ABCDEFGH12345678"
-            
-    + Body
-
-            {
-                "userId": "1",
-                "currentPIN" : 1234,
-                "newPIN" : 4321
-            }
-
-+ Response 201 (application/json)
-
-
-+ Response 401 (application/json)
-
- 
-+ Response 400 (application/json)
-
-
-
-## Forgot PIN [/user/forgotPin]
-
-### Forgot PIN [POST]
-
-+ Request  (application/json)
-    
-    + Headers
-        
-            Access-Token: "ABCDEFGH12345678"
-            
-    + Body
-
-            {
-                "phone": 9876543210,
-                "otp" : 753238,
-                "newPIN" : "1234"
-            }
-
-+ Response 201 (application/json)
-
-
-+ Response 401 (application/json)
-
- 
-+ Response 400 (application/json)
-
-
-
-## Push Notification [/user/notification]
-
-### Create Notification [POST]
-
-+ Request (application/json)
-
-    + Headers
-
-            Access-Token: "ABCDEFGH12345678"
-
-    + Body
-    
-            {   
-                "userId": [1,2,3,...],
-                "message": "thanks for login"
-            }
-
-+ Response 201 (application/json)
-    
-    + Body
-    
-            {   
-                "success":true
-            }
-    
-+ Response 400 (application/json)
-
-
-+ Response 401 (application/json)
-
-
 ## Payment Modes [/payment/modes]
 
 ### Create Payment Modes [POST]
@@ -3905,7 +3644,5 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 
 
 + Response 401 (application/json)
-
-                
 
                 

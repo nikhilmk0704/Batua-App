@@ -88,7 +88,7 @@ module.exports = {
             if (_.isEmpty(result))
                 return res.notFound(error.send("Does not exist"));
             return res.json(200, result);
-        })
+        });
     },
 
     updateUserByAdmin: function(req, res) {
@@ -118,6 +118,31 @@ module.exports = {
         });
     },
 
+    getActiveUsers: function(req, res) {
+        var params = {};
+        params.id = req.param('id');
+        var userService = new UserService();
+        userService.getActiveUsers(params, function(err, result) {
+            if (err)
+                return res.badRequest(error.send(err));
+            if (_.isEmpty(result))
+                return res.notFound(error.send("Does not exist"));
+            return res.json(200, result);
+        });
+    },
+
+    sendPushNotificationByAdmin: function(req, res) {
+        var params = {};
+        params.message = req.body.message;
+        params.id = req.body.id; // id should be in Array.
+        var userService = new UserService();
+        userService.sendPushNotificationByAdmin(params, function(err, result) {
+            if (err)
+                return res.badRequest(error.send(err));
+            return res.json(200, result);
+        });
+    },
+
     adminLogout: function(req, res) {
         var params = {};
         params.token = req.headers['access-token'];
@@ -134,6 +159,7 @@ module.exports = {
     salesAgentNormalLogin: function(req, res) {
         var params = {};
         params.email = req.body.email;
+        params.phone = req.body.phone;
         params.password = req.body.password;
         params.deviceId = req.body.deviceId;
         var userService = new UserService();
@@ -175,7 +201,7 @@ module.exports = {
         var userService = new UserService();
         userService.salesAgentForgotPassword(params, function(err, result) {
             if (err)
-                return res.json(401,error.send(err));
+                return res.json(401, error.send(err));
             return res.json(200, result);
         });
     },
@@ -394,9 +420,9 @@ module.exports = {
     pinLogin: function(req, res) {
         var params = {};
         params.token = req.headers['access-token'];
-        params.deviceId=req.body.deviceId;
-        params.userId=req.body.userId;
-        params.pin=req.body.pin;
+        params.deviceId = req.body.deviceId;
+        params.userId = req.body.userId;
+        params.pin = req.body.pin;
         var userService = new UserService();
         userService.pinLogin(params, function(err, result) {
             if (err)
@@ -416,6 +442,18 @@ module.exports = {
         });
     },
 
+    resetPin: function(req, res) {
+        var params = {};
+        params.userId = req.body.userId;
+        params.pin = req.body.pin;
+        var userService = new UserService();
+        userService.resetPin(params, function(err, result) {
+            if (err)
+                return res.badRequest(error.send(err));
+            return res.json(200, result);
+        });
+    },
+
     changePin: function(req, res) {
         var params = {};
         params.userId = req.body.userId;
@@ -423,6 +461,18 @@ module.exports = {
         params.newPin = req.body.newPin;
         var userService = new UserService();
         userService.changePin(params, function(err, result) {
+            if (err)
+                return res.badRequest(error.send(err));
+            return res.json(200, result);
+        });
+    },
+
+    contactus: function(req, res) {
+        var params = {};
+        params.query = req.body.query;
+        params.email = req.body.email;
+        var userService = new UserService();
+        userService.contactus(params, function(err, result) {
             if (err)
                 return res.badRequest(error.send(err));
             return res.json(200, result);

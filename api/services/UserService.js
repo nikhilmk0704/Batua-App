@@ -5,6 +5,7 @@ var token = require('rand-token');
 var md5 = require('md5');
 var fs = require('fs');
 var _ = require('lodash');
+var moment = require('moment');
 
 class UserService {
 
@@ -28,7 +29,7 @@ class UserService {
     }
 
     generateOtp() {
-        var otp = token.generate(6, '0123456789');
+        var otp = +(token.generate(6, '0123456789'));
         if (otp < 100000)
             return otp + 100000;
         return otp;
@@ -80,6 +81,7 @@ class UserService {
         mapObject.FIRSTNAME = name; // Capital case because of template is using the same 
         mapObject.LASTNAME = "";
         mapObject.URL = passwordGenerationUrl;
+        mapObject.CURRENT_DATE = moment().format('DD/MM/YYYY');
         var regExp = new RegExp(Object.keys(mapObject).join("|"), "gi");
         var htmlTemplate = template.replace(regExp, function(matched) {
             return mapObject[matched];
@@ -90,6 +92,21 @@ class UserService {
                 console.log(err);
             else
                 console.log(result);
+        });
+    }
+
+    sendNotification(params) {
+        var awsSnsService = new AwsSnsService();
+        var arrayOfDeviceId = params.arrayOfDeviceId;
+        var message = params.message;
+        var title = params.title;
+        async.each(arrayOfDeviceId, function(deviceId) {
+            awsSnsService.sendNotification(deviceId, message, title, function(err, result) {
+                if (err)
+                    console.log(err);
+                else
+                    console.log(result);
+            });
         });
     }
 
@@ -153,6 +170,8 @@ class UserService {
             loggedinResult.email = result.email;
             loggedinResult.profileImageUrl = result.profileImageUrl;
             loggedinResult.phone = result.phone;
+            loggedinResult.isPinActivated = result.isPinActivated;
+            loggedinResult.isPinSet = (result.pin) ? (true) : (false);
             loggedinResult.token = data.token;
             loggedinResult.userGroup = result.userGroups.name;
             return callback(null, loggedinResult);
@@ -174,7 +193,7 @@ class UserService {
         findObject.where.$and = {};
         findObject.where.$and.email = email;
         findObject.where.$and.status = 'Active';
-        var passwordGenerationUrl = "http://52.36.228.74:1337/resetpassword/" + email + "/" + token;
+        var passwordGenerationUrl = "http://52.36.228.74:1337/#/resetpassword/" + email + "/" + token;
         Users.find(findObject).then(function(result) {
             var group = (result) ? (result.userGroups.name) : (null);
             if (result && (group == 'Admin' || group == 'Super Admin')) {
@@ -364,7 +383,7 @@ class UserService {
             newParams.userId = userData.id;
             var email = userData.email;
             var urlToken = result.token;
-            var passwordGenerationUrl = "http://52.36.228.74:1337/resetpassword/" + email + "/" + urlToken;
+            var passwordGenerationUrl = "http://52.36.228.74:1337/#/resetpassword/" + email + "/" + urlToken;
             userService.createUsersAccessToken(newParams, userData, passwordGenerationUrl, callback);
             return null;
         }).catch(function(exception) {
@@ -444,6 +463,63 @@ class UserService {
         userRepository.updateAndFind(params, options, findObject, callback);
     }
 
+    /**************** Send Push Notification From Admin CMS ****************/
+
+    getActiveUsers(params, callback) {
+        var id = params.id;
+        var findObject = {};
+        findObject.where = {};
+        findObject.include = [{ model: UserGroups, as: 'userGroups', required: true, where: { name: 'User' } }];
+        findObject.attributes = ['id', 'name', 'phone', 'email', 'status', 'profileImageUrl', 'latitude', 'longitude'];
+        var userRepository = new UserRepository();
+        if (id) {
+            findObject.where.$and = {};
+            findObject.where.$and.id = id;
+            findObject.where.$and.status = 'Active';
+            userRepository.find(findObject, callback);
+        } else {
+            findObject.where.status = 'Active';
+            userRepository.findAll(findObject, callback);
+        }
+    }
+
+    /**************** Send Push Notification From Admin CMS ****************/
+
+    sendPushNotificationByAdmin(params, callback) {
+        var userService = new UserService();
+        var message = params.message;
+        var userIds = params.id;
+        if (!message || !userIds)
+            return callback("Please give message and id");
+        if (!_.isString(message))
+            return callback("Message should be String");
+        if (!_.isArray(userIds))
+            return callback("Id should be an Array");
+        if (_.isEmpty(userIds))
+            return callback("Id Array should not be Empty");
+        userService.getDeviceIds(params, callback);
+    }
+
+    getDeviceIds(params, callback) {
+        var userService = new UserService();
+        var getDeviceIdQueryString = "SELECT DISTINCT at.deviceId FROM Users " +
+            "AS u INNER JOIN (UsersAccessTokens AS uat INNER JOIN AccessTokens " +
+            "AS at ON at.id=uat.accessTokenId AND at.token IS NOT NULL AND at.deviceId IS NOT NULL) ON " +
+            "u.id=uat.userId INNER JOIN UserGroups AS ug ON ug.id=u.userGroupId " +
+            "AND ug.name='User' WHERE u.status='Active' AND u.id IN (" + params.id + ")";
+        sequelize.query(getDeviceIdQueryString).spread(function(metaResult, result) {
+            var notifyObject = {};
+            var arrayOfDeviceId = _.map(result, 'deviceId');
+            notifyObject.arrayOfDeviceId = arrayOfDeviceId;
+            notifyObject.message = params.message;
+            notifyObject.title = "Batua";
+            userService.sendNotification(notifyObject);
+            return callback(null, { message: "Notification Sent" });
+        }).catch(function(exception) {
+            callback(exception);
+        });
+    }
+
     /*********************** Logout From Admin CMS ****************************/
 
     adminLogout(params, callback) {
@@ -466,21 +542,35 @@ class UserService {
     salesAgentNormalLogin(params, callback) {
         var userService = new UserService();
         var email = params.email;
+        var phone = +params.phone;
         var password = params.password;
-        if (email && password)
+        var isValidEmail = userService.isValidEmail(email);
+        var isValidPhone = userService.isValidPhone(phone);
+        if ((email && phone) || (!email && !phone))
+            return callback("Either phone or email is required !");
+        if (phone && !isValidPhone)
+            return callback("Invalid Phone !");
+        if (email && !isValidEmail)
+            return callback("Invalid Email !")
+        if ((isValidEmail && password) || (isValidPhone && password))
             return userService.findUserAndValidateLogin(params, callback);
-        return callback("Email And Password Required")
+        return callback("Email And Password Or Phone And Password Required !")
     }
 
     findUserAndValidateLogin(params, callback) {
         var userService = new UserService();
+        var email = params.email;
+        var phone = +params.phone;
         var findObject = {};
         findObject.where = {};
-        findObject.where.email = params.email;
+        (email) ? (findObject.where.email = email) : (findObject);
+        (phone) ? (findObject.where.phone = phone) : (findObject);
         findObject.include = userService.getIncludeModels();
         Users.find(findObject).then(function(result) {
-            if (!result)
+            if (!result && email)
                 return callback("Incorrect Email");
+            if (!result && phone)
+                return callback("Incorrect Phone");
             userService.validateSalesLogin(params, result, callback);
             return null;
         }).catch(function(exception) {
@@ -578,7 +668,7 @@ class UserService {
         var isValidPhone = userService.isValidPhone(phone);
         if (!isValidPhone)
             return callback("10 Digit Phone is Required");
-        var userType = 'Field sales Agent';
+        var userType = 'Field Sales Agent';
         return userService.validateUserBeforeOtp(phone, userType, callback);
     }
 
@@ -657,6 +747,8 @@ class UserService {
         var userService = new UserService();
         var updateObject = {};
         updateObject.otp = null;
+        updateObject.isPhoneVerified = true;
+        updateObject.status = 'Active';
         var whereObject = {};
         whereObject.where = {};
         whereObject.where.id = userData.id;
@@ -745,13 +837,21 @@ class UserService {
         findObject.where = {};
         if (userId) {
             findObject.where.id = userId;
-            findObject.attributes = ['id', 'name', 'phone', 'profileImageUrl', 'email', 'isPinActivated'];
+            findObject.attributes = ['id', 'name', 'phone', 'profileImageUrl', 'email', 'isPinActivated', 'pin'];
         }
         if (salesagentId) {
             findObject.where.id = salesagentId;
-            findObject.attributes = ['id', 'name', 'profileImageUrl', 'email'];
+            findObject.attributes = ['id', 'name', 'profileImageUrl', 'email', 'pin'];
         }
-        userRepository.find(findObject, callback);
+        userRepository.find(findObject, function(err, result) {
+            if (err)
+                callback(err);
+            if (!result)
+                callback(null, result);
+            result.dataValues.isPinSet = (result.pin) ? (true) : (false);
+            delete result.dataValues.pin;
+            callback(null, result);
+        });
     }
 
     /**************** Updates User's Or Field Sales Agent's Profile ****************/
@@ -815,7 +915,7 @@ class UserService {
         whereObject.where = {};
         whereObject.where.id = params.id;
         findObject = whereObject;
-        findObject.attributes = ['id', 'name', 'email', 'profileImageUrl', 'phone'];
+        findObject.attributes = ['id', 'name', 'email', 'profileImageUrl', 'phone', 'isPinActivated'];
         userRepository.updateAndFind(newParams, whereObject, findObject, callback);
     }
 
@@ -847,7 +947,7 @@ class UserService {
         });
     }
 
-    /********************* Normal Sign In User's App **************************/
+    /********************* Normal SignUp In User's App **************************/
 
     normalSignup(params, callback) {
         var userService = new UserService();
@@ -857,8 +957,12 @@ class UserService {
         var password = params.password;
         var isValidPhone = userService.isValidPhone(phone);
         var isValidPassword = userService.isValidPassword(password);
+        if (!phone)
+            return callback("Phone Number Required")
         if (!isValidPhone)
             return callback("Invalid Phone");
+        if (email && !userService.isValidEmail(email))
+            return callback("Invalid Email")
         if (!isValidPassword)
             return callback("Invalid Password");
         var newParams = {};
@@ -879,8 +983,10 @@ class UserService {
         (email) ? (findObject.where.$or = [{ 'phone': phone }, { 'email': email }]) : (findObject);
         (!email) ? (findObject.where.phone = phone) : (findObject);
         Users.find(findObject).then(function(result) {
-            if (result)
-                return callback("Already Registered");
+            if (result && (!email || (email && result.phone == phone)))
+                return callback("Phone Number Already Registered");
+            if (result && email && result.email == email)
+                return callback("Email Already Registered");
             userService.createNewUser(params, callback);
             return null;
         }).catch(function(exception) {
@@ -944,8 +1050,12 @@ class UserService {
         findObject.where = {};
         (googleId) ? (findObject.where.$or = [{ email: email }, { googleId: googleId }]) : (findObject);
         (facebookId) ? (findObject.where.$or = [{ email: email }, { facebookId: facebookId }]) : (findObject);
+        if (!email)
+            return callback("Email Required");
         if (!isValidEmail)
             return callback("Invalid Email");
+        if ((googleId && facebookId) || (!googleId && !facebookId))
+            return callback("Please give either googleId or facebookId");
         userService.validateUserSignup(params, findObject, callback);
     }
 
@@ -956,8 +1066,10 @@ class UserService {
         var googleId = params.googleId;
         var facebookId = params.facebookId;
         Users.find(findObject).then(function(result) {
-            if (result)
-                return callback("Already Exist");
+            if (result && googleId && (result.googleId == googleId || result.email == email))
+                return callback("Gmail Already Registered");
+            if (result && facebookId && (result.facebookId == facebookId || result.email == email))
+                return callback("Facebook Email Already Registered");
             var newParams = {};
             newParams.name == name;
             newParams.email = email;
@@ -1075,16 +1187,15 @@ class UserService {
                 return callback("Incorrect Phone");
             if (result.otp != otp)
                 return callback("Incorrect OTP");
-            userService.updateAccessTokenAndShowResult(params, result, callback);
             var userId = result.id;
-            userService.deleteOtp(userId);
+            userService.deleteOtp(userId,callback);
             return null;
         }).catch(function(exception) {
             callback(exception);
         });
     }
 
-    deleteOtp(userId) {
+    deleteOtp(userId, callback) {
         var updateObject = {};
         var whereObject = {};
         whereObject.where = {};
@@ -1092,7 +1203,11 @@ class UserService {
         updateObject.otp = null;
         updateObject.status = 'Active';
         updateObject.isPhoneVerified = true;
-        Users.update(updateObject, whereObject);
+        Users.update(updateObject, whereObject).then(function(result) {
+            callback(null, { message: "Phone Number Verified" });
+        }).catch(function(exception){
+            callback(exception);
+        });
     }
 
     /******************** Normal Login In User App ************************/
@@ -1194,7 +1309,7 @@ class UserService {
         whereObject.where.id = params.id;
         whereObject.include = userService.getIncludeModels();
         Users.find(whereObject).then(function(result) {
-            if (result)
+            if (!result)
                 return callback("Incorrect Id");
             userService.validateUserProfile(params, result, callback);
             return null;
@@ -1277,14 +1392,14 @@ class UserService {
         var pin = params.pin;
         var deviceId = params.deviceId;
         var token = params.token;
-        if (!userId && !pin && !deviceId && !token)
+        if (!userId || !pin || !deviceId || !token)
             return callback("Please give userId,pin,deviceId,Access-Token");
         if (!userService.isValidPin(pin))
             return callback("Invalid PIN");
-        userService.findUserAndValidatePin(params,callback);
+        userService.findUserAndValidatePin(params, callback);
     }
 
-    findUserAndValidatePin(params,callback){
+    findUserAndValidatePin(params, callback) {
         var userId = params.userId;
         var pin = params.pin;
         var deviceId = params.deviceId;
@@ -1326,6 +1441,48 @@ class UserService {
         userService.forgotPassword(params, callback);
     }
 
+    /****************** Set Or Reset PIN ***********************/
+
+    resetPin(params, callback) {
+        var userService = new UserService();
+        var userId = params.userId;
+        var pin = params.pin;
+        if (!userId && !pin)
+            return callback("userId and pin is required");
+        var isValidPin = userService.isValidPin(pin);
+        if (!isValidPin)
+            return callback("Invalid Pin");
+        var findObject = {};
+        findObject.where = {};
+        findObject.where.id = userId;
+        findObject.include = userService.getIncludeModels();
+        Users.find(findObject).then(function(result) {
+            if (!result)
+                return callback("Incorrect userId");
+            var group = result.userGroups.name;
+            var status = result.status;
+            if (group != 'User' || status != 'Active')
+                return callback("Not an Active User");
+            userService.updatePinForResetPin(params, callback);
+            return null;
+        }).catch(function(exception) {
+            callback(exception);
+        });
+    }
+
+    updatePinForResetPin(params, callback) {
+        var updateObject = {};
+        updateObject.pin = params.pin;
+        var whereObject = {};
+        whereObject.where = {};
+        whereObject.where.id = params.userId;
+        Users.update(updateObject, whereObject).then(function(result) {
+            callback(null, "PIN is Reset");
+        }).catch(function(exception) {
+            callback(exception);
+        });
+    }
+
     /****************** Validates Old PIN And Set New PIN ***********************/
 
     changePin(params, callback) {
@@ -1333,7 +1490,7 @@ class UserService {
         var userId = params.userId;
         var currentPin = params.currentPin;
         var newPin = params.newPin;
-        if (!userId && !currentPin && newPin)
+        if (!userId || !currentPin || !newPin)
             return callback("User Id, Current PIN And New PIN Required");
         if (userId && !_.isInteger(currentPin))
             return callback("Current PIN should be Integer");
@@ -1381,6 +1538,26 @@ class UserService {
             return callback(null, { message: "PIN Reset" });
         }).catch(function(exception) {
             callback(exception);
+        });
+    }
+
+    /********************** Contact Us User App ***********************/
+
+    contactus(params, callback) {
+        var awsSesService = new AwsSesService();
+        var userService = new UserService();
+        var email = params.email;
+        var query = params.query;
+        var mailObject = {};
+        mailObject.sender = 'support@thebatua.com';
+        mailObject.receivers = [];
+        mailObject.receivers.push(email);
+        mailObject.subjectText = 'Welcome to Batua !!!';
+        mailObject.bodyText = 'Welcome to Batua !!!';
+        awsSesService.sendEmail(mailObject, function(err, result) {
+            if (err)
+                return callback(err);
+            return callback(null, { message: "We are processing your query" });
         });
     }
 

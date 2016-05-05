@@ -27,7 +27,7 @@ module.exports.routes = {
     /********************* Merchants Module API ************************/
 
     'post /api/merchant': 'MerchantsController.create',
-    'get /api/user/:userId/merchant/:id?': 'MerchantsController.find',
+    'get /api/user/:userId/merchant/:id?/latitude/:latitude/longitude/:longitude': 'MerchantsController.find',
     'get /api/salesagent/:salesAgentId/merchant/:id?': 'MerchantsController.find',
     'get /api/admin/:adminId/merchant/:id?': 'MerchantsController.find',
     'get /api/merchant/:id?': 'MerchantsController.getActiveMerchants',
@@ -72,6 +72,8 @@ module.exports.routes = {
     'get /api/admin/user/:id?': 'UsersController.findUserByAdmin',
     'put /api/admin/user': 'UsersController.updateUserByAdmin',
     'put /api/admin/user/setstatus': 'UsersController.setUserStatusByAdmin',
+    'get /api/admin/activeuser/:id?': 'UsersController.getActiveUsers',
+    'put /api/admin/activeuser/notify': 'UsersController.sendPushNotificationByAdmin',
     'put /api/admin/user/logout': 'UsersController.adminLogout',
 
     /********************* Field Sales Agent App API ************************/
@@ -102,8 +104,11 @@ module.exports.routes = {
     'put /api/user/pin/status': 'UsersController.updatePinStatus',
     'put /api/user/pin/Login': 'UsersController.pinLogin',
     'put /api/user/pin/forgot': 'UsersController.forgotPin',
+    'put /api/user/pin/reset': 'UsersController.resetPin',
     'put /api/user/pin/change': 'UsersController.changePin',
+    'post /api/user/contactus': 'UsersController.contactus',
     'put /api/user/logout': 'UsersController.logout',
+    'post /api/user/validatePromocode':'PromocodesValidateController.validatePromocode',
 
     /********************* Image Upload API ************************/
 
