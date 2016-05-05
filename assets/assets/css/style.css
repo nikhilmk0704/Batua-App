@@ -615,3 +615,22 @@ td {
     /* visibility: collapse; */
     display: none;
 }
+
+.modalWindow {
+    position: absolute;
+    margin: 100px;
+}
+
+.timeline-badge {
+    color: #fff;
+    width: 35px;
+    height: 35px;
+    line-height: 35px;
+    font-size: 1.3em;
+    text-align: center;
+    background-color: #3980C2 !important;
+    border-radius: 50%;
+    margin: 5px;
+    padding: 7px;
+}
+
