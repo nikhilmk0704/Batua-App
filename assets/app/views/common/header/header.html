@@ -1,4 +1,4 @@
-<header class="page-header navbar navbar-fixed-top" style="border:5px solid transparent; border-bottom-color:#FF4081;" ng-show="$auth.isAuthenticated()">
+<header class="page-header navbar navbar-fixed-top" style="border:5px solid transparent; border-bottom-color:#FF4081;" ng-show="$auth.isAuthenticated()" ng-controller="headerController as vm">
     <!-- HEADER BEGIN -->
     <div class="page-header-inner">
         <div class="page-logo">
@@ -8,13 +8,13 @@
         <a href="javascript:;" class="menu-toggler responsive-toggler" data-toggle="collapse" data-target=".navbar-collapse" style="margin-top:25px;"> </a>
         <!-- END RESPONSIVE MENU TOGGLER -->
         <!-- BEGIN TOP NAVIGATION MENU -->
-        <div class="top-menu" style="padding-top:15px;">
+        <div class="top-menu" style="padding-top:5px;">
             <!-- User Profile -->
             <ul class="nav navbar-nav pull-right">
                 <li class="dropdown dropdown-user" uib-dropdown>
                     <a href="javascript:;" class="dropdown-toggle customedropdown" data-hover="dropdown" uib-dropdown-toggle>
-                        <img alt="" class="img-circle" src="assets/images/avatar3_small.jpg" />
-                        <span class="username username-hide-on-mobile black"><strong> Nick as <label> Admin</label></strong></span>
+                        <span class="timeline-badge img-circle"><i class="fa fa-user"></i></span>
+                        <span class="username username-hide-on-mobile black"><strong> {{vm.loggedInUserDetails.name | uppercase}}</strong> as <strong> {{vm.loggedInUserDetails.userGroup}}</strong></span>
                         <i class="fa fa-angle-down"></i>
                     </a>
                     <ul class="dropdown-menu dropdown-menu-default">
@@ -23,7 +23,7 @@
                                 <i class="fa fa-key"></i> Change Password
                             </a>
                         </li>
-                        <li ng-controller="headerController as vm">
+                        <li>
                             <a ng-click="vm.logout()">
                                 <i class="fa fa-lock"></i> Log Out
                             </a>
