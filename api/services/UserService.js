@@ -193,7 +193,7 @@ class UserService {
         findObject.where.$and = {};
         findObject.where.$and.email = email;
         findObject.where.$and.status = 'Active';
-        var passwordGenerationUrl = "http://52.36.228.74:1337/#/resetpassword/" + email + "/" + token;
+        var passwordGenerationUrl = sails.config.connections.url+"/#/resetpassword/" + email + "/" + token;
         Users.find(findObject).then(function(result) {
             var group = (result) ? (result.userGroups.name) : (null);
             if (result && (group == 'Admin' || group == 'Super Admin')) {
@@ -383,7 +383,7 @@ class UserService {
             newParams.userId = userData.id;
             var email = userData.email;
             var urlToken = result.token;
-            var passwordGenerationUrl = "http://52.36.228.74:1337/#/resetpassword/" + email + "/" + urlToken;
+            var passwordGenerationUrl = sails.config.connections.url+"/#/resetpassword/" + email + "/" + urlToken;
             userService.createUsersAccessToken(newParams, userData, passwordGenerationUrl, callback);
             return null;
         }).catch(function(exception) {
@@ -698,7 +698,8 @@ class UserService {
         var params = {};
         params.phone = phone;
         var otp = userService.generateOtp();
-        params.message = "Your One Time Password for Batua App is " + otp;
+        var otpExpiresAt = moment().add(2, 'm').format("HH:mm:ss");
+        params.message = "OTP for Batua App reset password is " + otp + " . Valid until " + otpExpiresAt + " . Thank you.";
         smsService.send(params, function(err, result) {
             if (err) {
                 console.log(err);
@@ -793,7 +794,7 @@ class UserService {
             return callback("UserId And New Password Required");
         var isValidPassword = userService.isValidPassword(newPassword);
         if (!isValidPassword)
-            return callback("Incorrect Password");
+            return callback("Password length should be atleast 6 and should not contain Spaces");
         var findObject = {};
         findObject.where = {};
         findObject.include = userService.getIncludeModels();
@@ -880,6 +881,12 @@ class UserService {
         var userService = new UserService();
         var currentPassword = params.currentPassword;
         var newPassword = params.newPassword;
+        var isValidCurrentPassword = userService.isValidPassword(currentPassword);
+        var isValidNewPassword = userService.isValidPassword(newPassword);
+        if (!isValidCurrentPassword)
+            return callback("Current Password length should be atleast 6 and should not contain Spaces");
+        if (!isValidNewPassword)
+            return callback("New Password length should be atleast 6 and should not contain Spaces");
         var id = params.id;
         var whereObject = {};
         whereObject.where = {};
@@ -1011,7 +1018,8 @@ class UserService {
         var params = {};
         params.phone = phone;
         var otp = userService.generateOtp();
-        params.message = "Welcom to Batua!!! Your One Time Password for verification is " + otp;
+        var otpExpiresAt = moment().add(2, 'm').format("HH:mm:ss");
+        params.message = "OTP for Batua App reset password is " + otp + " . Valid until " + otpExpiresAt + " . Thank you.";
         smsService.send(params, function(err, result) {
             if (err) {
                 console.log(err);
@@ -1188,7 +1196,7 @@ class UserService {
             if (result.otp != otp)
                 return callback("Incorrect OTP");
             var userId = result.id;
-            userService.deleteOtp(userId,callback);
+            userService.deleteOtp(userId, callback);
             return null;
         }).catch(function(exception) {
             callback(exception);
@@ -1205,7 +1213,7 @@ class UserService {
         updateObject.isPhoneVerified = true;
         Users.update(updateObject, whereObject).then(function(result) {
             callback(null, { message: "Phone Number Verified" });
-        }).catch(function(exception){
+        }).catch(function(exception) {
             callback(exception);
         });
     }
@@ -1224,11 +1232,11 @@ class UserService {
         if (!userName)
             return callback("Please give phone or email");
         if (!isValidPassword)
-            return callback("Incorrect Password");
+            return callback("Password length should be atleast 6 and should not contain Spaces");
         if (!isNaN(+userName) && !userService.isValidPhone(+userName))
-            return callback("Incorrect Phone");
+            return callback("Phone should be 10 Digit");
         if (isNaN(+userName) && !userService.isValidEmail(userName))
-            return callback("Incorrect Email");
+            return callback("Invalid Email");
         if (!isNaN(+userName) && userService.isValidPhone(+userName))
             findObject.where.$and.phone = userName;
         if (isNaN(+userName) && userService.isValidEmail(userName))
@@ -1262,7 +1270,7 @@ class UserService {
         var facebookId = params.facebookId;
         var isValidEmail = userService.isValidEmail(email);
         if (!isValidEmail)
-            return callback("Incorrect Email");
+            return callback("Invalid Email");
         var findObject = {};
         findObject.where = {};
         findObject.include = userService.getIncludeModels();
@@ -1426,6 +1434,8 @@ class UserService {
                 return callback("PIN is not Active");
             if (result.pin != pin)
                 return callback("Incorrect PIN");
+            loggedinResult.isPinActivated = true;
+            loggedinResult.isPinSet = true;
             if (result.pin == pin)
                 return callback(null, loggedinResult);
             return callback("Something went Wrong");
@@ -1544,20 +1554,36 @@ class UserService {
     /********************** Contact Us User App ***********************/
 
     contactus(params, callback) {
-        var awsSesService = new AwsSesService();
         var userService = new UserService();
         var email = params.email;
         var query = params.query;
-        var mailObject = {};
-        mailObject.sender = 'support@thebatua.com';
-        mailObject.receivers = [];
-        mailObject.receivers.push(email);
-        mailObject.subjectText = 'Welcome to Batua !!!';
-        mailObject.bodyText = 'Welcome to Batua !!!';
-        awsSesService.sendEmail(mailObject, function(err, result) {
+        userService.respondContact(email, 'support@thebatua.com', 'User');
+        userService.respondContact('support@thebatua.com', email, 'Batua');
+        callback(null, { message: "Email Sent" });
+    }
+
+    respondContact(emailTo, emailFrom, emailToUserType) {
+        var awsSesService = new AwsSesService();
+        var params = {};
+        params.sender = emailFrom;
+        params.receivers = [];
+        params.receivers.push(emailTo);
+        params.subjectText = 'Welcome to Batua !!!';
+        params.bodyText = 'Welcome to Batua !!!';
+        if (emailToUserType == 'User') {
+            var templatPath = './api/templates/contact-us/response_contact_us.ejs';
+            params.htmlTemplate = fs.readFileSync(templatPath, "utf-8");
+        }
+        if (emailToUserType == 'Batua') {
+            var templatPath = './api/templates/contact-us/query_contact_us.ejs';
+            var template = fs.readFileSync(templatPath, "utf-8");
+            params.htmlTemplate = template.replace(/Query detail description will be visible here/g, query);
+        }
+        awsSesService.sendEmail(params, function(err, result) {
             if (err)
-                return callback(err);
-            return callback(null, { message: "We are processing your query" });
+                console.log(err);
+            else
+                console.log(result);
         });
     }
 

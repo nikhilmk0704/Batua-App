@@ -2781,6 +2781,89 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 400 (application/json)
 
 
+## Reports [/api/admin]
+
+### Get Payment Settlement report [GET /api/admin/payment/settlement]
+
++ Response 200 (application/json)
+    + Body 
+    
+            [
+                {
+                    "id": 6,
+                    "merchantName": "vikash",
+                    "netTransactionAmount": 100000,
+                    "netOfferAmount": 10000,
+                    "netPromoOffer": 10000,
+                    "cashbackByMerchant": 10000,
+                    "feeCharged": 1000,
+                    "settlementAmount":1000,
+                    "status":"Open",
+                    "createdAt": "2016-04-06T07:38:39.000Z",
+                    "updatedAt": "2016-04-06T07:43:56.000Z"
+                }
+            ]
+        
++ Response 404 (application/json)
+
+
+### Get Payment Details report [GET /api/admin/payment/details]
+
++ Response 200 (application/json)
+    + Body 
+    
+            [
+                {
+                    "id": 6,
+                    "user": "vikash",
+                    "orderNumber": 100000,
+                    "transactionId": 10000,
+                    "transactionDate": "2016-04-06T07:38:39.000Z",
+                    "transactionAmount": 10000,
+                    "offerAmount": 1000,
+                    "promoOfferAmount":1000,
+                    "promoAmountByMerchant":"Open",
+                    "feeCharged":1000,
+                    "amountCreditedToBatua":500,
+                    "settlementAmount":10000
+                    "createdAt": "2016-04-06T07:38:39.000Z",
+                    "updatedAt": "2016-04-06T07:43:56.000Z"
+                }
+            ]
+        
+        
++ Response 404 (application/json)
+
+
+### Get Transaction report [GET /api/admin/transaction]
+
++ Response 200 (application/json)
+    + Body 
+    
+            [
+                {
+                    "id": 6,
+                    "merchantName":"manaf"
+                    "userName": "vikash",
+                    "orderNumber": 100000,
+                    "transactionId": 10000,
+                    "transactionDate": "2016-04-06T07:38:39.000Z",
+                    "paymentAmount": 10000,
+                    "cashbackByOffer":100,
+                    "cashbackByPromo":200,
+                    "amountCreditedToBatua":500,
+                    "transactionCancelledBy":"admin1",
+                    "transactionCancelledOn":"2016-04-06T07:38:39.000Z",
+                    "cancellationDescription":"description",
+                    "createdAt": "2016-04-06T07:38:39.000Z",
+                    "updatedAt": "2016-04-06T07:43:56.000Z"
+                }
+            ]
+    
+        
++ Response 404 (application/json)
+
+
 ## Payment Modes [/payment/modes]
 
 ### Create Payment Modes [POST]
@@ -3644,5 +3727,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 
 
 + Response 401 (application/json)
+
+                
 
                 
