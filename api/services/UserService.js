@@ -55,7 +55,7 @@ class UserService {
     }
 
     isValidPin(pin) {
-        if (pin && _.toString(pin).length == 4 && _.inRange(pin, 1000, 10000))
+        if (pin && _.toString(pin).length == 4 && _.inRange(pin, 1000, 10000) && !(/\s/g.test(_.toString(pin))))
             return true;
         return false;
     }
@@ -295,11 +295,11 @@ class UserService {
         if (!userId || !currentPassword || !newPassword)
             return callback("User Id, Current Password And New Password Required");
         if (userId && ((/\s/g.test(currentPassword)) || currentPassword.length < 6))
-            return callback("Incorrect Current Password");
+            return callback("Minimum Current Password length is 6 with no Spaces");
         if (userId && (/\s/g.test(newPassword)))
-            return callback("Spaces are not Allowed");
+            return callback("Spaces are not Allowed in new password");
         if (userId && newPassword.length < 6)
-            return callback("Minimum Password Length is 6");
+            return callback("Minimum New Password length is 6 with no Spaces");
         if (userId && (currentPassword == newPassword))
             return callback("Current Password And New Password should be different");
         return userService.validatePassword(params, callback);
@@ -549,7 +549,7 @@ class UserService {
         if ((email && phone) || (!email && !phone))
             return callback("Either phone or email is required !");
         if (phone && !isValidPhone)
-            return callback("Invalid Phone !");
+            return callback("Phone should be 10 digit Number");
         if (email && !isValidEmail)
             return callback("Invalid Email !")
         if ((isValidEmail && password) || (isValidPhone && password))
@@ -699,7 +699,7 @@ class UserService {
         params.phone = phone;
         var otp = userService.generateOtp();
         var otpExpiresAt = moment().add(2, 'm').format("HH:mm:ss");
-        params.message = "OTP for Batua App reset password is " + otp + " . Valid until " + otpExpiresAt + " . Thank you.";
+        params.message = "OTP for Batua App reset password is " + otp + " . Thank you.";
         smsService.send(params, function(err, result) {
             if (err) {
                 console.log(err);
@@ -794,7 +794,7 @@ class UserService {
             return callback("UserId And New Password Required");
         var isValidPassword = userService.isValidPassword(newPassword);
         if (!isValidPassword)
-            return callback("Password length should be atleast 6 and should not contain Spaces");
+            return callback("Minimum Password length is 6 with no Spaces");
         var findObject = {};
         findObject.where = {};
         findObject.include = userService.getIncludeModels();
@@ -883,10 +883,8 @@ class UserService {
         var newPassword = params.newPassword;
         var isValidCurrentPassword = userService.isValidPassword(currentPassword);
         var isValidNewPassword = userService.isValidPassword(newPassword);
-        if (!isValidCurrentPassword)
-            return callback("Current Password length should be atleast 6 and should not contain Spaces");
-        if (!isValidNewPassword)
-            return callback("New Password length should be atleast 6 and should not contain Spaces");
+        if (!isValidCurrentPassword || !isValidNewPassword)
+            return callback("Minimum Password length is 6 with no Spaces");
         var id = params.id;
         var whereObject = {};
         whereObject.where = {};
@@ -967,11 +965,11 @@ class UserService {
         if (!phone)
             return callback("Phone Number Required")
         if (!isValidPhone)
-            return callback("Invalid Phone");
+            return callback("Phone should be 10 digit Number");
         if (email && !userService.isValidEmail(email))
             return callback("Invalid Email")
         if (!isValidPassword)
-            return callback("Invalid Password");
+            return callback("Minimum Password length is 6 with no Spaces");
         var newParams = {};
         newParams.phone = phone;
         newParams.email = email;
@@ -1019,7 +1017,7 @@ class UserService {
         params.phone = phone;
         var otp = userService.generateOtp();
         var otpExpiresAt = moment().add(2, 'm').format("HH:mm:ss");
-        params.message = "OTP for Batua App reset password is " + otp + " . Valid until " + otpExpiresAt + " . Thank you.";
+        params.message = "OTP for Batua App reset password is " + otp + " . Thank you.";
         smsService.send(params, function(err, result) {
             if (err) {
                 console.log(err);
@@ -1118,7 +1116,7 @@ class UserService {
         if (!userId)
             return callback("Please give userId");
         if (!isValidPhone)
-            return callback("Invalid Phone");
+            return callback("Phone should be 10 digit Number");
         userService.isPhoneExist(params, findObject, callback);
     }
 
@@ -1232,7 +1230,7 @@ class UserService {
         if (!userName)
             return callback("Please give phone or email");
         if (!isValidPassword)
-            return callback("Password length should be atleast 6 and should not contain Spaces");
+            return callback("Minimum Password length is 6 with no Spaces");
         if (!isNaN(+userName) && !userService.isValidPhone(+userName))
             return callback("Phone should be 10 Digit");
         if (isNaN(+userName) && !userService.isValidEmail(userName))
@@ -1288,7 +1286,7 @@ class UserService {
         var phone = params.phone;
         var isValidPhone = userService.isValidPhone(phone);
         if (!isValidPhone)
-            return callback("Invalid Phone");
+            return callback("Phone should be 10 digit Number");
         var userType = 'User';
         return userService.validateUserBeforeOtp(phone, userType, callback);
     }
@@ -1403,7 +1401,7 @@ class UserService {
         if (!userId || !pin || !deviceId || !token)
             return callback("Please give userId,pin,deviceId,Access-Token");
         if (!userService.isValidPin(pin))
-            return callback("Invalid PIN");
+            return callback("Pin should be 4 digit Number");
         userService.findUserAndValidatePin(params, callback);
     }
 
@@ -1461,7 +1459,7 @@ class UserService {
             return callback("userId and pin is required");
         var isValidPin = userService.isValidPin(pin);
         if (!isValidPin)
-            return callback("Invalid Pin");
+            return callback("Pin should be 4 digit Number");
         var findObject = {};
         findObject.where = {};
         findObject.where.id = userId;
@@ -1503,9 +1501,9 @@ class UserService {
         if (!userId || !currentPin || !newPin)
             return callback("User Id, Current PIN And New PIN Required");
         if (userId && !_.isInteger(currentPin))
-            return callback("Current PIN should be Integer");
+            return callback("Current PIN should be 4 Digit Integer");
         if (userId && !_.isInteger(newPin))
-            return callback("New PIN should be Integer");
+            return callback("New PIN should be 4 Digit Integer");
         if (userId && !_.inRange(currentPin, 1000, 10000))
             return callback("Incorrect Current PIN");
         if (userId && !_.inRange(newPin, 1000, 10000))
