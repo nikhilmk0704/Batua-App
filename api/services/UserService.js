@@ -881,11 +881,11 @@ class UserService {
         var userService = new UserService();
         var currentPassword = params.currentPassword;
         var newPassword = params.newPassword;
-        var isValidCurrentPassword=userService.isValidPassword(currentPassword);
-        var isValidNewPassword=userService.isValidPassword(newPassword);
-        if(!isValidCurrentPassword)
+        var isValidCurrentPassword = userService.isValidPassword(currentPassword);
+        var isValidNewPassword = userService.isValidPassword(newPassword);
+        if (!isValidCurrentPassword)
             return callback("Current Password length should be atleast 6 and should not contain Spaces");
-        if(!isValidNewPassword)
+        if (!isValidNewPassword)
             return callback("New Password length should be atleast 6 and should not contain Spaces");
         var id = params.id;
         var whereObject = {};
@@ -1434,6 +1434,8 @@ class UserService {
                 return callback("PIN is not Active");
             if (result.pin != pin)
                 return callback("Incorrect PIN");
+            loggedinResult.isPinActivated = true;
+            loggedinResult.isPinSet = true;
             if (result.pin == pin)
                 return callback(null, loggedinResult);
             return callback("Something went Wrong");
