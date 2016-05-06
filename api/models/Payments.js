@@ -45,7 +45,7 @@ module.exports = {
             required: true,
             allowNull: false,
         },
-        canccellationDate: {
+        cancellationDate: {
             type: Sequelize.DATE,
         },
         cancellationDescription: {
