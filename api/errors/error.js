@@ -10,8 +10,11 @@ module.exports = {
             var isErrorsArrayExist = (errorParams.errors[0].message) ? (true) : (false);
             var isUniqueVoilation = (_.indexOf(errorParams.errors[0].type.split(' '), 'unique') >= 0) ? (true) : (false);
             var messageError;
-            if(isErrorsArrayExist && isUniqueVoilation)
-                messageError=Object.keys(errorParams.fields)[0]+" already exist";
+            if (isErrorsArrayExist && isUniqueVoilation) {
+                var attribute = Object.keys(errorParams.fields)[0];
+                (attribute == 'phone') ? (attribute = "Mobile number") : (attribute);
+                messageError = attribute + " already exist";
+            }
             if (isErrorsArrayExist && !isUniqueVoilation)
                 messageError = (_.pick(errorParams.errors[0], 'message').message);
             if (!isErrorsArrayExist)
