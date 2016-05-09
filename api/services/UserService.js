@@ -193,7 +193,7 @@ class UserService {
         findObject.where.$and = {};
         findObject.where.$and.email = email;
         findObject.where.$and.status = 'Active';
-        var passwordGenerationUrl = sails.config.connections.url+"/#/resetpassword/" + email + "/" + token;
+        var passwordGenerationUrl = sails.config.connections.url + "/#/resetpassword/" + email + "/" + token;
         Users.find(findObject).then(function(result) {
             var group = (result) ? (result.userGroups.name) : (null);
             if (result && (group == 'Admin' || group == 'Super Admin')) {
@@ -320,7 +320,7 @@ class UserService {
             var group = result.userGroups.name;
             var status = result.status;
             if (group == 'Field Sales Agent' || status != "Active")
-                return callback("Not Active !");
+                return callback("Does not exist !");
             if (result.password != md5(currentPassword))
                 return callback("Incorrect Current Password");
             if (result.password == md5(currentPassword)) {
@@ -383,7 +383,7 @@ class UserService {
             newParams.userId = userData.id;
             var email = userData.email;
             var urlToken = result.token;
-            var passwordGenerationUrl = sails.config.connections.url+"/#/resetpassword/" + email + "/" + urlToken;
+            var passwordGenerationUrl = sails.config.connections.url + "/#/resetpassword/" + email + "/" + urlToken;
             userService.createUsersAccessToken(newParams, userData, passwordGenerationUrl, callback);
             return null;
         }).catch(function(exception) {
@@ -684,7 +684,7 @@ class UserService {
             var group = result.userGroups.name;
             var status = result.status;
             if (group != userType || status != 'Active')
-                return callback("Not an Active " + userType + " !");
+                return callback("" + userType + " does not exist !");
             userService.sendOtp(phone, callback);
             return null;
         }).catch(function(exception) {
@@ -1125,9 +1125,9 @@ class UserService {
         var phone = params.phone;
         var type = params.type;
         Users.count({ where: { phone: phone } }).then(function(result) {
-            if (result && type=='send')
+            if (result && type == 'send')
                 return callback("Mobile Number is already Registered");
-            if (!result && type=='resend')
+            if (!result && type == 'resend')
                 return callback("Mobile Number is not Registered");
             userService.validateOtpForSignup(params, findObject, callback);
             return null;
@@ -1142,7 +1142,7 @@ class UserService {
             if (!result)
                 return callback("Incorrect Id");
             if (result && result.userGroups.name != 'User')
-                return callback("Not a User");
+                return callback("User does not exist");
             userService.updatePhoneForSendOtp(params, callback);
             return null;
         }).catch(function(exception) {
@@ -1241,7 +1241,6 @@ class UserService {
         if (isNaN(+userName) && userService.isValidEmail(userName))
             findObject.where.$and.email = userName;
         findObject.where.$and.password = md5(password);
-        findObject.where.$and.status = 'Active';
         userService.validateUserLogin(params, findObject, callback);
     }
 
@@ -1251,8 +1250,11 @@ class UserService {
             if (!result)
                 return callback("Incorrect Credentials");
             var group = result.userGroups.name;
+            var isPhoneVerified = result.isPhoneVerified;
+            if(!isPhoneVerified)
+                return callback("Mobile number not verified");
             if (result && group != 'User')
-                return callback("Not a User");
+                return callback("User does not exist");
             userService.updateAccessTokenAndShowResult(params, result, callback);
             return null;
         }).catch(function(exception) {
@@ -1275,8 +1277,6 @@ class UserService {
         findObject.include = userService.getIncludeModels();
         (googleId) ? (findObject.where.$or = [{ email: email }, { googleId: googleId }]) : (findObject);
         (facebookId) ? (findObject.where.$or = [{ email: email }, { facebookId: facebookId }]) : (findObject);
-        findObject.where.$and = {};
-        findObject.where.$and.status = 'Active';
         userService.validateUserLogin(params, findObject, callback);
     }
 
@@ -1331,7 +1331,7 @@ class UserService {
         var resultedEmail = userData.email;
         var userGroupName = userData.userGroups.name;
         if (userData && userGroupName != "User")
-            return callback("Not a User");
+            return callback("User does not exist");
         if (userData && email && resultedEmail)
             return callback("Email Is One Time Editable");
         if (userData && ((!resultedEmail && email) || (resultedEmail && !email)))
@@ -1428,7 +1428,7 @@ class UserService {
             loggedinResult.phone = result.phone;
             loggedinResult.userGroup = result.userGroups.name;
             if (result.userGroups.name != 'User' || result.status != 'Active')
-                return callback("Inactive User");
+                return callback("User does not exist");
             if (!result.isPinActivated)
                 return callback("PIN is not Active");
             if (result.pin != pin)
@@ -1471,7 +1471,7 @@ class UserService {
             var group = result.userGroups.name;
             var status = result.status;
             if (group != 'User' || status != 'Active')
-                return callback("Not an Active User");
+                return callback("User does not exist");
             userService.updatePinForResetPin(params, callback);
             return null;
         }).catch(function(exception) {
@@ -1524,7 +1524,7 @@ class UserService {
             if (!result)
                 return callback("Incorrect User Id");
             if (result.userGroups.name != 'User' || result.status != "Active")
-                return callback("Not an Active User");
+                return callback("User does not exist");
             if (!result.isPinActivated)
                 return callback("Please Enable PIN Settings");
             if (currentPin != result.pin)
