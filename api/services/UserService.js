@@ -549,7 +549,7 @@ class UserService {
         if ((email && phone) || (!email && !phone))
             return callback("Either phone or email is required !");
         if (phone && !isValidPhone)
-            return callback("Phone should be 10 digit Number");
+            return callback("Mobile Number should be 10 digit Number");
         if (email && !isValidEmail)
             return callback("Invalid Email !")
         if ((isValidEmail && password) || (isValidPhone && password))
@@ -680,7 +680,7 @@ class UserService {
         findObject.include = userService.getIncludeModels();
         Users.find(findObject).then(function(result) {
             if (!result)
-                return callback("Unregistered Phone");
+                return callback("Unregistered Mobile Number");
             var group = result.userGroups.name;
             var status = result.status;
             if (group != userType || status != 'Active')
@@ -734,7 +734,7 @@ class UserService {
         whereObject.where.phone = phone;
         Users.find(whereObject).then(function(result) {
             if (!result)
-                return callback("Incorrect phone");
+                return callback("Incorrect Mobile Number");
             if (result.otp != otp)
                 return callback("Incorrect OTP");
             userService.updateSalesOnOtp(params, result, callback);
@@ -963,9 +963,9 @@ class UserService {
         var isValidPhone = userService.isValidPhone(phone);
         var isValidPassword = userService.isValidPassword(password);
         if (!phone)
-            return callback("Phone Number Required")
+            return callback("Mobile Number Required")
         if (!isValidPhone)
-            return callback("Phone should be 10 digit Number");
+            return callback("Mobile Number should be 10 digit Number");
         if (email && !userService.isValidEmail(email))
             return callback("Invalid Email")
         if (!isValidPassword)
@@ -989,7 +989,7 @@ class UserService {
         (!email) ? (findObject.where.phone = phone) : (findObject);
         Users.find(findObject).then(function(result) {
             if (result && (!email || (email && result.phone == phone)))
-                return callback("Phone Number Already Registered");
+                return callback("Mobile Number Already Registered");
             if (result && email && result.email == email)
                 return callback("Email Already Registered");
             userService.createNewUser(params, callback);
@@ -1116,16 +1116,19 @@ class UserService {
         if (!userId)
             return callback("Please give userId");
         if (!isValidPhone)
-            return callback("Phone should be 10 digit Number");
+            return callback("Mobile Number should be 10 digit Number");
         userService.isPhoneExist(params, findObject, callback);
     }
 
     isPhoneExist(params, findObject, callback) {
         var userService = new UserService();
         var phone = params.phone;
+        var type = params.type;
         Users.count({ where: { phone: phone } }).then(function(result) {
-            if (result)
-                return callback("Phone is already Registered");
+            if (result && type=='send')
+                return callback("Mobile Number is already Registered");
+            if (!result && type=='resend')
+                return callback("Mobile Number is not Registered");
             userService.validateOtpForSignup(params, findObject, callback);
             return null;
         }).catch(function(exception) {
@@ -1138,8 +1141,6 @@ class UserService {
         Users.find(findObject).then(function(result) {
             if (!result)
                 return callback("Incorrect Id");
-            if (result.phone)
-                return callback("Phone is already registered with id");
             if (result && result.userGroups.name != 'User')
                 return callback("Not a User");
             userService.updatePhoneForSendOtp(params, callback);
@@ -1190,7 +1191,7 @@ class UserService {
         var otp = params.otp;
         Users.find(findObject).then(function(result) {
             if (!result)
-                return callback("Incorrect Phone");
+                return callback("Incorrect Mobile Number");
             if (result.otp != otp)
                 return callback("Incorrect OTP");
             var userId = result.id;
@@ -1210,7 +1211,7 @@ class UserService {
         updateObject.status = 'Active';
         updateObject.isPhoneVerified = true;
         Users.update(updateObject, whereObject).then(function(result) {
-            callback(null, { message: "Phone Number Verified" });
+            callback(null, { message: "Mobile Number Verified" });
         }).catch(function(exception) {
             callback(exception);
         });
@@ -1228,11 +1229,11 @@ class UserService {
         findObject.where = {};
         findObject.where.$and = {};
         if (!userName)
-            return callback("Please give phone or email");
+            return callback("Please give Mobile Number or email");
         if (!isValidPassword)
             return callback("Minimum Password length is 6 with no Spaces");
         if (!isNaN(+userName) && !userService.isValidPhone(+userName))
-            return callback("Phone should be 10 Digit");
+            return callback("Mobile Number should be 10 Digit");
         if (isNaN(+userName) && !userService.isValidEmail(userName))
             return callback("Invalid Email");
         if (!isNaN(+userName) && userService.isValidPhone(+userName))
@@ -1286,7 +1287,7 @@ class UserService {
         var phone = params.phone;
         var isValidPhone = userService.isValidPhone(phone);
         if (!isValidPhone)
-            return callback("Phone should be 10 digit Number");
+            return callback("Mobile Number should be 10 digit Number");
         var userType = 'User';
         return userService.validateUserBeforeOtp(phone, userType, callback);
     }

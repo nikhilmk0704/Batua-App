@@ -295,6 +295,7 @@ module.exports = {
         var params = {};
         params.phone = req.body.phone;
         params.userId = req.body.userId;
+        params.type = req.body.type;
         var userService = new UserService();
         userService.sendOtpForSignup(params, function(err, result) {
             if (err)
