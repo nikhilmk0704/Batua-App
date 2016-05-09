@@ -1252,7 +1252,7 @@ class UserService {
             var group = result.userGroups.name;
             var isPhoneVerified = result.isPhoneVerified;
             if (!isPhoneVerified)
-                return callback(null, { userId: result.id, message: "Mobile number not verified" });
+                return callback(null, { userId: result.id, isPhoneVerified: isPhoneVerified });
             if (result && group != 'User')
                 return callback("User does not exist");
             userService.updateAccessTokenAndShowResult(params, result, callback);
