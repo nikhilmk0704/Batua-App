@@ -1251,8 +1251,8 @@ class UserService {
                 return callback("Incorrect Credentials");
             var group = result.userGroups.name;
             var isPhoneVerified = result.isPhoneVerified;
-            if(!isPhoneVerified)
-                return callback("Mobile number not verified");
+            if (!isPhoneVerified)
+                return callback(null, { userId: result.id, message: "Mobile number not verified" });
             if (result && group != 'User')
                 return callback("User does not exist");
             userService.updateAccessTokenAndShowResult(params, result, callback);
