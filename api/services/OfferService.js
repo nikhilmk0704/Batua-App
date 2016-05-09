@@ -85,6 +85,25 @@ class PromocodesService {
         });
     }
 
+    validateUserAndOffer(params,callback){
+        if (!params.merchantId){
+            return callback("Merchant ID deos not exist");
+        }
+
+        var rawQueryString = "SELECT `id`, `discountPercentage`, `description`, `maximumAmountLimit`,"+
+                             " `validFrom`, `validTo`, `status`, `createdAt`, `updatedAt`"+ 
+                             " FROM `Offers` WHERE 1 AND status=:status AND NOW() between validFrom and validTo AND id in"+ 
+                             " (SELECT offerId from MerchantsOffers where merchantId = :merchantId)";
+        sequelize.query(rawQueryString,
+            { replacements: { status: 'Active', merchantId:params.merchantId}, 
+            type: sequelize.QueryTypes.SELECT }
+            ).then(function(result) {
+                if(result){
+                    return callback(null,result);
+                }
+            })
+        }
+
 
     find(params, callback) {
         var offersRepository = new OffersRepository();

@@ -29,6 +29,23 @@ module.exports = {
             }
             return res.json(200, result);
         });
+    },
+    validateOffer: function(req, res) {
+
+        var params = {};
+
+        params.merchantId = req.body.merchantId;
+        
+        var offerService = new OfferService();
+   
+        offerService.validateUserAndOffer(params, function(err, result) {
+            if (err)
+                return res.badRequest(error.send(err));
+            if(_.isEmpty(result)){
+                return res.notFound(error.send("No offer found"));
+            }
+            return res.json(200, result);
+        });
     }
 
 };
