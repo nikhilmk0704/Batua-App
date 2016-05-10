@@ -171,6 +171,7 @@ class UserService {
             loggedinResult.profileImageUrl = result.profileImageUrl;
             loggedinResult.phone = result.phone;
             loggedinResult.isPinActivated = result.isPinActivated;
+            loggedinResult.isPhoneVerified = result.isPhoneVerified;
             loggedinResult.isPinSet = (result.pin) ? (true) : (false);
             loggedinResult.token = data.token;
             loggedinResult.userGroup = result.userGroups.name;
@@ -683,6 +684,8 @@ class UserService {
                 return callback("Unregistered Mobile Number");
             var group = result.userGroups.name;
             var status = result.status;
+            if (result.facebookId || result.googleId)
+                return callback("Already a social user");
             if (group != userType || status != 'Active')
                 return callback("" + userType + " does not exist !");
             userService.sendOtp(phone, callback);
@@ -1426,6 +1429,7 @@ class UserService {
             loggedinResult.email = result.email;
             loggedinResult.profileImageUrl = result.profileImageUrl;
             loggedinResult.phone = result.phone;
+            loggedinResult.isPhoneVerified = result.isPhoneVerified;
             loggedinResult.userGroup = result.userGroups.name;
             if (result.userGroups.name != 'User' || result.status != 'Active')
                 return callback("User does not exist");
