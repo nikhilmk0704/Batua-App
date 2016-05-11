@@ -1256,6 +1256,9 @@ class UserService {
                 return callback("Incorrect credentials");
             var group = result.userGroups.name;
             var isPhoneVerified = result.isPhoneVerified;
+            var status=result.status;
+            if(status=='Permanent Suspend' || status=='Suspend')
+                return callback("Mobile Number is already Registered, but is in " + status + " Mode. Please contact Batua Admin");
             if (!isPhoneVerified)
                 return callback(null, { userId: result.id, isPhoneVerified: isPhoneVerified });
             if (result && group != 'User')
