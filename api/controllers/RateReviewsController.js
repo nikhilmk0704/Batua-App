@@ -7,7 +7,7 @@
 
 'use strict';
 
-var error=require('../errors/error.js');
+var error = require('../errors/error.js');
 
 module.exports = {
 
@@ -15,47 +15,45 @@ module.exports = {
         var params = req.body;
         var rateReviewService = new RateReviewService();
         rateReviewService.save(params, function(err, result) {
-            if (err) {
+            if (err)
                 return res.badRequest(error.send(err));
-            } 
             return res.json(201, result);
         });
     },
 
     find: function(req, res) {
-        var userId = req.param('userId');
-        var merchantId = req.param('merchantId');
+        var params = {};
+        params.id = req.param('id');
+        params.userId = req.param('userId');
+        params.merchantId = req.param('merchantId');
         var rateReviewService = new RateReviewService();
-        rateReviewService.find(userId, merchantId, function(err, result) {
-            if (err) {
+        rateReviewService.find(params, function(err, result) {
+            if (err)
                 return res.badRequest(error.send(err));
-            } 
-            if(_.isEmpty(result)){
+            if (_.isEmpty(result))
                 return res.notFound(error.send("Does not exist"));
-            }
             return res.json(200, result);
         });
     },
 
     update: function(req, res) {
-    	var params=req.body;
+        var params = req.body;
         var rateReviewService = new RateReviewService();
-    	rateReviewService.updateAndFind(params, function(err, result) {
-            if (err) {
+        rateReviewService.updateAndFind(params, function(err, result) {
+            if (err)
                 return res.badRequest(error.send(err));
-            } 
-            return res.json(200,result);
+            return res.json(200, result);
         });
     },
 
     delete: function(req, res) {
-    	var id=req.param('id');
+        var params = {};
+        params.id = req.param('id');
         var rateReviewService = new RateReviewService();
-        rateReviewService.delete(id, function(err, result) {
-            if (err) {
+        rateReviewService.delete(params, function(err, result) {
+            if (err)
                 return res.badRequest(error.send(err));
-            } 
-            return res.jsonx(200,result);
+            return res.jsonx(200, result);
         });
     }
 };
