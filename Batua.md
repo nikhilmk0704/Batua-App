@@ -620,7 +620,8 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
     
             {
                 "userId":28,
-                "phone":9479897802
+                "phone":9479897802,
+                "type":"send"           // or "type":"resend"
             }
             
         
@@ -1077,6 +1078,108 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
                 }
             ]
         }
+
+
+### Validate Promocode [POST /api/user/validatePromocode]
+
++ Request (application/json)
+
+    + Body
+    
+            { 
+                "promocode": "DEEVALI20",
+                "merchantId":"8"
+            }
+            
+        
++ Response 200 (application/json)
+
+        [
+            {
+                "id": 1,
+                "promocode": "DEEVALI20",
+                "discountPercentage": 20,
+                "description": "Clearance Sale",
+                "maximumAmountLimit": 2500,
+                "validFrom": "2016-05-01T11:03:12.000Z",
+                "validTo": "2016-05-12T11:03:12.000Z",
+                "percentageCostBourneByBatua": 5,
+                "percentageCostBourneByMerchant": 2,
+                "status": "Active",
+                "createdAt": "2016-05-04T09:02:48.000Z",
+                "updatedAt": "2016-05-04T09:02:48.000Z"
+            }
+        ]
+            
++ Response 400 (application/json)
+    
+        {
+            "errors":[
+                        {
+                            "message": "Promocode missing"
+                        }
+                    ]
+        }
+
+
+### Validate Offer [POST /api/user/validateOffer]
+
++ Request (application/json)
+
+    + Body
+    
+            { 
+                "merchantId":"8"
+            }
+            
+        
++ Response 200 (application/json)
+
+        [
+            {
+                "id": 13,
+                "discountPercentage": 30,
+                "description": "Clearance Duplicate Sale2",
+                "maximumAmountLimit": 2500,
+                "validFrom": "2016-05-05T11:03:12.000Z",
+                "validTo": "2016-06-23T11:03:12.000Z",
+                "status": "Active",
+                "createdAt": "2016-05-03T11:58:00.000Z",
+                "updatedAt": "2016-05-04T12:21:56.000Z"
+            }
+        ]
+            
++ Response 400 (application/json)
+    
+        {
+            "errors":[
+                        {
+                            "message": "Merchant ID deos not exist"
+                        }
+                    ]
+        }
+
+
+### Contact Us [POST /api/user/contactus]
+
++ Request  (application/json)
+    
+    + Body
+
+            {
+                "email":"vikashcool1991@gmail.com",
+                "query":"contact us query lies here !!!"
+            }
+
++ Response 200 (application/json)
+
+    + Body
+            
+            {
+                "message": "Email Sent"
+            }
+
++ Response 400 (application/json)
 
 
 ### Logout [PUT /api/user/logout]
@@ -2108,17 +2211,14 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 
 + Request (application/json)
 
-    + Headers
-
-            Access-Token: "ABCDEFGH12345678"
-
     + Body
     
             {   
                 "rating":4,
                 "review":"give some review",
                 "userId":23,
-                "merchantId":12
+                "merchantId":12,
+                "paymentId":21
             }
 
 + Response 201 (application/json)
@@ -2130,57 +2230,79 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
                 "rating":4,
                 "review":"give some review",
                 "userId":23,
-                "merchantId":12
+                "merchantId":12,
+                "paymentId":21
             }
     
 + Response 400 (application/json)
 
 
-+ Response 401 (application/json)
-
-
-### Get Review [GET /api/ratereview/user/{userId}/merchant/{merchantId}]
+### Get Review By Id [GET /api/ratereview/{:id}]
 
 + Response 200 (application/json)
     
     + Body
     
-            [
-                {   
-                    "id":1,
-                    "rating":4,
-                    "review":"give some review",
-                    "userId":   {
-                                    "id":23,
-                                    "name":"vikash singh",
-                                    "profileImageUrl":"url",
-                                    "createdAt": "2016-11-12T05:03:46.000Z",
-                                    "updatedAt": "2016-11-12T05:03:46.000Z"
-                                },
-                    "merchantId":{
-                                    "id":12,
-                                    "name":"merchantName",
-                                    "profileImageUrl":"url",
-                                    "createdAt": "2016-11-12T05:03:46.000Z",
-                                    "updatedAt": "2016-11-12T05:03:46.000Z"
-                                }
-                }
-            ]
+            {   
+                "id":1,
+                "rating":4,
+                "review":"give some review",
+                "userId":23,
+                "merchantId":12,
+                "paymentId":21
+            }
     
 + Response 400 (application/json)
 
 
-+ Response 401 (application/json)
++ Response 404 (application/json)
 
+
+### Get Review By userId [GET /api/ratereview/user/{:userId}]
+
++ Response 200 (application/json)
+    
+    + Body
+    
+            [{   
+                "id":1,
+                "rating":4,
+                "review":"give some review",
+                "userId":23,
+                "merchantId":12,
+                "paymentId":21
+            }]
+    
++ Response 400 (application/json)
+
+
++ Response 404 (application/json)
+
+
+### Get Review By merchantId [GET /api/ratereview/merchant/{:merchantId}]
+
++ Response 200 (application/json)
+    
+    + Body
+    
+            [{   
+                "id":1,
+                "rating":4,
+                "review":"give some review",
+                "userId":23,
+                "merchantId":12,
+                "paymentId":21
+            }]
+    
++ Response 400 (application/json)
+
+
++ Response 404 (application/json)
 
 ### Update Review [PUT /api/ratereview]
 
 + Request (application/json)
 
-    + Headers
-
-            Access-Token: "ABCDEFGH12345678"
-
     + Body
     
             {   
@@ -2188,7 +2310,8 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
                 "rating":5,
                 "review":"give some new review",
                 "userId":23,
-                "merchantId":12
+                "merchantId":12,
+                "paymentId":21
             }
 
 + Response 200 (application/json)
@@ -2200,13 +2323,11 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
                 "rating":5,
                 "review":"give some new review",
                 "userId":23,
-                "merchantId":12
+                "merchantId":12,
+                "paymentId":21
             }
     
 + Response 400 (application/json)
-
-
-+ Response 401 (application/json)
 
 
 ### Delete Review [DELETE /api/ratereview/{id}]
@@ -2220,7 +2341,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 400 (application/json)
 
 
-+ Response 401 (application/json)
++ Response 404 (application/json)
 
 
 ## Promocode Management [/api/promocode]

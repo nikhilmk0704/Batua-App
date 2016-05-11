@@ -108,10 +108,10 @@ module.exports.routes = {
     'put /api/user/pin/forgot': 'UsersController.forgotPin',
     'put /api/user/pin/reset': 'UsersController.resetPin',
     'put /api/user/pin/change': 'UsersController.changePin',
-    'post /api/user/contactus': 'UsersController.contactus',
-    'put /api/user/logout': 'UsersController.logout',
     'post /api/user/validatePromocode': 'DiscountValidateController.validatePromocode',
     'post /api/user/validateOffer': 'DiscountValidateController.validateOffer',
+    'post /api/user/contactus': 'UsersController.contactus',
+    'put /api/user/logout': 'UsersController.logout',
 
     /********************* Image Upload API ************************/
 

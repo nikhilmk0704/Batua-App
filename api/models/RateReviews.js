@@ -28,6 +28,7 @@ module.exports = {
     },
     associations: function() {
         RateReviews.belongsTo(Users, {
+            as: 'users',
             foreignKey: {
                 name: 'userId',
                 required: true,
@@ -35,6 +36,7 @@ module.exports = {
             }
         });
         RateReviews.belongsTo(Merchants, {
+            as: 'merchants',
             foreignKey: {
                 name: 'merchantId',
                 required: true,
@@ -42,6 +44,7 @@ module.exports = {
             }
         });
         RateReviews.belongsTo(Payments, {
+            as: 'payments',
             foreignKey: {
                 name: 'paymentId',
                 required: true,
