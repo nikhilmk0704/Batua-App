@@ -1244,14 +1244,16 @@ class UserService {
         if (isNaN(+userName) && userService.isValidEmail(userName))
             findObject.where.$and.email = userName;
         findObject.where.$and.password = md5(password);
-        userService.validateUserLogin(params, findObject, callback);
+        userService.validateUserLogin(params, findObject, 'normal', callback);
     }
 
-    validateUserLogin(params, findObject, callback) {
+    validateUserLogin(params, findObject, type, callback) {
         var userService = new UserService();
         Users.find(findObject).then(function(result) {
-            if (!result)
-                return callback("Incorrect Credentials");
+            if (!result && type=='social')
+                return callback("Email is not registered. Please proceed with Sign UP");
+            if (!result && type=='normal')
+                return callback("Incorrect credentials");
             var group = result.userGroups.name;
             var isPhoneVerified = result.isPhoneVerified;
             if (!isPhoneVerified)
@@ -1280,7 +1282,7 @@ class UserService {
         findObject.include = userService.getIncludeModels();
         (googleId) ? (findObject.where.$or = [{ email: email }, { googleId: googleId }]) : (findObject);
         (facebookId) ? (findObject.where.$or = [{ email: email }, { facebookId: facebookId }]) : (findObject);
-        userService.validateUserLogin(params, findObject, callback);
+        userService.validateUserLogin(params, findObject, 'social', callback);
     }
 
     /******************** Sends OTP On Forgot Password In User App ***********************/

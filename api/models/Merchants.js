@@ -56,6 +56,7 @@ module.exports = {
         },
         averageRating: {
             type: Sequelize.DECIMAL(2, 1),
+            defaultValue: 0,
             validate: {
                 min: 0,
                 max: 5
@@ -63,6 +64,7 @@ module.exports = {
         },
         reviewersCount: {
             type: Sequelize.INTEGER,
+            defaultValue: 0
         },
         fees: {
             type: Sequelize.FLOAT,

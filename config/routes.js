@@ -51,7 +51,9 @@ module.exports.routes = {
     /********************* Rate Review API ************************/
 
     'post /api/ratereview': 'RateReviewsController.create',
-    'get /api/ratereview/user/:userId/merchant/:merchantId': 'RateReviewsController.find',
+    'get /api/ratereview/:id?': 'RateReviewsController.find',
+    'get /api/ratereview/merchant/:merchantId': 'RateReviewsController.find',
+    'get /api/ratereview/user/:userId': 'RateReviewsController.find',
     'put /api/ratereview': 'RateReviewsController.update',
     'delete /api/ratereview/:id': 'RateReviewsController.delete',
 
@@ -106,10 +108,10 @@ module.exports.routes = {
     'put /api/user/pin/forgot': 'UsersController.forgotPin',
     'put /api/user/pin/reset': 'UsersController.resetPin',
     'put /api/user/pin/change': 'UsersController.changePin',
+    'post /api/user/validatePromocode': 'DiscountValidateController.validatePromocode',
+    'post /api/user/validateOffer': 'DiscountValidateController.validateOffer',
     'post /api/user/contactus': 'UsersController.contactus',
     'put /api/user/logout': 'UsersController.logout',
-    'post /api/user/validatePromocode':'DiscountValidateController.validatePromocode',
-    'post /api/user/validateOffer':'DiscountValidateController.validateOffer',
 
     /********************* Image Upload API ************************/
 
