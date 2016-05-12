@@ -688,7 +688,7 @@ class UserService {
                 return callback("Unregistered Mobile Number");
             var group = result.userGroups.name;
             var status = result.status;
-            if (result.facebookId || result.googleId)
+            if ((result.facebookId || result.googleId) && userType=='User')
                 return callback("Already a social user");
             if (group != userType || status != 'Active')
                 return callback("" + userType + " does not exist !");
