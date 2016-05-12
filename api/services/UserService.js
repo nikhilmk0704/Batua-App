@@ -625,7 +625,7 @@ class UserService {
         Users.find(findObject).then(function(result) {
             var status = result.status;
             var group = result.userGroups.name;
-            if(status!='Active' || group!='Field Sales Agent')
+            if (status != 'Active' || group != 'Field Sales Agent')
                 return callback('Field Sales Agent does not exist');
             userService.validateGoogleId(params, result, callback);
             return null;
@@ -688,7 +688,7 @@ class UserService {
                 return callback("Unregistered Mobile Number");
             var group = result.userGroups.name;
             var status = result.status;
-            if ((result.facebookId || result.googleId) && userType=='User')
+            if ((result.facebookId || result.googleId) && userType == 'User')
                 return callback("Already a social user");
             if (group != userType || status != 'Active')
                 return callback("" + userType + " does not exist !");
@@ -1261,12 +1261,12 @@ class UserService {
             var group = result.userGroups.name;
             var isPhoneVerified = result.isPhoneVerified;
             var status = result.status;
+            if (result && group != 'User')
+                return callback("User does not exist");
             if (status == 'Permanent Suspend' || status == 'Suspend')
                 return callback("Mobile Number is already Registered, but is in " + status + " Mode. Please contact Batua Admin");
             if (!isPhoneVerified)
                 return callback(null, { userId: result.id, isPhoneVerified: isPhoneVerified });
-            if (result && group != 'User')
-                return callback("User does not exist");
             userService.updateAccessTokenAndShowResult(params, result, callback);
             return null;
         }).catch(function(exception) {
