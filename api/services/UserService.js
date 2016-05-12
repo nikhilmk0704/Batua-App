@@ -623,6 +623,10 @@ class UserService {
         findObject.where.email = email;
         findObject.include = userService.getIncludeModels();
         Users.find(findObject).then(function(result) {
+            var status = result.status;
+            var group = result.userGroups.name;
+            if(status!='Active' || group!='Field Sales Agent')
+                return callback('Field Sales Agent does not exist');
             userService.validateGoogleId(params, result, callback);
             return null;
         }).catch(function(exception) {
@@ -1250,14 +1254,14 @@ class UserService {
     validateUserLogin(params, findObject, type, callback) {
         var userService = new UserService();
         Users.find(findObject).then(function(result) {
-            if (!result && type=='social')
+            if (!result && type == 'social')
                 return callback("Email is not registered. Please proceed with Sign UP");
-            if (!result && type=='normal')
+            if (!result && type == 'normal')
                 return callback("Incorrect credentials");
             var group = result.userGroups.name;
             var isPhoneVerified = result.isPhoneVerified;
-            var status=result.status;
-            if(status=='Permanent Suspend' || status=='Suspend')
+            var status = result.status;
+            if (status == 'Permanent Suspend' || status == 'Suspend')
                 return callback("Mobile Number is already Registered, but is in " + status + " Mode. Please contact Batua Admin");
             if (!isPhoneVerified)
                 return callback(null, { userId: result.id, isPhoneVerified: isPhoneVerified });
