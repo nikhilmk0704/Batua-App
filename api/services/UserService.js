@@ -1589,6 +1589,7 @@ class UserService {
         if (emailToUserType == 'Batua') {
             var templatPath = './api/templates/contact-us/query_contact_us.ejs';
             var template = fs.readFileSync(templatPath, "utf-8");
+            var query = params.query;
             params.htmlTemplate = template.replace(/Query detail description will be visible here/g, query);
         }
         awsSesService.sendEmail(params, function(err, result) {
