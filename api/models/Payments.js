@@ -41,9 +41,7 @@ module.exports = {
             defaultValue: false,
         },
         type: {
-            type: Sequelize.STRING,  // enum values needs to be added
-            required: true,
-            allowNull: false,
+            type: Sequelize.STRING  // enum values needs to be added
         },
         canccellationDate: {
             type: Sequelize.DATE,
@@ -77,8 +75,7 @@ module.exports = {
         });
         Payments.belongsTo(Paymentmodes, {
             foreignKey: {
-                name: 'paymentModeId',
-                allowNull: false
+                name: 'paymentModeId'
             }
         });
         Payments.belongsTo(TransactionDetails, {
