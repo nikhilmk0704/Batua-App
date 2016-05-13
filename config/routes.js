@@ -51,7 +51,9 @@ module.exports.routes = {
     /********************* Rate Review API ************************/
 
     'post /api/ratereview': 'RateReviewsController.create',
-    'get /api/ratereview/user/:userId/merchant/:merchantId': 'RateReviewsController.find',
+    'get /api/ratereview/:id?': 'RateReviewsController.find',
+    'get /api/ratereview/merchant/:merchantId': 'RateReviewsController.find',
+    'get /api/ratereview/user/:userId': 'RateReviewsController.find',
     'put /api/ratereview': 'RateReviewsController.update',
     'delete /api/ratereview/:id': 'RateReviewsController.delete',
 

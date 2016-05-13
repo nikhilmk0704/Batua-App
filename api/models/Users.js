@@ -21,9 +21,11 @@ module.exports = {
         phone: {
             type: Sequelize.BIGINT(10),
             unique: true,
-            validate:{
-                min:0,
-                max:9999999999
+            validate: {
+                validateLength: function(value) {
+                    if (("" + "" + value).length != 10)
+                        throw new Error("Give 10 digit Integer");
+                }
             }
         },
         profileImageUrl: {
@@ -52,22 +54,22 @@ module.exports = {
         },
         password: {
             type: Sequelize.STRING,
-            validate:{
-                isWhiteSpace:function(value){
-                    if(/\s/g.test(value))
+            validate: {
+                isWhiteSpace: function(value) {
+                    if (/\s/g.test(value))
                         throw new Error("Spaces not allowed");
                 },
-                length:function(value){
-                    if(value.length < 6)
+                length: function(value) {
+                    if (value.length < 6)
                         throw new Error("Minimum length six");
                 }
             }
         },
         pin: {
             type: Sequelize.INTEGER(4),
-            validate:{
-                min:1000,
-                max:9999
+            validate: {
+                min: 1000,
+                max: 9999
             }
         },
         isPinActivated: {
@@ -80,14 +82,14 @@ module.exports = {
         status: {
             type: Sequelize.STRING,
         },
-        latitude:{
-            type:Sequelize.FLOAT
+        latitude: {
+            type: Sequelize.FLOAT
         },
-        longitude:{
-            type:Sequelize.FLOAT
+        longitude: {
+            type: Sequelize.FLOAT
         },
-        locationUpdateTime:{
-            type:Sequelize.DATE
+        locationUpdateTime: {
+            type: Sequelize.DATE
         }
     },
     options: {
@@ -97,37 +99,37 @@ module.exports = {
     },
     associations: function() {
         Users.belongsTo(UserGroups, {
-            as:'userGroups',
+            as: 'userGroups',
             foreignKey: {
                 name: 'userGroupId',
-                required:true,
+                required: true,
                 allowNull: false
             }
         });
-        Users.belongsToMany(Paymentmodes,{
-            as:'paymentmodes',
-            through:'UsersPaymentmodes',
-            foreignKey:{
-                name:'userId'
+        Users.belongsToMany(Paymentmodes, {
+            as: 'paymentmodes',
+            through: 'UsersPaymentmodes',
+            foreignKey: {
+                name: 'userId'
             }
         });
-        Paymentmodes.belongsToMany(Users,{
-            through:'UsersPaymentmodes',
-            foreignKey:{
-                name:'paymentmodeId'
+        Paymentmodes.belongsToMany(Users, {
+            through: 'UsersPaymentmodes',
+            foreignKey: {
+                name: 'paymentmodeId'
             }
         });
         AccessTokens.belongsToMany(Users, {
-            as:'users',
-            through:'UsersAccessTokens',
+            as: 'users',
+            through: 'UsersAccessTokens',
             foreignKey: {
                 name: 'accessTokenId',
                 allowNull: false
             }
         });
         Users.belongsToMany(AccessTokens, {
-            as:'accessTokens',
-            through:'UsersAccessTokens',
+            as: 'accessTokens',
+            through: 'UsersAccessTokens',
             foreignKey: {
                 name: 'userId',
                 allowNull: false
@@ -144,4 +146,3 @@ function hashPasswordHook(instance, options, callback) {
     instance.set('password', hashPassword(instance.get('password')));
     callback(null, instance);
 }
-

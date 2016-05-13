@@ -55,7 +55,7 @@ class UserService {
     }
 
     isValidPin(pin) {
-        if (pin && _.toString(pin).length == 4 && _.inRange(pin, 1000, 10000))
+        if (pin && _.toString(pin).length == 4 && _.inRange(pin, 1000, 10000) && !(/\s/g.test(_.toString(pin))))
             return true;
         return false;
     }
@@ -171,6 +171,7 @@ class UserService {
             loggedinResult.profileImageUrl = result.profileImageUrl;
             loggedinResult.phone = result.phone;
             loggedinResult.isPinActivated = result.isPinActivated;
+            loggedinResult.isPhoneVerified = result.isPhoneVerified;
             loggedinResult.isPinSet = (result.pin) ? (true) : (false);
             loggedinResult.token = data.token;
             loggedinResult.userGroup = result.userGroups.name;
@@ -193,7 +194,7 @@ class UserService {
         findObject.where.$and = {};
         findObject.where.$and.email = email;
         findObject.where.$and.status = 'Active';
-        var passwordGenerationUrl = "http://52.36.228.74:1337/#/resetpassword/" + email + "/" + token;
+        var passwordGenerationUrl = sails.config.connections.url + "/#/resetpassword/" + email + "/" + token;
         Users.find(findObject).then(function(result) {
             var group = (result) ? (result.userGroups.name) : (null);
             if (result && (group == 'Admin' || group == 'Super Admin')) {
@@ -295,11 +296,11 @@ class UserService {
         if (!userId || !currentPassword || !newPassword)
             return callback("User Id, Current Password And New Password Required");
         if (userId && ((/\s/g.test(currentPassword)) || currentPassword.length < 6))
-            return callback("Incorrect Current Password");
+            return callback("Minimum Current Password length is 6 with no Spaces");
         if (userId && (/\s/g.test(newPassword)))
-            return callback("Spaces are not Allowed");
+            return callback("Spaces are not Allowed in new password");
         if (userId && newPassword.length < 6)
-            return callback("Minimum Password Length is 6");
+            return callback("Minimum New Password length is 6 with no Spaces");
         if (userId && (currentPassword == newPassword))
             return callback("Current Password And New Password should be different");
         return userService.validatePassword(params, callback);
@@ -320,7 +321,7 @@ class UserService {
             var group = result.userGroups.name;
             var status = result.status;
             if (group == 'Field Sales Agent' || status != "Active")
-                return callback("Not Active !");
+                return callback("Does not exist !");
             if (result.password != md5(currentPassword))
                 return callback("Incorrect Current Password");
             if (result.password == md5(currentPassword)) {
@@ -383,7 +384,7 @@ class UserService {
             newParams.userId = userData.id;
             var email = userData.email;
             var urlToken = result.token;
-            var passwordGenerationUrl = "http://52.36.228.74:1337/#/resetpassword/" + email + "/" + urlToken;
+            var passwordGenerationUrl = sails.config.connections.url + "/#/resetpassword/" + email + "/" + urlToken;
             userService.createUsersAccessToken(newParams, userData, passwordGenerationUrl, callback);
             return null;
         }).catch(function(exception) {
@@ -504,7 +505,7 @@ class UserService {
         var userService = new UserService();
         var getDeviceIdQueryString = "SELECT DISTINCT at.deviceId FROM Users " +
             "AS u INNER JOIN (UsersAccessTokens AS uat INNER JOIN AccessTokens " +
-            "AS at ON at.id=uat.accessTokenId AND at.token IS NOT NULL) ON " +
+            "AS at ON at.id=uat.accessTokenId AND at.token IS NOT NULL AND at.deviceId IS NOT NULL) ON " +
             "u.id=uat.userId INNER JOIN UserGroups AS ug ON ug.id=u.userGroupId " +
             "AND ug.name='User' WHERE u.status='Active' AND u.id IN (" + params.id + ")";
         sequelize.query(getDeviceIdQueryString).spread(function(metaResult, result) {
@@ -549,7 +550,7 @@ class UserService {
         if ((email && phone) || (!email && !phone))
             return callback("Either phone or email is required !");
         if (phone && !isValidPhone)
-            return callback("Invalid Phone !");
+            return callback("Mobile Number should be 10 digit Number");
         if (email && !isValidEmail)
             return callback("Invalid Email !")
         if ((isValidEmail && password) || (isValidPhone && password))
@@ -622,6 +623,10 @@ class UserService {
         findObject.where.email = email;
         findObject.include = userService.getIncludeModels();
         Users.find(findObject).then(function(result) {
+            var status = result.status;
+            var group = result.userGroups.name;
+            if (status != 'Active' || group != 'Field Sales Agent')
+                return callback('Field Sales Agent does not exist');
             userService.validateGoogleId(params, result, callback);
             return null;
         }).catch(function(exception) {
@@ -680,11 +685,13 @@ class UserService {
         findObject.include = userService.getIncludeModels();
         Users.find(findObject).then(function(result) {
             if (!result)
-                return callback("Unregistered Phone");
+                return callback("Unregistered Mobile Number");
             var group = result.userGroups.name;
             var status = result.status;
+            if ((result.facebookId || result.googleId) && userType == 'User')
+                return callback("Already a social user");
             if (group != userType || status != 'Active')
-                return callback("Not an Active " + userType + " !");
+                return callback("" + userType + " does not exist !");
             userService.sendOtp(phone, callback);
             return null;
         }).catch(function(exception) {
@@ -698,7 +705,8 @@ class UserService {
         var params = {};
         params.phone = phone;
         var otp = userService.generateOtp();
-        params.message = "Your One Time Password for Batua App is " + otp;
+        var otpExpiresAt = moment().add(2, 'm').format("HH:mm:ss");
+        params.message = "OTP for Batua App reset password is " + otp + " . Thank you.";
         smsService.send(params, function(err, result) {
             if (err) {
                 console.log(err);
@@ -733,7 +741,7 @@ class UserService {
         whereObject.where.phone = phone;
         Users.find(whereObject).then(function(result) {
             if (!result)
-                return callback("Incorrect phone");
+                return callback("Incorrect Mobile Number");
             if (result.otp != otp)
                 return callback("Incorrect OTP");
             userService.updateSalesOnOtp(params, result, callback);
@@ -748,6 +756,7 @@ class UserService {
         var updateObject = {};
         updateObject.otp = null;
         updateObject.isPhoneVerified = true;
+        updateObject.status = 'Active';
         var whereObject = {};
         whereObject.where = {};
         whereObject.where.id = userData.id;
@@ -792,7 +801,7 @@ class UserService {
             return callback("UserId And New Password Required");
         var isValidPassword = userService.isValidPassword(newPassword);
         if (!isValidPassword)
-            return callback("Incorrect Password");
+            return callback("Minimum Password length is 6 with no Spaces");
         var findObject = {};
         findObject.where = {};
         findObject.include = userService.getIncludeModels();
@@ -879,6 +888,10 @@ class UserService {
         var userService = new UserService();
         var currentPassword = params.currentPassword;
         var newPassword = params.newPassword;
+        var isValidCurrentPassword = userService.isValidPassword(currentPassword);
+        var isValidNewPassword = userService.isValidPassword(newPassword);
+        if (!isValidCurrentPassword || !isValidNewPassword)
+            return callback("Minimum Password length is 6 with no Spaces");
         var id = params.id;
         var whereObject = {};
         whereObject.where = {};
@@ -957,13 +970,13 @@ class UserService {
         var isValidPhone = userService.isValidPhone(phone);
         var isValidPassword = userService.isValidPassword(password);
         if (!phone)
-            return callback("Phone Number Required")
+            return callback("Mobile Number Required")
         if (!isValidPhone)
-            return callback("Invalid Phone");
+            return callback("Mobile Number should be 10 digit Number");
         if (email && !userService.isValidEmail(email))
             return callback("Invalid Email")
         if (!isValidPassword)
-            return callback("Invalid Password");
+            return callback("Minimum Password length is 6 with no Spaces");
         var newParams = {};
         newParams.phone = phone;
         newParams.email = email;
@@ -983,7 +996,7 @@ class UserService {
         (!email) ? (findObject.where.phone = phone) : (findObject);
         Users.find(findObject).then(function(result) {
             if (result && (!email || (email && result.phone == phone)))
-                return callback("Phone Number Already Registered");
+                return callback("Mobile Number Already Registered");
             if (result && email && result.email == email)
                 return callback("Email Already Registered");
             userService.createNewUser(params, callback);
@@ -1010,7 +1023,8 @@ class UserService {
         var params = {};
         params.phone = phone;
         var otp = userService.generateOtp();
-        params.message = "Welcom to Batua!!! Your One Time Password for verification is " + otp;
+        var otpExpiresAt = moment().add(2, 'm').format("HH:mm:ss");
+        params.message = "OTP for Batua App reset password is " + otp + " . Thank you.";
         smsService.send(params, function(err, result) {
             if (err) {
                 console.log(err);
@@ -1109,16 +1123,19 @@ class UserService {
         if (!userId)
             return callback("Please give userId");
         if (!isValidPhone)
-            return callback("Invalid Phone");
+            return callback("Mobile Number should be 10 digit Number");
         userService.isPhoneExist(params, findObject, callback);
     }
 
     isPhoneExist(params, findObject, callback) {
         var userService = new UserService();
         var phone = params.phone;
+        var type = params.type;
         Users.count({ where: { phone: phone } }).then(function(result) {
-            if (result)
-                return callback("Phone is already Registered");
+            if (result && type == 'send')
+                return callback("Mobile Number is already Registered");
+            if (!result && type == 'resend')
+                return callback("Mobile Number is not Registered");
             userService.validateOtpForSignup(params, findObject, callback);
             return null;
         }).catch(function(exception) {
@@ -1131,10 +1148,8 @@ class UserService {
         Users.find(findObject).then(function(result) {
             if (!result)
                 return callback("Incorrect Id");
-            if (result.phone)
-                return callback("Phone is already registered with id");
             if (result && result.userGroups.name != 'User')
-                return callback("Not a User");
+                return callback("User does not exist");
             userService.updatePhoneForSendOtp(params, callback);
             return null;
         }).catch(function(exception) {
@@ -1183,19 +1198,18 @@ class UserService {
         var otp = params.otp;
         Users.find(findObject).then(function(result) {
             if (!result)
-                return callback("Incorrect Phone");
+                return callback("Incorrect Mobile Number");
             if (result.otp != otp)
                 return callback("Incorrect OTP");
-            userService.updateAccessTokenAndShowResult(params, result, callback);
             var userId = result.id;
-            userService.deleteOtp(userId);
+            userService.deleteOtp(userId, callback);
             return null;
         }).catch(function(exception) {
             callback(exception);
         });
     }
 
-    deleteOtp(userId) {
+    deleteOtp(userId, callback) {
         var updateObject = {};
         var whereObject = {};
         whereObject.where = {};
@@ -1203,7 +1217,11 @@ class UserService {
         updateObject.otp = null;
         updateObject.status = 'Active';
         updateObject.isPhoneVerified = true;
-        Users.update(updateObject, whereObject);
+        Users.update(updateObject, whereObject).then(function(result) {
+            callback(null, { message: "Mobile Number Verified" });
+        }).catch(function(exception) {
+            callback(exception);
+        });
     }
 
     /******************** Normal Login In User App ************************/
@@ -1218,30 +1236,37 @@ class UserService {
         findObject.where = {};
         findObject.where.$and = {};
         if (!userName)
-            return callback("Please give phone or email");
+            return callback("Please give Mobile Number or email");
         if (!isValidPassword)
-            return callback("Incorrect Password");
+            return callback("Minimum Password length is 6 with no Spaces");
         if (!isNaN(+userName) && !userService.isValidPhone(+userName))
-            return callback("Incorrect Phone");
+            return callback("Mobile Number should be 10 Digit");
         if (isNaN(+userName) && !userService.isValidEmail(userName))
-            return callback("Incorrect Email");
+            return callback("Invalid Email");
         if (!isNaN(+userName) && userService.isValidPhone(+userName))
             findObject.where.$and.phone = userName;
         if (isNaN(+userName) && userService.isValidEmail(userName))
             findObject.where.$and.email = userName;
         findObject.where.$and.password = md5(password);
-        findObject.where.$and.status = 'Active';
-        userService.validateUserLogin(params, findObject, callback);
+        userService.validateUserLogin(params, findObject, 'normal', callback);
     }
 
-    validateUserLogin(params, findObject, callback) {
+    validateUserLogin(params, findObject, type, callback) {
         var userService = new UserService();
         Users.find(findObject).then(function(result) {
-            if (!result)
-                return callback("Incorrect Credentials");
+            if (!result && type == 'social')
+                return callback("Email is not registered. Please proceed with Sign UP");
+            if (!result && type == 'normal')
+                return callback("Incorrect credentials");
             var group = result.userGroups.name;
+            var isPhoneVerified = result.isPhoneVerified;
+            var status = result.status;
             if (result && group != 'User')
-                return callback("Not a User");
+                return callback("User does not exist");
+            if (status == 'Permanent Suspend' || status == 'Suspend')
+                return callback("Mobile Number is already Registered, but is in " + status + " Mode. Please contact Batua Admin");
+            if (!isPhoneVerified)
+                return callback(null, { userId: result.id, isPhoneVerified: isPhoneVerified });
             userService.updateAccessTokenAndShowResult(params, result, callback);
             return null;
         }).catch(function(exception) {
@@ -1258,15 +1283,13 @@ class UserService {
         var facebookId = params.facebookId;
         var isValidEmail = userService.isValidEmail(email);
         if (!isValidEmail)
-            return callback("Incorrect Email");
+            return callback("Invalid Email");
         var findObject = {};
         findObject.where = {};
         findObject.include = userService.getIncludeModels();
         (googleId) ? (findObject.where.$or = [{ email: email }, { googleId: googleId }]) : (findObject);
         (facebookId) ? (findObject.where.$or = [{ email: email }, { facebookId: facebookId }]) : (findObject);
-        findObject.where.$and = {};
-        findObject.where.$and.status = 'Active';
-        userService.validateUserLogin(params, findObject, callback);
+        userService.validateUserLogin(params, findObject, 'social', callback);
     }
 
     /******************** Sends OTP On Forgot Password In User App ***********************/
@@ -1276,7 +1299,7 @@ class UserService {
         var phone = params.phone;
         var isValidPhone = userService.isValidPhone(phone);
         if (!isValidPhone)
-            return callback("Invalid Phone");
+            return callback("Mobile Number should be 10 digit Number");
         var userType = 'User';
         return userService.validateUserBeforeOtp(phone, userType, callback);
     }
@@ -1320,7 +1343,7 @@ class UserService {
         var resultedEmail = userData.email;
         var userGroupName = userData.userGroups.name;
         if (userData && userGroupName != "User")
-            return callback("Not a User");
+            return callback("User does not exist");
         if (userData && email && resultedEmail)
             return callback("Email Is One Time Editable");
         if (userData && ((!resultedEmail && email) || (resultedEmail && !email)))
@@ -1391,7 +1414,7 @@ class UserService {
         if (!userId || !pin || !deviceId || !token)
             return callback("Please give userId,pin,deviceId,Access-Token");
         if (!userService.isValidPin(pin))
-            return callback("Invalid PIN");
+            return callback("Pin should be 4 digit Number");
         userService.findUserAndValidatePin(params, callback);
     }
 
@@ -1415,13 +1438,16 @@ class UserService {
             loggedinResult.email = result.email;
             loggedinResult.profileImageUrl = result.profileImageUrl;
             loggedinResult.phone = result.phone;
+            loggedinResult.isPhoneVerified = result.isPhoneVerified;
             loggedinResult.userGroup = result.userGroups.name;
             if (result.userGroups.name != 'User' || result.status != 'Active')
-                return callback("Inactive User");
+                return callback("User does not exist");
             if (!result.isPinActivated)
                 return callback("PIN is not Active");
             if (result.pin != pin)
                 return callback("Incorrect PIN");
+            loggedinResult.isPinActivated = true;
+            loggedinResult.isPinSet = true;
             if (result.pin == pin)
                 return callback(null, loggedinResult);
             return callback("Something went Wrong");
@@ -1437,7 +1463,7 @@ class UserService {
         userService.forgotPassword(params, callback);
     }
 
-    /****************** Validates Old PIN And Set New PIN ***********************/
+    /****************** Set Or Reset PIN ***********************/
 
     resetPin(params, callback) {
         var userService = new UserService();
@@ -1447,7 +1473,7 @@ class UserService {
             return callback("userId and pin is required");
         var isValidPin = userService.isValidPin(pin);
         if (!isValidPin)
-            return callback("Invalid Pin");
+            return callback("Pin should be 4 digit Number");
         var findObject = {};
         findObject.where = {};
         findObject.where.id = userId;
@@ -1458,7 +1484,7 @@ class UserService {
             var group = result.userGroups.name;
             var status = result.status;
             if (group != 'User' || status != 'Active')
-                return callback("Not an Active User");
+                return callback("User does not exist");
             userService.updatePinForResetPin(params, callback);
             return null;
         }).catch(function(exception) {
@@ -1489,9 +1515,9 @@ class UserService {
         if (!userId || !currentPin || !newPin)
             return callback("User Id, Current PIN And New PIN Required");
         if (userId && !_.isInteger(currentPin))
-            return callback("Current PIN should be Integer");
+            return callback("Current PIN should be 4 Digit Integer");
         if (userId && !_.isInteger(newPin))
-            return callback("New PIN should be Integer");
+            return callback("New PIN should be 4 Digit Integer");
         if (userId && !_.inRange(currentPin, 1000, 10000))
             return callback("Incorrect Current PIN");
         if (userId && !_.inRange(newPin, 1000, 10000))
@@ -1511,7 +1537,7 @@ class UserService {
             if (!result)
                 return callback("Incorrect User Id");
             if (result.userGroups.name != 'User' || result.status != "Active")
-                return callback("Not an Active User");
+                return callback("User does not exist");
             if (!result.isPinActivated)
                 return callback("Please Enable PIN Settings");
             if (currentPin != result.pin)
@@ -1540,20 +1566,37 @@ class UserService {
     /********************** Contact Us User App ***********************/
 
     contactus(params, callback) {
-        var awsSesService = new AwsSesService();
         var userService = new UserService();
         var email = params.email;
         var query = params.query;
-        var mailObject = {};
-        mailObject.sender = 'support@thebatua.com';
-        mailObject.receivers = [];
-        mailObject.receivers.push(email);
-        mailObject.subjectText = 'Welcome to Batua !!!';
-        mailObject.bodyText = 'Welcome to Batua !!!';
-        awsSesService.sendEmail(mailObject, function(err, result) {
+        userService.respondContact(email, 'support@thebatua.com', 'User');
+        userService.respondContact('support@thebatua.com', email, 'Batua');
+        callback(null, { message: "Email Sent" });
+    }
+
+    respondContact(emailTo, emailFrom, emailToUserType) {
+        var awsSesService = new AwsSesService();
+        var params = {};
+        params.sender = emailFrom;
+        params.receivers = [];
+        params.receivers.push(emailTo);
+        params.subjectText = 'Welcome to Batua !!!';
+        params.bodyText = 'Welcome to Batua !!!';
+        if (emailToUserType == 'User') {
+            var templatPath = './api/templates/contact-us/response_contact_us.ejs';
+            params.htmlTemplate = fs.readFileSync(templatPath, "utf-8");
+        }
+        if (emailToUserType == 'Batua') {
+            var templatPath = './api/templates/contact-us/query_contact_us.ejs';
+            var template = fs.readFileSync(templatPath, "utf-8");
+            var query = params.query;
+            params.htmlTemplate = template.replace(/Query detail description will be visible here/g, query);
+        }
+        awsSesService.sendEmail(params, function(err, result) {
             if (err)
-                return callback(err);
-            return callback(null, { message: "We are processing your query" });
+                console.log(err);
+            else
+                console.log(result);
         });
     }
 

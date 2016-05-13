@@ -242,7 +242,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 400 (applicaiton)
 
 
-### Push Notification For Active Users [GET /api/admin/activeuser/{id}]
+### Get Active Users For Push Notification [GET /api/admin/activeuser/{id}]
         
 + Response 200 (application/json)
     
@@ -281,7 +281,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 400 (applicaiton)
 
 
-### Send Push Notification [PUT /api/admin/activeuser/notify]
+### Send Push Notification To Active Users [PUT /api/admin/activeuser/notify]
 
 + Request (application/json)
  
@@ -620,7 +620,8 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
     
             {
                 "userId":28,
-                "phone":9479897802
+                "phone":9479897802,
+                "type":"send"           // or "type":"resend"
             }
             
         
@@ -656,13 +657,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 200 (application/json)
 
             {
-                "id": 28,
-                "name": null,
-                "email": "abca@abc.com",
-                "profileImageUrl": null,
-                "phone": 9479897802,
-                "token": "093eGGfnGDvtstZ3juHxgeBH",
-                "userGroup": "User"
+                "message": "Phone Number Verified"
             }
             
 + Response 401 (application/json)
@@ -1026,7 +1021,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
             }
 
 
-### Reset PIN [PUT /api/user/pin/reset]
+### Set/Reset PIN [PUT /api/user/pin/reset]
 
 + Request (application/json)
 
@@ -1083,6 +1078,108 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
                 }
             ]
         }
+
+
+### Validate Promocode [POST /api/user/validatePromocode]
+
++ Request (application/json)
+
+    + Body
+    
+            { 
+                "promocode": "DEEVALI20",
+                "merchantId":"8"
+            }
+            
+        
++ Response 200 (application/json)
+
+        [
+            {
+                "id": 1,
+                "promocode": "DEEVALI20",
+                "discountPercentage": 20,
+                "description": "Clearance Sale",
+                "maximumAmountLimit": 2500,
+                "validFrom": "2016-05-01T11:03:12.000Z",
+                "validTo": "2016-05-12T11:03:12.000Z",
+                "percentageCostBourneByBatua": 5,
+                "percentageCostBourneByMerchant": 2,
+                "status": "Active",
+                "createdAt": "2016-05-04T09:02:48.000Z",
+                "updatedAt": "2016-05-04T09:02:48.000Z"
+            }
+        ]
+            
++ Response 400 (application/json)
+    
+        {
+            "errors":[
+                        {
+                            "message": "Promocode missing"
+                        }
+                    ]
+        }
+
+
+### Validate Offer [POST /api/user/validateOffer]
+
++ Request (application/json)
+
+    + Body
+    
+            { 
+                "merchantId":"8"
+            }
+            
+        
++ Response 200 (application/json)
+
+        [
+            {
+                "id": 13,
+                "discountPercentage": 30,
+                "description": "Clearance Duplicate Sale2",
+                "maximumAmountLimit": 2500,
+                "validFrom": "2016-05-05T11:03:12.000Z",
+                "validTo": "2016-06-23T11:03:12.000Z",
+                "status": "Active",
+                "createdAt": "2016-05-03T11:58:00.000Z",
+                "updatedAt": "2016-05-04T12:21:56.000Z"
+            }
+        ]
+            
++ Response 400 (application/json)
+    
+        {
+            "errors":[
+                        {
+                            "message": "Merchant ID deos not exist"
+                        }
+                    ]
+        }
+
+
+### Contact Us [POST /api/user/contactus]
+
++ Request  (application/json)
+    
+    + Body
+
+            {
+                "email":"vikashcool1991@gmail.com",
+                "query":"contact us query lies here !!!"
+            }
+
++ Response 200 (application/json)
+
+    + Body
+            
+            {
+                "message": "Email Sent"
+            }
+
++ Response 400 (application/json)
 
 
 ### Logout [PUT /api/user/logout]
@@ -2114,17 +2211,14 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 
 + Request (application/json)
 
-    + Headers
-
-            Access-Token: "ABCDEFGH12345678"
-
     + Body
     
             {   
                 "rating":4,
                 "review":"give some review",
                 "userId":23,
-                "merchantId":12
+                "merchantId":12,
+                "paymentId":21
             }
 
 + Response 201 (application/json)
@@ -2136,57 +2230,79 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
                 "rating":4,
                 "review":"give some review",
                 "userId":23,
-                "merchantId":12
+                "merchantId":12,
+                "paymentId":21
             }
     
 + Response 400 (application/json)
 
 
-+ Response 401 (application/json)
-
-
-### Get Review [GET /api/ratereview/user/{userId}/merchant/{merchantId}]
+### Get Review By Id [GET /api/ratereview/{:id}]
 
 + Response 200 (application/json)
     
     + Body
     
-            [
-                {   
-                    "id":1,
-                    "rating":4,
-                    "review":"give some review",
-                    "userId":   {
-                                    "id":23,
-                                    "name":"vikash singh",
-                                    "profileImageUrl":"url",
-                                    "createdAt": "2016-11-12T05:03:46.000Z",
-                                    "updatedAt": "2016-11-12T05:03:46.000Z"
-                                },
-                    "merchantId":{
-                                    "id":12,
-                                    "name":"merchantName",
-                                    "profileImageUrl":"url",
-                                    "createdAt": "2016-11-12T05:03:46.000Z",
-                                    "updatedAt": "2016-11-12T05:03:46.000Z"
-                                }
-                }
-            ]
+            {   
+                "id":1,
+                "rating":4,
+                "review":"give some review",
+                "userId":23,
+                "merchantId":12,
+                "paymentId":21
+            }
     
 + Response 400 (application/json)
 
 
-+ Response 401 (application/json)
++ Response 404 (application/json)
 
+
+### Get Review By userId [GET /api/ratereview/user/{:userId}]
+
++ Response 200 (application/json)
+    
+    + Body
+    
+            [{   
+                "id":1,
+                "rating":4,
+                "review":"give some review",
+                "userId":23,
+                "merchantId":12,
+                "paymentId":21
+            }]
+    
++ Response 400 (application/json)
+
+
++ Response 404 (application/json)
+
+
+### Get Review By merchantId [GET /api/ratereview/merchant/{:merchantId}]
+
++ Response 200 (application/json)
+    
+    + Body
+    
+            [{   
+                "id":1,
+                "rating":4,
+                "review":"give some review",
+                "userId":23,
+                "merchantId":12,
+                "paymentId":21
+            }]
+    
++ Response 400 (application/json)
+
+
++ Response 404 (application/json)
 
 ### Update Review [PUT /api/ratereview]
 
 + Request (application/json)
 
-    + Headers
-
-            Access-Token: "ABCDEFGH12345678"
-
     + Body
     
             {   
@@ -2194,7 +2310,8 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
                 "rating":5,
                 "review":"give some new review",
                 "userId":23,
-                "merchantId":12
+                "merchantId":12,
+                "paymentId":21
             }
 
 + Response 200 (application/json)
@@ -2206,13 +2323,11 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
                 "rating":5,
                 "review":"give some new review",
                 "userId":23,
-                "merchantId":12
+                "merchantId":12,
+                "paymentId":21
             }
     
 + Response 400 (application/json)
-
-
-+ Response 401 (application/json)
 
 
 ### Delete Review [DELETE /api/ratereview/{id}]
@@ -2226,7 +2341,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 400 (application/json)
 
 
-+ Response 401 (application/json)
++ Response 404 (application/json)
 
 
 ## Promocode Management [/api/promocode]
@@ -2787,355 +2902,87 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 400 (application/json)
 
 
-## Normal SignUp [/user/normalSignUp]
+## Reports [/api/admin]
 
-### Normal SignUp [POST]
-
-+ Request (application/json)
-    
-    + Body
-
-            {
-                "name":"vikash singh",
-                "email":"username@domain.com",
-                "phone":9876543210,
-                "password":"123456",
-                "groupId":1,
-                "deviceToken":"APA91bGl8H-kxi4eEVIcNHExgbsI5zB32Aj42340iAkL7_D6g2VYTlTvYDKIqfKeiX9eDswg7xFifVhOmrJtmRAtzviDKZEVlaq3FiWAzNB8jpyaEv8d22uH04MyUn_XwsUs4kwV88ZC"
-            }
-        
-+ Response 201 (application/json)
-
-            {
-                "id": 1,
-                "name":"vikash singh",
-                "email":"username@domain.com",
-                "phone":9876543210,
-                "accessToken": "dgfjsdgjkbdjkbvs",
-                "profileImageUrl": null
-            }
-
-+ Response 400 (applicaiton)
-
-        {
-            "success": false,
-            "message": "Already exist"
-        }
-
-## Social SignUp [/user/socialSignUp]
-
-### Social SignUp [POST]
-
-+ Request (application/json)
-    
-    + Body
-
-            {
-                "name":"vikash singh",
-                "email":"username@domain.com",
-                "socialId": "hehdbdhbchvywegduahsjxnsajbcdjscvcbjdsbn@facebook.com",
-                "socialType": "FACEBOOK",
-                "profileImageUrl":"https://beatniks-s3.s3.amazonaws.com/e4207a81-2dd1-4c49-b4e5-0391380e235f.jpg",
-                "deviceToken":"APA91bGl8H-kxi4eEVIcNHExgbsI5zB32Aj42340iAkL7_D6g2VYTlTvYDKIqfKeiX9eDswg7xFifVhOmrJtmRAtzviDKZEVlaq3FiWAzNB8jpyaEv8d22uH04MyUn_XwsUs4kwV88ZC"
-            }
-        
-+ Response 201 (application/json)
-
-            {
-                "id": 1,
-                "name":"vikash singh",
-                "email":"username@domain.com",
-                "phone":9876543210,
-                "accessToken": "dgfjsdgjkbdjkbvs",
-                "profileImageUrl": "https://beatniws.com/e4207a81e235f.jpg"
-            }
-
-+ Response 400 (applicaiton)
-
-        {
-            "success": false,
-            "message": "Already exist"
-        }
-
-## Mobile verification [/user/mobileVerification]
-
-### Verify Mobile Number [POST]
-
-+ Request (application/json)
-    
-    + Body
-
-            {
-                "phone": 9876543210,
-                "otp": 123456
-            }
-            
-+ Response 200 (application/json)
-
-        {
-            "success": true,
-            "accessToken": "08yGxPpUNeRcF8UK18g0lnHW"
-        }
-
-+ Response 400 (applicaiton)
-
-        {
-            "success": false,
-            "message": "Bad Request"
-        }
-
-## Login [/user/login]
-
-### Login [POST]
-
-+ Request (application/json)
-    
-    + Body
-
-            {
-                "email":"username@domain.com",
-                "password":"123456",
-                "deviceToken": "bdkjgbekjgbjksbgvjsnb",
-                "groupId": 1
-            }
-            
-+ Response 200 (application/json)
-
-            {
-                "id": 1,
-                "name":"vikash singh",
-                "email":"username@domain.com",
-                "phone":9876543210,
-                "accessToken": "dgfjsdgjkbdjkbvs",
-                "profileImageUrl": "https://beatniws.com/e4207a81e235f.jpg"
-            }
-
-+ Response 400 (applicaiton)
-
-        {
-            "success": false,
-            "message": "Already exist"
-        }
-
-## PIN Login [/user/{id}/pinlogin]
-
-### PIN Login [POST]
-
-+ Request (application/json)
-    
-    + Body
-
-            {
-                "userId":24,
-                "pin":1234,
-                "deviceToken": "bdkjgbekjgbjksbgvjsnb",
-                "groupId": 1
-            }
-            
-+ Response 200 (application/json)
-
-            {   
-                "id":1,
-                "name":"vikash singh",
-                "email":"username@domain.com",
-                "phone":9876543210,
-                "accessToken": "dhfvhjevfhjvbhgfvhsdvsjv"
-            }
-
-+ Response 400 (applicaiton)
-
-            {
-                "success": false,
-                "message": "Bad Request"
-            }
-            
-
-## Logout [/user/{id}/logout]
-
-### Logout [PUT]
-
-+ Request  (application/json)
-
-    + Headers
-        
-            Access-Token: "ABCDEFGH12345678"
-            
-    + Body
-
-            {
-                "id": "1"
-            }
+### Get Payment Settlement report [GET /api/admin/payment/settlement]
 
 + Response 200 (application/json)
-       
-
-+ Response 400 (application/json)
+    + Body 
     
-            {
-                "message":"Unable to logout"
-            }
-
-## Forgot Password [/user/forgotPassword]
-    
-    Used for resend otp also.
-    
-### forgotPassword [POST]
-
-+ Request  (application/json)
-
-    + Body
-
-            {
-                "mobile": 9876543210
-            }
-
-+ Response 201 (application/json)
-
-
-+ Response 401 (application/json)
-
+            [
+                {
+                    "id": 6,
+                    "merchantName": "vikash",
+                    "netTransactionAmount": 100000,
+                    "netOfferAmount": 10000,
+                    "netPromoOffer": 10000,
+                    "cashbackByMerchant": 10000,
+                    "feeCharged": 1000,
+                    "settlementAmount":1000,
+                    "status":"Open",
+                    "createdAt": "2016-04-06T07:38:39.000Z",
+                    "updatedAt": "2016-04-06T07:43:56.000Z"
+                }
+            ]
         
-+ Response 400 (application/json)
++ Response 404 (application/json)
 
 
-## Set New Password [/user/setNewPassword]
+### Get Payment Details report [GET /api/admin/payment/details]
 
-### Set New Password [POST]
-
-+ Request  (application/json)
-
-    + Body
-
-            {
-                "mobile": 9876543210
-                "newPassword" : "1234",
-                "otp": 123456
-            }
-
-+ Response 201 (application/json)
-
-
-+ Response 401 (application/json)
-
- 
-+ Response 400 (application/json)
-
-
-
-
-
-## Save PIN [/user/savePin]
-
-### Save PIN [POST]
-
-+ Request  (application/json)
-
-    + Headers
++ Response 200 (application/json)
+    + Body 
+    
+            [
+                {
+                    "id": 6,
+                    "user": "vikash",
+                    "orderNumber": 100000,
+                    "transactionId": 10000,
+                    "transactionDate": "2016-04-06T07:38:39.000Z",
+                    "transactionAmount": 10000,
+                    "offerAmount": 1000,
+                    "promoOfferAmount":1000,
+                    "promoAmountByMerchant":"Open",
+                    "feeCharged":1000,
+                    "amountCreditedToBatua":500,
+                    "settlementAmount":10000
+                    "createdAt": "2016-04-06T07:38:39.000Z",
+                    "updatedAt": "2016-04-06T07:43:56.000Z"
+                }
+            ]
         
-             Access-Token: "ABCDEFGH12345678"
-            
-    + Body
-
-            {
-                "userId": "1",
-                "PIN" : "1234"
-            }
-
-+ Response 201 (application/json)
-
-
-+ Response 401 (application/json)
-
- 
-+ Response 400 (application/json)
-
-
-
-## Reset PIN [/user/resetPin]
-
-### Reset PIN [POST]
-
-+ Request  (application/json)
-
-    + Headers
         
-            Access-Token: "ABCDEFGH12345678"
-            
-    + Body
-
-            {
-                "userId": "1",
-                "currentPIN" : 1234,
-                "newPIN" : 4321
-            }
-
-+ Response 201 (application/json)
++ Response 404 (application/json)
 
 
-+ Response 401 (application/json)
+### Get Transaction report [GET /api/admin/transaction]
 
- 
-+ Response 400 (application/json)
-
-
-
-## Forgot PIN [/user/forgotPin]
-
-### Forgot PIN [POST]
-
-+ Request  (application/json)
++ Response 200 (application/json)
+    + Body 
     
-    + Headers
+            [
+                {
+                    "id": 6,
+                    "merchantName":"manaf"
+                    "userName": "vikash",
+                    "orderNumber": 100000,
+                    "transactionId": 10000,
+                    "transactionDate": "2016-04-06T07:38:39.000Z",
+                    "paymentAmount": 10000,
+                    "cashbackByOffer":100,
+                    "cashbackByPromo":200,
+                    "amountCreditedToBatua":500,
+                    "transactionCancelledBy":"admin1",
+                    "transactionCancelledOn":"2016-04-06T07:38:39.000Z",
+                    "cancellationDescription":"description",
+                    "createdAt": "2016-04-06T07:38:39.000Z",
+                    "updatedAt": "2016-04-06T07:43:56.000Z"
+                }
+            ]
+    
         
-            Access-Token: "ABCDEFGH12345678"
-            
-    + Body
-
-            {
-                "phone": 9876543210,
-                "otp" : 753238,
-                "newPIN" : "1234"
-            }
-
-+ Response 201 (application/json)
-
-
-+ Response 401 (application/json)
-
- 
-+ Response 400 (application/json)
-
-
-
-## Push Notification [/user/notification]
-
-### Create Notification [POST]
-
-+ Request (application/json)
-
-    + Headers
-
-            Access-Token: "ABCDEFGH12345678"
-
-    + Body
-    
-            {   
-                "userId": [1,2,3,...],
-                "message": "thanks for login"
-            }
-
-+ Response 201 (application/json)
-    
-    + Body
-    
-            {   
-                "success":true
-            }
-    
-+ Response 400 (application/json)
-
-
-+ Response 401 (application/json)
++ Response 404 (application/json)
 
 
 ## Payment Modes [/payment/modes]

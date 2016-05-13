@@ -1,10 +1,15 @@
-angular.module('app').controller('headerController', ['$state', 'authenticationService', function($state, authenticationService) {
+angular.module('app').controller('headerController', ['$state', 'authenticationService', 'loginService',
 
-    var vm = this;
+    function($state, authenticationService, loginService) {
 
-    vm.logout = function() {
-        authenticationService.clearCredentials();
-        $state.go('login', { reload: true });
+        var vm = this;
+
+        vm.logout = function() {
+            authenticationService.clearCredentials();
+            $state.go('login', { reload: true });
+        }
+
+        vm.loggedInUserDetails = loginService.getUserDetails();
+
     }
-    
-}]);
+]);

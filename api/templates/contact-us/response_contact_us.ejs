@@ -1,0 +1,793 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<!-- Responsive Meta Tag -->
+<meta content="width=device-width, initial-scale=1" name="viewport" />
+<!-- <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css"> -->
+
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+
+<title>Email Template</title>
+
+<!-- Responsive and Valid Styles -->
+
+<style type="text/css">
+	 body {
+        width: 100%;
+        background-color: #F1F2F7;
+        margin: 0;
+        padding: 0;
+        -webkit-font-smoothing: antialiased;
+        font-family: arial;
+    }
+    
+    html {
+        width: 100%;
+    }
+    
+    table {
+        font-size: 13px;
+        border: 0;
+    }
+    
+
+    table.maintableborder {
+    	margin-left: 18%;
+    	margin-right: 18%;
+    }
+
+    table.templatebody {
+    	background-color: white !important;
+    }
+
+    .main-header {
+      padding-left:5px;
+    }
+
+    @media (max-width: 650px) {
+
+    	table.headertitle {
+    		width: 100% !important;
+    		float: left;
+    	}
+
+    	table.templatebody {
+    		width: 100% !important;
+    		float: left;
+    	}
+
+    	table.maintableborder {
+    		margin-left:18%;
+    	}
+
+    }
+
+     @media (max-width: 560px) {
+
+    	table.headertitle {
+    		width: 100% !important;
+    		float: left;
+    	}
+
+    	table.templatebody {
+    		width: 100% !important;
+    		float: left;
+    	}
+
+    	table.maintableborder {
+    		margin-left:18%;
+    	}
+
+    }
+
+    @media (max-width: 512px) {
+
+    	table.headertitle {
+    		width: 100% !important;
+    		float: left;
+    	}
+
+    	table.templatebody {
+    		width: 100% !important;
+    		float: left;
+    	}
+
+    	table.maintableborder {
+    		margin-left:30px;
+    		margin-right: 30px;
+    	}
+
+    }
+
+    @media (max-width: 440px) {
+
+    	table.headertitle {
+    		width: 100% !important;
+    		float: left;
+    	}
+
+    	table.templatebody {
+    		width: 100% !important;
+    		float: left;
+    	}
+
+    	table.maintableborder {
+    		margin-left:30px;
+    		margin-right: 30px;
+    		border:5px solid #3980c2;
+    	}
+
+    		table.templatewelcomenote {
+    		width:92%;
+    		
+    	}
+
+    	p.templatewelcomenote {
+    		font-size: 18px !important;
+    	}
+
+    }
+
+    @media (max-width: 399px) {
+
+    	table.headertitle {
+    		width: 100% !important;
+    		float: left;
+    	}
+
+    	table.templatebody {
+    		width: 100% !important;
+    		float: left;
+    	}
+
+    	p.templatewelcomenote {
+    		font-size: 18px !important;
+    		text-align: center;
+    		
+    	}
+
+    	table.templatewelcomenote {
+    		width:92%;
+    		
+    	}
+
+    	td.main-header {
+    	
+    		font-size: 16px !important;
+
+    	}
+
+    	table.mainContent {
+    		width:95%;
+    		margin-left: 0px;
+    		margin-right: 0px;
+    	}
+
+    	table.maintableborder {
+    		
+    		margin-left:30px;
+    		margin-right: 30px;
+    		border:1px solid #3980c2;
+    	}
+
+    	table.maintablecontent {
+    		width:100px !important;    	}
+
+    }
+
+    @media (max-width: 356px) {
+
+    	table.headertitle {
+    		width: 100% !important;
+    		float: left;
+    	}
+
+    	table.templatebody {
+    		width: 100% !important;
+    		float: left;
+    	}
+
+    	p.templatewelcomenote {
+    		font-size: 18px !important;
+    		text-align: center;
+    		
+    	}
+
+    	table.templatewelcomenote {
+    		width:92%;
+    		
+    	}
+
+    	td.main-header {
+    	
+    		font-size: 16px !important;
+
+    	}
+
+    	table.mainContent {
+    		width:95%;
+    		margin-left: 0px;
+    		margin-right: 0px;
+    	}
+
+    	table.maintableborder {
+    		
+    		margin-left:15px;
+    		margin-right: 10px;
+    		border:1px solid #3980c2;
+    	}
+
+    	table.maintablecontent {
+    		width:50px !important;    
+    			}
+
+    			.templatefooter {
+    				display:block;
+    			}
+
+    }
+
+
+    @media (min-width: 900px) {
+    	table.fullbody {
+    		margin-left: 15%;
+    		margin-right: 15%;
+    	}
+    }
+
+     @media (min-width: 1300px) {
+    	table.fullbody {
+    		margin-left: 20%;
+    		margin-right: 15%;
+    	}
+    }
+
+     @media (min-width: 1650px) {
+    	table.fullbody {
+    		margin-left: 25%;
+    		margin-right: 15%;
+    	}
+    }
+
+
+
+
+    @media (min-width: 800px) {
+    	table.maintableborder {
+    		margin-left: 18%;
+    		margin-right: 18%;
+    	}
+    }
+
+    @media (min-width: 720px) {
+    	table.maintableborder {
+    		margin-right:18%;
+    	}
+
+    	p.socialcenternet {
+    		margin-left:31%;
+    		margin-right: 18%;
+    	}
+    	
+    }
+
+    @media (min-width: 1150px){
+    	p.socialcenternet {
+    		margin-left:35%;
+    		margin-right: 18%;
+    	}
+    }
+
+     @media (min-width: 890px){
+    	p.socialcenternet {
+    		margin-left:31%;
+    		margin-right: 18%;
+    	}
+    }
+
+     @media (min-width: 1450px){
+    	p.socialcenternet {
+    		margin-left:35%;
+    		margin-right: 18%;
+    	}
+    }
+
+     @media (max-width: 720px){
+    	p.socialcenternet {
+    		margin-left:27%;
+    		
+    	}
+    }
+
+     @media (max-width: 630px){
+    	p.socialcenternet {
+    		margin-left:20%;
+    		
+    	}
+    }
+
+     @media (max-width: 480x){
+    	p.socialcenternet {
+    		margin-left:10%;
+    		
+    	}
+
+    	p.socialcentermobile {
+    		margin-left:50%;
+    	}
+    }
+
+     @media (max-width: 436px){
+    	p.socialcenternet {
+    		margin-left:10%;
+    		
+    	}
+
+    	p.socialcentermobile {
+    		margin-left:40% ;
+    	}
+    }
+
+     @media (max-width: 370px){
+    	p.socialcenternet {
+    		margin-left:5%;
+    		
+    	}
+    }
+    
+    @media (min-width: 437px){
+    	p.socialcentermobile {
+    		margin-left:45% ;
+    	}
+    }
+
+    @media (max-width: 350px){
+    	table.socialcontent {
+    		width: 100%;
+    		margin-left: 0px!important;
+    		margin-right: 0px;
+    	}
+    }
+    .firebugResetStyles {
+        z-index: 2147483646 !important;
+        top: 0 !important;
+        left: 0 !important;
+        display: block !important;
+        border: 0 none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+        outline: 0 !important;
+        min-width: 0 !important;
+        max-width: none !important;
+        min-height: 0 !important;
+        max-height: none !important;
+        position: fixed !important;
+        transform: rotate(0deg) !important;
+        transform-origin: 50% 50% !important;
+        border-radius: 0 !important;
+        box-shadow: none !important;
+        background: transparent none !important;
+        pointer-events: none !important;
+        white-space: normal !important;
+    }
+    
+    .firebugBlockBackgroundColor {
+        background-color: transparent !important;
+    }
+    
+    .firebugResetStyles:before,
+    .firebugResetStyles:after {
+        content: "" !important;
+    }
+    /**actual styling to be modified by firebug theme**/
+    
+    .firebugCanvas {
+        display: none !important;
+    }
+    /* ------------------------- */
+    
+    .firebugLayoutBox {
+        width: auto !important;
+        position: static !important;
+    }
+    
+    .firebugLayoutBoxOffset {
+        opacity: 0.8 !important;
+        position: fixed !important;
+    }
+    
+    .firebugLayoutLine {
+        opacity: 0.4 !important;
+        background-color: #000000 !important;
+    }
+    
+    .firebugLayoutLineLeft,
+    .firebugLayoutLineRight {
+        width: 1px !important;
+        height: 100% !important;
+    }
+    
+    .firebugLayoutLineTop,
+    .firebugLayoutLineBottom {
+        width: 100% !important;
+        height: 1px !important;
+    }
+    
+    .firebugLayoutLineTop {
+        margin-top: -1px !important;
+        border-top: 1px solid #999999 !important;
+    }
+    
+    .firebugLayoutLineRight {
+        border-right: 1px solid #999999 !important;
+    }
+    
+    .firebugLayoutLineBottom {
+        border-bottom: 1px solid #999999 !important;
+    }
+    
+    .firebugLayoutLineLeft {
+        margin-left: -1px !important;
+        border-left: 1px solid #999999 !important;
+    }
+    /* ----------------- */
+    
+    .firebugLayoutBoxParent {
+        border-top: 0 none !important;
+        border-right: 1px dashed #E00 !important;
+        border-bottom: 1px dashed #E00 !important;
+        border-left: 0 none !important;
+        position: fixed !important;
+        width: auto !important;
+    }
+    
+    .firebugRuler {
+        position: absolute !important;
+    }
+    
+    .firebugRulerH {
+        top: -15px !important;
+        left: 0 !important;
+        width: 100% !important;
+        height: 14px !important;
+        border-top: 1px solid #BBBBBB !important;
+        border-right: 1px dashed #BBBBBB !important;
+        border-bottom: 1px solid #000000 !important;
+    }
+    
+    .firebugRulerV {
+        top: 0 !important;
+        left: -15px !important;
+        width: 14px !important;
+        height: 100% !important;
+        border-left: 1px solid #BBBBBB !important;
+        border-right: 1px solid #000000 !important;
+        border-bottom: 1px dashed #BBBBBB !important;
+    }
+    
+    .overflowRulerX > .firebugRulerV {
+        left: 0 !important;
+    }
+    
+    .overflowRulerY > .firebugRulerH {
+        top: 0 !important;
+    }
+    /* --------------------------------- */
+    
+    .fbProxyElement {
+        position: fixed !important;
+        pointer-events: auto !important;
+        \
+    }
+
+	.maintable {
+		border:10px solid red;
+		border-top: none;
+		border-bottom: none;
+	}
+
+	.maintablecontent {
+		
+		border-collapse: collapse;
+		border:none;
+		border-bottom-left-radius: 15px;
+		border-bottom-right-radius: 15px;
+		border-top-left-radius: 15px;
+		border-top-right-radius: 15px;
+		
+		
+	}
+
+	.maintableborder {
+		border:18px solid #3980c2;
+		
+		border-top: 25px solid #3980c2;
+		border-bottom-left-radius: 15px;
+		border-bottom-right-radius: 15px;
+		border-top-left-radius: 15px;
+		border-top-right-radius: 15px;
+		
+	}
+
+	.tabledata {
+		font-weight:bold;
+		font-size: 13px;
+		font-family: Arial;
+		line-height:20px;
+		text-align: center;
+		margin-left:10px;
+		margin-right: 10px;
+	}
+
+	.socialcontent {
+		border:2px solid #283593;
+		
+		border-collapse: collapse;
+	}
+
+	.socialcontent .td {
+		text-align: center;
+	}
+
+	.oddrow {
+		background-color:#f0f0f0;
+	}
+
+	.evenrow {
+		background-color:#e0e0e0
+	}
+
+	
+
+	tr.socialcontentheading {
+		border-bottom: transparent;;
+		border-right: transparent;
+	}
+	tr.socialcontentbody {
+		border-right: transparent;
+	}
+
+	
+
+	.halfwidthdata {
+		width:50%;
+		
+	}
+
+	.halfwidthdata.leftdata {
+		border-left:2px solid #283593;
+	}
+
+	.halfwidthdata.rightdata {
+		border-left:1px dotted #283593;
+		border-right:2px solid #283593;
+	}
+
+	.halfwidthdata.firstrow {
+		border-top:2px solid #283593;
+	}
+
+	.halfwidthdata.lastrow {
+		border-bottom:2px solid #283593;
+	}
+
+	.socialcontentheading {
+		border-bottom: none;
+	}
+
+	.socialcontentbody {
+		background-color: #C5CAE9;
+	}
+
+	.note > ul > li { padding-top:2px;
+		padding-bottom:2px;
+
+	}
+
+
+
+</style>
+
+
+<head>
+</head>
+
+<body leftmargin="0" topmargin="0" marginheight="0" marginwidth="0">
+	<div class="container">
+		
+			<table class="col-xs-8 fullbody" border="0" cellpadding="0" cellspacing="0">
+				<tbody>
+					<tr>
+						<td height="30"></td>
+					</tr>
+					<tr bgcolor="#f0f0f0" class="fullcontent">
+						<td align="center" bgcolor="#F0f0f0" valign="top" width="100%">
+							<!--  top header -->
+							<table class="headertitle" align="center" border="0"  cellpadding="0" cellspacing="0" width="100%"  >
+								<tbody>
+
+									<tr bgcolor="#C5CAE9">
+										<td height="15"></td>
+									</tr>
+									<tr bgcolor="#C5CAE9">
+										<td align="center">
+											<table class="" align="center" border="0" cellpadding="0" cellspacing="0" width="100%" style="margin-left:20px;">
+												<tbody>
+													<tr>
+														<td>
+															<table class="top-header-left" align="left" border="0" cellpadding="0" cellspacing="0" width="100%">
+																<tbody>
+																	<tr>
+																		<td>
+																			<table class="" border="0" cellpadding="0" cellspacing="0">
+																				<tbody>
+																					<tr>
+																						<td>
+																							<img style="display: block;" src="https://s3-ap-southeast-1.amazonaws.com/batua-s3/comp-logo.png" alt="company_logo" width="200px;" >
+																						</td>
+																						<td>&nbsp;&nbsp;</td>
+																					</tr>
+																				</tbody>
+																			</table>
+																		</td>
+																	</tr>
+																</tbody>
+															</table>
+
+
+														</td>
+													</tr>
+												</tbody>
+											</table>
+										</td>
+									</tr>
+									<tr bgcolor="#C5CAE9">
+										<td height="5"></td>
+									</tr>
+									<tr bgcolor="#283593">
+										<td height="5"></td>
+									</tr>
+								</tbody>
+							</table>
+							<!--  end top header  -->
+							<!-- main content -->
+							<table class="templatebody" align="center" border="0" cellpadding="0" cellspacing="0"  bgcolor="ffffff">
+								<!--Header-->
+								<tbody>
+									<tr>
+										<td height="40"></td>
+									</tr>
+
+									<tr>
+										<td>
+											<table class="templatewelcomenote" align="center" border="0" cellpadding="0" cellspacing="0" >
+												<tbody>
+													<tr>
+														<td>
+															<table align="center" border="0" cellpadding="0" cellspacing="0" >
+																<tbody>
+																	<tr>
+																		<td>
+																			<table  class="" border="0" cellpadding="0" cellspacing="0" style="border-bottom: 2px solid #283593" >
+																				<tbody>
+																					<tr>
+
+																						<td><b><p class="templatewelcomenote" style="color:#FF4081;font-size: 24px;text-align: center;">Query Recieved</p></b>
+																						</td>
+
+																					</tr>
+																					
+
+																				</tbody>
+																			</table>
+
+
+																		</td>
+																	</tr>
+																</tbody>
+															</table>
+														</td>
+													</tr>
+												</tbody>
+											</table>
+										</td>
+									</tr>
+
+									<tr>
+										<td height="20"></td>
+									</tr>
+									<!-- end header -->
+									<!-- main section -->
+									<tr>
+										<td>
+											<table class="" align="center" border="0" cellpadding="0" cellspacing="0" >
+												<tr>
+													<td>
+														<table class="mainContent" align="center" border="0" cellpadding="0" cellspacing="0">
+															<tbody>
+																<tr>
+																	<td class="main-header" style="padding-left:10px;padding-right:10px;color: #212121; font-size: 16px; font-weight:bold; font-family: Arial;text-align: center">
+																		Thank you for contacting us. We are working on your query and will get in touch within next 24 hours.
+																	</td>
+																</tr>
+																<tr>
+																	<td height="20"></td>
+																</tr>
+															</tbody>
+														</table>
+
+														
+                                                        <tr>
+                                                            <td height="20"></td>
+                                                        </tr>
+														
+
+														
+
+												
+														
+														<tr>
+															<td>
+																<table style="line-height:20px;margin-left: 10%">
+
+																	<tr>
+																		<td>Regards</td>
+																	</tr>
+																	<tr>
+																		<td style="font-weight:bold;">Team BATUA</td>
+																	</tr>
+
+																</table>
+															</td>
+														</tr>
+													</td>
+												</tr>
+												<tr>
+													<td height="25"></td>
+												</tr>
+												<tr>
+													<td height="20"></td>
+												</tr>
+												<tr>
+													<td height="30"></td>
+												</tr>
+
+												
+														
+												<tr>
+													<td style="color: #939393; font-size: 11px; font-weight: normal; font-family:Arial;" class="prefooter-subheader" align="center">
+													
+														<span style="color: #3980c2">Website :</span> <a style="text-decoration:none;" href="#">BATUA WEBSITE</a> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span class="templatefooter" style="display: none;"><br></span><span style="color: #3980c2">Email :</span>
+														<a href="mailto:support@thebatua.com" style="text-decoration:none;" target="_top">support@thebatua.com</a>
+													</td> 
+												</tr>
+												<tr>
+													<td height="10"></td>
+												</tr> 
+											</table>
+
+										</td>
+									</tr>
+									 
+									<tr>
+										<td>
+											<div style=" margin:0px auto; background:#3980c2; padding-top:15px; text-align:center; height:30px; color: #fff; font-size: 10px; font-weight: normal; font-family: Arial;" >
+																	<span style="font-size:14px;" align="center"><b>Copyright 2016, Batua Pvt Ltd. All rights reserved.</b></span>
+																	
+											</div>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</td>
+					</tr>
+				</tbody>
+			</table>
+		
+	</div>
+</body>
+
+</html>

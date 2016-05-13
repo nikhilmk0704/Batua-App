@@ -43,7 +43,7 @@ module.exports = {
         type: {
             type: Sequelize.STRING  // enum values needs to be added
         },
-        canccellationDate: {
+        cancellationDate: {
             type: Sequelize.DATE,
         },
         cancellationDescription: {

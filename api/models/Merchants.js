@@ -33,8 +33,10 @@ module.exports = {
             unique: true,
             allowNull: false,
             validate: {
-                min: 0,
-                max: 9999999999
+                validateLength: function(value) {
+                    if (("" + "" + value).length != 10)
+                        throw new Error("Give 10 digit Integer");
+                }
             }
         },
         email: {
@@ -54,6 +56,7 @@ module.exports = {
         },
         averageRating: {
             type: Sequelize.DECIMAL(2, 1),
+            defaultValue: 0,
             validate: {
                 min: 0,
                 max: 5
@@ -61,6 +64,7 @@ module.exports = {
         },
         reviewersCount: {
             type: Sequelize.INTEGER,
+            defaultValue: 0
         },
         fees: {
             type: Sequelize.FLOAT,

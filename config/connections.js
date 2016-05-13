@@ -114,5 +114,5 @@ module.exports.connections = {
             "secretAccessKey":"7LzV1fAtnfoH+3YARCATziv+M6YpExHkQwlVYOV1",
             "region":"us-east-1"
         },
-
+    url:"http://52.36.228.74:1337",
 };

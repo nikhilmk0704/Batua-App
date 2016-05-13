@@ -2,6 +2,7 @@
 
 var MerchantRepository = require('../repositories/MerchantRepository.js');
 var UserRepository = require('../repositories/UserRepository.js');
+var _ = require('lodash');
 
 class MerchantService {
 
@@ -68,7 +69,7 @@ class MerchantService {
     // shows only those merchants created by particular sales agent
     find(params, callback) {
         var merchantService = new MerchantService();
-        var id = (params.id)?(+params.id):(null);
+        var id = (params.id) ? (+params.id) : (null);
         var userId = params.userId;
         var salesAgentId = params.salesAgentId;
         var adminId = params.adminId;
@@ -367,6 +368,7 @@ class MerchantService {
 
     getAllMerchantsWithDistance(arrayOfMerchants, locationObject, callback) {
         var count = 0;
+        var result = [];
         async.each(arrayOfMerchants, function(element) {
             var lon1 = element.longitude;
             var lat1 = element.latitude;
@@ -382,9 +384,10 @@ class MerchantService {
             dist = dist * 60 * 1.1515;
             dist = dist * 1.609344;
             element.dataValues.distance = dist;
+            result.push(element.dataValues);
             count++;
             if (count == arrayOfMerchants.length)
-                callback(null, arrayOfMerchants);
+                callback(null, _.orderBy(result, ['distance'], ['asc']));
         });
     }
 
