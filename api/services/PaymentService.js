@@ -15,9 +15,10 @@ generateOrderNo(function(sequenceNumber){
     transactionDetailParam.orderNumber = sequenceNumber;
     transactionDetailParam.transactionId = sequenceNumber;
     transactionDetailParam.paymentId = params.paymentId;
+    transactionDetailParam.status = params.status;
 
     var transactionDetailsRepository = new TransactionDetailsRepository();  
-
+    
     transactionDetailsRepository.save(transactionDetailParam, function(err,transactionDetail){
             if (err)
                 return callback(err,null);
@@ -28,6 +29,7 @@ generateOrderNo(function(sequenceNumber){
             savePaymentParam.transactionDetailId = transactionDetail.id;
             savePaymentParam.userId = params.userId;
             savePaymentParam.merchantId = params.merchantId;
+            savePaymentParam.paymentModeId = params.paymentmodeId;
             if(params.promocode){
                savePaymentParam.promocodeId = params.promocode.id; 
             }else{
@@ -54,7 +56,18 @@ generateOrderNo(function(sequenceNumber){
                         if (err) {
                             return callback(err,null);
                         }
-                        return callback(null, result);
+                        findPaymentDetail(result,function(err,detailResult){
+                            if (err) {
+                                return callback(err,null);
+                            }
+                          
+                            var detailResultParsed = JSON.parse(JSON.stringify(detailResult));
+                            detailResultParsed.promocodeAmount = parseFloat(resultArray.reducedAmount);
+                            detailResultParsed.batuaCommission = parseFloat(resultArray.deductionAmountFromAmountAfterPromocodeApply);
+                            detailResultParsed.merchantFee = parseFloat(resultArray.fee);     
+                            return callback(null, detailResultParsed);
+                        });
+                        
                     });
                 });
 
@@ -69,21 +82,40 @@ generateOrderNo(function(sequenceNumber){
                         if (err) {
                             return callback(err,null);
                         }
-                        return callback(null, result);
+                        findPaymentDetail(result,function(err,detailResult){
+                            if (err) {
+                                return callback(err,null);
+                            }
+                            var detailResultParsed = JSON.parse(JSON.stringify(detailResult));
+                            detailResultParsed.promocodeAmount = parseFloat(resultArray.reducedAmount);
+                            detailResultParsed.batuaCommission = 0;
+                            detailResultParsed.merchantFee = parseFloat(resultArray.fee);
+                            return callback(null, detailResultParsed);
+                        });
+                        
                     });
                 });
 
             }else{
-
+                var deductionFee = parseFloat(params.amount) * (parseFloat(merchantFee[0].fees) / 100)
                 savePaymentParam.initialAmount = parseFloat(params.amount);
-                savePaymentParam.reducedAmount = parseFloat(merchantFee[0].fees);
-                savePaymentParam.paidAmount =parseFloat(params.amount) - parseFloat(merchantFee[0].fees);
+                savePaymentParam.reducedAmount = deductionFee;
+                savePaymentParam.paidAmount =parseFloat(params.amount) - deductionFee;
                 
                 return savePaymentDetails(savePaymentParam, function(err, result) {
                     if (err) {
                         return callback(err,null);
                     }
-                    return callback(null, result);
+                    findPaymentDetail(result,function(err,detailResult){
+                            if (err) {
+                                return callback(err,null);
+                            }
+                            var detailResultParsed = JSON.parse(JSON.stringify(detailResult));
+                            detailResultParsed.promocodeAmount = 0;
+                            detailResultParsed.batuaCommission = 0;
+                            detailResultParsed.merchantFee = deductionFee;
+                            return callback(null, detailResultParsed);
+                    });
                 });
                 
             }
@@ -98,6 +130,59 @@ generateOrderNo(function(sequenceNumber){
 }
 }
 module.exports = PaymentService;
+
+function findPaymentDetail(paymentResponse,callback){
+
+    var params = {};
+    params.where = {};
+    params.where.id = paymentResponse.id;
+    var paymentsRepository = new PaymentsRepository();
+    paymentsRepository.find(params, function(err,findResult){
+        if (err) {
+            return callback(err,null);
+        }
+        var include = [{
+            model: Merchants,
+            as:'merchant',
+            required: false
+        },
+        {
+            model: Users,
+            as:'user',
+            required: false
+        },
+        {
+            model: Promocodes,
+            as:'promocode',
+            required: false
+        },
+        {
+            model: Offers,
+            as:'offerDiscount',
+            required: false
+        },
+        {
+            model: TransactionDetails,
+            as:'transactionDetail',
+            required: false
+        },
+        {
+            model: Paymentmodes,
+            as:'paymentMode',
+            required: false
+        }
+        ];
+        params.include = include;
+
+        paymentsRepository.find(params, function(err,findResult){
+            if (err) {
+                return callback(err,null);
+            }
+            return callback(null, findResult);
+        });
+    });
+
+}
 
 function savePaymentDetails(params, callback) {
 
@@ -193,10 +278,11 @@ function promocodeOperation(params,fee,callback){
     
     /*------------ /% cost bourned by merchnats -----------*/
 
-    var payAmountAfterBurned = amountAfterPromocodeApply - deductionAmountFromAmountAfterPromocodeApply;
+    var payAmountAfterBurned = amount - deductionAmountFromAmountAfterPromocodeApply;
     
     /*------------ Paid Amount To Merchants -----------*/
-    var paidAmount = payAmountAfterBurned - fee;
+    var deductionFee = payAmountAfterBurned * (fee / 100);
+    var paidAmount = payAmountAfterBurned - deductionFee;
 
     var returnObject = {};
 
@@ -204,9 +290,15 @@ function promocodeOperation(params,fee,callback){
     returnObject.amountAfterPromocodeApply = amountAfterPromocodeApply; 
     returnObject.deductionAmountFromAmountAfterPromocodeApply = deductionAmountFromAmountAfterPromocodeApply;
     returnObject.paidAmount = paidAmount;
-    returnObject.fee = fee;
+    returnObject.fee = deductionFee;
 
-    return callback(returnObject);
+    updateUserWalletBalance(params.userId,params.paymentmodeId,reducedAmount,function(updateResult){
+
+        if(updateResult){
+            return callback(returnObject);
+        }
+
+    });
 
 }
 
@@ -237,24 +329,29 @@ function offerOperation(params,fee,callback){
 
     
     /*------------ Paid Amount To Merchants -----------*/
-    var paidAmount = amountAfterOfferApply - fee;
+    var deductionFee = amountAfterOfferApply * (fee / 100);
+    var paidAmount = amountAfterOfferApply - deductionFee;
 
     var returnObject = {};
 
     returnObject.reducedAmount = reducedAmount;
     returnObject.amountAfterOfferApply = amountAfterOfferApply;   
     returnObject.paidAmount = paidAmount;
-    returnObject.fee = fee;
+    returnObject.fee = deductionFee;
 
-    updateUserWalletBalance(params.userId,reducedAmount,function(updateResult){
+    updateUserWalletBalance(params.userId,params.paymentmodeId,reducedAmount,function(updateResult){
+
+        if(updateResult){
+            return callback(returnObject);
+        }
 
     });
 
-    return callback(returnObject);
+    
 
 }
 
-function updateUserWalletBalance(userId,cashBack,callback){
+function updateUserWalletBalance(userId,paymentmodeId,cashBack,callback){
 
     var rawQueryString = "SELECT `balance` FROM UsersPaymentmodes WHERE 1 AND userId=:userId";
     sequelize.query(rawQueryString,
@@ -263,27 +360,27 @@ function updateUserWalletBalance(userId,cashBack,callback){
         ).then(function(result) {
             if(result.length > 0){
                var balance = result[0].balance;
-               var newBalance = balance + cashBack;
-               var rawQueryStringUpdate = "UPDATE `UsersPaymentmodes` SET `balance`=:newBalance WHERE 1 AND `userId`=:userId";
+               var newBalance = parseFloat(balance) + parseFloat(cashBack);
+               var rawQueryStringUpdate = "UPDATE `UsersPaymentmodes` SET `balance`=:balance WHERE 1 AND `userId`=:userId";
 
                 sequelize.query(rawQueryStringUpdate,
                     { replacements: {balance:newBalance,userId:userId}, 
                     type: sequelize.QueryTypes.UPDATE }
                     ).then(function(result) {
-                        console.log(result);
+                        callback(true);
                 });
             
             }else{
                 var balance = 0;
                 var newBalance = parseFloat(balance) + parseFloat(cashBack);
                
-                var rawQueryStringUpdate = "INSERT INTO `UsersPaymentmodes`( `balance`,`userId`) VALUES (:balance,:userId)";
+                var rawQueryStringUpdate = "INSERT INTO `UsersPaymentmodes`( `balance`,`userId`,`paymentmodeId`) VALUES (:balance,:userId,:paymentmodeId)";
 
                 sequelize.query(rawQueryStringUpdate,
-                    { replacements: {balance:newBalance,userId:userId}, 
+                    { replacements: {balance:newBalance,userId:userId,paymentmodeId:paymentmodeId}, 
                     type: sequelize.QueryTypes.INSERT}
                     ).then(function(result) {
-                        console.log(result);
+                        callback(true);
                 });
             }
             
