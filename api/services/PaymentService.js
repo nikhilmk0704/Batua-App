@@ -216,7 +216,9 @@ function generateOrderNo(callback){
     sequelize.query(rawQueryString,
     { type: sequelize.QueryTypes.SELECT }
     ).then(function(result) {
+        console.log(result);
         if(result){
+        console.log(111);
            if(result.length > 0){
             var sequenceNumber = result[0].AUTO_INCREMENT < 100 ? '00' + result[0].AUTO_INCREMENT : result[0].AUTO_INCREMENT
             callback(formattedDate+sequenceNumber);
