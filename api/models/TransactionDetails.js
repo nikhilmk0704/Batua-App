@@ -22,35 +22,33 @@ module.exports = {
             allowNull: false,
             unique: true,
         },
-        mode: {
-            type: Sequelize.STRING,
-            required: true,
-            allowNull: false
-        },
-        status: {
+        transactionId: {
             type: Sequelize.STRING,
             required: true,
             allowNull: false,
+            unique: true,
         },
-        txnid: {
+        mode: {
+            type: Sequelize.STRING
+        },
+        status: {
+            type: Sequelize.STRING
+        },
+        paymentId: {
             type: Sequelize.STRING,
             required: true,
             allowNull: false,
             unique: true,
         },
         amount: {
-            type: Sequelize.FLOAT,
-            required: true,
-            allowNull: false,
+            type: Sequelize.FLOAT
         },
         additionalCharges: {
             type: Sequelize.FLOAT,
-            defaultValue: 0.0,
+            defaultValue: 0.0
         },
         netAmountDebited: {
-            type: Sequelize.FLOAT,
-            required: true,
-            allowNull: false,
+            type: Sequelize.FLOAT
         },
         bankReferenceNumber: {
             type: Sequelize.STRING,

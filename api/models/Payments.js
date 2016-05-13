@@ -41,9 +41,7 @@ module.exports = {
             defaultValue: false,
         },
         type: {
-            type: Sequelize.STRING,  // enum values needs to be added
-            required: true,
-            allowNull: false,
+            type: Sequelize.STRING  // enum values needs to be added
         },
         cancellationDate: {
             type: Sequelize.DATE,
@@ -53,35 +51,40 @@ module.exports = {
         },
     },
     associations: function() {
-        Payments.belongsTo(Users, {
+        Payments.belongsTo(Users, { 
+            as:'user',
             foreignKey: {
                 name: 'userId',
                 allowNull: false
             }
         });
-        Payments.belongsTo(Promocodes, {
+        Payments.belongsTo(Promocodes, { 
+            as:'promocode',
             foreignKey: {
                 name: 'promocodeId',
             }
         });
         Payments.belongsTo(Offers, {
+            as:'offerDiscount',
             foreignKey: {
                 name: 'offerDiscountId',
             }
         });
-        Payments.belongsTo(Merchants, {
+        Payments.belongsTo(Merchants, { 
+            as:'merchant',
             foreignKey: {
                 name: 'merchantId',
                 allowNull: false
             }
         });
         Payments.belongsTo(Paymentmodes, {
+            as:'paymentMode',
             foreignKey: {
-                name: 'paymentModeId',
-                allowNull: false
+                name: 'paymentModeId'
             }
         });
         Payments.belongsTo(TransactionDetails, {
+            as:'transactionDetail',
             foreignKey: {
                 name: 'transactionDetailId',
                 allowNull: false
