@@ -62,11 +62,6 @@ class PaymentService {
                                     if (err) {
                                         return callback(err, null);
                                     }
-
-                                    /*var detailResultParsed = JSON.parse(JSON.stringify(detailResult));
-                                    detailResultParsed.promocodeAmount = parseFloat(resultArray.reducedAmount);
-                                    detailResultParsed.batuaCommission = parseFloat(resultArray.deductionAmountFromAmountAfterPromocodeApply);
-                                    detailResultParsed.merchantFee = parseFloat(resultArray.fee); */
                                     return callback(null, detailResult);
                                 });
 
@@ -90,10 +85,6 @@ class PaymentService {
                                     if (err) {
                                         return callback(err, null);
                                     }
-                                    /* var detailResultParsed = JSON.parse(JSON.stringify(detailResult));
-                                     detailResultParsed.promocodeAmount = parseFloat(resultArray.reducedAmount);
-                                     detailResultParsed.batuaCommission = 0;
-                                     detailResultParsed.merchantFee = parseFloat(resultArray.fee);*/
                                     return callback(null, detailResult);
                                 });
 
@@ -105,9 +96,9 @@ class PaymentService {
                         savePaymentParam.initialAmount = parseFloat(params.amount);
                         savePaymentParam.reducedAmount = deductionFee;
                         savePaymentParam.paidAmount = parseFloat(params.amount) - deductionFee;
-                        savePaymentParam.promocodeAmount = parseFloat(resultArray.reducedAmount);
-                        savePaymentParam.batuaCommission = parseFloat(resultArray.deductionAmountFromAmountAfterPromocodeApply);
-                        savePaymentParam.merchantFee = parseFloat(resultArray.fee);
+                        savePaymentParam.promocodeAmount = 0;
+                        savePaymentParam.batuaCommission = 0;
+                        savePaymentParam.merchantFee = parseFloat(deductionFee);
 
                         return savePaymentDetails(savePaymentParam, function(err, result) {
                             if (err) {
@@ -467,6 +458,7 @@ function offerOperation(params, fee, callback) {
     returnObject.amountAfterOfferApply = amountAfterOfferApply;
     returnObject.paidAmount = paidAmount;
     returnObject.fee = deductionFee;
+    returnObject.deductionAmountFromAmountAfterPromocodeApply = 0;
 
     updateUserWalletBalance(params.userId, params.paymentmodeId, reducedAmount, function(updateResult) {
 
