@@ -16,12 +16,12 @@ module.exports = {
         var params = req.body;
 
         var paymentService = new PaymentService();
-
+   
         paymentService.save(params, function(err, result) {
             if (err)
                 return res.badRequest(error.send(err));
-            if (_.isEmpty(result)) {
-                return res.notFound(error.send("Invalid promocode"));
+            if(_.isEmpty(result)){
+                return res.notFound(error.send("Invalid payment"));
             }
             return res.json(200, result);
         });
@@ -58,5 +58,4 @@ module.exports = {
             return res.json(200, result);
         });
     }
-
 };
