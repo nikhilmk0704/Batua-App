@@ -63,12 +63,7 @@ generateOrderNo(function(sequenceNumber){
                         findPaymentDetail(result,function(err,detailResult){
                             if (err) {
                                 return callback(err,null);
-                            }
-                          
-                            /*var detailResultParsed = JSON.parse(JSON.stringify(detailResult));
-                            detailResultParsed.promocodeAmount = parseFloat(resultArray.reducedAmount);
-                            detailResultParsed.batuaCommission = parseFloat(resultArray.deductionAmountFromAmountAfterPromocodeApply);
-                            detailResultParsed.merchantFee = parseFloat(resultArray.fee); */    
+                            }    
                             return callback(null, detailResult);
                         });
                         
@@ -93,10 +88,6 @@ generateOrderNo(function(sequenceNumber){
                             if (err) {
                                 return callback(err,null);
                             }
-                           /* var detailResultParsed = JSON.parse(JSON.stringify(detailResult));
-                            detailResultParsed.promocodeAmount = parseFloat(resultArray.reducedAmount);
-                            detailResultParsed.batuaCommission = 0;
-                            detailResultParsed.merchantFee = parseFloat(resultArray.fee);*/
                             return callback(null, detailResult);
                         });
                         
@@ -108,9 +99,9 @@ generateOrderNo(function(sequenceNumber){
                 savePaymentParam.initialAmount = parseFloat(params.amount);
                 savePaymentParam.reducedAmount = deductionFee;
                 savePaymentParam.paidAmount =parseFloat(params.amount) - deductionFee;
-                savePaymentParam.promocodeAmount = parseFloat(resultArray.reducedAmount);
-                savePaymentParam.batuaCommission = parseFloat(resultArray.deductionAmountFromAmountAfterPromocodeApply);
-                savePaymentParam.merchantFee=parseFloat(resultArray.fee); 
+                savePaymentParam.promocodeAmount = 0;
+                savePaymentParam.batuaCommission = 0;
+                savePaymentParam.merchantFee=parseFloat(deductionFee); 
                 
                 return savePaymentDetails(savePaymentParam, function(err, result) {
                     if (err) {
@@ -120,10 +111,6 @@ generateOrderNo(function(sequenceNumber){
                             if (err) {
                                 return callback(err,null);
                             }
-                            /*var detailResultParsed = JSON.parse(JSON.stringify(detailResult));
-                            detailResultParsed.promocodeAmount = 0;
-                            detailResultParsed.batuaCommission = 0;
-                            detailResultParsed.merchantFee = deductionFee;*/
                             return callback(null, detailResult);
                     });
                 });
