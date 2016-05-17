@@ -113,6 +113,8 @@ module.exports.routes = {
     'post /api/user/validatePromocode':'DiscountValidateController.validatePromocode',
     'post /api/user/validateOffer':'DiscountValidateController.validateOffer',
     'post /api/user/makePayment':'PaymentsController.doPayment',
+    'get /api/user/:userId/payment/history':'PaymentsController.history',
+    'get /api/user/:userId/wallet':'PaymentsController.wallet',
     
 
     /********************* Image Upload API ************************/

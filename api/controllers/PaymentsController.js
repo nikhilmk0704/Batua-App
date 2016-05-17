@@ -25,5 +25,37 @@ module.exports = {
             }
             return res.json(200, result);
         });
+    },
+
+    history: function(req, res) {
+
+        var params = {};
+        params.userId = req.param('userId');
+
+        var paymentService = new PaymentService();
+
+        paymentService.history(params, function(err, result) {
+            if (err)
+                return res.badRequest(error.send(err));
+            if (_.isEmpty(result))
+                return res.notFound(error.send('No Transactions'));
+            return res.json(200, result);
+        });
+    },
+
+    wallet: function(req, res) {
+
+        var params = {};
+        params.userId = req.param('userId');
+
+        var paymentService = new PaymentService();
+        
+        paymentService.wallet(params, function(err, result) {
+            if (err)
+                return res.badRequest(error.send(err));
+            if (_.isEmpty(result))
+                return res.notFound(error.send('No Transactions'));
+            return res.json(200, result);
+        });
     }
 };

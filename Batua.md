@@ -1159,6 +1159,550 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
                     ]
         }
 
+### Make Payment [POST /api/user/makePayment]
+
++ Request (application/json)
+
+    + Body
+    
+            {
+              "merchantId": "7",
+              "paymentId": "pay_5SUr0HtJ3H2Z2d",
+              "userId": "4",
+              "amount": "1000",
+              "paymentmodeId": "1",
+              "status": "success",
+              "offer": null,
+              "promocode": {
+                "id": 1,
+                "promocode": "DEEVALI20",
+                "discountPercentage": 10,
+                "description": "Clearance Sale",
+                "maximumAmountLimit": 50,
+                "validFrom": "2016-05-01T11:03:12.000Z",
+                "validTo": "2016-05-12T11:03:12.000Z",
+                "percentageCostBourneByBatua": 5,
+                "percentageCostBourneByMerchant": 2,
+                "status": "Active",
+                "createdAt": "2016-05-04T09:02:48.000Z",
+                "updatedAt": "2016-05-04T09:02:48.000Z"
+                }
+            }
+            
+        
++ Response 200 (application/json)
+
+        {
+          "id": 48,
+          "initialAmount": 1000,
+          "reducedAmount": 550.5,
+          "paidAmount": 499.5,
+          "isConfirmed": false,
+          "isCancelled": false,
+          "type": null,
+          "canccellationDate": null,
+          "cancellationDescription": null,
+          "createdAt": "2016-05-13T10:29:53.000Z",
+          "updatedAt": "2016-05-13T10:29:53.000Z",
+          "userId": 4,
+          "promocodeId": 1,
+          "offerDiscountId": null,
+          "merchantId": 7,
+          "paymentModeId": 1,
+          "transactionDetailId": 96,
+          "merchant": {
+            "id": 7,
+            "name": "Hashim123",
+            "shortCode": "hashim1020",
+            "profileImageUrl": "url",
+            "phone": 2147483647,
+            "email": null,
+            "address": null,
+            "latitude": null,
+            "longitude": null,
+            "averageRating": null,
+            "reviewersCount": null,
+            "fees": 50,
+            "bankName": "HDFC",
+            "branchName": "Kormanagala",
+            "accountHolder": "Kajal",
+            "accountNumber": 9876543210987654,
+            "ifscCode": "HDFC001",
+            "status": "Pending for approval",
+            "createdAt": "2016-04-05T05:11:31.000Z",
+            "updatedAt": "2016-04-05T05:11:31.000Z",
+            "locationId": null,
+            "createdSalesId": 2,
+            "categoryId": 2
+          },
+          "user": {
+            "id": 4,
+            "name": "vikash",
+            "phone": 123457685,
+            "profileImageUrl": "url",
+            "email": "nikhil@tecsolsoftware.com",
+            "isPhoneVerified": false,
+            "facebookId": null,
+            "googleId": null,
+            "batuaId": null,
+            "password": null,
+            "pin": null,
+            "isPinActivated": false,
+            "otp": null,
+            "status": "Active",
+            "latitude": null,
+            "longitude": null,
+            "locationUpdateTime": null,
+            "createdAt": "2016-04-05T05:45:38.000Z",
+            "updatedAt": "2016-04-05T05:45:38.000Z",
+            "userGroupId": 3
+          },
+          "promocode": {
+            "id": 1,
+            "promocode": "DEEVALI20",
+            "discountPercentage": 20,
+            "description": "Clearance Sale",
+            "maximumAmountLimit": 2500,
+            "validFrom": "2016-05-01T11:03:12.000Z",
+            "validTo": "2016-05-12T11:03:12.000Z",
+            "percentageCostBourneByBatua": 5,
+            "percentageCostBourneByMerchant": 2,
+            "status": "Active",
+            "createdAt": "2016-05-04T09:02:48.000Z",
+            "updatedAt": "2016-05-04T09:02:48.000Z"
+          },
+          "offerDiscount": null,
+          "transactionDetail": {
+            "id": 96,
+            "bankName": null,
+            "orderNumber": "130520160096",
+            "transactionId": "130520160096",
+            "mode": null,
+            "status": "success",
+            "paymentId": "pay_5SUr0HtJ3H2Z2d",
+            "amount": null,
+            "additionalCharges": 0,
+            "netAmountDebited": null,
+            "bankReferenceNumber": null,
+            "cardType": null,
+            "cardNumber": null,
+            "expiryDate": null,
+            "createdAt": "2016-05-13T10:29:53.000Z",
+            "updatedAt": "2016-05-13T10:29:53.000Z"
+          },
+          "paymentMode": {
+            "id": 1,
+            "paymentMode": "razorpay",
+            "walletType": null,
+            "createdAt": null,
+            "updatedAt": null
+          },
+          "promocodeAmount": 50,
+          "batuaCommission": 1,
+          "merchantFee": 499.5
+        }
+            
++ Response 400 (application/json)
+    
+        {
+          "errors": [
+            {
+              "message": "ER_NO_REFERENCED_ROW_2: Cannot add or update a child row: a foreign key constraint fails (`batua`.`payments`, CONSTRAINT `payments_ibfk_2` FOREIGN KEY (`promocodeId`) REFERENCES `Promocodes` (`id`) ON DELETE SET NULL ON UPDATE CASCADE)"
+            }
+          ]
+        }
+
+
+### Transaction History Us [GET /api/user/{:userId}/payment/history]
+
++ Response 200 (application/json)
+
+    + Body
+            
+            [
+                {
+                    "id": 5,
+                    "initialAmount": 20,
+                    "reducedAmount": 0.6,
+                    "paidAmount": 19.4,
+                    "isConfirmed": false,
+                    "isCancelled": false,
+                    "type": null,
+                    "cancellationDate": null,
+                    "cancellationDescription": null,
+                    "createdAt": "2016-05-13T13:43:17.000Z",
+                    "updatedAt": "2016-05-13T13:43:17.000Z",
+                    "userId": 70,
+                    "promocodeId": null,
+                    "offerDiscountId": null,
+                    "merchantId": 120,
+                    "paymentModeId": 1,
+                    "transactionDetailId": 10,
+                    "merchant":{
+                                    "id": 120,
+                                    "name": "swaram store",
+                                    "shortcode": "swaram12"
+                                },
+                    "user":{
+                                "id": 70,
+                                "name": "arny"
+                            },
+                    "promocode": null,
+                    "offerDiscount": null,
+                    "transactionDetail":{
+                                            "id": 10,
+                                            "orderNumber": "130520160010",
+                                            "transactionId": "130520160010"
+                                        },
+                    "paymentMode":  {
+                                        "id": 1,
+                                        "paymentMode": "razorpay",
+                                        "walletType": null
+                                    }
+                    },
+                {
+                    "id": 6,
+                    "initialAmount": 20,
+                    "reducedAmount": 2.9,
+                    "paidAmount": 17.1,
+                    "isConfirmed": false,
+                    "isCancelled": false,
+                    "type": null,
+                    "cancellationDate": null,
+                    "cancellationDescription": null,
+                    "createdAt": "2016-05-13T14:05:00.000Z",
+                    "updatedAt": "2016-05-13T14:05:00.000Z",
+                    "userId": 70,
+                    "promocodeId": null,
+                    "offerDiscountId": 26,
+                    "merchantId": 82,
+                    "paymentModeId": 1,
+                    "transactionDetailId": 11,
+                    "merchant":{
+                                    "id": 82,
+                                    "name": "kada shop",
+                                    "shortcode": "KaDa1234"
+                                },
+                    "user":{
+                                "id": 70,
+                                "name": "arny"
+                            },
+                    "promocode": null,
+                    "offerDiscount":{
+                                        "id": 26,
+                                        "discountPercentage": 10,
+                                        "description": "Test Offer",
+                                        "maximumAmountLimit": 2000,
+                                        "validFrom": "2016-05-11T18:30:00.000Z",
+                                        "validTo": "2016-05-20T18:30:00.000Z",
+                                        "status": "Active",
+                                        "createdAt": "2016-05-12T04:28:31.000Z",
+                                        "updatedAt": "2016-05-12T04:28:31.000Z"
+                                    },
+                "transactionDetail":{
+                                        "id": 11,
+                                        "orderNumber": "130520160011",
+                                        "transactionId": "130520160011"
+                                    },
+                    "paymentMode":  {
+                                        "id": 1,
+                                        "paymentMode": "razorpay",
+                                        "walletType": null
+                                    }
+                }
+            ]
+
++ Response 400 (application/json)
+
+
+### Wallet/Recharge/Payment/Cashback [GET /api/user/{:userId}/wallet]
+
++ Response 200 (application/json)
+
+    + Body
+            
+            {
+                "balance": 14,
+                "recharge": [
+                    {
+                      "id": 5,
+                      "initialAmount": 20,
+                      "reducedAmount": 0.6,
+                      "paidAmount": 19.4,
+                      "isConfirmed": false,
+                      "isCancelled": false,
+                      "type": null,
+                      "cancellationDate": null,
+                      "cancellationDescription": null,
+                      "createdAt": "2016-05-13T13:43:17.000Z",
+                      "updatedAt": "2016-05-13T13:43:17.000Z",
+                      "userId": 70,
+                      "promocodeId": null,
+                      "offerDiscountId": null,
+                      "merchantId": 120,
+                      "paymentModeId": 1,
+                      "transactionDetailId": 10,
+                      "merchant": {
+                        "id": 120,
+                        "name": "swaram store",
+                        "shortcode": "swaram12"
+                      },
+                      "user": {
+                        "id": 70,
+                        "name": "arny"
+                      },
+                      "promocode": null,
+                      "offerDiscount": null,
+                      "transactionDetail": {
+                        "id": 10,
+                        "orderNumber": "130520160010",
+                        "transactionId": "130520160010"
+                      },
+                      "paymentMode": {
+                        "id": 1,
+                        "paymentMode": "razorpay",
+                        "walletType": null
+                      }
+                    },
+                    {
+                      "id": 6,
+                      "initialAmount": 20,
+                      "reducedAmount": 2.9,
+                      "paidAmount": 17.1,
+                      "isConfirmed": false,
+                      "isCancelled": false,
+                      "type": null,
+                      "cancellationDate": null,
+                      "cancellationDescription": null,
+                      "createdAt": "2016-05-13T14:05:00.000Z",
+                      "updatedAt": "2016-05-13T14:05:00.000Z",
+                      "userId": 70,
+                      "promocodeId": null,
+                      "offerDiscountId": 26,
+                      "merchantId": 82,
+                      "paymentModeId": 1,
+                      "transactionDetailId": 11,
+                      "merchant": {
+                        "id": 82,
+                        "name": "kada shop",
+                        "shortcode": "KaDa1234"
+                      },
+                      "user": {
+                        "id": 70,
+                        "name": "arny"
+                      },
+                      "promocode": null,
+                      "offerDiscount": {
+                        "id": 26,
+                        "discountPercentage": 10,
+                        "description": "Test Offer",
+                        "maximumAmountLimit": 2000,
+                        "validFrom": "2016-05-11T18:30:00.000Z",
+                        "validTo": "2016-05-20T18:30:00.000Z",
+                        "status": "Active",
+                        "createdAt": "2016-05-12T04:28:31.000Z",
+                        "updatedAt": "2016-05-12T04:28:31.000Z"
+                      },
+                      "transactionDetail": {
+                        "id": 11,
+                        "orderNumber": "130520160011",
+                        "transactionId": "130520160011"
+                      },
+                      "paymentMode": {
+                        "id": 1,
+                        "paymentMode": "razorpay",
+                        "walletType": null
+                      }
+                    }
+                ],
+                "cashback": [
+                    {
+                      "id": 5,
+                      "initialAmount": 20,
+                      "reducedAmount": 0.6,
+                      "paidAmount": 19.4,
+                      "isConfirmed": false,
+                      "isCancelled": false,
+                      "type": null,
+                      "cancellationDate": null,
+                      "cancellationDescription": null,
+                      "createdAt": "2016-05-13T13:43:17.000Z",
+                      "updatedAt": "2016-05-13T13:43:17.000Z",
+                      "userId": 70,
+                      "promocodeId": null,
+                      "offerDiscountId": null,
+                      "merchantId": 120,
+                      "paymentModeId": 1,
+                      "transactionDetailId": 10,
+                      "merchant": {
+                        "id": 120,
+                        "name": "swaram store",
+                        "shortcode": "swaram12"
+                      },
+                      "user": {
+                        "id": 70,
+                        "name": "arny"
+                      },
+                      "promocode": null,
+                      "offerDiscount": null,
+                      "transactionDetail": {
+                        "id": 10,
+                        "orderNumber": "130520160010",
+                        "transactionId": "130520160010"
+                      },
+                      "paymentMode": {
+                        "id": 1,
+                        "paymentMode": "razorpay",
+                        "walletType": null
+                      }
+                    },
+                    {
+                      "id": 6,
+                      "initialAmount": 20,
+                      "reducedAmount": 2.9,
+                      "paidAmount": 17.1,
+                      "isConfirmed": false,
+                      "isCancelled": false,
+                      "type": null,
+                      "cancellationDate": null,
+                      "cancellationDescription": null,
+                      "createdAt": "2016-05-13T14:05:00.000Z",
+                      "updatedAt": "2016-05-13T14:05:00.000Z",
+                      "userId": 70,
+                      "promocodeId": null,
+                      "offerDiscountId": 26,
+                      "merchantId": 82,
+                      "paymentModeId": 1,
+                      "transactionDetailId": 11,
+                      "merchant": {
+                        "id": 82,
+                        "name": "kada shop",
+                        "shortcode": "KaDa1234"
+                      },
+                      "user": {
+                        "id": 70,
+                        "name": "arny"
+                      },
+                      "promocode": null,
+                      "offerDiscount": {
+                        "id": 26,
+                        "discountPercentage": 10,
+                        "description": "Test Offer",
+                        "maximumAmountLimit": 2000,
+                        "validFrom": "2016-05-11T18:30:00.000Z",
+                        "validTo": "2016-05-20T18:30:00.000Z",
+                        "status": "Active",
+                        "createdAt": "2016-05-12T04:28:31.000Z",
+                        "updatedAt": "2016-05-12T04:28:31.000Z"
+                      },
+                      "transactionDetail": {
+                        "id": 11,
+                        "orderNumber": "130520160011",
+                        "transactionId": "130520160011"
+                      },
+                      "paymentMode": {
+                        "id": 1,
+                        "paymentMode": "razorpay",
+                        "walletType": null
+                      }
+                    }
+                ],
+                "payment": [
+                    {
+                      "id": 5,
+                      "initialAmount": 20,
+                      "reducedAmount": 0.6,
+                      "paidAmount": 19.4,
+                      "isConfirmed": false,
+                      "isCancelled": false,
+                      "type": null,
+                      "cancellationDate": null,
+                      "cancellationDescription": null,
+                      "createdAt": "2016-05-13T13:43:17.000Z",
+                      "updatedAt": "2016-05-13T13:43:17.000Z",
+                      "userId": 70,
+                      "promocodeId": null,
+                      "offerDiscountId": null,
+                      "merchantId": 120,
+                      "paymentModeId": 1,
+                      "transactionDetailId": 10,
+                      "merchant": {
+                        "id": 120,
+                        "name": "swaram store",
+                        "shortcode": "swaram12"
+                      },
+                      "user": {
+                        "id": 70,
+                        "name": "arny"
+                      },
+                      "promocode": null,
+                      "offerDiscount": null,
+                      "transactionDetail": {
+                        "id": 10,
+                        "orderNumber": "130520160010",
+                        "transactionId": "130520160010"
+                      },
+                      "paymentMode": {
+                        "id": 1,
+                        "paymentMode": "razorpay",
+                        "walletType": null
+                      }
+                    },
+                    {
+                      "id": 6,
+                      "initialAmount": 20,
+                      "reducedAmount": 2.9,
+                      "paidAmount": 17.1,
+                      "isConfirmed": false,
+                      "isCancelled": false,
+                      "type": null,
+                      "cancellationDate": null,
+                      "cancellationDescription": null,
+                      "createdAt": "2016-05-13T14:05:00.000Z",
+                      "updatedAt": "2016-05-13T14:05:00.000Z",
+                      "userId": 70,
+                      "promocodeId": null,
+                      "offerDiscountId": 26,
+                      "merchantId": 82,
+                      "paymentModeId": 1,
+                      "transactionDetailId": 11,
+                      "merchant": {
+                        "id": 82,
+                        "name": "kada shop",
+                        "shortcode": "KaDa1234"
+                      },
+                      "user": {
+                        "id": 70,
+                        "name": "arny"
+                      },
+                      "promocode": null,
+                      "offerDiscount": {
+                        "id": 26,
+                        "discountPercentage": 10,
+                        "description": "Test Offer",
+                        "maximumAmountLimit": 2000,
+                        "validFrom": "2016-05-11T18:30:00.000Z",
+                        "validTo": "2016-05-20T18:30:00.000Z",
+                        "status": "Active",
+                        "createdAt": "2016-05-12T04:28:31.000Z",
+                        "updatedAt": "2016-05-12T04:28:31.000Z"
+                      },
+                      "transactionDetail": {
+                        "id": 11,
+                        "orderNumber": "130520160011",
+                        "transactionId": "130520160011"
+                      },
+                      "paymentMode": {
+                        "id": 1,
+                        "paymentMode": "razorpay",
+                        "walletType": null
+                      }
+                    }
+                ]
+            }
+
++ Response 400 (application/json)
+
 
 ### Contact Us [POST /api/user/contactus]
 
@@ -3848,7 +4392,5 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 
 
 + Response 401 (application/json)
-
-                
 
                 

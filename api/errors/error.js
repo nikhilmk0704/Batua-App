@@ -7,8 +7,8 @@ module.exports = {
         if (typeof errorParams == "string")
             messageObject.message = errorParams;
         if (typeof errorParams == "object") {
-            var isErrorsArrayExist = (errorParams.errors[0].message) ? (true) : (false);
-            var isUniqueVoilation = (_.indexOf(errorParams.errors[0].type.split(' '), 'unique') >= 0) ? (true) : (false);
+            var isErrorsArrayExist = (_.isArray(errorParams.errors) && errorParams.errors[0].message) ? (true) : (false);
+            var isUniqueVoilation = (isErrorsArrayExist && _.indexOf(errorParams.errors[0].type.split(' '), 'unique') >= 0) ? (true) : (false);
             var messageError;
             if (isErrorsArrayExist && isUniqueVoilation) {
                 var attribute = Object.keys(errorParams.fields)[0];
