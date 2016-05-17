@@ -30,6 +30,7 @@ generateOrderNo(function(sequenceNumber){
             savePaymentParam.userId = params.userId;
             savePaymentParam.merchantId = params.merchantId;
             savePaymentParam.paymentModeId = params.paymentmodeId;
+            savePaymentParam.type = params.type;
             if(params.promocode){
                savePaymentParam.promocodeId = params.promocode.id; 
             }else{
@@ -42,7 +43,6 @@ generateOrderNo(function(sequenceNumber){
             }
 
             getMerchantFee(params.merchantId,function(merchantFee){
-
             // managing promocode 
             if(params.promocode){
 
@@ -52,6 +52,10 @@ generateOrderNo(function(sequenceNumber){
                                                         + parseFloat(resultArray.deductionAmountFromAmountAfterPromocodeApply)
                                                         + parseFloat(resultArray.fee));
                     savePaymentParam.paidAmount = parseFloat(resultArray.paidAmount);
+                    savePaymentParam.promocodeAmount = parseFloat(resultArray.reducedAmount);
+                    savePaymentParam.batuaCommission = parseFloat(resultArray.deductionAmountFromAmountAfterPromocodeApply);
+                    savePaymentParam.merchantFee=parseFloat(resultArray.fee); 
+                    
                     return savePaymentDetails(savePaymentParam, function(err, result) {
                         if (err) {
                             return callback(err,null);
@@ -61,11 +65,11 @@ generateOrderNo(function(sequenceNumber){
                                 return callback(err,null);
                             }
                           
-                            var detailResultParsed = JSON.parse(JSON.stringify(detailResult));
+                            /*var detailResultParsed = JSON.parse(JSON.stringify(detailResult));
                             detailResultParsed.promocodeAmount = parseFloat(resultArray.reducedAmount);
                             detailResultParsed.batuaCommission = parseFloat(resultArray.deductionAmountFromAmountAfterPromocodeApply);
-                            detailResultParsed.merchantFee = parseFloat(resultArray.fee);     
-                            return callback(null, detailResultParsed);
+                            detailResultParsed.merchantFee = parseFloat(resultArray.fee); */    
+                            return callback(null, detailResult);
                         });
                         
                     });
@@ -78,6 +82,9 @@ generateOrderNo(function(sequenceNumber){
                     savePaymentParam.reducedAmount = (parseFloat(resultArray.reducedAmount) 
                                                       + parseFloat(resultArray.fee));
                     savePaymentParam.paidAmount = parseFloat(resultArray.paidAmount);
+                    savePaymentParam.promocodeAmount = parseFloat(resultArray.reducedAmount);
+                    savePaymentParam.batuaCommission = parseFloat(resultArray.deductionAmountFromAmountAfterPromocodeApply);
+                    savePaymentParam.merchantFee=parseFloat(resultArray.fee); 
                     return savePaymentDetails(savePaymentParam, function(err, result) {
                         if (err) {
                             return callback(err,null);
@@ -86,11 +93,11 @@ generateOrderNo(function(sequenceNumber){
                             if (err) {
                                 return callback(err,null);
                             }
-                            var detailResultParsed = JSON.parse(JSON.stringify(detailResult));
+                           /* var detailResultParsed = JSON.parse(JSON.stringify(detailResult));
                             detailResultParsed.promocodeAmount = parseFloat(resultArray.reducedAmount);
                             detailResultParsed.batuaCommission = 0;
-                            detailResultParsed.merchantFee = parseFloat(resultArray.fee);
-                            return callback(null, detailResultParsed);
+                            detailResultParsed.merchantFee = parseFloat(resultArray.fee);*/
+                            return callback(null, detailResult);
                         });
                         
                     });
@@ -101,6 +108,9 @@ generateOrderNo(function(sequenceNumber){
                 savePaymentParam.initialAmount = parseFloat(params.amount);
                 savePaymentParam.reducedAmount = deductionFee;
                 savePaymentParam.paidAmount =parseFloat(params.amount) - deductionFee;
+                savePaymentParam.promocodeAmount = parseFloat(resultArray.reducedAmount);
+                savePaymentParam.batuaCommission = parseFloat(resultArray.deductionAmountFromAmountAfterPromocodeApply);
+                savePaymentParam.merchantFee=parseFloat(resultArray.fee); 
                 
                 return savePaymentDetails(savePaymentParam, function(err, result) {
                     if (err) {
@@ -110,11 +120,11 @@ generateOrderNo(function(sequenceNumber){
                             if (err) {
                                 return callback(err,null);
                             }
-                            var detailResultParsed = JSON.parse(JSON.stringify(detailResult));
+                            /*var detailResultParsed = JSON.parse(JSON.stringify(detailResult));
                             detailResultParsed.promocodeAmount = 0;
                             detailResultParsed.batuaCommission = 0;
-                            detailResultParsed.merchantFee = deductionFee;
-                            return callback(null, detailResultParsed);
+                            detailResultParsed.merchantFee = deductionFee;*/
+                            return callback(null, detailResult);
                     });
                 });
                 
@@ -216,6 +226,7 @@ function generateOrderNo(callback){
     sequelize.query(rawQueryString,
     { type: sequelize.QueryTypes.SELECT }
     ).then(function(result) {
+        console.log(result);
         if(result){
            if(result.length > 0){
             var sequenceNumber = result[0].AUTO_INCREMENT < 100 ? '00' + result[0].AUTO_INCREMENT : result[0].AUTO_INCREMENT
@@ -358,6 +369,7 @@ function updateUserWalletBalance(userId,paymentmodeId,cashBack,callback){
         { replacements: {userId:userId}, 
         type: sequelize.QueryTypes.SELECT }
         ).then(function(result) {
+            
             if(result.length > 0){
                var balance = result[0].balance;
                var newBalance = parseFloat(balance) + parseFloat(cashBack);
