@@ -28,6 +28,21 @@ module.exports = {
             required: true,
             allowNull: false,
         },
+        promocodeAmount: {
+            type: Sequelize.FLOAT,
+            required: true,
+            allowNull: false,
+        },
+        batuaCommission: {
+            type: Sequelize.FLOAT,
+            required: true,
+            allowNull: false,
+        },
+        merchantFee: {
+            type: Sequelize.FLOAT,
+            required: true,
+            allowNull: false,
+        },
         isConfirmed: {
             type: Sequelize.BOOLEAN,
             required: true,

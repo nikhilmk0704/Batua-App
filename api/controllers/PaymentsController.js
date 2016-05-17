@@ -21,7 +21,7 @@ module.exports = {
             if (err)
                 return res.badRequest(error.send(err));
             if(_.isEmpty(result)){
-                return res.notFound(error.send("Invalid promocode"));
+                return res.notFound(error.send("Invalid payment"));
             }
             return res.json(200, result);
         });
