@@ -44,7 +44,7 @@
                                         <span class="required"> * </span>
                                     </label>
                                     <div class="col-xs-8">
-                                        <input type="number" class="form-control input-circle" id="maxLimit" name="maxLimit" placeholder="Enter the Maximum Limit" style="margin-bottom:15px;" required ng-model="vm.editOfferData.maximumAmountLimit">
+                                        <input type="number" class="form-control input-circle" id="maxLimit" name="maxLimit" placeholder="Enter the Maximum Limit" style="margin-bottom:15px;" required ng-model="vm.editOfferData.maximumAmountLimit" min="1">
                                         <span class="help-block text-danger" ng-if="!editOfferForm.maxLimit.$pristine && editOfferForm.maxLimit.$invalid" ng-messages="editOfferForm.maxLimit.$error">Please enter a valid max limit </span>
                                     </div>
                                 </section>
