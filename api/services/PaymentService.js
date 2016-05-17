@@ -113,16 +113,7 @@ class PaymentService {
                             if (err) {
                                 return callback(err, null);
                             }
-                            findPaymentDetail(result, function(err, detailResult) {
-                                if (err) {
-                                    return callback(err, null);
-                                }
-                                /*var detailResultParsed = JSON.parse(JSON.stringify(detailResult));
-                                detailResultParsed.promocodeAmount = 0;
-                                detailResultParsed.batuaCommission = 0;
-                                detailResultParsed.merchantFee = deductionFee;*/
-                                return callback(null, detailResult);
-                            });
+                            return callback(null, detailResult);
                         });
 
                     }
