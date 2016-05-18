@@ -51,7 +51,7 @@
                                         <span class="required"> * </span>
                                     </label>
                                     <div class="col-xs-8">
-                                        <input type="number" class="form-control input-circle" id="maxLimit" name="maxLimit" placeholder="Enter the Maximum Limit" style="margin-bottom:15px;" required ng-model="offerData.maximumAmountLimit">
+                                        <input type="number" class="form-control input-circle" id="maxLimit" name="maxLimit" placeholder="Enter the Maximum Limit" style="margin-bottom:15px;" required ng-model="offerData.maximumAmountLimit" min="1">
                                         <span class="help-block text-danger" ng-if="!addOfferForm.maxLimit.$pristine && addOfferForm.maxLimit.$invalid" ng-messages="addOfferForm.maxLimit.$error">Please enter maximum limit for an offer</span>
                                     </div>
                                 </section>
