@@ -4,118 +4,133 @@ var PaymentsRepository = require('../repositories/PaymentsRepository.js');
 
 var TransactionDetailsRepository = require('../repositories/TransactionDetailsRepository.js');
 
+var request = require('request');
+
 class PaymentService {
 
     save(params, callback) {
 
-        generateOrderNo(function(sequenceNumber) {
+        request({
+            method: 'POST',
+            url: 'https://'+sails.config.connections.razorpayKeyId+':'+sails.config.connections.razorPayKeySecret+'@api.razorpay.com/v1/payments/'+params.paymentId+'/capture',
+            form: {
+                amount: parseFloat(params.amount)*100
+            }
+        }, function (error, response, body) {
+            
+            body = JSON.parse(body);
+            if(response.statusCode == 200){
+                
+                generateOrderNo(function(sequenceNumber) {
 
-            var transactionDetailParam = {};
+                    var transactionDetailParam = {};
 
-            transactionDetailParam.orderNumber = sequenceNumber;
-            transactionDetailParam.transactionId = sequenceNumber;
-            transactionDetailParam.paymentId = params.paymentId;
-            transactionDetailParam.status = params.status;
+                    transactionDetailParam.orderNumber = sequenceNumber;
+                    transactionDetailParam.transactionId = sequenceNumber;
+                    transactionDetailParam.paymentId = params.paymentId;
+                    transactionDetailParam.status = params.status;
 
-            var transactionDetailsRepository = new TransactionDetailsRepository();
+                    var transactionDetailsRepository = new TransactionDetailsRepository();
 
-            transactionDetailsRepository.save(transactionDetailParam, function(err, transactionDetail) {
-                if (err)
-                    return callback(err, null);
-                /*---save payment for each transaction---*/
+                    transactionDetailsRepository.save(transactionDetailParam, function(err, transactionDetail) {
+                        if (err)
+                            return callback(err, null);
+                        /*---save payment for each transaction---*/
 
-                var savePaymentParam = {};
+                        var savePaymentParam = {};
 
-                savePaymentParam.transactionDetailId = transactionDetail.id;
-                savePaymentParam.userId = params.userId;
-                savePaymentParam.merchantId = params.merchantId;
-                savePaymentParam.paymentModeId = params.paymentmodeId;
-                savePaymentParam.type = params.type;
-                if (params.promocode) {
-                    savePaymentParam.promocodeId = params.promocode.id;
-                } else {
-                    savePaymentParam.promocodeId = null;
-                }
-                if (params.offer) {
-                    savePaymentParam.offerDiscountId = params.offer.id;
-                } else {
-                    savePaymentParam.offerDiscountId = null;
-                }
+                        savePaymentParam.transactionDetailId = transactionDetail.id;
+                        savePaymentParam.userId = params.userId;
+                        savePaymentParam.merchantId = params.merchantId;
+                        savePaymentParam.paymentModeId = params.paymentmodeId;
+                        savePaymentParam.type = params.type;
+                        if (params.promocode) {
+                            savePaymentParam.promocodeId = params.promocode.id;
+                        } else {
+                            savePaymentParam.promocodeId = null;
+                        }
+                        if (params.offer) {
+                            savePaymentParam.offerDiscountId = params.offer.id;
+                        } else {
+                            savePaymentParam.offerDiscountId = null;
+                        }
 
-                getMerchantFee(params.merchantId, function(merchantFee) {
-                    // managing promocode 
-                    if (params.promocode) {
+                        getMerchantFee(params.merchantId, function(merchantFee) {
+                            if (params.promocode) {
 
-                        promocodeOperation(params, merchantFee[0].fees, function(resultArray) {
-                            savePaymentParam.initialAmount = parseFloat(params.amount);
-                            savePaymentParam.reducedAmount = (parseFloat(resultArray.reducedAmount) + parseFloat(resultArray.deductionAmountFromAmountAfterPromocodeApply) + parseFloat(resultArray.fee));
-                            savePaymentParam.paidAmount = parseFloat(resultArray.paidAmount);
-                            savePaymentParam.promocodeAmount = parseFloat(resultArray.reducedAmount);
-                            savePaymentParam.batuaCommission = parseFloat(resultArray.deductionAmountFromAmountAfterPromocodeApply);
-                            savePaymentParam.merchantFee = parseFloat(resultArray.fee);
+                                promocodeOperation(params, merchantFee[0].fees, function(resultArray) {
+                                    savePaymentParam.initialAmount = parseFloat(params.amount);
+                                    savePaymentParam.reducedAmount = (parseFloat(resultArray.reducedAmount) + parseFloat(resultArray.deductionAmountFromAmountAfterPromocodeApply) + parseFloat(resultArray.fee));
+                                    savePaymentParam.paidAmount = parseFloat(resultArray.paidAmount);
+                                    savePaymentParam.promocodeAmount = parseFloat(resultArray.reducedAmount);
+                                    savePaymentParam.batuaCommission = parseFloat(resultArray.deductionAmountFromAmountAfterPromocodeApply);
+                                    savePaymentParam.merchantFee = parseFloat(resultArray.fee);
 
-                            return savePaymentDetails(savePaymentParam, function(err, result) {
-                                if (err) {
-                                    return callback(err, null);
-                                }
-                                findPaymentDetail(result, function(err, detailResult) {
+                                    return savePaymentDetails(savePaymentParam, function(err, result) {
+                                        if (err) {
+                                            return callback(err, null);
+                                        }
+                                        findPaymentDetail(result, function(err, detailResult) {
+                                            if (err) {
+                                                return callback(err, null);
+                                            }
+                                            return callback(null, detailResult);
+                                        });
+
+                                    });
+                                });
+
+
+                            } else if (params.offer) {
+                                offerOperation(params, merchantFee[0].fees, function(resultArray) {
+                                    savePaymentParam.initialAmount = parseFloat(params.amount);
+                                    savePaymentParam.reducedAmount = (parseFloat(resultArray.reducedAmount) + parseFloat(resultArray.fee));
+                                    savePaymentParam.paidAmount = parseFloat(resultArray.paidAmount);
+                                    savePaymentParam.promocodeAmount = parseFloat(resultArray.reducedAmount);
+                                    savePaymentParam.batuaCommission = parseFloat(resultArray.deductionAmountFromAmountAfterPromocodeApply);
+                                    savePaymentParam.merchantFee = parseFloat(resultArray.fee);
+                                    return savePaymentDetails(savePaymentParam, function(err, result) {
+                                        if (err) {
+                                            return callback(err, null);
+                                        }
+                                        findPaymentDetail(result, function(err, detailResult) {
+                                            if (err) {
+                                                return callback(err, null);
+                                            }
+                                            return callback(null, detailResult);
+                                        });
+
+                                    });
+                                });
+
+                            } else {
+                                var deductionFee = parseFloat(params.amount) * (parseFloat(merchantFee[0].fees) / 100)
+                                savePaymentParam.initialAmount = parseFloat(params.amount);
+                                savePaymentParam.reducedAmount = deductionFee;
+                                savePaymentParam.paidAmount = parseFloat(params.amount) - deductionFee;
+                                savePaymentParam.promocodeAmount = 0;
+                                savePaymentParam.batuaCommission = 0;
+                                savePaymentParam.merchantFee = parseFloat(deductionFee);
+                                return savePaymentDetails(savePaymentParam, function(err, result) {
                                     if (err) {
                                         return callback(err, null);
                                     }
-                                    return callback(null, detailResult);
+                                    findPaymentDetail(result, function(err, detailResult) {
+                                        if (err) {
+                                            return callback(err, null);
+                                        }
+                                        return callback(null, detailResult);
+                                    });
                                 });
-
-                            });
-                        });
-
-
-                    } else if (params.offer) {
-                        offerOperation(params, merchantFee[0].fees, function(resultArray) {
-                            savePaymentParam.initialAmount = parseFloat(params.amount);
-                            savePaymentParam.reducedAmount = (parseFloat(resultArray.reducedAmount) + parseFloat(resultArray.fee));
-                            savePaymentParam.paidAmount = parseFloat(resultArray.paidAmount);
-                            savePaymentParam.promocodeAmount = parseFloat(resultArray.reducedAmount);
-                            savePaymentParam.batuaCommission = parseFloat(resultArray.deductionAmountFromAmountAfterPromocodeApply);
-                            savePaymentParam.merchantFee = parseFloat(resultArray.fee);
-                            return savePaymentDetails(savePaymentParam, function(err, result) {
-                                if (err) {
-                                    return callback(err, null);
-                                }
-                                findPaymentDetail(result, function(err, detailResult) {
-                                    if (err) {
-                                        return callback(err, null);
-                                    }
-                                    return callback(null, detailResult);
-                                });
-
-                            });
-                        });
-
-                    } else {
-                        var deductionFee = parseFloat(params.amount) * (parseFloat(merchantFee[0].fees) / 100)
-                        savePaymentParam.initialAmount = parseFloat(params.amount);
-                        savePaymentParam.reducedAmount = deductionFee;
-                        savePaymentParam.paidAmount = parseFloat(params.amount) - deductionFee;
-                        savePaymentParam.promocodeAmount = 0;
-                        savePaymentParam.batuaCommission = 0;
-                        savePaymentParam.merchantFee = parseFloat(deductionFee);
-
-                        return savePaymentDetails(savePaymentParam, function(err, result) {
-                            if (err) {
-                                return callback(err, null);
                             }
-                            return callback(null, detailResult);
                         });
-
-                    }
-
+                    });
                 });
-
-            });
-
+            }else{
+                return callback(body.error.description, null);
+            }
+            
         });
-
-
     }
 
     history(params, callback) {
@@ -383,15 +398,15 @@ function generateOrderNo(callback) {
     var dateNow = new Date();
     var dd = dateNow.getDate();
     var monthSingleDigit = dateNow.getMonth() + 1,
-        mm = monthSingleDigit < 10 ? '0' + monthSingleDigit : monthSingleDigit;
+    mm = monthSingleDigit < 10 ? '0' + monthSingleDigit : monthSingleDigit;
     var yy = dateNow.getFullYear().toString();
 
     var formattedDate = dd + mm + yy;
 
     var rawQueryString = "SELECT AUTO_INCREMENT" +
-        " FROM information_schema.TABLES" +
-        " WHERE TABLE_SCHEMA = 'batua'" +
-        " AND TABLE_NAME = 'TransactionDetails'";
+    " FROM information_schema.TABLES" +
+    " WHERE TABLE_SCHEMA = 'batua'" +
+    " AND TABLE_NAME = 'TransactionDetails'";
 
     sequelize.query(rawQueryString, { type: sequelize.QueryTypes.SELECT }).then(function(result) {
         console.log(result);
