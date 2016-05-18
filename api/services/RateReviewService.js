@@ -144,11 +144,19 @@ class RateReviewService {
     }
 
     getIncludeModels() {
-        return [
-            { model: Users, attributes: ['id', 'name', 'profileImageUrl', 'email'], as: 'users' },
-            { model: Merchants, attributes: ['id', 'name', 'profileImageUrl', 'email'], as: 'merchants' },
-            { model: Payments, attributes: ['id'], as: 'payments' }
-        ];
+        return [{
+            model: Users,
+            attributes: ['id', 'name', 'profileImageUrl', 'email'],
+            as: 'users'
+        }, {
+            model: Merchants,
+            attributes: ['id', 'name', 'profileImageUrl', 'email'],
+            as: 'merchants'
+        }, {
+            model: Payments,
+            attributes: ['id'],
+            as: 'payments'
+        }];
     }
 
 }

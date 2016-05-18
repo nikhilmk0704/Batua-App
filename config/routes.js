@@ -75,6 +75,8 @@ module.exports.routes = {
     'put /api/admin/user': 'UsersController.updateUserByAdmin',
     'put /api/admin/user/setstatus': 'UsersController.setUserStatusByAdmin',
     'get /api/admin/activeuser/:id?': 'UsersController.getActiveUsers',
+    'get /api/admin/transaction/report':'PaymentsController.transactionReport',
+    'put /api/admin/transaction/cancel':'PaymentsController.cancel',
     'put /api/admin/activeuser/notify': 'UsersController.sendPushNotificationByAdmin',
     'put /api/admin/user/logout': 'UsersController.adminLogout',
 
