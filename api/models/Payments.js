@@ -73,6 +73,12 @@ module.exports = {
                 allowNull: false
             }
         });
+        Payments.belongsTo(Users, { 
+            as:'cancelledBy',
+            foreignKey: {
+                name: 'adminId'
+            }
+        });
         Payments.belongsTo(Promocodes, { 
             as:'promocode',
             foreignKey: {

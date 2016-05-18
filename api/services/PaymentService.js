@@ -195,6 +195,64 @@ class PaymentService {
         })
     }
 
+    transactionReport(callback) {
+
+        var paymentsRepository = new PaymentsRepository();
+
+        var whereObject = {};
+        var include = [{
+            model: Merchants,
+            as: 'merchant',
+            attributes: ['id', 'name'],
+            required: false
+        }, {
+            model: Users,
+            as: 'user',
+            attributes: ['id', 'name'],
+            required: false
+        }, {
+            model: Users,
+            as: 'cancelledBy',
+            attributes: ['id', 'name'],
+            required: false
+        }, {
+            model: TransactionDetails,
+            as: 'transactionDetail',
+            attributes: ['id', 'orderNumber', 'transactionId', 'paymentId', 'createdAt'],
+            required: false
+        }];
+        whereObject.include = include;
+        whereObject.where = {};
+
+        paymentsRepository.findAll(whereObject, callback);
+    }
+
+    cancelTransaction(params, callback) {
+
+        var paymentId = params.paymentId;
+        var cancellationDate = params.cancellationDate;
+        var cancellationDescription = params.cancellationDescription;
+        var adminId = params.adminId;
+        if(!paymentId)
+            return callback("Provide Payment Id");
+        if(!adminId)
+            return callback("Provide Admin Id");
+        var updateObject = {};
+        updateObject.isCancelled = true;
+        updateObject.cancellationDate = cancellationDate;
+        updateObject.cancellationDescription = cancellationDescription;
+        updateObject.adminId = adminId;
+        var whereObject = {};
+        var findObject = {};
+        whereObject.where = {};
+        whereObject.where.id = paymentId;
+        findObject = JSON.parse(JSON.stringify(whereObject));
+
+        var paymentsRepository = new PaymentsRepository();
+
+        paymentsRepository.updateAndFind(updateObject, whereObject, findObject, callback);
+    }
+
 }
 module.exports = PaymentService;
 
