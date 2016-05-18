@@ -33,7 +33,7 @@
             });
         }
 
-        function updateMerchant(merchant, imageGallery, cityId, coordinates, callback) {
+        function updateMerchant(merchant, imageGallery, cityId, coordinates, status, callback) {
             httpi({
                 method: "put",
                 url: API.updateMerchant,
@@ -57,7 +57,7 @@
                     ifscCode: merchant.ifscCode,
                     branchName: merchant.branchName,
                     bankName: merchant.bankName,
-                    status: "Active",
+                    status: status,
                     createdSalesId: merchant.createdSalesId
                 }
             }).then(function(response) {
