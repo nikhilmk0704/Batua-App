@@ -38,7 +38,7 @@ angular.module('app').controller('editMerchantController', ['$state', 'merchantS
         };
 
         vm.editMerchant = function(merchant) {
-            var cityId, coordinates;
+            var cityId, coordinates, status;
             var imageGallery = vm.getAllImages();
 
             if (angular.isDefined(merchant.cityId)) {
@@ -48,8 +48,9 @@ angular.module('app').controller('editMerchantController', ['$state', 'merchantS
             }
 
             coordinates = vm.coordinates;
+            status = "Active";
 
-            merchantService.updateMerchant(merchant, imageGallery, cityId, coordinates, function(response) {
+            merchantService.updateMerchant(merchant, imageGallery, cityId, coordinates, status, function(response) {
                 if (response.status === 200) {
                     $state.go('merchantList');
                     return toastr.success('Merchant Details has been updated successfully.');
@@ -69,7 +70,7 @@ angular.module('app').controller('editMerchantController', ['$state', 'merchantS
                 imageGallery.splice(image, 1);
             }
 
-            var cityId, coordinates;
+            var cityId, coordinates, status;
 
             if (angular.isDefined(merchant.cityId)) {
                 cityId = merchant.cityId.originalObject.id;
@@ -79,7 +80,9 @@ angular.module('app').controller('editMerchantController', ['$state', 'merchantS
 
             coordinates = vm.coordinates;
 
-            merchantService.updateMerchant(merchant, imageGallery, cityId, coordinates, function(response) {
+            status = merchant.status;
+
+            merchantService.updateMerchant(merchant, imageGallery, cityId, coordinates, status, function(response) {
                 if (response.status === 200) {
                     $state.reload();
                     return toastr.success('Image is deleted successfully');
