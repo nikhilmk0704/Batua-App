@@ -19,7 +19,14 @@ module.exports = {
    
         paymentService.save(params, function(err, result) {
             if (err){
-                return res.badRequest(error.send(err));
+    
+                if(typeof err === 'object'){
+                    return res.notAcceptable(error.send(err.message));
+
+                }else{
+                    return res.badRequest(error.send(err));
+                }
+                
             }
             return res.json(200, result);
         });
