@@ -127,7 +127,10 @@ class PaymentService {
                     });
                 });
             }else{
-                return callback(body.error.description, null);
+                var newErr = {}
+                newErr.errorCode = 406;
+                newErr.message = body.error.description;
+                return callback(newErr, null);
             }
             
         });

@@ -45,7 +45,7 @@ module.exports.connections = {
         host: 'localhost',
         port: 3306,
         user: 'root',
-        password: '',
+        password: 'root',
         database: 'batua',
         supportBigNumbers: true,
         bigNumberStrings: true,
@@ -119,5 +119,5 @@ module.exports.connections = {
 
     razorpayKeyId:"rzp_test_tJrFA1TwhaOaOh",
 
-    razorPayKeySecret:"PcbQ1tmnyfGmo2xvhefkOrJX"
+    razorPayKeySecret:"PcbQ1tmnyfGmo2xvhefkOrJY"
 };
