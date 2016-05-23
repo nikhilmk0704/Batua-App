@@ -18,9 +18,10 @@ module.exports = {
         var paymentService = new PaymentService();
    
         paymentService.save(params, function(err, result) {
+
             if (err){
     
-                if(typeof err === 'object'){
+                if(err.errorCode===406){
                     return res.notAcceptable(error.send(err.message));
 
                 }else{
