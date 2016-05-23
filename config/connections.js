@@ -119,5 +119,5 @@ module.exports.connections = {
 
     razorpayKeyId:"rzp_test_tJrFA1TwhaOaOh",
 
-    razorPayKeySecret:"PcbQ1tmnyfGmo2xvhefkOrJY"
+    razorPayKeySecret:"PcbQ1tmnyfGmo2xvhefkOrJX"
 };
