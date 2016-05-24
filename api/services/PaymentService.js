@@ -19,6 +19,7 @@ class PaymentService {
         }, function (error, response, body) {
             
             body = JSON.parse(body);
+        
             if(response.statusCode == 200){
                 
                 generateOrderNo(function(sequenceNumber) {
@@ -29,6 +30,7 @@ class PaymentService {
                     transactionDetailParam.transactionId = sequenceNumber;
                     transactionDetailParam.paymentId = params.paymentId;
                     transactionDetailParam.status = params.status;
+                    transactionDetailParam.mode = body.method;
 
                     var transactionDetailsRepository = new TransactionDetailsRepository();
 
