@@ -117,7 +117,7 @@ module.exports.connections = {
     
     url:"http://52.36.228.74:1337",
 
-    razorpayKeyId:"rzp_test_tJrFA1TwhaOaOh",
+    razorpayKeyId:"rzp_test_md3Fac2ya09UQ6",
 
-    razorPayKeySecret:"PcbQ1tmnyfGmo2xvhefkOrJX"
+    razorPayKeySecret:"5yvs5WXA6pxWIWcXEHvoNIJF"
 };
