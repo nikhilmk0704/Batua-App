@@ -609,7 +609,7 @@ function includeModels() {
     }, {
         model: TransactionDetails,
         as: 'transactionDetail',
-        attributes: ['id', 'orderNumber', 'transactionId'],
+        attributes: ['id', 'orderNumber', 'transactionId','mode'],
         required: false
     }, {
         model: Paymentmodes,
