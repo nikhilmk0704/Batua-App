@@ -302,6 +302,178 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
             
 + Response 400 (applicaiton)
 
+### Cancel Payment [PUT /api/admin/transaction/cancel]
+
++ Request (application/json)
+ 
+    + Body
+    
+            {
+                "paymentId":1,
+                "adminId":1,
+                "cancellationDate":"2016-05-13T12:45:16.000Z",
+                "cancellationDescription":"Cancelled"
+            }
+        
++ Response 200 (application/json)
+    
+    + Body
+
+            {
+                "id": 1,
+                "initialAmount": 1000,
+                "reducedAmount": 1110.48,
+                "paidAmount": 9.52,
+                "promocodeAmount": 0,
+                "batuaCommission": 0,
+                "merchantFee": 0,
+                "isConfirmed": false,
+                "isCancelled": true,
+                "type": null,
+                "cancellationDate": "2016-05-13T12:45:16.000Z",
+                "cancellationDescription": "Cancelled",
+                "createdAt": "2016-05-13T12:45:16.000Z",
+                "updatedAt": "2016-05-20T06:08:24.000Z",
+                "userId": 12,
+                "adminId": 1,
+                "promocodeId": 6,
+                "offerDiscountId": null,
+                "merchantId": 5,
+                "paymentModeId": 1,
+                "transactionDetailId": 1
+            }
+            
++ Response 400 (applicaiton)
+    
+            {   
+                "errors":[
+                    {
+                        "message": "Already exist"
+                    }
+                ]
+            }  
+
+### Add Settlement [POST /api/admin/settlement]
+
++ Request (application/json)
+ 
+    + Body
+    
+            {
+                "name":"vikash",
+                "date":"2016-05-10T13:18:48.000Z",
+                "referenceNumber":"1234",
+                "description":"hello"
+            }
+        
++ Response 200 (application/json)
+    
+    + Body
+
+            {
+                "id": 1,
+                "name": "vikash",
+                "date": "2016-05-10T13:18:48.000Z",
+                "referenceNumber": "1234",
+                "description": "hello",
+                "updatedAt": "2016-05-26T05:39:46.000Z",
+                "createdAt": "2016-05-26T05:39:46.000Z"
+            }
+
++ Response 400 (applicaiton)
+    
+            {   
+                "errors":[
+                    {
+                        "message": "Please provide Name"
+                    }
+                ]
+            }  
+
+
+### Get Payment Settlement report [GET /api/admin/payment/settlement]
+
++ Response 200 (application/json)
+
+    + Body 
+    
+            [
+                {
+                    "id": 6,
+                    "merchantName": "vikash",
+                    "netTransactionAmount": 100000,
+                    "netOfferAmount": 10000,
+                    "netPromoOffer": 10000,
+                    "cashbackByMerchant": 10000,
+                    "feeCharged": 1000,
+                    "settlementAmount":1000,
+                    "status":"Open",
+                    "createdAt": "2016-04-06T07:38:39.000Z",
+                    "updatedAt": "2016-04-06T07:43:56.000Z"
+                }
+            ]
+        
++ Response 404 (application/json)
+
+
+### Get Payment Details report [GET /api/admin/payment/details]
+
++ Response 200 (application/json)
+
+    + Body 
+    
+            [
+                {
+                    "id": 6,
+                    "user": "vikash",
+                    "orderNumber": 100000,
+                    "transactionId": 10000,
+                    "transactionDate": "2016-04-06T07:38:39.000Z",
+                    "transactionAmount": 10000,
+                    "offerAmount": 1000,
+                    "promoOfferAmount":1000,
+                    "promoAmountByMerchant":"Open",
+                    "feeCharged":1000,
+                    "amountCreditedToBatua":500,
+                    "settlementAmount":10000
+                    "createdAt": "2016-04-06T07:38:39.000Z",
+                    "updatedAt": "2016-04-06T07:43:56.000Z"
+                }
+            ]
+        
+        
++ Response 404 (application/json)
+
+
+### Get Transaction report [GET /api/admin/transaction/report]
+
++ Response 200 (application/json)
+
+    + Body 
+    
+            [
+                {
+                    "id": 6,
+                    "merchantName":"manaf"
+                    "userName": "vikash",
+                    "orderNumber": 100000,
+                    "transactionId": 10000,
+                    "transactionDate": "2016-04-06T07:38:39.000Z",
+                    "paymentAmount": 10000,
+                    "cashbackByOffer":100,
+                    "cashbackByPromo":200,
+                    "amountCreditedToBatua":500,
+                    "transactionCancelledBy":"admin1",
+                    "transactionCancelledOn":"2016-04-06T07:38:39.000Z",
+                    "cancellationDescription":"description",
+                    "createdAt": "2016-04-06T07:38:39.000Z",
+                    "updatedAt": "2016-04-06T07:43:56.000Z"
+                }
+            ]
+    
+        
++ Response 404 (application/json)
+
 
 ### Admin Logout [PUT /api/admin/user/logout]
 
@@ -3446,928 +3618,6 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 400 (application/json)
 
 
-## Reports [/api/admin]
-
-### Get Payment Settlement report [GET /api/admin/payment/settlement]
-
-+ Response 200 (application/json)
-    + Body 
-    
-            [
-                {
-                    "id": 6,
-                    "merchantName": "vikash",
-                    "netTransactionAmount": 100000,
-                    "netOfferAmount": 10000,
-                    "netPromoOffer": 10000,
-                    "cashbackByMerchant": 10000,
-                    "feeCharged": 1000,
-                    "settlementAmount":1000,
-                    "status":"Open",
-                    "createdAt": "2016-04-06T07:38:39.000Z",
-                    "updatedAt": "2016-04-06T07:43:56.000Z"
-                }
-            ]
-        
-+ Response 404 (application/json)
-
-
-### Get Payment Details report [GET /api/admin/payment/details]
-
-+ Response 200 (application/json)
-    + Body 
-    
-            [
-                {
-                    "id": 6,
-                    "user": "vikash",
-                    "orderNumber": 100000,
-                    "transactionId": 10000,
-                    "transactionDate": "2016-04-06T07:38:39.000Z",
-                    "transactionAmount": 10000,
-                    "offerAmount": 1000,
-                    "promoOfferAmount":1000,
-                    "promoAmountByMerchant":"Open",
-                    "feeCharged":1000,
-                    "amountCreditedToBatua":500,
-                    "settlementAmount":10000
-                    "createdAt": "2016-04-06T07:38:39.000Z",
-                    "updatedAt": "2016-04-06T07:43:56.000Z"
-                }
-            ]
-        
-        
-+ Response 404 (application/json)
-
-
-### Get Transaction report [GET /api/admin/transaction]
-
-+ Response 200 (application/json)
-    + Body 
-    
-            [
-                {
-                    "id": 6,
-                    "merchantName":"manaf"
-                    "userName": "vikash",
-                    "orderNumber": 100000,
-                    "transactionId": 10000,
-                    "transactionDate": "2016-04-06T07:38:39.000Z",
-                    "paymentAmount": 10000,
-                    "cashbackByOffer":100,
-                    "cashbackByPromo":200,
-                    "amountCreditedToBatua":500,
-                    "transactionCancelledBy":"admin1",
-                    "transactionCancelledOn":"2016-04-06T07:38:39.000Z",
-                    "cancellationDescription":"description",
-                    "createdAt": "2016-04-06T07:38:39.000Z",
-                    "updatedAt": "2016-04-06T07:43:56.000Z"
-                }
-            ]
-    
-        
-+ Response 404 (application/json)
-
-
-## Payment Modes [/payment/modes]
-
-### Create Payment Modes [POST]
-
-+ Request (application/json)
-
-    + Headers
-
-            Access-Token: "ABCDEFGH12345678"
-
-    + Body
-    
-            {   
-                "name":"netbanking",
-                "walletTypeId":null
-            }
-
-+ Response 201 (application/json)
-    
-    + Body
-    
-            {   
-                "id":1,
-                "name":"netbanking",
-                "walletTypeId":null
-            }
-    
-+ Response 400 (application/json)
-
-
-+ Response 401 (application/json)
-
-
-### Update Payment Mode [PUT]
-
-+ Request (application/json)
-
-    + Headers
-
-            Access-Token: "ABCDEFGH12345678"
-
-    + Body
-    
-            {   
-                "id":1,
-                "name":"cards",
-                "walletTypeId":null
-            }
-
-+ Response 200 (application/json)
-    
-    + Body
-    
-            {   
-                "id":1,
-                "name":"cards",
-                "walletTypeId":null
-            }
-    
-+ Response 400 (application/json)
-
-
-+ Response 401 (application/json)
-
-
-### Get Payment Mode [GET]
-
-+ Response 200 (application/json)
-    
-    + Body
-    
-            [
-                {   
-                    "id":1,
-                    "name":"cards",
-                    "walletTypeId":null
-                },
-                {   
-                    "id":2,
-                    "name":"wallets",
-                    "walletTypeId": {
-                                        "id":2,
-                                        "name":"mobikwik",
-                                        "createdAt": "2016-11-12T05:03:46.000Z",
-                                        "updatedAt": "2016-11-12T05:03:46.000Z"
-                                    }
-                }
-            ]
-        
-+ Response 400 (application/json)
-
-
-+ Response 401 (application/json)
-
-
-### Delete Payment Mode [DELETE]
-
-+ Request (application/json)
-
-    + Headers
-
-            Access-Token: "ABCDEFGH12345678"
-
-    + Body
-    
-            {   
-                "id":1
-            }
-
-+ Response 200 (application/json)
-    
-    + Body
-    
-            {   
-                "id":1,
-                "name":"cards",
-                "walletTypeId":null
-            }
-    
-+ Response 400 (application/json)
-
-
-+ Response 401 (application/json)
-
-
-## Transaction History [/user/{id}/transaction/history]
-
-### Get Transaction History [GET]
-
-+ Response 200 (application/json)
-    
-    + Body
-    
-            [
-                {   
-                    "id":1,
-                    "amount":1000,
-                    "reducedAmount":800,
-                    "paidAmount":700,
-                    "transactionId":    {
-                                            "id":4,
-                                            "orderNumber":ABCD1234,
-                                            "txnid":QWERTY1234
-                                        },
-                    "merchantId":   {
-                                        "id":2,
-                                        "name":Pizza Hut"
-                                    },
-                    "paymentModeId":    {
-                                            "id":1,
-                                            "name":"netbanking",
-                                            "walletTypeId":null
-                                            
-                                        },
-                    "createdAt": "2016-11-12T05:03:46.000Z",
-                    "updatedAt": "2016-11-12T05:03:46.000Z"
-                },
-                {   
-                    "id":2,
-                    "amount":1000,
-                    "reducedAmount":800,
-                    "paidAmount":700,
-                    "transactionId":    {
-                                            "id":5,
-                                            "orderNumber":BCD1234,
-                                            "txnid":QWERT1234
-                                        },
-                    "merchantId":   {
-                                        "id":3,
-                                        "name":Pizza Hut"
-                                    },
-                    "paymentModeId":    {
-                                            "id":3,
-                                            "name":"wallet",
-                                            "walletTypeId": {
-                                                                "id":2,
-                                                                "name":"mobikwik"
-                                                            }
-                                        },
-                    "createdAt": "2016-11-12T05:03:46.000Z",
-                    "updatedAt": "2016-11-12T05:03:46.000Z"
-                },
-            ]
-            
-+ Response 400 (application/json)
-
-
-+ Response 401 (application/json)
-
-
-## Transaction Details [/user/{id}/transaction/{id}/details]
-
-### Get Transaction Details [GET]
-
-+ Response 200 (application/json)
-    
-    + Body
-    
-            [
-                {   
-                    "id":1,
-                    "amount":1000,
-                    "reducedAmount":800,
-                    "paidAmount":700,
-                    "transactionId":    {
-                                            "id":4,
-                                            "orderNumber":ABCD1234,
-                                            "txnid":QWERTY1234,
-                                            "cardNumber":123456789101112",
-                                            "bankName":"HDFC",
-                                            "cardType":"visa"
-                                        },
-                    "merchantId":   {
-                                        "id":2,
-                                        "name":Pizza Hut"
-                                    },
-                    "paymentModeId":    {
-                                            "id":1,
-                                            "name":"netbanking",
-                                            "walletTypeId":null
-                                            
-                                        },
-                    "createdAt": "2016-11-12T05:03:46.000Z",
-                    "updatedAt": "2016-11-12T05:03:46.000Z"
-                },
-                {   
-                    "id":2,
-                    "amount":1000,
-                    "reducedAmount":800,
-                    "paidAmount":700,
-                    "transactionId":    {
-                                            "id":5,
-                                            "orderNumber":BCD1234,
-                                            "txnid":QWERT1234,
-                                            "cardNumber":123456789101112",
-                                            "bankName":"HDFC",
-                                            "cardType":"RuPay"
-                                        },
-                    "merchantId":   {
-                                        "id":3,
-                                        "name":Pizza Hut"
-                                    },
-                    "paymentModeId":    {
-                                            "id":3,
-                                            "name":"wallet",
-                                            "walletTypeId": {
-                                                                "id":2,
-                                                                "name":"mobikwik"
-                                                            }
-                                            
-                                        },
-                    "createdAt": "2016-11-12T05:03:46.000Z",
-                    "updatedAt": "2016-11-12T05:03:46.000Z"
-                },
-            ]
-    
-+ Response 400 (application/json)
-
-
-+ Response 401 (application/json)
-
-
-## User Wallet Recharged List [/user/{id}/wallet/recharged]
-
-### User Wallet Recharged List [GET]
-
-+ Response 200 (application/json)
-    
-    + Body
-    
-            [
-                {   
-                    "id":1,
-                    "amount":1000,
-                    "reducedAmount":800,
-                    "paidAmount":700,
-                    "transactionId":    {
-                                            "id":4,
-                                            "orderNumber":ABCD1234,
-                                            "txnid":QWERTY1234,
-                                            "cardNumber":123456789101112",
-                                            "bankName":"HDFC",
-                                            "cardType":"visa"
-                                        },
-                    "merchantId":   {
-                                        "id":2,
-                                        "name":Pizza Hut"
-                                    },
-                    "paymentModeId":    {
-                                            "id":1,
-                                            "name":"netbanking",
-                                            "walletTypeId":null
-                                            
-                                        },
-                    "createdAt": "2016-11-12T05:03:46.000Z",
-                    "updatedAt": "2016-11-12T05:03:46.000Z"
-                },
-                {   
-                    "id":2,
-                    "amount":1000,
-                    "reducedAmount":800,
-                    "paidAmount":700,
-                    "transactionId":    {
-                                            "id":5,
-                                            "orderNumber":BCD1234,
-                                            "txnid":QWERT1234,
-                                            "cardNumber":123456789101112",
-                                            "bankName":"HDFC",
-                                            "cardType":"RuPay"
-                                        },
-                    "merchantId":   {
-                                        "id":3,
-                                        "name":Pizza Hut"
-                                    },
-                    "paymentModeId":    {
-                                            "id":3,
-                                            "name":"wallet",
-                                            "walletTypeId": {
-                                                                "id":2,
-                                                                "name":"mobikwik"
-                                                            }
-                                            
-                                        },
-                    "createdAt": "2016-11-12T05:03:46.000Z",
-                    "updatedAt": "2016-11-12T05:03:46.000Z"
-                },
-            ]
-    
-+ Response 400 (application/json)
-
-
-+ Response 401 (application/json)
-
-
-## User Wallet Payments List [/user/{id}/wallet/payments]
-
-### User Wallet Payments List [GET]
-
-+ Response 200 (application/json)
-    
-    + Body
-    
-            [
-                {   
-                    "id":1,
-                    "amount":1000,
-                    "reducedAmount":800,
-                    "paidAmount":700,
-                    "transactionId":    {
-                                            "id":4,
-                                            "orderNumber":ABCD1234,
-                                            "txnid":QWERTY1234,
-                                            "cardNumber":123456789101112",
-                                            "bankName":"HDFC",
-                                            "cardType":"visa"
-                                        },
-                    "merchantId":   {
-                                        "id":2,
-                                        "name":Pizza Hut"
-                                    },
-                    "paymentModeId":    {
-                                            "id":1,
-                                            "name":"netbanking",
-                                            "walletTypeId":null
-                                            
-                                        },
-                    "createdAt": "2016-11-12T05:03:46.000Z",
-                    "updatedAt": "2016-11-12T05:03:46.000Z"
-                },
-                {   
-                    "id":2,
-                    "amount":1000,
-                    "reducedAmount":800,
-                    "paidAmount":700,
-                    "transactionId":    {
-                                            "id":5,
-                                            "orderNumber":BCD1234,
-                                            "txnid":QWERT1234,
-                                            "cardNumber":123456789101112",
-                                            "bankName":"HDFC",
-                                            "cardType":"RuPay"
-                                        },
-                    "merchantId":   {
-                                        "id":3,
-                                        "name":Pizza Hut"
-                                    },
-                    "paymentModeId":    {
-                                            "id":3,
-                                            "name":"wallet",
-                                            "walletTypeId": {
-                                                                "id":2,
-                                                                "name":"mobikwik"
-                                                            }
-                                            
-                                        },
-                    "createdAt": "2016-11-12T05:03:46.000Z",
-                    "updatedAt": "2016-11-12T05:03:46.000Z"
-                },
-            ]
-    
-+ Response 400 (application/json)
-
-
-+ Response 401 (application/json)
-
-
-## User Wallet CashBack List [/user/{id}/wallet/cashback]
-
-### User Wallet CashBack List [GET]
-
-+ Response 200 (application/json)
-    
-    + Body
-    
-            [
-                {   
-                    "id":1,
-                    "amount":1000,
-                    "reducedAmount":800,
-                    "paidAmount":700,
-                    "transactionId":    {
-                                            "id":4,
-                                            "orderNumber":ABCD1234,
-                                            "txnid":QWERTY1234,
-                                            "cardNumber":123456789101112",
-                                            "bankName":"HDFC",
-                                            "cardType":"visa"
-                                        },
-                    "merchantId":   {
-                                        "id":2,
-                                        "name":Pizza Hut"
-                                    },
-                    "paymentModeId":    {
-                                            "id":1,
-                                            "name":"netbanking",
-                                            "walletTypeId":null
-                                            
-                                        },
-                    "createdAt": "2016-11-12T05:03:46.000Z",
-                    "updatedAt": "2016-11-12T05:03:46.000Z"
-                },
-                {   
-                    "id":2,
-                    "amount":1000,
-                    "reducedAmount":800,
-                    "paidAmount":700,
-                    "transactionId":    {
-                                            "id":5,
-                                            "orderNumber":BCD1234,
-                                            "txnid":QWERT1234,
-                                            "cardNumber":123456789101112",
-                                            "bankName":"HDFC",
-                                            "cardType":"RuPay"
-                                        },
-                    "merchantId":   {
-                                        "id":3,
-                                        "name":Pizza Hut"
-                                    },
-                    "paymentModeId":    {
-                                            "id":3,
-                                            "name":"wallet",
-                                            "walletTypeId": {
-                                                                "id":2,
-                                                                "name":"mobikwik"
-                                                            }
-                                            
-                                        },
-                    "createdAt": "2016-11-12T05:03:46.000Z",
-                    "updatedAt": "2016-11-12T05:03:46.000Z"
-                },
-            ]
-    
-+ Response 400 (application/json)
-
-
-+ Response 401 (application/json)
-
-
-## Merchant Payment [/user/{id}/merchant/{id}/payment]
-
-### Create Merchant Payment [POST]
-
-+ Request (application/json)
-
-    + Headers
-
-            Access-Token: "ABCDEFGH12345678"
-
-    + Body
-    
-            {   
-                "amount":1000,
-                "paymentModeId":2,
-                "cardTypeId":1,
-                "bankListId":null,
-                "cardNumber":123456789101112,
-                "expiresOn":"2026-11-12T05:03:46.000Z",
-                "cvv":123,
-                "userId":24,
-                "merchantId":12,
-                "promocode":"24556TY"
-            }
-
-+ Response 201 (application/json)
-    
-    + Body
-    
-            {   
-                "id":4,
-                "amount":1000,
-                "paymentModeId":2,
-                "cardTypeId":1,
-                "bankListId":null,
-                "cardNumber":123456789101112,
-                "expiresOn":"2026-11-12T05:03:46.000Z",
-                "cvv":123,
-                "userId":24,
-                "merchantId":12,
-                "promocode":"24556TY"
-                
-            }
-    
-+ Response 400 (application/json)
-
-
-+ Response 401 (application/json)
-
-
-### Get Merchant Payment Status  [GET]
-
-+ Response 200 (application/json)
-    
-    + Body
-    
-            [
-                {   
-                    "id":1,
-                    "amount":1000,
-                    "reducedAmount":800,
-                    "paidAmount":700,
-                    "transactionId":    {
-                                            "id":4,
-                                            "orderNumber":ABCD1234,
-                                            "txnid":QWERTY1234,
-                                            "netAmountDebited":712.5,
-                                            "cardNumber":123456789101112",
-                                            "bankName":"HDFC",
-                                            "cardType":"visa"
-                                        },
-                    "merchantId":   {
-                                        "id":2,
-                                        "name":Pizza Hut"
-                                    },
-                    "paymentModeId":    {
-                                            "id":1,
-                                            "name":"netbanking",
-                                            "walletTypeId":null
-                                            
-                                        },
-                    "promocodeId":    {
-                                            "id":1,
-                                            "promocode":code1,
-                                            "offerDiscountPercentage":40,
-                                            "description":"grive some description",
-                                            "maximumAmountLimit":1000,
-                                            "validFrom":"2016-11-12T05:03:46.000Z",
-                                            "validTo":"2017-11-12T05:03:46.000Z",
-                                            "percentageCostBourneByBatua":10,
-                                            "percentageCostBourneByMerchant":20,
-                                            "merchantId":12,
-                                            "statusId":2
-                                            
-                                        },
-                    "offerDiscountId":    {
-                                            "id":1,
-                                            "offerDiscountPercentage":40,
-                                            "description":"grive some description",
-                                            "maximumAmountLimit":1000,
-                                            "validFrom":"2016-11-12T05:03:46.000Z",
-                                            "validTo":"2017-11-12T05:03:46.000Z",
-                                            "merchantId":12,
-                                            "statusId":2
-                                            
-                                        },
-                    "createdAt": "2016-11-12T05:03:46.000Z",
-                    "updatedAt": "2016-11-12T05:03:46.000Z"
-                },
-                {   
-                    "id":2,
-                    "amount":1000,
-                    "reducedAmount":800,
-                    "paidAmount":700,
-                    "transactionId":    {
-                                            "id":5,
-                                            "orderNumber":BCD1234,
-                                            "txnid":QWERT1234,
-                                            "cardNumber":123456789101112",
-                                            "bankName":"HDFC",
-                                            "cardType":"RuPay"
-                                        },
-                    "merchantId":   {
-                                        "id":3,
-                                        "name":Pizza Hut"
-                                    },
-                    "paymentModeId":    {
-                                            "id":3,
-                                            "name":"wallet",
-                                            "walletTypeId": {
-                                                                "id":2,
-                                                                "name":"mobikwik"
-                                                            }
-                                            
-                                        },
-                    "promocodeId":    {
-                                            "id":1,
-                                            "promocode":code1,
-                                            "offerDiscountPercentage":40,
-                                            "description":"grive some description",
-                                            "maximumAmountLimit":1000,
-                                            "validFrom":"2016-11-12T05:03:46.000Z",
-                                            "validTo":"2017-11-12T05:03:46.000Z",
-                                            "percentageCostBourneByBatua":10,
-                                            "percentageCostBourneByMerchant":20,
-                                            "merchantId":12,
-                                            "statusId":2
-                                            
-                                        },
-                    "offerDiscountId":    {
-                                            "id":1,
-                                            "offerDiscountPercentage":40,
-                                            "description":"grive some description",
-                                            "maximumAmountLimit":1000,
-                                            "validFrom":"2016-11-12T05:03:46.000Z",
-                                            "validTo":"2017-11-12T05:03:46.000Z",
-                                            "merchantId":12,
-                                            "statusId":2
-                                            
-                                        },
-                    "createdAt": "2016-11-12T05:03:46.000Z",
-                    "updatedAt": "2016-11-12T05:03:46.000Z"
-                },
-            ]
-    
-+ Response 400 (application/json)
-
-
-+ Response 401 (application/json)
-
-
-## Wallet Recharge Payment [/user/{id}/Wallet/payment]
-
-### Create Wallet Recharge Payment [POST]
-
-+ Request (application/json)
-
-    + Headers
-
-            Access-Token: "ABCDEFGH12345678"
-
-    + Body
-    
-            {   
-                "amount":1000,
-                "paymentModeId":2,
-                "cardTypeId":1,
-                "bankListId":null,
-                "cardNumber":123456789101112,
-                "expiresOn":"2026-11-12T05:03:46.000Z",
-                "cvv":123,
-                "userId":24
-            }
-
-+ Response 201 (application/json)
-    
-    + Body
-    
-            {   
-                "id":4,
-                "amount":1000,
-                "paymentModeId":2,
-                "cardTypeId":1,
-                "bankListId":null,
-                "cardNumber":123456789101112,
-                "expiresOn":"2026-11-12T05:03:46.000Z",
-                "cvv":123,
-                "userId":24,
-                "createdAt": "2016-11-12T05:03:46.000Z",
-                "updatedAt": "2016-11-12T05:03:46.000Z"
-            }
-    
-+ Response 400 (application/json)
-
-
-+ Response 401 (application/json)
-
-
-### Get Wallet Recharge Payment Status [GET]
-
-+ Response 200 (application/json)
-    
-    + Body
-    
-            [
-                {   
-                    "id":1,
-                    "amount":1000,
-                    "reducedAmount":800,
-                    "paidAmount":700,
-                    "transactionId":    {
-                                            "id":4,
-                                            "orderNumber":ABCD1234,
-                                            "txnid":QWERTY1234,
-                                            "netAmountDebited":712.5,
-                                            "cardNumber":123456789101112",
-                                            "bankName":"HDFC",
-                                            "cardType":"visa",
-                                            "createdAt": "2016-11-12T05:03:46.000Z",
-                                            "updatedAt": "2016-11-12T05:03:46.000Z"
-                                        },
-                    "merchantId":   {
-                                        "id":2,
-                                        "name":Pizza Hut",
-                                        "createdAt": "2016-11-12T05:03:46.000Z",
-                                        "updatedAt": "2016-11-12T05:03:46.000Z"
-                                    },
-                    "paymentModeId":    {
-                                            "id":1,
-                                            "name":"netbanking",
-                                            "walletTypeId":null,
-                                            "createdAt": "2016-11-12T05:03:46.000Z",
-                                            "updatedAt": "2016-11-12T05:03:46.000Z"
-                                            
-                                        },
-                    "promocodeId":    {
-                                            "id":1,
-                                            "promocode":code1,
-                                            "offerDiscountPercentage":40,
-                                            "description":"grive some description",
-                                            "maximumAmountLimit":1000,
-                                            "validFrom":"2016-11-12T05:03:46.000Z",
-                                            "validTo":"2017-11-12T05:03:46.000Z",
-                                            "percentageCostBourneByBatua":10,
-                                            "percentageCostBourneByMerchant":20,
-                                            "merchantId":12,
-                                            "statusId":2,
-                                            "createdAt": "2016-11-12T05:03:46.000Z",
-                                            "updatedAt": "2016-11-12T05:03:46.000Z"
-                                            
-                                        },
-                    "offerDiscountId":    {
-                                            "id":1,
-                                            "offerDiscountPercentage":40,
-                                            "description":"grive some description",
-                                            "maximumAmountLimit":1000,
-                                            "validFrom":"2016-11-12T05:03:46.000Z",
-                                            "validTo":"2017-11-12T05:03:46.000Z",
-                                            "merchantId":12,
-                                            "statusId":2,
-                                            "createdAt": "2016-11-12T05:03:46.000Z",
-                                            "updatedAt": "2016-11-12T05:03:46.000Z"
-                                            
-                                        },
-                    "createdAt": "2016-11-12T05:03:46.000Z",
-                    "updatedAt": "2016-11-12T05:03:46.000Z"
-                },
-                {   
-                    "id":2,
-                    "amount":1000,
-                    "reducedAmount":800,
-                    "paidAmount":700,
-                    "transactionId":    {
-                                            "id":5,
-                                            "orderNumber":BCD1234,
-                                            "txnid":QWERT1234,
-                                            "cardNumber":123456789101112",
-                                            "bankName":"HDFC",
-                                            "cardType":"RuPay",
-                                            "createdAt": "2016-11-12T05:03:46.000Z",
-                                            "updatedAt": "2016-11-12T05:03:46.000Z"
-                                        },
-                    "merchantId":   {
-                                        "id":3,
-                                        "name":Pizza Hut",
-                                        "createdAt": "2016-11-12T05:03:46.000Z",
-                                        "updatedAt": "2016-11-12T05:03:46.000Z"
-                                    },
-                    "paymentModeId":    {
-                                            "id":3,
-                                            "name":"wallet",
-                                            "walletTypeId": {
-                                                                "id":2,
-                                                                "name":"mobikwik",
-                                                                "createdAt": "2016-11-12T05:03:46.000Z",
-                                                                "updatedAt": "2016-11-12T05:03:46.000Z"
-                                                            },
-                                            "createdAt": "2016-11-12T05:03:46.000Z",
-                                            "updatedAt": "2016-11-12T05:03:46.000Z"
-                                            
-                                        },
-                    "promocodeId":    {
-                                            "id":1,
-                                            "promocode":code1,
-                                            "offerDiscountPercentage":40,
-                                            "description":"grive some description",
-                                            "maximumAmountLimit":1000,
-                                            "validFrom":"2016-11-12T05:03:46.000Z",
-                                            "validTo":"2017-11-12T05:03:46.000Z",
-                                            "percentageCostBourneByBatua":10,
-                                            "percentageCostBourneByMerchant":20,
-                                            "merchantId":12,
-                                            "statusId":2,
-                                            "createdAt": "2016-11-12T05:03:46.000Z",
-                                            "updatedAt": "2016-11-12T05:03:46.000Z"
-                                            
-                                        },
-                    "offerDiscountId":    {
-                                            "id":1,
-                                            "offerDiscountPercentage":40,
-                                            "description":"grive some description",
-                                            "maximumAmountLimit":1000,
-                                            "validFrom":"2016-11-12T05:03:46.000Z",
-                                            "validTo":"2017-11-12T05:03:46.000Z",
-                                            "merchantId":12,
-                                            "statusId":2,
-                                            "createdAt": "2016-11-12T05:03:46.000Z",
-                                            "updatedAt": "2016-11-12T05:03:46.000Z"
-                                            
-                                        },
-                    "createdAt": "2016-11-12T05:03:46.000Z",
-                    "updatedAt": "2016-11-12T05:03:46.000Z"
-                },
-            ]
-    
-+ Response 400 (application/json)
-
-
-+ Response 401 (application/json)
-
-
 ## Payment Settlement [/user/{id}/payment/settlement]
 
 ### Create [POST]
@@ -4392,5 +3642,3 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 
 
 + Response 401 (application/json)
-
-                

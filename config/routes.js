@@ -75,8 +75,9 @@ module.exports.routes = {
     'put /api/admin/user': 'UsersController.updateUserByAdmin',
     'put /api/admin/user/setstatus': 'UsersController.setUserStatusByAdmin',
     'get /api/admin/activeuser/:id?': 'UsersController.getActiveUsers',
-    'get /api/admin/transaction/report':'PaymentsController.transactionReport',
-    'put /api/admin/transaction/cancel':'PaymentsController.cancel',
+    'get /api/admin/transaction/report': 'PaymentsController.transactionReport',
+    'put /api/admin/transaction/cancel': 'PaymentsController.cancel',
+    'post /api/admin/settlement': 'SettlementsController.create',
     'put /api/admin/activeuser/notify': 'UsersController.sendPushNotificationByAdmin',
     'put /api/admin/user/logout': 'UsersController.adminLogout',
 
@@ -112,12 +113,12 @@ module.exports.routes = {
     'put /api/user/pin/change': 'UsersController.changePin',
     'post /api/user/contactus': 'UsersController.contactus',
     'put /api/user/logout': 'UsersController.logout',
-    'post /api/user/validatePromocode':'DiscountValidateController.validatePromocode',
-    'post /api/user/validateOffer':'DiscountValidateController.validateOffer',
-    'post /api/user/makePayment':'PaymentsController.doPayment',
-    'get /api/user/:userId/payment/history':'PaymentsController.history',
-    'get /api/user/:userId/wallet':'PaymentsController.wallet',
-    
+    'post /api/user/validatePromocode': 'DiscountValidateController.validatePromocode',
+    'post /api/user/validateOffer': 'DiscountValidateController.validateOffer',
+    'post /api/user/makePayment': 'PaymentsController.doPayment',
+    'get /api/user/:userId/payment/history': 'PaymentsController.history',
+    'get /api/user/:userId/wallet': 'PaymentsController.wallet',
+
 
     /********************* Image Upload API ************************/
 
