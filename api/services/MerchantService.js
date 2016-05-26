@@ -331,14 +331,15 @@ class MerchantService {
             var groupName = (data && data.userGroups.name);
             var merchantService = new MerchantService();
             var merchantRepository = new MerchantRepository();
-            if (data && id) {
+            if (data && id && groupName != 'User') {
                 params.where.id = id;
                 merchantRepository.find(params, callback);
                 return null;
             }
-            if (data && userId && !id && groupName == 'User') {
+            if (data && userId && groupName == 'User') {
                 var merchantService = new MerchantService();
                 params.where.status = 'Active';
+                (id) ? (params.where.id = id) : (params);
                 merchantRepository.findAll(params, function(err, result) {
                     if (err)
                         callback(err);
