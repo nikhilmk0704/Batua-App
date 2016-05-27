@@ -39,32 +39,12 @@ module.exports = {
         validFrom: {
             type: Sequelize.DATE,
             required: true,
-            allowNull: false,
-            validate: {
-                isDate: true,
-                isAfter: function () {
-                    var oldDate = moment(Sequelize.DATE())._d;
-                    var validateDate = moment(this.validFrom)._d;
-                    if (!(moment(validateDate).isAfter(oldDate))) {
-                        throw new Error('Past dates are not allowed');
-                    }
-                }
-            }
+            allowNull: false
         },
         validTo: {
             type: Sequelize.DATE,
             required: true,
-            allowNull: false,
-            validate: {
-                isDate: true,
-                isAfter: function () {
-                    var validateDateFrom = moment(this.validFrom)._d;
-                    var validateDateTo = moment(this.validTo)._d;
-                    if (!(moment(validateDateTo).isAfter(validateDateFrom))) {
-                        throw new Error('Past dates are not allowed');
-                    }
-                }
-            }
+            allowNull: false
         },
         percentageCostBourneByBatua: {
             type: Sequelize.INTEGER,
