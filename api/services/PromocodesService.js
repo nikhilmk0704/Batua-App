@@ -1,4 +1,5 @@
 'use strict';
+var moment = require('moment');
 
 var PromocodesRepository = require('../repositories/PromocodesRepository.js');
 
@@ -9,6 +10,20 @@ class PromocodesService {
     save(params, callback) {
 
         var promocodesRepository = new PromocodesRepository();
+
+        var oldDate = moment(Sequelize.DATE())._d;
+        var validateDate = moment(params.validFrom)._d;
+        
+        if (!(moment(validateDate).isAfter(oldDate))) {
+            callback('Past From date not allowed',null);
+        }
+
+        var validateDateFrom = moment(params.validFrom)._d;
+        var validateDateTo = moment(params.validTo)._d;
+        
+        if (!(moment(validateDateTo).isAfter(validateDateFrom))) {
+            callback('To date should be after From date',null);
+        }
 
         promocodesRepository.save(params, function(err,result){
             if (err)
@@ -34,6 +49,14 @@ class PromocodesService {
         options.where.id = params.id;
         var findObject=options;
         var promocodesRepository = new PromocodesRepository();
+        
+        var validateDateFrom = moment(params.validFrom)._d;
+        var validateDateTo = moment(params.validTo)._d;
+        
+        if (!(moment(validateDateTo).isAfter(validateDateFrom))) {
+            callback('To date should be after From date',null);
+        }
+        
         promocodesRepository.updateAndFind(params, options, findObject, function(err,result){
             if (err) {
                 return callback(err,null);
