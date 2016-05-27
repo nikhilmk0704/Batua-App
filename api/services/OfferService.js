@@ -10,6 +10,19 @@ class PromocodesService {
 
         var offersRepository = new OffersRepository();
 
+        var oldDate = moment(Sequelize.DATE())._d;
+        var validateDate = moment(params.validFrom)._d;
+        
+        if (!(moment(validateDate).isAfter(oldDate))) {
+            callback('Past From date not allowed',null);
+        }
+
+        var validateDateFrom = moment(params.validFrom)._d;
+        var validateDateTo = moment(params.validTo)._d;
+        
+        if (!(moment(validateDateTo).isAfter(validateDateFrom))) {
+            callback('To date should be after From date',null);
+        }
         return duplicateOffer(params,function(err,duplicateResult){
             if(err)
                 return callback(err,null);
@@ -44,7 +57,12 @@ class PromocodesService {
         options.where = {};
         options.where.id = params.id;
         var findObject=options;
-
+        var validateDateFrom = moment(params.validFrom)._d;
+        var validateDateTo = moment(params.validTo)._d;
+        
+        if (!(moment(validateDateTo).isAfter(validateDateFrom))) {
+            callback('To date should be after From date',null);
+        }
         var offersRepository = new OffersRepository();
         offersRepository.updateAndFind(params, options, findObject, function(err,result){
             if (err) {
