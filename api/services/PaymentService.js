@@ -12,16 +12,16 @@ class PaymentService {
 
         request({
             method: 'POST',
-            url: 'https://'+sails.config.connections.razorpayKeyId+':'+sails.config.connections.razorPayKeySecret+'@api.razorpay.com/v1/payments/'+params.paymentId+'/capture',
+            url: 'https://' + sails.config.connections.razorpayKeyId + ':' + sails.config.connections.razorPayKeySecret + '@api.razorpay.com/v1/payments/' + params.paymentId + '/capture',
             form: {
-                amount: parseFloat(params.amount)*100
+                amount: parseFloat(params.amount) * 100
             }
-        }, function (error, response, body) {
-            
+        }, function(error, response, body) {
+
             body = JSON.parse(body);
-        
-            if(response.statusCode == 200){
-                
+
+            if (response.statusCode == 200) {
+
                 generateOrderNo(function(sequenceNumber) {
 
                     var transactionDetailParam = {};
@@ -128,13 +128,13 @@ class PaymentService {
                         });
                     });
                 });
-            }else{
+            } else {
                 var newErr = {}
                 newErr.errorCode = 406;
                 newErr.message = body.error.description;
                 return callback(newErr, null);
             }
-            
+
         });
     }
 
@@ -148,6 +148,9 @@ class PaymentService {
         whereObject.include = includeModels();
         whereObject.where = {};
         whereObject.where.userId = userId;
+        whereObject.order = [
+            ['createdAt', 'DESC']
+        ];
 
         paymentsRepository.findAll(whereObject, callback);
     }
@@ -225,6 +228,9 @@ class PaymentService {
         }];
         whereObject.include = include;
         whereObject.where = {};
+        whereObject.order = [
+            ['createdAt', 'DESC']
+        ];
 
         paymentsRepository.findAll(whereObject, callback);
     }
@@ -235,9 +241,9 @@ class PaymentService {
         var cancellationDate = params.cancellationDate;
         var cancellationDescription = params.cancellationDescription;
         var adminId = params.adminId;
-        if(!paymentId)
+        if (!paymentId)
             return callback("Provide Payment Id");
-        if(!adminId)
+        if (!adminId)
             return callback("Provide Admin Id");
         var updateObject = {};
         updateObject.isCancelled = true;
@@ -283,7 +289,10 @@ function getRechargedList(userId, callback) {
     whereObject.where.$and = {};
     whereObject.where.$and.userId = userId;
     whereObject.where.$and.type = 'recharge';
-
+    whereObject.order = [
+            ['createdAt', 'DESC']
+        ];
+        
     paymentsRepository.findAll(whereObject, function(err, result) {
         if (err)
             return callback(err);
@@ -304,6 +313,9 @@ function getPaymentList(userId, callback) {
     whereObject.where.$and.merchantId = {};
     whereObject.where.$and.merchantId.$not = null;
     whereObject.where.$and.paymentmodeId = 3;
+    whereObject.order = [
+            ['createdAt', 'DESC']
+        ];
 
     paymentsRepository.findAll(whereObject, function(err, result) {
         if (err)
@@ -329,6 +341,9 @@ function getCashbackList(userId, callback) {
     whereObject.where.$and.$or.offerDiscountId.$not = null;
     whereObject.where.$and.$or.promocodeId = {};
     whereObject.where.$and.$or.promocodeId.$not = null;
+    whereObject.order = [
+            ['createdAt', 'DESC']
+        ];
 
     paymentsRepository.findAll(whereObject, function(err, result) {
         if (err)
@@ -403,15 +418,15 @@ function generateOrderNo(callback) {
     var dateNow = new Date();
     var dd = dateNow.getDate();
     var monthSingleDigit = dateNow.getMonth() + 1,
-    mm = monthSingleDigit < 10 ? '0' + monthSingleDigit : monthSingleDigit;
+        mm = monthSingleDigit < 10 ? '0' + monthSingleDigit : monthSingleDigit;
     var yy = dateNow.getFullYear().toString();
 
     var formattedDate = dd + mm + yy;
 
     var rawQueryString = "SELECT AUTO_INCREMENT" +
-    " FROM information_schema.TABLES" +
-    " WHERE TABLE_SCHEMA = 'batua'" +
-    " AND TABLE_NAME = 'TransactionDetails'";
+        " FROM information_schema.TABLES" +
+        " WHERE TABLE_SCHEMA = 'batua'" +
+        " AND TABLE_NAME = 'TransactionDetails'";
 
     sequelize.query(rawQueryString, { type: sequelize.QueryTypes.SELECT }).then(function(result) {
         console.log(result);
@@ -609,7 +624,7 @@ function includeModels() {
     }, {
         model: TransactionDetails,
         as: 'transactionDetail',
-        attributes: ['id', 'orderNumber', 'transactionId','mode'],
+        attributes: ['id', 'orderNumber', 'transactionId', 'mode'],
         required: false
     }, {
         model: Paymentmodes,
