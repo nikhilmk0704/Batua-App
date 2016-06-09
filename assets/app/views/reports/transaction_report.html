@@ -8,52 +8,41 @@
                     <div class="caption font-dark" style="padding-left:20px;padding-top:15px;">
                         <span class="caption-subject bold uppercase"> Transaction Report</span>
                     </div>
-                    <div class="col-xs-4" style="margin-top:10px;float:right;">
-                        <div id="sample_1_filter" class="dataTables_filter pull-right" style="">
-                            <div class="input-group pull-right">
-                                <span class="input-group-addon input-circle-left">
-                         <i class="fa fa-search"></i>
-                       </span>
-                                <input type="search" class="form-control input-sm input-medium input-inline input-circle-right" id="search" name="search" placeholder="search here" aria-controls="sample_1">
-                            </div>
-                        </div>
-                    </div>
                 </section>
                 <section class="portlet-body">
                     <section class="table-toolbar">
                         <div class="row">
-                            <div class="col-xs-12">
-                                <form class="paymentreport-form" action="" method="">
+                            <form class="paymentreport-form" ng-submit="vm.handleFilterClicked(vm.filterData)">
+                                <div class="col-xs-12">
                                     <section class="form-group col-xs-12">
-                                        <div class="col-xs-4">
-                                            <section class="input-group offerstartdate" style="margin-bottom:15px;">
-                                                <div class="input-group-addon input-circle-left">
-                                                    <i class="fa fa-user"></i>
+                                        <div class="col-xs-3">
+                                            <section class="form-group form-md-line-input has-info" style="padding:0px;">
+                                                <div class="col-xs-12">
+                                                    <select class="form-control" ng-options="instances.instanceId as instances.title +','+(instances.start_time ?instances.start_time :'') for instances in vm.instanceData" ng-model="vm.filterData.merchantId">
+                                                        <option value="">All</option>
+                                                    </select>
                                                 </div>
-                                                <input type="text" class="form-control input-circle-right" id="merchantname" name="merchantname" placeholder="Select Merchant" required>
                                             </section>
                                         </div>
-                                        <div class=" col-xs-4">
+                                        <div class=" col-xs-3">
                                             <section class="input-group offerstartdate" style="margin-bottom:15px;">
                                                 <div class="input-group-addon input-circle-left">
-                                                    <i class="fa fa-calendar">
-                                </i>
+                                                    <i class="fa fa-calendar"></i>
                                                 </div>
                                                 <input class="form-control input-circle-right" id="date" name="date" placeholder="From Date" type="text" />
                                             </section>
                                         </div>
-                                        <div class=" col-xs-4">
+                                        <div class=" col-xs-3">
                                             <section class="input-group  offerstartdate" style="margin-bottom:15px;">
                                                 <div class="input-group-addon input-circle-left">
-                                                    <i class="fa fa-calendar">
-                                </i>
+                                                    <i class="fa fa-calendar"></i>
                                                 </div>
                                                 <input class="form-control input-circle-right" id="date" name="date" placeholder="To Date" type="text" />
                                             </section>
                                         </div>
-                                        <div class="col-xs-4" style="margin-bottom:15px;">
+                                        <div class="col-xs-3" style="margin-bottom:15px;">
                                             <section class="form-group form-md-line-input has-info" style="padding:0px;">
-                                                <div class="col-xs-10">
+                                                <div class="col-xs-12">
                                                     <select class="form-control" id="form_control_1" required>
                                                         <option value="" disabled selected hidden>user </option>
                                                         <option value="1">user 1</option>
@@ -63,195 +52,67 @@
                                                 </div>
                                             </section>
                                         </div>
-                                        <div class="col-xs-4" style="margin-bottom:15px;">
-                                            <section class="form-group form-md-line-input has-info" style="padding:0px;">
-                                                <div class="col-xs-10">
-                                                    <select class="form-control" id="form_control_1" required>
-                                                        <option value="" disabled selected hidden>Transaction ID </option>
-                                                        <option value="1"> 1</option>
-                                                        <option value="2"> 2</option>
-                                                        <option value="3"> 3</option>
-                                                    </select>
-                                                </div>
-                                            </section>
-                                        </div>
                                     </section>
-                                </form>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="btn-group" style="padding-left:30px;">
-                                    <button id="sample_editable_1_new" class="btn sbold blue" href=""> Generate Report
-                                        <i class="fa fa-exchange"></i>
-                                    </button>
                                 </div>
-                                <div class="btn-group" style="padding-left:30px;">
-                                    <button id="sample_editable_1_new" class="btn sbold red" href="">Clear Filter</button>
+                                <div class="col-md-6">
+                                    <div class="btn-group" style="margin-left:20px;padding-left:30px;">
+                                        <button type="submit" class="btn sbold blue"> Generate Report </button>
+                                    </div>
+                                    <div class="btn-group" style="padding-left:30px;">
+                                        <button type="button" class="btn sbold red" ng-click="vm.clearFilters()"> Clear Filter </button>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-md-6 pull-right">
-                                <div class="btn-group" style="margin-right:25px;float:right;">
-                                    <button id="sample_editable_1_new" class="btn sbold green" href=""> Export as Excel
-                                        <i class="fa fa-exchange"></i>
-                                    </button>
+                                <div class="col-md-6 pull-right">
+                                    <div class="btn-group" style="margin-right:50px;float:right;">
+                                        <button type="button" class="btn sbold green" ng-click="vm.exportData()"> Export as Excel
+                                            <i class="fa fa-exchange"></i>
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
+                            </form>
                         </div>
                     </section>
                 </section>
-                <div id="sample_1_wrapper" class="dataTables_wrapper no-footer">
+                <div class="dataTables_wrapper no-footer">
                     <div class="table-scrollable">
-                        <table class="table table-striped table-bordered table-hover order-column dataTable no-footer" id="sample_1" role="grid" aria-describedby="sample_1_info">
+                        <table class="table table-striped table-bordered table-hover order-column dataTable no-footer" datatable="ng">
                             <thead>
-                                <tr role="row">
-                                    <th class="" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" aria-label="activate to sort column ascending" style="width: 100px;">Sl No. </th>
-                                    <th class="sorting" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" aria-label="activate to sort column ascending" style="width:100px;float:left;">Merchant Name
-                                    </th>
-                                    <th class="" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" aria-label="activate to sort column ascending" style="width: 100px;"> User Name </th>
-                                    <th class="" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" aria-label="activate to sort column ascending" style="width: 100px;"> Order number </th>
-                                    <th class="" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" aria-sort="ascending" aria-label="activate to sort column descending" style="width: 108px;">Transaction ID</th>
-                                    <th class="" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" aria-label=" activate to sort column ascending" style="width: 119px;">Transaction Date</th>
-                                    <th class="" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" aria-label=" activate to sort column ascending" style="width: 119px;"> Payment Amt(Rs)</th>
-                                    <th class="" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" aria-label=" activate to sort column ascending" style="width: 220px;"> cashbackby offer </th>
-                                    <th class="" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" aria-label=" activate to sort column ascending" style="width: 220px;">cashback by promo</th>
-                                    <th class="" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" aria-label=" activate to sort column ascending" style="width: 119px;">Amt(Rs) credited to batua</th>
-                                    <th class="" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" aria-label=" activate to sort column ascending" style="width: 119px;"> Transaction cancelled by</th>
-                                    <th class="" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" aria-label=" activate to sort column ascending" style="width: 119px;"> Transaction cancelled on</th>
-                                    <th class="" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" aria-label=" activate to sort column ascending" style="width: 220px;">Cancellation Description</th>
-                                    <th class="" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" aria-label="  activate to sort column ascending" style="width: 120px; text-align:center;">Action</th>
+                                <tr role="row" style="text-align:center;">
+                                    <th style="width: 100px;"> Sr No. </th>
+                                    <th class="sorting" style="width:100px;"> Merchant Name</th>
+                                    <th style="width: 100px;"> User Name </th>
+                                    <th style="width: 100px;"> Order number </th>
+                                    <th style="width: 108px;"> Transaction ID </th>
+                                    <th style="width: 119px;"> Transaction Date </th>
+                                    <th style="width: 119px;"> Payment Amount(Rs) </th>
+                                    <th style="width: 220px;"> Cashback by Offer </th>
+                                    <th style="width: 220px;"> Cashback by PromoCode </th>
+                                    <th style="width: 119px;"> Amount(Rs) credited to Batua</th>
+                                    <th style="width: 119px;"> Transaction cancelled by </th>
+                                    <th style="width: 119px;"> Transaction cancelled on </th>
+                                    <th style="width: 220px;"> Cancellation Description </th>
+                                    <th style="width: 120px;"> Action </th>
                                 </tr>
                             </thead>
                             <tbody class="datatablecustom">
-                                <tr class="gradeX odd" role="row">
-                                    <td>1</td>
-                                    <td>demo Merchant </td>
-                                    <td>demo user</td>
-                                    <td> 828182</td>
-                                    <td>1234ABC</td>
-                                    <td> 12/2/2016</td>
-                                    <td>1000 </td>
-                                    <td></td>
-                                    <td>100</td>
-                                    <td>900</td>
-                                    <td>admin 1 </td>
-                                    <td> 12/3/2016</td>
-                                    <td> some description for the cancelling of transaction</td>
-                                    <td><a type="submit" class="btn button-color" href="Cancel_Transaction.html">Cancel Transaction</a> </td>
-                                </tr>
-                                <tr class="gradeX even" role="row">
-                                    <td>1</td>
-                                    <td>demo Merchant </td>
-                                    <td>demo user</td>
-                                    <td> 828182</td>
-                                    <td>1234ABC</td>
-                                    <td> 12/2/2016</td>
-                                    <td>1000 </td>
-                                    <td></td>
-                                    <td>100</td>
-                                    <td>900</td>
-                                    <td>admin 1 </td>
-                                    <td> 12/3/2016</td>
-                                    <td> some description for the cancelling of transaction</td>
-                                    <td><a type="submit" class="btn button-color" href="Cancel_Transaction.html">Cancel Transaction</a> </td>
-                                </tr>
-                                <tr class="gradeX odd" role="row">
-                                    <td>1</td>
-                                    <td>demo Merchant </td>
-                                    <td>demo user</td>
-                                    <td> 828182</td>
-                                    <td>1234ABC</td>
-                                    <td> 12/2/2016</td>
-                                    <td>1000 </td>
-                                    <td></td>
-                                    <td>100</td>
-                                    <td>900</td>
-                                    <td>admin 1 </td>
-                                    <td> 12/3/2016</td>
-                                    <td> some description for the cancelling of transaction</td>
-                                    <td><a type="submit" class="btn button-color" href="Cancel_Transaction.html">Cancel Transaction</a> </td>
-                                </tr>
-                                <tr class="gradeX even" role="row">
-                                    <td>1</td>
-                                    <td>demo Merchant </td>
-                                    <td>demo user</td>
-                                    <td> 828182</td>
-                                    <td>1234ABC</td>
-                                    <td> 12/2/2016</td>
-                                    <td>1000 </td>
-                                    <td></td>
-                                    <td>100</td>
-                                    <td>900</td>
-                                    <td>admin 1 </td>
-                                    <td> 12/3/2016</td>
-                                    <td> some description for the cancelling of transaction</td>
-                                    <td><a type="submit" class="btn button-color" href="Cancel_Transaction.html">Cancel Transaction</a> </td>
-                                </tr>
-                                <tr class="gradeX odd" role="row">
-                                    <td>1</td>
-                                    <td>demo Merchant </td>
-                                    <td>demo user</td>
-                                    <td> 828182</td>
-                                    <td>1234ABC</td>
-                                    <td> 12/2/2016</td>
-                                    <td>1000 </td>
-                                    <td></td>
-                                    <td>100</td>
-                                    <td>900</td>
-                                    <td>admin 1 </td>
-                                    <td> 12/3/2016</td>
-                                    <td> some description for the cancelling of transaction</td>
-                                    <td><a type="submit" class="btn button-color" href="Cancel_Transaction.html">Cancel Transaction</a> </td>
-                                </tr>
-                                <tr class="gradeX even" role="row">
-                                    <td>1</td>
-                                    <td>demo Merchant </td>
-                                    <td>demo user</td>
-                                    <td> 828182</td>
-                                    <td>1234ABC</td>
-                                    <td> 12/2/2016</td>
-                                    <td>1000 </td>
-                                    <td></td>
-                                    <td>100</td>
-                                    <td>900</td>
-                                    <td>admin 1 </td>
-                                    <td> 12/3/2016</td>
-                                    <td> some description for the cancelling of transaction</td>
-                                    <td><a type="submit" class="btn button-color" href="Cancel_Transaction.html">Cancel Transaction</a> </td>
+                                <tr class="gradeX odd" role="row" ng-repeat="reportData in vm.reportsData" style="text-align:center;">
+                                    <td>{{$index + 1}}</td>
+                                    <td>{{reportData.merchant.name}}</td>
+                                    <td>{{reportData.user.name?reportData.user.name:''}}</td>
+                                    <td>{{reportData.transactionDetail.orderNumber}}</td>
+                                    <td>{{reportData.transactionDetail.transactionId}}</td>
+                                    <td>{{reportData.transactionDetail.createdAt}}</td>
+                                    <td>{{reportData.paidAmount}}</td>
+                                    <td>{{reportData.promocodeId?'':reportData.promocodeAmount}}</td>
+                                    <td>{{reportData.promocodeId?reportData.promocodeAmount:''}}</td>
+                                    <td>{{reportData.batuaCommission}}</td>
+                                    <td>{{reportData.cancelledBy?reportData.cancelledBy.name:''}}</td>
+                                    <td>{{reportData.cancellationDate?(reportData.cancellationDate |date:shortDate):''}}</td>
+                                    <td>{{reportData.cancellationDescription?reportData.cancellationDescription:''}}</td>
+                                    <td><a type="button" class="btn button-color" ui-sref="cancelTransaction({paymentId:reportData.id})">Cancel Transaction</a></td>
                                 </tr>
                             </tbody>
                         </table>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-7 col-sm-7 pull-right">
-                            <div class="dataTables_paginate paging_bootstrap_full_number" id="sample_1_paginate">
-                                <ul class="pagination" style="visibility: visible;">
-                                    <li class="prev disabled">
-                                        <a href="#" title="First"><i class="fa fa-angle-double-left"></i></a>
-                                    </li>
-                                    <li class="prev disabled">
-                                        <a href="#" title="Prev"><i class="fa fa-angle-left"></i></a>
-                                    </li>
-                                    <li class="active">
-                                        <a href="#">1</a></li>
-                                    <li><a href="#">2</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">3</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">4</a>
-                                    </li>
-                                    <li>
-                                        <a href="#">5</a>
-                                    </li>
-                                    <li class="next">
-                                        <a href="#" title="Next"><i class="fa fa-angle-right"></i></a>
-                                    </li>
-                                    <li class="next">
-                                        <a href="#" title="Last"><i class="fa fa-angle-double-right"></i></a>
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
                     </div>
                 </div>
             </section>

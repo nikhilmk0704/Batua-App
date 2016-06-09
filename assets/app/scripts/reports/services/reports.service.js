@@ -1,11 +1,11 @@
 (function() {    
     'use strict';
 
-    angular.module('app').factory('reportService', reportService);
+    angular.module('app').factory('reportsService', reportsService);
 
-    reportService.$inject = ['httpi', 'API'];
+    reportsService.$inject = ['httpi', 'API'];
 
-    function reportService(httpi, API) {
+    function reportsService(httpi, API) {
 
         var service = {};
 
@@ -28,14 +28,15 @@
             });
         }
 
-        function addSettlement(merchant, callback) {
+        function addSettlement(data, callback) {
             httpi({
                 method: "post",
                 url: API.addSettlement,
                 data: {
-                    id: merchant.id,
-                    name: merchant.name,
-                    description: merchant.shortCode
+                    name: data.name,
+                    date: data.date,
+                    referenceNumber: data.referenceNumber,
+                    description: data.description
                 }
             }).then(function(response) {
                 callback(response);
@@ -44,7 +45,7 @@
             });
         }
 
-        function getPaymentDetailsAgainstMerchant(merchantId, callback) {
+        function getPaymentDetailsAgainstMerchant(adminId, merchantId, callback) {
             httpi({
                 method: "get",
                 url: API.paymentDetails,
@@ -59,13 +60,15 @@
             });
         }
 
-        function cancelTransaction(transactionId, callback) {
+        function cancelTransaction(adminId, paymentId, data, callback) {
             httpi({
                 method: "put",
                 url: API.cancelTransaction,
                 data: {
-                    id: transactionId,
-                    status: status
+                    paymentId: paymentId,
+                    adminId: adminId,
+                    cancellationDate: data.cancellationDate,
+                    cancellationDescription: data.cancellationDescription
                 }
             }).then(function(response) {
                 callback(response);

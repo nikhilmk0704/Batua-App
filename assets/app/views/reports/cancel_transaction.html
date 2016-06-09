@@ -13,43 +13,39 @@
                 <!-- section header ends -->
                 <!-- section body begins -->
                 <section class="portlet-body form">
-                    <form class="form-horizontal" role="form">
+                    <div class="form-horizontal">
                         <div class="form-body">
                             <!-- cancel transaction form begins -->
-                            <form class="canceltransaction-form" action="" method="">
+                            <form class="canceltransaction-form" ng-submit="vm.cancelTransaction(cancellationDetails)" name="cancelForm" role="form" novalidate>
                                 <section class="form-group col-xs-12">
-                                    <section class="form-group">
+                                    <section class="form-group" ng-class="{'has-error': cancelForm.cancelDate.$invalid && !cancelForm.cancelDate.$pristine}">
                                         <label class="control-label col-xs-3">Date:
                                             <span class="required"> * </span>
                                         </label>
-                                        <section class="input-group col-xs-8  offerstartdate" style="margin-bottom:15px;">
-                                            <div class="input-group-addon input-circle-left">
-                                                <i class="fa fa-calendar">
-                                  </i>
-                                            </div>
-                                            <input class="form-control input-circle-right" id="date" name="date" placeholder="Cancelation Date" type="text" />
+                                        <section class="input-group col-xs-8  offerstartdate" style="margin-bottom:15px;padding-left:15px;">
+                                            <div class="input-group-addon input-circle-left"><a ng-click="openFrom($event)"><i class="fa fa-calendar"></i></a></div>
+                                            <input type="text" class="form-control input-circle-right dateinput" uib-datepicker-popup="dd/MM/yyyy" is-open="status.opened" min-date="minDate" max-date="maxDate" datepicker-mode="day" show-weeks="false" clear-text="false" show-button-bar="false" name="cancelDate" ng-model="cancellationDetails.cancellationDate" required placeholder="Cancelation Date as DD/MM/YYYY" style="width:97%" />
                                         </section>
-                                        <span class="help-block text-danger col-xs-8 col-xs-push-3"> Please select a valid  date </span>
+                                        <span class="help-block text-danger col-xs-8 col-xs-push-3" ng-if="!cancelForm.cancelDate.$pristine && cancelForm.cancelDate.$invalid" ng-messages="cancelForm.cancelDate.$error"> Please select a valid date </span>
                                     </section>
-                                    <section class="form-group">
+                                    <section class="form-group" ng-class="{'has-error': cancelForm.desc.$invalid && !cancelForm.desc.$pristine}">
                                         <label class="control-label col-xs-3">Description:
                                             <span class="required"> * </span>
                                         </label>
                                         <div class="col-xs-8">
-                                            <textarea class="form-control input-circle col-xs-12" rows="3" id="offerdesc" name="offerdesc" placeholder="Enter Offer Description" style="margin-bottom:15px;" required></textarea>
-                                            <span class="help-block text-danger">Please enter valid description for the offer </span>
+                                            <textarea class="form-control input-circle col-xs-12" rows="5" id="desc" name="desc" placeholder="Enter Offer Description" style="margin-bottom:15px;" ng-model="cancellationDetails.cancellationDescription" required></textarea>
+                                            <span class="help-block text-danger col-xs-8 col-xs-push-3" ng-if="!cancelForm.desc.$pristine && cancelForm.desc.$invalid" ng-messages="cancelForm.desc.$error">Please enter description for cancellation</span>
                                         </div>
                                     </section>
                                 </section>
+                                <div class="form-actions rightshift" style="border-top-width:0px;">
+                                    <button type="submit" class="btn button-color margin-form-btn" ng-disabled="cancelForm.$invalid">Submit</button>
+                                    <button type="button" class="btn default margin-form-btn" ui-sref="transactions">Cancel</button>
+                                </div>
                             </form>
                             <!-- cancel transaction form ends -->
                         </div>
-                        <!-- cancel transaction form button controls -->
-                        <div class="form-actions rightshift" style="border-top-width:0px;">
-                            <button type="button" class="btn default margin-form-btn" onclick="location.href='Transaction_Report.html'">Cancel</button>
-                            <button type="submit" class="btn button-color margin-form-btn" onclick="location.href='Transaction_Report.html'">Submit</button>
-                        </div>
-                    </form>
+                    </div>
                 </section>
                 <!-- section body ends -->
             </div>

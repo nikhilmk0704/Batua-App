@@ -2,9 +2,9 @@ angular.module('app').controller('paymentDetailsController', ['$state', 'reports
 
     var vm = this;
 
-    reportsService.getMerchantList(adminId, function(response) {
+    reportsService.getPaymentDetailsAgainstMerchant(adminId, function(response) {
         if (response.status === 200) {
-            vm.merchants = response.data;
+            vm.paymentDetails = response.data;
             return;
         }
         if (response.status === 400) {

@@ -210,6 +210,46 @@
             controllerAs: 'vm'
         })
 
+        .state('reports', {
+            url: '/reports',
+            templateUrl: 'app/views/reports/reports.html'
+        })
+
+        .state('payments', {
+            url: '/payments',
+            templateUrl: 'app/views/reports/payment_report.html',
+            controller: 'paymentController',
+            controllerAs: 'vm'
+        })
+
+        .state('paymentDetails', {
+            url: '/paymentDetails',
+            templateUrl: 'app/views/reports/payment_details_report.html',
+            controller: 'paymentDetailsController',
+            controllerAs: 'vm'
+        })
+
+        .state('paymentSettlement', {
+            url: '/paymentSettlement',
+            templateUrl: 'app/views/reports/add_settlement_report.html',
+            controller: 'paymentSettlementController',
+            controllerAs: 'vm'
+        })
+
+        .state('transactions', {
+            url: '/transactions',
+            templateUrl: 'app/views/reports/transaction_report.html',
+            controller: 'transactionController',
+            controllerAs: 'vm'
+        })
+
+        .state('cancelTransaction', {
+            url: '/cancelTransaction/:paymentId',
+            templateUrl: 'app/views/reports/cancel_transaction.html',
+            controller: 'transactionController',
+            controllerAs: 'vm'
+        })
+
     }
 
     run.$inject = ['$rootScope', '$cookieStore', '$http', '$location', 'authenticationService', '$state', 'loginService'];
