@@ -48,20 +48,11 @@ angular.module('app').controller('transactionController', ['$scope', '$state', '
         //         var finalData = _.where(vm.items, filterParams);
         //         vm.items = angular.copy(finalData);
         //     }
-
-        //     $timeout(function() {
-        //         $("#financialReportList").dataTable();
-        //     }, 200);
-
         // };
 
         // vm.clearFilters = function() {
-        //     delete($scope.dateTo);
-        //     delete($scope.dateFrom);
         //     delete(vm.filterData);
         //     vm.items = reportData;
-        //     $('#dateFrom').val('');
-        //     $('#dateTo').val('');
         //     vm.handleFilterClicked();
         // }
 
