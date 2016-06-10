@@ -99,25 +99,36 @@ module.exports.connections = {
      *                                                                          *
      ***************************************************************************/
 
-    s3Bucket:{
-                key: 'AKIAIM7PFH47KK5U4WKA',
-                secret: '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',
-                bucket: 'batua-test'
-            },
+    s3Bucket: {
+        key: 'AKIAIM7PFH47KK5U4WKA',
+        secret: '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',
+        bucket: 'batua-test'
+    },
 
-    snsPlatformArn:{
-                        PlatformApplicationArn:'arn:aws:sns:us-east-1:711489290099:app/GCM/Batua'
-                    },
+    snsPlatformArn: {
+        PlatformApplicationArn: 'arn:aws:sns:us-east-1:711489290099:app/GCM/Batua'
+    },
 
-    ses:{
-            "accessKeyId":"AKIAI7NWTVGO2FZZBX6Q",
-            "secretAccessKey":"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",
-            "region":"us-east-1"
-        },
-    
-    url:"http://52.36.228.74:1337",
+    ses: {
+        "accessKeyId": "AKIAI7NWTVGO2FZZBX6Q",
+        "secretAccessKey": "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",
+        "region": "us-east-1"
+    },
 
-    razorpayKeyId:"rzp_test_md3Fac2ya09UQ6",
+    url: "http://52.36.228.74:1337",
 
-    razorPayKeySecret:"5yvs5WXA6pxWIWcXEHvoNIJF"
+    razorpayKeyId: "rzp_test_md3Fac2ya09UQ6",
+
+    razorPayKeySecret: "5yvs5WXA6pxWIWcXEHvoNIJF",
+
+    merchantSecretKey: "VQ-QWx",
+
+    merchantReferenceNumber: "00000001",
+
+    headers: {
+        'Content-Type': 'application/json',
+        'Accept': 'application/json',
+        'X-IBM-Client-Id': '4f2ebc0b-5e90-4ab2-a3af-599474c03997',
+        'X-IBM-Client-Secret': 'X2aH6yD2iQ0eA4sM1tI7wG4iL7nL2gT3tP8jP3pG6iA3qJ3qO4'
+    }
 };

@@ -78,6 +78,8 @@ module.exports.routes = {
     'get /api/admin/transaction/report': 'PaymentsController.transactionReport',
     'put /api/admin/transaction/cancel': 'PaymentsController.cancel',
     'post /api/admin/settlement': 'SettlementsController.create',
+    'get /api/admin/settlement/report': 'SettlementsController.report',
+    'get /api/admin/settlement/details': 'SettlementsController.details',
     'put /api/admin/activeuser/notify': 'UsersController.sendPushNotificationByAdmin',
     'put /api/admin/user/logout': 'UsersController.adminLogout',
 
@@ -116,6 +118,10 @@ module.exports.routes = {
     'post /api/user/validatePromocode': 'DiscountValidateController.validatePromocode',
     'post /api/user/validateOffer': 'DiscountValidateController.validateOffer',
     'post /api/user/makePayment': 'PaymentsController.doPayment',
+    'post /api/user/yesbankwallet/generateotp': 'PaymentsController.yesBankGenerateOtp',
+    'post /api/user/yesbankwallet/verifyotp': 'PaymentsController.yesBankVerifyOtp',
+    'post /api/user/yesbankwallet/executethirdpartypayment': 'PaymentsController.yesBankExecuteTxn',
+    'post /api/user/yesbankwallet/makepayment': 'PaymentsController.makeYesBankWalletPayment',
     'get /api/user/:userId/payment/history': 'PaymentsController.history',
     'get /api/user/:userId/wallet': 'PaymentsController.wallet',
 
