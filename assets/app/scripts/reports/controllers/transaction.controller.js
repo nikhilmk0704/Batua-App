@@ -1,12 +1,14 @@
-angular.module('app').controller('transactionController', ['$scope', '$state', '$stateParams', 'reportsService', 'loginService', 'toastr', 'merchantList',
-    function($scope, $state, $stateParams, reportsService, loginService, toastr, merchantList) {
+angular.module('app').controller('transactionController', ['$scope', '$state', '$stateParams', 'reportsService', 'loginService', 'toastr', 'merchantList', 'users',
+    function($scope, $state, $stateParams, reportsService, loginService, toastr, merchantList, users) {
 
         var vm = this;
         vm.merchantList = merchantList;
+        vm.users = users;
 
         reportsService.getTransactionReport(function(response) {
             if (response.status === 200) {
                 vm.reportsData = response.data;
+                reportsData = angular.copy(vm.reportsData);
                 return;
             }
             if (response.status === 400) {
@@ -15,54 +17,56 @@ angular.module('app').controller('transactionController', ['$scope', '$state', '
             return toastr.error(response.data);
         });
 
-        // vm.handleFilterClicked = function(data) {
+        vm.handleFilterClicked = function(data) {
 
-        //     var filterParams = {};
+            var filterParams = {};
 
-        //     vm.items = reportData;
-        //     var checkItems = angular.copy(vm.items);
-        //     if (!data && !$scope.dateFrom && !$scope.dateTo)
-        //         vm.items = reportData;
+            vm.reportsData = reportsData;
 
-        //     else {
+            if (!data) {
+                vm.reportsData = reportsData;
+            }
 
-        //         if (dateFrom) {
-        //             vm.items = _.filter(reportData, function(item) {
-        //                 return (moment(moment(dateFrom, 'DD-MM-YYYY').format("YYYY-MM-DD")).isSameOrBefore(moment(item.instanceDate).format('YYYY-MM-DD')))
-        //             });
-        //         }
-        //         if (dateTo) {
-        //             vm.items = _.filter(vm.items, function(item) {
-        //                 return (moment(moment(dateTo, 'DD-MM-YYYY').format("YYYY-MM-DD")).isSameOrAfter(moment(item.instanceDate).format('YYYY-MM-DD')))
-        //                 return item;
-        //             });
+            if (data) {
+                if (data.merchantId) {
+                    filterParams.merchantId = data.merchantId;
+                }
+                if (data.userId) {
+                    filterParams.userId = data.userId;
+                }
+                if (data.fromDate) {
+                    vm.reportsData = _.filter(reportsData, function(item) {
+                        return (moment(moment(data.fromDate, 'dd/MM/yyyy').format("YYYY-MM-DD")).isSameOrBefore(moment(item.instanceDate).format('YYYY-MM-DD')))
+                    });
+                }
+                if (data.toDate) {
+                    vm.reportsData = _.filter(vm.reportsData, function(item) {
+                        return (moment(moment(data.fromDate, 'dd/MM/yyyy').format("YYYY-MM-DD")).isSameOrAfter(moment(item.instanceDate).format('YYYY-MM-DD')))
+                        return item;
+                    });
+                }
+                var finalData = _.where(vm.reportsData, filterParams);
+                vm.reportsData = angular.copy(finalData);
+            }
+        };
 
-        //         }
-        //     }
-
-        //     if (data) {
-        //         if (data.instanceId)
-        //             filterParams.instanceId = data.instanceId;
-        //         if (data.vendor)
-        //             filterParams.vendorName = data.vendor.firstName + ' ' + (data.vendor.lastName ? data.vendor.lastName : '');
-        //         var finalData = _.where(vm.items, filterParams);
-        //         vm.items = angular.copy(finalData);
-        //     }
-        // };
-
-        // vm.clearFilters = function() {
-        //     delete(vm.filterData);
-        //     vm.items = reportData;
-        //     vm.handleFilterClicked();
-        // }
+        vm.clearFilters = function() {
+            delete(vm.filterData);
+            vm.reportsData = reportsData;
+            vm.handleFilterClicked();
+        }
 
         vm.exportData = function() {
 
-            vm.listOfMerchants = angular.copy(vm.reportsData);
+            vm.list = angular.copy(vm.reportsData);
 
-            vm.filteredData = _.map(vm.listOfMerchants, function(data) {
-                var cityName = ((data.locations && data.locations.cities) ? data.locations.cities.name : '');
-                var reportsData = { 'Name': data.name, 'Category': data.categories.name, 'ShortCode': data.shortCode, 'City': cityName, 'Created By': data.users.name, 'Status': data.status }
+            vm.filteredData = _.map(vm.list, function(data) {
+                var userName = (data.user.name ? data.user.name : '');
+                var offerCashback = (data.promocodeId ? '' : data.promocodeAmount);
+                var promoCashback = (data.promocodeId ? data.promocodeAmount : '');
+                var transactionCancelledBy = (data.cancelledBy ? data.cancelledBy.name : '');
+                var transactionCancelledOn = (data.cancellationDate ? (data.cancellationDate).format('YYYY-MM-DD') : '');
+                var reportsData = { 'Merchant Name': data.merchant.name, 'User Name': userName, 'Order number': data.transactionDetail.orderNumber, 'Transaction ID': data.transactionDetail.transactionId, 'Transaction Date': (data.transactionDetail.createdAt).format('YYYY-MM-DD'), 'Payment Amount(Rs)': data.paidAmount, 'Cashback by Offer': offerCashback, 'Cashback by PromoCode': promoCashback, 'Amount(Rs) credited to Batua': data.batuaCommission, 'Transaction cancelled by': transactionCancelledBy, 'Transaction cancelled on': transactionCancelledOn, 'Cancellation Description': data.status }
                 return reportsData;
             });
 
@@ -89,6 +93,8 @@ angular.module('app').controller('transactionController', ['$scope', '$state', '
             });
         }
 
+        /*END of Cancel Transaction*/
+
         /* START ui-bootstrap datepicker */
 
         $scope.today = function() {
@@ -102,9 +108,17 @@ angular.module('app').controller('transactionController', ['$scope', '$state', '
         $scope.toggleMin();
 
         $scope.maxDate = new Date(2050, 12, 31);
+        $scope.startDate = new Date(2016, 01, 01);
 
         $scope.openFrom = function($event) {
             $scope.status.opened = true;
+            $scope.status.opened1 = true;
+            $scope.status.opened2 = false;
+        };
+
+        $scope.openTo = function($event) {
+            $scope.status.opened1 = false;
+            $scope.status.opened2 = true;
         };
 
         $scope.setDate = function(year, month, day) {
@@ -120,7 +134,9 @@ angular.module('app').controller('transactionController', ['$scope', '$state', '
         $scope.format = $scope.formats[0];
 
         $scope.status = {
-            opened: false
+            opened: false,
+            opened1: false,
+            opened2: false
         };
 
         var tomorrow = new Date();
@@ -138,8 +154,6 @@ angular.module('app').controller('transactionController', ['$scope', '$state', '
         }];
 
         /* END ui-bootstrap datepicker */
-
-        /*END of Cancel Transaction*/
 
 
     }

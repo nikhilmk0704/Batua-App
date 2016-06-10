@@ -18,36 +18,29 @@
                                         <div class="col-xs-3">
                                             <section class="form-group form-md-line-input has-info" style="padding:0px;">
                                                 <div class="col-xs-12">
-                                                    <select class="form-control" ng-options="instances.instanceId as instances.title +','+(instances.start_time ?instances.start_time :'') for instances in vm.instanceData" ng-model="vm.filterData.merchantId">
-                                                        <option value="">All</option>
+                                                    <select class="form-control" name="merchant" id="merchant" ng-options="merchant.id as merchant.name for merchant in vm.merchantList" ng-model="vm.filterData.merchantId">
+                                                        <option value="" disabled selected hidden>All</option>
                                                     </select>
                                                 </div>
                                             </section>
                                         </div>
                                         <div class=" col-xs-3">
                                             <section class="input-group offerstartdate" style="margin-bottom:15px;">
-                                                <div class="input-group-addon input-circle-left">
-                                                    <i class="fa fa-calendar"></i>
-                                                </div>
-                                                <input class="form-control input-circle-right" id="date" name="date" placeholder="From Date" type="text" />
+                                                <div class="input-group-addon input-circle-left"><a ng-click="openFrom($event)"><i class="fa fa-calendar"></i></a></div>
+                                                <input type="text" class="form-control input-circle-right dateinput" uib-datepicker-popup="dd/MM/yyyy" is-open="status.opened1" min-date="startDate" max-date="minDate" datepicker-mode="day" show-weeks="false" clear-text="false" show-button-bar="false" name="fromDate" ng-model="m.filterData.fromDate" required placeholder="From Date" style="width:97%" />
                                             </section>
                                         </div>
                                         <div class=" col-xs-3">
-                                            <section class="input-group  offerstartdate" style="margin-bottom:15px;">
-                                                <div class="input-group-addon input-circle-left">
-                                                    <i class="fa fa-calendar"></i>
-                                                </div>
-                                                <input class="form-control input-circle-right" id="date" name="date" placeholder="To Date" type="text" />
+                                            <section class="input-group offerstartdate" style="margin-bottom:15px;">
+                                                <div class="input-group-addon input-circle-left"><a ng-click="openFrom($event)"><i class="fa fa-calendar"></i></a></div>
+                                                <input type="text" class="form-control input-circle-right dateinput" uib-datepicker-popup="dd/MM/yyyy" is-open="status.opened2" min-date="m.filterData.fromDate" max-date="minDate" datepicker-mode="day" show-weeks="false" clear-text="false" show-button-bar="false" name="toDate" ng-model="m.filterData.toDate" required placeholder="From Date" style="width:97%" />
                                             </section>
                                         </div>
                                         <div class="col-xs-3" style="margin-bottom:15px;">
                                             <section class="form-group form-md-line-input has-info" style="padding:0px;">
                                                 <div class="col-xs-12">
-                                                    <select class="form-control" id="form_control_1" required>
-                                                        <option value="" disabled selected hidden>user </option>
-                                                        <option value="1">user 1</option>
-                                                        <option value="2">user 2</option>
-                                                        <option value="3">user 3</option>
+                                                    <select class="form-control" name="user" id="user" ng-options="user.id as user.name for user in vm.users" ng-model="vm.filterData.userId">
+                                                        <option value="" disabled selected hidden>All</option>
                                                     </select>
                                                 </div>
                                             </section>
@@ -101,7 +94,7 @@
                                     <td>{{reportData.user.name?reportData.user.name:''}}</td>
                                     <td>{{reportData.transactionDetail.orderNumber}}</td>
                                     <td>{{reportData.transactionDetail.transactionId}}</td>
-                                    <td>{{reportData.transactionDetail.createdAt}}</td>
+                                    <td>{{reportData.transactionDetail.createdAt |date:shortDate}}</td>
                                     <td>{{reportData.paidAmount}}</td>
                                     <td>{{reportData.promocodeId?'':reportData.promocodeAmount}}</td>
                                     <td>{{reportData.promocodeId?reportData.promocodeAmount:''}}</td>

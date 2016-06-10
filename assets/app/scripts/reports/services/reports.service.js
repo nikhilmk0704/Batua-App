@@ -3,9 +3,9 @@
 
     angular.module('app').factory('reportsService', reportsService);
 
-    reportsService.$inject = ['httpi', 'API'];
+    reportsService.$inject = ['httpi', 'API', '$q'];
 
-    function reportsService(httpi, API) {
+    function reportsService(httpi, API, $q) {
 
         var service = {};
 
@@ -14,6 +14,7 @@
         service.getPaymentDetailsAgainstMerchant = getPaymentDetailsAgainstMerchant;
         service.cancelTransaction = cancelTransaction;
         service.getTransactionReport = getTransactionReport;
+        service.getListOfUsers = getListOfUsers;
 
         return service;
 
@@ -87,6 +88,18 @@
                 callback(response);
             });
         }
+
+        function getListOfUsers(callback) {
+            var deferred = $q.defer();
+            httpi({
+                method: "get",
+                url: API.activeMobileUsers
+            }).then(function(response) {
+                deferred.resolve(response.data);
+            });
+            return deferred.promise;
+        }
+
 
     }
 

@@ -18,7 +18,7 @@
         // Now set up the states
         $stateProvider
 
-        .state('login', {
+            .state('login', {
             url: '/login',
             templateUrl: 'app/views/login/login.html',
             controller: 'loginController',
@@ -98,8 +98,8 @@
                 userGroups: ['userService', function(userService) {
                     return userService.getUserGroups();
                 }],
-                loggedInUser: ['loginService', 'authenticationService', function(loginService, authenticationService){
-                    if(loginService.getUserDetails().userGroup == 'Super Admin') {
+                loggedInUser: ['loginService', 'authenticationService', function(loginService, authenticationService) {
+                    if (loginService.getUserDetails().userGroup == 'Super Admin') {
                         return loginService.getUserDetails().userGroup;
                     }
                     authenticationService.clearCredentials();
@@ -114,8 +114,8 @@
             controller: 'editUserController',
             controllerAs: 'vm',
             resolve: {
-                loggedInUser: ['loginService', 'authenticationService', function(loginService, authenticationService){
-                    if(loginService.getUserDetails().userGroup == 'Super Admin') {
+                loggedInUser: ['loginService', 'authenticationService', function(loginService, authenticationService) {
+                    if (loginService.getUserDetails().userGroup == 'Super Admin') {
                         return loginService.getUserDetails().userGroup;
                     }
                     authenticationService.clearCredentials();
@@ -130,8 +130,8 @@
             controller: 'userController',
             controllerAs: 'vm',
             resolve: {
-                loggedInUser: ['loginService', 'authenticationService', function(loginService, authenticationService){
-                    if(loginService.getUserDetails().userGroup == 'Super Admin') {
+                loggedInUser: ['loginService', 'authenticationService', function(loginService, authenticationService) {
+                    if (loginService.getUserDetails().userGroup == 'Super Admin') {
                         return loginService.getUserDetails().userGroup;
                     }
                     authenticationService.clearCredentials();
@@ -240,7 +240,15 @@
             url: '/transactions',
             templateUrl: 'app/views/reports/transaction_report.html',
             controller: 'transactionController',
-            controllerAs: 'vm'
+            controllerAs: 'vm',
+            resolve: {
+                merchantList: ['merchantService', function(merchantService) {
+                    return merchantService.getAllActiveMerchants();
+                }],
+                users: ['reportsService', function(reportsService) {
+                    return reportsService.getListOfUsers();
+                }]
+            }
         })
 
         .state('cancelTransaction', {
@@ -273,7 +281,7 @@
             var restrictedRoutes = ['/login', '/forgetPassword'];
             var restrictedPage = $.inArray($location.path(), restrictedRoutes) === -1;
             var restrictedPagesWithIds = ['/resetpassword'];
-            restrictedPagesWithIds.forEach(function (route) {
+            restrictedPagesWithIds.forEach(function(route) {
                 if ($location.path().substring(0, route.length) === route) {
                     restrictedPage = false;
                 }
