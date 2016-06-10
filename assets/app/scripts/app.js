@@ -219,7 +219,12 @@
             url: '/payments',
             templateUrl: 'app/views/reports/payment_report.html',
             controller: 'paymentController',
-            controllerAs: 'vm'
+            controllerAs: 'vm',
+            resolve: {
+                merchantList: ['merchantService', function(merchantService) {
+                    return merchantService.getAllActiveMerchants();
+                }]
+            }
         })
 
         .state('paymentDetails', {
@@ -232,7 +237,7 @@
         .state('paymentSettlement', {
             url: '/paymentSettlement',
             templateUrl: 'app/views/reports/add_settlement_report.html',
-            controller: 'paymentSettlementController',
+            controller: 'paymentController',
             controllerAs: 'vm'
         })
 

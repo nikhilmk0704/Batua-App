@@ -8,99 +8,83 @@
                     <div class="caption font-dark" style="padding-left:20px;padding-top:15px;">
                         <span class="caption-subject bold uppercase"> Payment Report</span>
                     </div>
-                    <div class="col-xs-4" style="margin-top:10px;float:right;">
-                        <div id="sample_1_filter" class="dataTables_filter pull-right" style="">
-                            <div class="input-group pull-right">
-                                <span class="input-group-addon input-circle-left">
-                         <i class="fa fa-search"></i>
-                       </span>
-                                <input type="search" class="form-control input-sm input-medium input-inline input-circle-right" id="search" name="search" placeholder="search here" aria-controls="sample_1">
-                            </div>
-                        </div>
-                    </div>
                 </section>
                 <section class="portlet-body">
                     <section class="table-toolbar">
                         <div class="row">
-                            <div class="col-xs-12">
-                                <form class="paymentreport-form" action="" method="">
+                            <form class="paymentreport-form" ng-submit="vm.handleFilterClicked(vm.filterData)">
+                                <div class="col-xs-12">
                                     <section class="form-group col-xs-12">
                                         <div class="col-xs-4">
-                                            <section class="input-group offerstartdate" style="margin-bottom:15px;">
-                                                <div class="input-group-addon input-circle-left">
-                                                    <i class="fa fa-user"></i>
+                                            <section class="form-group form-md-line-input has-info" style="padding:0px;">
+                                                <div class="col-xs-12">
+                                                    <select class="form-control" name="merchant" id="merchant" ng-options="merchant.id as merchant.name for merchant in vm.merchantList" ng-model="vm.filterData.merchantId">
+                                                        <option value="" disabled selected hidden>All</option>
+                                                    </select>
                                                 </div>
-                                                <input type="text" class="form-control input-circle-right" id="merchantname" name="merchantname" placeholder="Select Merchant" required>
                                             </section>
                                         </div>
                                         <div class=" col-xs-4">
                                             <section class="input-group offerstartdate" style="margin-bottom:15px;">
-                                                <div class="input-group-addon input-circle-left">
-                                                    <i class="fa fa-calendar">
-                                </i>
-                                                </div>
-                                                <input class="form-control input-circle-right" id="date" name="date" placeholder="From Date" type="text" />
+                                                <div class="input-group-addon input-circle-left"><a ng-click="openFrom($event)"><i class="fa fa-calendar"></i></a></div>
+                                                <input type="text" class="form-control input-circle-right dateinput" uib-datepicker-popup="dd/MM/yyyy" is-open="status.opened1" min-date="startDate" max-date="minDate" datepicker-mode="day" show-weeks="false" clear-text="false" show-button-bar="false" name="fromDate" ng-model="m.filterData.fromDate" required placeholder="From Date" style="width:97%" />
                                             </section>
                                         </div>
                                         <div class=" col-xs-4">
-                                            <section class="input-group  offerstartdate" style="margin-bottom:15px;">
-                                                <div class="input-group-addon input-circle-left">
-                                                    <i class="fa fa-calendar">
-                                </i>
-                                                </div>
-                                                <input class="form-control input-circle-right" id="date" name="date" placeholder="To Date" type="text" />
+                                            <section class="input-group offerstartdate" style="margin-bottom:15px;">
+                                                <div class="input-group-addon input-circle-left"><a ng-click="openTo($event)"><i class="fa fa-calendar"></i></a></div>
+                                                <input type="text" class="form-control input-circle-right dateinput" uib-datepicker-popup="dd/MM/yyyy" is-open="status.opened2" min-date="m.filterData.fromDate" max-date="minDate" datepicker-mode="day" show-weeks="false" clear-text="false" show-button-bar="false" name="toDate" ng-model="m.filterData.toDate" required placeholder="From Date" style="width:97%" />
                                             </section>
                                         </div>
                                     </section>
-                                </form>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="btn-group" style="padding-left:30px;">
-                                    <button id="sample_editable_1_new" class="btn sbold blue" href=""> Generate Report
-                                        <i class="fa fa-exchange"></i>
-                                    </button>
                                 </div>
-                                <div class="btn-group" style="padding-left:30px;">
-                                    <button id="sample_editable_1_new" class="btn sbold red" href="">Clear Filter</button>
+                                <div class="col-md-6">
+                                    <div class="btn-group" style="margin-left:20px;padding-left:30px;">
+                                        <button id="sample_editable_1_new" class="btn sbold blue" href=""> Generate Report
+                                            <i class="fa fa-exchange"></i>
+                                        </button>
+                                    </div>
+                                    <div class="btn-group" style="padding-left:30px;">
+                                        <button id="sample_editable_1_new" class="btn sbold red" href="">Clear Filter</button>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-md-6 pull-right">
-                                <div class="btn-group" style="margin-right:25px;float:right;">
-                                    <button id="sample_editable_1_new" class="btn sbold green" href=""> Export as Excel
-                                        <i class="fa fa-exchange"></i>
-                                    </button>
+                                <div class="col-md-6 pull-right">
+                                    <div class="btn-group" style="margin-right:50px;float:right;">
+                                        <button id="sample_editable_1_new" class="btn sbold green" href=""> Export as Excel
+                                            <i class="fa fa-exchange"></i>
+                                        </button>
+                                    </div>
                                 </div>
-                            </div>
+                            </form>
                         </div>
                     </section>
-                    <div id="sample_1_wrapper" class="dataTables_wrapper no-footer">
+                    <div class="dataTables_wrapper no-footer">
                         <div class="table-scrollable">
-                            <table class="table table-striped table-bordered table-hover  order-column dataTable no-footer" id="sample_1" role="grid" aria-describedby="sample_1_info">
+                            <table class="table table-striped table-bordered table-hover  order-column dataTable no-footer" datatable="ng">
                                 <thead>
                                     <tr role="row">
-                                        <th class="" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" aria-label="activate to sort column ascending" style="width: 100px;">Sl No. </th>
-                                        <th class="sorting" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" aria-label="  activate to sort column ascending" style="width:120px;">Merchant Name
-                                        </th>
-                                        <th class="" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" aria-label="activate to sort column ascending" style="width: 100px;"> Net Transaction Amt(Rs) </th>
-                                        <th class="" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" aria-sort="ascending" aria-label="activate to sort column descending" style="width: 108px;">Net Offer Amt (Rs)</th>
-                                        <th class="" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" aria-label=" activate to sort column ascending" style="width: 119px;"> Net Promo Offer Amt(Rs)</th>
-                                        <th class="" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" aria-label=" activate to sort column ascending" style="width: 119px;"> cashback by merchant(Rs) </th>
-                                        <th class="" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" aria-label=" activate to sort column ascending" style="width: 220px;"> Fee Charged(Rs) </th>
-                                        <th class="" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" aria-label=" activate to sort column ascending" style="width: 220px;">Settlement Amt(Rs)</th>
-                                        <th class="" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" aria-label=" activate to sort column ascending" style="width: 220px;">Status</th>
-                                        <th class="" tabindex="0" colspan="2" aria-controls="sample_1" rowspan="1" colspan="1" aria-label="  activate to sort column ascending" style="width: 120px; text-align:center;">Action</th>
+                                        <th style="width: 100px;"> Sr No. </th>
+                                        <th class="sorting" style="width:120px;"> Merchant Name </th>
+                                        <th style="width: 100px;"> Net Transaction Amt(Rs) </th>
+                                        <th style="width: 108px;"> Net Offer Amt (Rs) </th>
+                                        <th style="width: 119px;"> Net Promo Offer Amt(Rs) </th>
+                                        <th style="width: 119px;"> Cashback By Merchant(Rs) </th>
+                                        <th style="width: 220px;"> Fee Charged(Rs) </th>
+                                        <th style="width: 220px;"> Settlement Amt(Rs) </th>
+                                        <th style="width: 220px;"> Status </th>
+                                        <th style="width: 120px; text-align:center;"> Action </th>
                                     </tr>
                                 </thead>
                                 <tbody class="datatablecustom">
-                                    <tr class="gradeX odd" role="row">
-                                        <td>1</td>
-                                        <td>demo Merchant </td>
-                                        <td>100000</td>
-                                        <td> 10000</td>
-                                        <td>10000</td>
-                                        <td> 10000</td>
-                                        <td>1000 </td>
-                                        <td>1000</td>
+                                    <tr class="gradeX odd" role="row" ng-repeat="reportData in vm.reportsData" style="text-align:center;">
+                                        <td>{{$index + 1}}</td>
+                                        <td>{{}}</td>
+                                        <td>{{}}</td>
+                                        <td>{{}}</td>
+                                        <td>{{}}</td>
+                                        <td>{{}}</td>
+                                        <td>{{}}</td>
+                                        <td>{{}}</td>
                                         <td>
                                             <select class="form-control input-circle" id="form_control_1" required>
                                                 <option value="" disabled selected hidden>select status</option>
@@ -108,139 +92,11 @@
                                                 <option value="4">Settled</option>
                                             </select>
                                         </td>
-                                        <td><a type="button" class="btn default " href="Payment_Detail_Report.html" style="margin-bottom:10%;">Show Detail</a></td>
-                                        <td><a type="submit" class="btn button-color" href="Add_Settlement_Report.html">Add Settlement</a> </td>
-                                    </tr>
-                                    <tr class="gradeX even" role="row">
-                                        <td>1</td>
-                                        <td>demo Merchant </td>
-                                        <td>100000</td>
-                                        <td> 10000</td>
-                                        <td>10000</td>
-                                        <td> 10000</td>
-                                        <td>1000 </td>
-                                        <td>1000</td>
-                                        <td>
-                                            <select class="form-control input-circle" id="form_control_1" required>
-                                                <option value="" disabled selected hidden>select status</option>
-                                                <option value="3">Open</option>
-                                                <option value="4">Settled</option>
-                                            </select>
-                                        </td>
-                                        <td><a type="button" class="btn default " href="Payment_Detail.html" style="margin-bottom:10%;">Show Detail</a></td>
-                                        <td><a type="submit" class="btn button-color" href="Add_Settlement_Report">Add Settlement</a> </td>
-                                    </tr>
-                                    <tr class="gradeX odd" role="row">
-                                        <td>1</td>
-                                        <td>demo Merchant </td>
-                                        <td>100000</td>
-                                        <td> 10000</td>
-                                        <td>10000</td>
-                                        <td> 10000</td>
-                                        <td>1000 </td>
-                                        <td>1000</td>
-                                        <td>
-                                            <select class="form-control input-circle" id="form_control_1" required>
-                                                <option value="" disabled selected hidden>select status</option>
-                                                <option value="3">Open</option>
-                                                <option value="4">Settled</option>
-                                            </select>
-                                        </td>
-                                        <td><a type="button" class="btn default " href="Payment_Detail.html" style="margin-bottom:10%;">Show Detail</a></td>
-                                        <td><a type="submit" class="btn button-color" href="Add_Settlement_Report">Add Settlement</a> </td>
-                                    </tr>
-                                    <tr class="gradeX even" role="row">
-                                        <td>1</td>
-                                        <td>demo Merchant </td>
-                                        <td>100000</td>
-                                        <td> 10000</td>
-                                        <td>10000</td>
-                                        <td> 10000</td>
-                                        <td>1000 </td>
-                                        <td>1000</td>
-                                        <td>
-                                            <select class="form-control input-circle" id="form_control_1" required>
-                                                <option value="" disabled selected hidden>select status</option>
-                                                <option value="3">Open</option>
-                                                <option value="4">Settled</option>
-                                            </select>
-                                        </td>
-                                        <td><a type="button" class="btn default " href="Payment_Detail.html" style="margin-bottom:10%;">Show Detail</a></td>
-                                        <td><a type="submit" class="btn button-color" href="Add_Settlement_Report">Add Settlement</a> </td>
-                                    </tr>
-                                    <tr class="gradeX odd" role="row">
-                                        <td>1</td>
-                                        <td>demo Merchant </td>
-                                        <td>100000</td>
-                                        <td> 10000</td>
-                                        <td>10000</td>
-                                        <td> 10000</td>
-                                        <td>1000 </td>
-                                        <td>1000</td>
-                                        <td>
-                                            <select class="form-control input-circle" id="form_control_1" required>
-                                                <option value="" disabled selected hidden>select status</option>
-                                                <option value="3">Open</option>
-                                                <option value="4">Settled</option>
-                                            </select>
-                                        </td>
-                                        <td><a type="button" class="btn default " href="Payment_Detail.html" style="margin-bottom:10%;">Show Detail</a></td>
-                                        <td><a type="submit" class="btn button-color" href="Add_Settlement_Report">Add Settlement</a> </td>
-                                    </tr>
-                                    <tr class="gradeX even" role="row">
-                                        <td>1</td>
-                                        <td>demo Merchant </td>
-                                        <td>100000</td>
-                                        <td> 10000</td>
-                                        <td>10000</td>
-                                        <td> 10000</td>
-                                        <td>1000 </td>
-                                        <td>1000</td>
-                                        <td>
-                                            <select class="form-control input-circle" id="form_control_1" style="width:100px;" required>
-                                                <option value="" disabled selected hidden>select status</option>
-                                                <option value="3">Open</option>
-                                                <option value="4">Settled</option>
-                                            </select>
-                                        </td>
-                                        <td><a type="button" class="btn default " href="Payment_Detail.html" style="margin-bottom:10%;">Show Detail</a></td>
-                                        <td><a type="submit" class="btn button-color" href="Add_Settlement_Report">Add Settlement</a> </td>
+                                        <td><a type="button" class="btn default" ui-sref="paymentDetails" style="margin-bottom:10%;">Show Detail</a></td>
+                                        <td><a type="submit" class="btn button-color" ui-sref="paymentSettlement">Add Settlement</a> </td>
                                     </tr>
                                 </tbody>
                             </table>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-7 col-sm-7 pull-right">
-                                <div class="dataTables_paginate paging_bootstrap_full_number" id="sample_1_paginate">
-                                    <ul class="pagination" style="visibility: visible;">
-                                        <li class="prev disabled">
-                                            <a href="#" title="First"><i class="fa fa-angle-double-left"></i></a>
-                                        </li>
-                                        <li class="prev disabled">
-                                            <a href="#" title="Prev"><i class="fa fa-angle-left"></i></a>
-                                        </li>
-                                        <li class="active">
-                                            <a href="#">1</a></li>
-                                        <li><a href="#">2</a>
-                                        </li>
-                                        <li>
-                                            <a href="#">3</a>
-                                        </li>
-                                        <li>
-                                            <a href="#">4</a>
-                                        </li>
-                                        <li>
-                                            <a href="#">5</a>
-                                        </li>
-                                        <li class="next">
-                                            <a href="#" title="Next"><i class="fa fa-angle-right"></i></a>
-                                        </li>
-                                        <li class="next">
-                                            <a href="#" title="Last"><i class="fa fa-angle-double-right"></i></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </section>

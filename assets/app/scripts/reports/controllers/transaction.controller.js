@@ -61,12 +61,27 @@ angular.module('app').controller('transactionController', ['$scope', '$state', '
             vm.list = angular.copy(vm.reportsData);
 
             vm.filteredData = _.map(vm.list, function(data) {
-                var userName = (data.user.name ? data.user.name : '');
-                var offerCashback = (data.promocodeId ? '' : data.promocodeAmount);
-                var promoCashback = (data.promocodeId ? data.promocodeAmount : '');
-                var transactionCancelledBy = (data.cancelledBy ? data.cancelledBy.name : '');
-                var transactionCancelledOn = (data.cancellationDate ? (data.cancellationDate).format('YYYY-MM-DD') : '');
-                var reportsData = { 'Merchant Name': data.merchant.name, 'User Name': userName, 'Order number': data.transactionDetail.orderNumber, 'Transaction ID': data.transactionDetail.transactionId, 'Transaction Date': (data.transactionDetail.createdAt).format('YYYY-MM-DD'), 'Payment Amount(Rs)': data.paidAmount, 'Cashback by Offer': offerCashback, 'Cashback by PromoCode': promoCashback, 'Amount(Rs) credited to Batua': data.batuaCommission, 'Transaction cancelled by': transactionCancelledBy, 'Transaction cancelled on': transactionCancelledOn, 'Cancellation Description': data.status }
+                var userName = (data.user.name ? data.user.name : ''),
+                    offerCashback = (data.promocodeId ? '' : data.promocodeAmount),
+                    promoCashback = (data.promocodeId ? data.promocodeAmount : ''),
+                    transactionCancelledBy = (data.cancelledBy ? data.cancelledBy.name : ''),
+                    transactionCancelledOn = (data.cancellationDate ? (data.cancellationDate).format('YYYY-MM-DD') : ''),
+                    cancelledDesc = (data.cancellationDescription ? data.cancellationDescription : '');
+                    
+                var reportsData = {
+                    'Merchant Name': data.merchant.name,
+                    'User Name': userName,
+                    'Order number': data.transactionDetail.orderNumber,
+                    'Transaction ID': data.transactionDetail.transactionId,
+                    'Transaction Date': (data.transactionDetail.createdAt).format('YYYY-MM-DD'),
+                    'Payment Amount(Rs)': data.paidAmount,
+                    'Cashback by Offer': offerCashback,
+                    'Cashback by PromoCode': promoCashback,
+                    'Amount(Rs) credited to Batua': data.batuaCommission,
+                    'Transaction cancelled by': transactionCancelledBy,
+                    'Transaction cancelled on': transactionCancelledOn,
+                    'Cancellation Description': cancelledDesc
+                }
                 return reportsData;
             });
 
