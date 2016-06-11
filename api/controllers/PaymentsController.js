@@ -16,18 +16,18 @@ module.exports = {
         var params = req.body;
 
         var paymentService = new PaymentService();
-   
+
         paymentService.save(params, function(err, result) {
 
-            if (err){
-    
-                if(err.errorCode===406){
+            if (err) {
+
+                if (err.errorCode === 406) {
                     return res.notAcceptable(error.send(err.message));
 
-                }else{
+                } else {
                     return res.badRequest(error.send(err));
                 }
-                
+
             }
             return res.json(200, result);
         });
@@ -55,7 +55,7 @@ module.exports = {
         params.userId = req.param('userId');
 
         var paymentService = new PaymentService();
-        
+
         paymentService.wallet(params, function(err, result) {
             if (err)
                 return res.badRequest(error.send(err));
@@ -93,5 +93,73 @@ module.exports = {
                 return res.badRequest(error.send(err));
             return res.json(200, result);
         });
-    }
+    },
+
+    yesBankGenerateOtp: function(req, res) {
+
+        var params = req.body;
+
+        var paymentService = new PaymentService();
+
+        paymentService.generateOtp(params, function(err, result) {
+
+            if (err)
+                return res.badRequest(error.send(err));
+
+            return res.json(200, result);
+
+        });
+
+    },
+
+    yesBankVerifyOtp: function(req, res) {
+
+        var params = req.body;
+
+        var paymentService = new PaymentService();
+
+        paymentService.verifyOtp(params, function(err, result) {
+
+            if (err)
+                return res.badRequest(error.send(err));
+
+            return res.json(200, result);
+
+        });
+
+    },
+
+    yesBankExecuteTxn: function(req, res) {
+
+        var params = req.body;
+
+        var paymentService = new PaymentService();
+
+        paymentService.executeTxnThirdParty(params, function(err, result) {
+
+            if (err)
+                return res.badRequest(error.send(err));
+
+            return res.json(200, result);
+
+        });
+
+    },
+
+    makeYesBankWalletPayment: function(req, res) {
+
+        var params = req.body;
+
+        var paymentService = new PaymentService();
+
+        paymentService.makeYesBankWalletPayment(params, function(err, result) {
+
+            if (err)
+                return res.badRequest(error.send(err));
+
+            return res.json(200, result);
+
+        });
+
+    },
 };

@@ -5,6 +5,7 @@ var PaymentsRepository = require('../repositories/PaymentsRepository.js');
 var TransactionDetailsRepository = require('../repositories/TransactionDetailsRepository.js');
 
 var request = require('request');
+var crypto = require('crypto');
 
 class PaymentService {
 
@@ -261,6 +262,202 @@ class PaymentService {
         paymentsRepository.updateAndFind(updateObject, whereObject, findObject, callback);
     }
 
+    generateOtp(params, callback) {
+        var phone = params.phone;
+        var merchantSecretKey = sails.config.connections.merchantSecretKey;
+        request({
+            method: 'POST',
+            url: 'https://uatsky.yesbank.in/app/uat/merchants/generate_otp.json',
+            headers: sails.config.connections.headers,
+            json: true,
+            body: {
+                "mobile_number": phone,
+                "merchant_secret_key": merchantSecretKey
+            }
+        }, function(error, response, body) {
+            if (error)
+                return callback(error, null);
+            if (body.code)
+                return callback(body, null);
+            return callback(null, body);
+        });
+    }
+
+    verifyOtp(params, callback) {
+        var phone = params.phone;
+        var otp = params.otp;
+        var merchantSecretKey = sails.config.connections.merchantSecretKey;
+        request({
+            method: 'POST',
+            url: 'https://uatsky.yesbank.in/app/uat/merchants/verify_otp.json',
+            headers: sails.config.connections.headers,
+            json: true,
+            body: {
+                "mobile_number": phone,
+                "merchant_secret_key": merchantSecretKey,
+                "otp": otp
+            }
+        }, function(error, response, body) {
+            if (error)
+                return callback(error, null);
+            if (body.code)
+                return callback(body, null);
+            var newParams = {};
+            newParams.phone = phone;
+            newParams.merchantSecretKey = merchantSecretKey;
+            newParams.authToken = body.auth_token;
+            var psk = "9c6cdb06e2dea650ecda660e40e44e76";
+            var text = "" + phone + "|" + psk;
+            newParams.signature = generateSignature(text);
+            getBalanceThirdParty(newParams, callback);
+        });
+    }
+
+    executeTxnThirdParty(params, callback) {
+        var phone = params.phone;
+        var merchantSecretKey = sails.config.connections.merchantSecretKey;
+        var amount = +params.amount;
+        var authToken = params.authToken;
+        var merchantReferenceNumber = sails.config.connections.merchantReferenceNumber;
+        var psk = "9c6cdb06e2dea650ecda660e40e44e76";
+        var text = "" + phone + "|" + psk + "|" + amount + "|" + merchantReferenceNumber;
+        console.log(text);
+        console.log(authToken);
+        var signature = generateSignature(text);
+        console.log(signature);
+        request({
+            method: 'POST',
+            url: 'https://uatsky.yesbank.in/app/uat/merchants/execute_txn_thirdparty.json',
+            headers: sails.config.connections.headers,
+            json: true,
+            body: {
+                "mobile_number": phone,
+                "merchant_secret_key": merchantSecretKey,
+                "amount": amount,
+                "merchent_reference_number": merchantReferenceNumber,
+                "description": "test1",
+                "signature": signature,
+                "auth_token": authToken
+            }
+        }, function(error, response, body) {
+            if (error)
+                return callback(error, null);
+            if (body.code)
+                return callback(body, null);
+            return callback(null, body);
+        });
+    }
+
+    makeYesBankWalletPayment(params, callback) {
+
+        generateOrderNo(function(sequenceNumber) {
+
+            var transactionDetailParam = {};
+
+            transactionDetailParam.orderNumber = sequenceNumber;
+            transactionDetailParam.transactionId = sequenceNumber;
+            transactionDetailParam.paymentId = params.paymentId;
+            transactionDetailParam.status = params.status;
+            transactionDetailParam.mode = 'Yes Wallet';
+
+            var transactionDetailsRepository = new TransactionDetailsRepository();
+
+            transactionDetailsRepository.save(transactionDetailParam, function(err, transactionDetail) {
+                if (err)
+                    return callback(err, null);
+                /*---save payment for each transaction---*/
+
+                var savePaymentParam = {};
+
+                savePaymentParam.transactionDetailId = transactionDetail.id;
+                savePaymentParam.userId = params.userId;
+                savePaymentParam.merchantId = params.merchantId;
+                savePaymentParam.paymentModeId = params.paymentmodeId;
+                savePaymentParam.type = params.type;
+                if (params.promocode) {
+                    savePaymentParam.promocodeId = params.promocode.id;
+                } else {
+                    savePaymentParam.promocodeId = null;
+                }
+                if (params.offer) {
+                    savePaymentParam.offerDiscountId = params.offer.id;
+                } else {
+                    savePaymentParam.offerDiscountId = null;
+                }
+
+                getMerchantFee(params.merchantId, function(merchantFee) {
+                    if (params.promocode) {
+
+                        promocodeOperation(params, merchantFee[0].fees, function(resultArray) {
+                            savePaymentParam.initialAmount = parseFloat(params.amount);
+                            savePaymentParam.reducedAmount = (parseFloat(resultArray.reducedAmount) + parseFloat(resultArray.deductionAmountFromAmountAfterPromocodeApply) + parseFloat(resultArray.fee));
+                            savePaymentParam.paidAmount = parseFloat(resultArray.paidAmount);
+                            savePaymentParam.promocodeAmount = parseFloat(resultArray.reducedAmount);
+                            savePaymentParam.batuaCommission = parseFloat(resultArray.deductionAmountFromAmountAfterPromocodeApply);
+                            savePaymentParam.merchantFee = parseFloat(resultArray.fee);
+
+                            return savePaymentDetails(savePaymentParam, function(err, result) {
+                                if (err) {
+                                    return callback(err, null);
+                                }
+                                findPaymentDetail(result, function(err, detailResult) {
+                                    if (err) {
+                                        return callback(err, null);
+                                    }
+                                    return callback(null, detailResult);
+                                });
+
+                            });
+                        });
+
+
+                    } else if (params.offer) {
+                        offerOperation(params, merchantFee[0].fees, function(resultArray) {
+                            savePaymentParam.initialAmount = parseFloat(params.amount);
+                            savePaymentParam.reducedAmount = (parseFloat(resultArray.reducedAmount) + parseFloat(resultArray.fee));
+                            savePaymentParam.paidAmount = parseFloat(resultArray.paidAmount);
+                            savePaymentParam.promocodeAmount = parseFloat(resultArray.reducedAmount);
+                            savePaymentParam.batuaCommission = parseFloat(resultArray.deductionAmountFromAmountAfterPromocodeApply);
+                            savePaymentParam.merchantFee = parseFloat(resultArray.fee);
+                            return savePaymentDetails(savePaymentParam, function(err, result) {
+                                if (err) {
+                                    return callback(err, null);
+                                }
+                                findPaymentDetail(result, function(err, detailResult) {
+                                    if (err) {
+                                        return callback(err, null);
+                                    }
+                                    return callback(null, detailResult);
+                                });
+
+                            });
+                        });
+
+                    } else {
+                        var deductionFee = parseFloat(params.amount) * (parseFloat(merchantFee[0].fees) / 100)
+                        savePaymentParam.initialAmount = parseFloat(params.amount);
+                        savePaymentParam.reducedAmount = deductionFee;
+                        savePaymentParam.paidAmount = parseFloat(params.amount) - deductionFee;
+                        savePaymentParam.promocodeAmount = 0;
+                        savePaymentParam.batuaCommission = 0;
+                        savePaymentParam.merchantFee = parseFloat(deductionFee);
+                        return savePaymentDetails(savePaymentParam, function(err, result) {
+                            if (err) {
+                                return callback(err, null);
+                            }
+                            findPaymentDetail(result, function(err, detailResult) {
+                                if (err) {
+                                    return callback(err, null);
+                                }
+                                return callback(null, detailResult);
+                            });
+                        });
+                    }
+                });
+            });
+        });
+    }
+
 }
 module.exports = PaymentService;
 
@@ -290,9 +487,9 @@ function getRechargedList(userId, callback) {
     whereObject.where.$and.userId = userId;
     whereObject.where.$and.type = 'recharge';
     whereObject.order = [
-            ['createdAt', 'DESC']
-        ];
-        
+        ['createdAt', 'DESC']
+    ];
+
     paymentsRepository.findAll(whereObject, function(err, result) {
         if (err)
             return callback(err);
@@ -314,8 +511,8 @@ function getPaymentList(userId, callback) {
     whereObject.where.$and.merchantId.$not = null;
     whereObject.where.$and.paymentmodeId = 3;
     whereObject.order = [
-            ['createdAt', 'DESC']
-        ];
+        ['createdAt', 'DESC']
+    ];
 
     paymentsRepository.findAll(whereObject, function(err, result) {
         if (err)
@@ -342,8 +539,8 @@ function getCashbackList(userId, callback) {
     whereObject.where.$and.$or.promocodeId = {};
     whereObject.where.$and.$or.promocodeId.$not = null;
     whereObject.order = [
-            ['createdAt', 'DESC']
-        ];
+        ['createdAt', 'DESC']
+    ];
 
     paymentsRepository.findAll(whereObject, function(err, result) {
         if (err)
@@ -632,4 +829,34 @@ function includeModels() {
         attributes: ['id', 'paymentMode', 'walletType'],
         required: false
     }];
+}
+
+function getBalanceThirdParty(params, callback) {
+    var phone = params.phone;
+    var authToken = params.authToken;
+    var signature = params.signature;
+    request({
+        method: 'POST',
+        url: 'https://uatsky.yesbank.in/app/uat/merchants/get_balance_thirdparty.json',
+        headers: sails.config.connections.headers,
+        json: true,
+        body: {
+            "mobile_number": phone,
+            "merchant_secret_key": sails.config.connections.merchantSecretKey,
+            "signature": signature,
+            "auth_token": authToken
+        }
+    }, function(error, response, body) {
+        if (error)
+            return callback(error, null);
+        if (body.code)
+            return callback(body, null);
+        return callback(null, body);
+    });
+}
+
+function generateSignature(text) {
+    var sha = crypto.createHash('sha512').update(text);
+    var result = sha.digest('hex');
+    return result;
 }
