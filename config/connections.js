@@ -125,6 +125,8 @@ module.exports.connections = {
 
     merchantReferenceNumber: "00000001",
 
+    psk: "9c6cdb06e2dea650ecda660e40e44e76",
+
     headers: {
         'Content-Type': 'application/json',
         'Accept': 'application/json',

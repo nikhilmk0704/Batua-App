@@ -201,12 +201,17 @@ class PaymentService {
         })
     }
 
-    transactionReport(callback) {
+    transactionReport(params, callback) {
+
+        var merchantId = params.merchantId;
+        var userId = params.userId;
+        var fromDate = params.fromDate;
+        var toDate = params.toDate;
 
         var paymentsRepository = new PaymentsRepository();
 
         var whereObject = {};
-        var include = [{
+        whereObject.include = [{
             model: Merchants,
             as: 'merchant',
             attributes: ['id', 'name'],
@@ -226,14 +231,55 @@ class PaymentService {
             as: 'transactionDetail',
             attributes: ['id', 'orderNumber', 'transactionId', 'paymentId', 'createdAt'],
             required: false
+        }, {
+            model: Settlements,
+            as: 'settlement',
+            required: false
         }];
-        whereObject.include = include;
         whereObject.where = {};
+        whereObject.where.$and = {};
+        (merchantId) ? (whereObject.where.$and.merchantId = merchantId) : (null);
+        (userId) ? (whereObject.where.$and.userId = userId) : (null);
+        (fromDate && toDate) ? (whereObject.where.$and.createdAt.$between = [fromDate, toDate]) : (null);
         whereObject.order = [
             ['createdAt', 'DESC']
         ];
-
-        paymentsRepository.findAll(whereObject, callback);
+        var txnArray = [];
+        var count = 0;
+        Payments.findAll(whereObject).then(function(result) {
+            result.forEach(function(obj) {
+                count++;
+                var txnObj = {};
+                txnObj.id = obj.id;
+                txnObj.merchantName = obj.merchant.name;
+                txnObj.userName = obj.user.name;
+                txnObj.orderNumber = obj.transactionDetail.orderNumber;
+                txnObj.transactionId = obj.transactionDetail.paymentId;
+                txnObj.transactionDate = obj.createdAt;
+                txnObj.paymentAmount = obj.initialAmount;
+                if (obj.offerDiscountId) {
+                    txnObj.cashbackByOffer = obj.promocodeAmount;
+                    txnObj.cashbackByPromo = 0;
+                }
+                if (obj.promocodeId) {
+                    txnObj.cashbackByOffer = 0;
+                    txnObj.cashbackByPromo = obj.promocodeAmount;
+                }
+                if (!obj.offerDiscountId && !obj.promocodeId) {
+                    txnObj.cashbackByOffer = 0;
+                    txnObj.cashbackByPromo = 0;
+                }
+                txnObj.amountCreditedToBatua = obj.paidAmount;
+                txnObj.transactionCancelledBy = (obj.cancelledBy) ? (obj.cancelledBy.name) : (null);
+                txnObj.transactionCancelledOn = obj.cancellationDate;
+                txnObj.cancellationDescription = obj.cancellationDescription;
+                txnArray.push(txnObj);
+                if (count == result.length)
+                    return callback(null, txnArray);
+            });
+        }).catch(function(exception) {
+            callback(exception);
+        });
     }
 
     cancelTransaction(params, callback) {
@@ -306,7 +352,7 @@ class PaymentService {
             newParams.phone = phone;
             newParams.merchantSecretKey = merchantSecretKey;
             newParams.authToken = body.auth_token;
-            var psk = "9c6cdb06e2dea650ecda660e40e44e76";
+            var psk = sails.config.connections.psk;
             var text = "" + phone + "|" + psk;
             newParams.signature = generateSignature(text);
             getBalanceThirdParty(newParams, callback);
@@ -319,12 +365,9 @@ class PaymentService {
         var amount = +params.amount;
         var authToken = params.authToken;
         var merchantReferenceNumber = sails.config.connections.merchantReferenceNumber;
-        var psk = "9c6cdb06e2dea650ecda660e40e44e76";
+        var psk = sails.config.connections.psk;
         var text = "" + phone + "|" + psk + "|" + amount + "|" + merchantReferenceNumber;
-        console.log(text);
-        console.log(authToken);
         var signature = generateSignature(text);
-        console.log(signature);
         request({
             method: 'POST',
             url: 'https://uatsky.yesbank.in/app/uat/merchants/execute_txn_thirdparty.json',
@@ -583,6 +626,10 @@ function findPaymentDetail(paymentResponse, callback) {
             model: Paymentmodes,
             as: 'paymentMode',
             required: false
+        }, {
+            model: Settlements,
+            as: 'settlement',
+            required: false
         }];
         params.include = include;
 
@@ -827,6 +874,10 @@ function includeModels() {
         model: Paymentmodes,
         as: 'paymentMode',
         attributes: ['id', 'paymentMode', 'walletType'],
+        required: false
+    }, {
+        model: Settlements,
+        as: 'settlement',
         required: false
     }];
 }

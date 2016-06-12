@@ -363,7 +363,10 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
                 "name":"vikash",
                 "date":"2016-05-10T13:18:48.000Z",
                 "referenceNumber":"1234",
-                "description":"hello"
+                "description":"hello",
+                "merchantId":"12",
+                "fromDate":"2016-05-26T05:39:46.000Z",
+                "toDate":"2016-05-26T05:39:46.000Z"
             }
         
 + Response 200 (application/json)
@@ -391,7 +394,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
             }  
 
 
-### Get Payment Settlement report [GET /api/admin/payment/settlement]
+### Get Payment Settlement report [GET /api/admin/payment/settlement?merchantId=12&fromDate=""&toDate=""]
 
 + Response 200 (application/json)
 
@@ -403,10 +406,10 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
                     "merchantName": "vikash",
                     "netTransactionAmount": 100000,
                     "netOfferAmount": 10000,
-                    "netPromoOffer": 10000,
-                    "cashbackByMerchant": 10000,
-                    "feeCharged": 1000,
-                    "settlementAmount":1000,
+                    "netPromoOfferAmount": 10000,
+                    "netCashbackByMerchant": 10000,
+                    "netFeeCharged": 1000,
+                    "netSettlementAmount":1000,
                     "status":"Open",
                     "createdAt": "2016-04-06T07:38:39.000Z",
                     "updatedAt": "2016-04-06T07:43:56.000Z"
@@ -416,7 +419,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 404 (application/json)
 
 
-### Get Payment Details report [GET /api/admin/payment/details]
+### Get Payment Details report [GET /api/admin/payment/details?merchantId=12]
 
 + Response 200 (application/json)
 
@@ -432,7 +435,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
                     "transactionAmount": 10000,
                     "offerAmount": 1000,
                     "promoOfferAmount":1000,
-                    "promoAmountByMerchant":"Open",
+                    "promoAmountByMerchant":1000,
                     "feeCharged":1000,
                     "amountCreditedToBatua":500,
                     "settlementAmount":10000
@@ -445,7 +448,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
 + Response 404 (application/json)
 
 
-### Get Transaction report [GET /api/admin/transaction/report]
+### Get Transaction report [GET /api/admin/transaction/report?merchantId=12&fromDate=""&toDate=""&userId=12]
 
 + Response 200 (application/json)
 
@@ -1483,6 +1486,69 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
             }
           ]
         }
+
+
+### Yes Bank Wallet Generate OTP [POST /api/user/yesbankwallet/generateotp]
+
++ Request (application/json)
+            
+    + Body
+    
+            {
+                "phone":"9876543219"
+            }
+
++ Response 200 (application/json)
+
+        {
+            "code": 0,
+            "status_code": "SUCCESS",
+            "message": "Generated One Time Password Successfully"
+        }
+
+
+### Yes Bank Wallet Verify OTP [POST /api/user/yesbankwallet/verifyotp]
+
++ Request (application/json)
+            
+    + Body
+    
+            {
+                "phone":"9876543219",
+                "otp":"111111"
+            }
+
++ Response 200 (application/json)
+
+            {
+                "code": 0,
+                "auth_token": "7a4ec066-eedf-48b1-8e2e-1e1d21edd03e",
+                "balance": 7764.34,
+                "status_code": "SUCCESS"
+            }
+
+
+### Yes Bank Wallet Execute Transaction [POST /api/user/yesbankwallet/executethirdpartypayment]
+
++ Request (application/json)
+            
+    + Body
+    
+            {
+                "phone":"9876543219",
+                "amount":100,
+                "authToken":"7a4ec066-eedf-48b1-8e2e-1e1d21edd03e"
+            }
+
++ Response 200 (application/json)
+
+            {
+                "code": 0,
+                "message": "Amount Transferred Successfully",
+                "yes_reference_number": "1wddw23232",
+                "status_code": "SUCCESS",
+                "merchant_reference_number":"ref0001"
+            }
 
 
 ### Transaction History Us [GET /api/user/{:userId}/payment/history]
