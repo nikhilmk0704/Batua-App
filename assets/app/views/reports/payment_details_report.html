@@ -6,7 +6,7 @@
             <section class="portlet light bordered portletcustom" style="padding:0;">
                 <section class="portlet-title">
                     <div class="caption font-dark" style="padding-left:20px;padding-top:15px;">
-                        <span class="caption-subject bold uppercase"> Payment details Against <label><!--merchant name should come here--> Merchant </label></span>
+                        <span class="caption-subject bold uppercase"> Payment details Against <label> {{vm.merchantName}} </label></span>
                     </div>
                 </section>
                 <section class="portlet-body">
@@ -16,15 +16,14 @@
                                 <thead>
                                     <tr role="row" ng-repeat="paymentDetail in vm.paymentDetails" style="text-align:center;">
                                         <th style="width: 100px;"> Sr No. </th>
-                                        <th class="sorting" style="width:100%;"> Users
-                                        </th>
+                                        <th class="sorting" style="width:100%;"> Users </th>
                                         <th style="width: 100px;"> Order Number </th>
                                         <th style="width: 108px;"> Transaction ID </th>
                                         <th style="width: 119px;"> Transaction Date </th>
-                                        <th style="width: 119px;"> Transaction Amt (Rs) </th>
-                                        <th style="width: 220px;"> Offer Amt (Rs) </th>
-                                        <th style="width: 220px;"> Promo Offer Amt (Rs) </th>
-                                        <th style="width: 220px;"> Promo Amt By Merchant (Rs) </th>
+                                        <th style="width: 119px;"> Transaction Amount (Rs) </th>
+                                        <th style="width: 220px;"> Offer Amount (Rs) </th>
+                                        <th style="width: 220px;"> Promocode Amount (Rs) </th>
+                                        <th style="width: 220px;"> Promo/Offer Amount By Merchant (Rs) </th>
                                         <th style="width: 220px;"> Fee Charged(Rs) </th>
                                         <th style="width: 220px;"> Amount Credited to Batua(Rs) </th>
                                         <th style="width: 120px;"> Settlement Amount </th>
@@ -33,17 +32,17 @@
                                 <tbody class="datatablecustom">
                                     <tr class="gradeX odd" role="row">
                                         <td>{{$index+1}}</td>
-                                        <td>{{}}</td>
-                                        <td>{{}}</td>
-                                        <td>{{}}</td>
-                                        <td>{{}}</td>
-                                        <td>{{}}</td>
-                                        <td>{{}}</td>
-                                        <td>{{}}</td>
-                                        <td>{{}}</td>
-                                        <td>{{}}</td>
-                                        <td>{{}}</td>
-                                        <td>{{}}</td>
+                                        <td>{{paymentDetail.user?paymentDetail.user:''}}</td>
+                                        <td>{{paymentDetail.orderNumber}}</td>
+                                        <td>{{paymentDetail.transactionId}}</td>
+                                        <td>{{paymentDetail.transactionDate |date:shortDate}}</td>
+                                        <td>{{paymentDetail.transactionAmount}}</td>
+                                        <td>{{paymentDetail.offerAmount}}</td>
+                                        <td>{{paymentDetail.promoOfferAmount}}</td>
+                                        <td>{{paymentDetail.promoAmountByMerchant}}</td>
+                                        <td>{{paymentDetail.feeCharged}}</td>
+                                        <td>{{paymentDetail.amountCreditedToBatua}}</td>
+                                        <td>{{paymentDetail.settlementAmount}}</td>
                                     </tr>
                                 </tbody>
                             </table>

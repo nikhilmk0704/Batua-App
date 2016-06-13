@@ -18,10 +18,11 @@
 
         return service;
 
-        function getPaymentReport(callback) {
+        function getPaymentReport(params, callback) {
             httpi({
                 method: "get",
-                url: API.paymentReport
+                url: API.paymentReport,
+                params: params
             }).then(function(response) {
                 callback(response);
             }, function(response) {
@@ -46,13 +47,12 @@
             });
         }
 
-        function getPaymentDetailsAgainstMerchant(adminId, merchantId, callback) {
+        function getPaymentDetailsAgainstMerchant(merchantId, callback) {
             httpi({
                 method: "get",
                 url: API.paymentDetails,
                 params: {
-                    adminId: adminId,
-                    id: merchantId
+                    merchantId: merchantId
                 }
             }).then(function(response) {
                 callback(response);
@@ -78,10 +78,11 @@
             });
         }
 
-        function getTransactionReport(callback) {
+        function getTransactionReport(params, callback) {
             httpi({
                 method: "get",
-                url: API.transactionReport
+                url: API.transactionReport,
+                params: params
             }).then(function(response) {
                 callback(response);
             }, function(response) {

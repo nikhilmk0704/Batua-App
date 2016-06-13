@@ -228,7 +228,7 @@
         })
 
         .state('paymentDetails', {
-            url: '/paymentDetails',
+            url: '/paymentDetails?merchantId&merchantName',
             templateUrl: 'app/views/reports/payment_details_report.html',
             controller: 'paymentDetailsController',
             controllerAs: 'vm'

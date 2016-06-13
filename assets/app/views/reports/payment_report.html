@@ -27,30 +27,28 @@
                                         <div class=" col-xs-4">
                                             <section class="input-group offerstartdate" style="margin-bottom:15px;">
                                                 <div class="input-group-addon input-circle-left"><a ng-click="openFrom($event)"><i class="fa fa-calendar"></i></a></div>
-                                                <input type="text" class="form-control input-circle-right dateinput" uib-datepicker-popup="dd/MM/yyyy" is-open="status.opened1" min-date="startDate" max-date="minDate" datepicker-mode="day" show-weeks="false" clear-text="false" show-button-bar="false" name="fromDate" ng-model="m.filterData.fromDate" required placeholder="From Date" style="width:97%" />
+                                                <input type="text" class="form-control input-circle-right dateinput" uib-datepicker-popup="dd/MM/yyyy" is-open="status.opened1" min-date="startDate" max-date="minDate" datepicker-mode="day" show-weeks="false" clear-text="false" show-button-bar="false" name="fromDate" ng-model="m.filterData.fromDate" placeholder="From Date" style="width:97%" />
                                             </section>
                                         </div>
                                         <div class=" col-xs-4">
                                             <section class="input-group offerstartdate" style="margin-bottom:15px;">
                                                 <div class="input-group-addon input-circle-left"><a ng-click="openTo($event)"><i class="fa fa-calendar"></i></a></div>
-                                                <input type="text" class="form-control input-circle-right dateinput" uib-datepicker-popup="dd/MM/yyyy" is-open="status.opened2" min-date="m.filterData.fromDate" max-date="minDate" datepicker-mode="day" show-weeks="false" clear-text="false" show-button-bar="false" name="toDate" ng-model="m.filterData.toDate" required placeholder="From Date" style="width:97%" />
+                                                <input type="text" class="form-control input-circle-right dateinput" uib-datepicker-popup="dd/MM/yyyy" is-open="status.opened2" min-date="m.filterData.fromDate" max-date="minDate" datepicker-mode="day" show-weeks="false" clear-text="false" show-button-bar="false" name="toDate" ng-model="m.filterData.toDate" placeholder="From Date" style="width:97%" />
                                             </section>
                                         </div>
                                     </section>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="btn-group" style="margin-left:20px;padding-left:30px;">
-                                        <button id="sample_editable_1_new" class="btn sbold blue" href=""> Generate Report
-                                            <i class="fa fa-exchange"></i>
-                                        </button>
+                                        <button class="btn sbold blue" type="submit"> Generate Report </button>
                                     </div>
                                     <div class="btn-group" style="padding-left:30px;">
-                                        <button id="sample_editable_1_new" class="btn sbold red" href="">Clear Filter</button>
+                                        <button type="button" class="btn sbold red" ng-click="vm.clearFilters()"> Clear Filter </button>
                                     </div>
                                 </div>
                                 <div class="col-md-6 pull-right">
                                     <div class="btn-group" style="margin-right:50px;float:right;">
-                                        <button id="sample_editable_1_new" class="btn sbold green" href=""> Export as Excel
+                                        <button type="button" class="btn sbold green" ng-click="vm.exportData()"> Export as Excel
                                             <i class="fa fa-exchange"></i>
                                         </button>
                                     </div>
@@ -78,21 +76,15 @@
                                 <tbody class="datatablecustom">
                                     <tr class="gradeX odd" role="row" ng-repeat="reportData in vm.reportsData" style="text-align:center;">
                                         <td>{{$index + 1}}</td>
-                                        <td>{{}}</td>
-                                        <td>{{}}</td>
-                                        <td>{{}}</td>
-                                        <td>{{}}</td>
-                                        <td>{{}}</td>
-                                        <td>{{}}</td>
-                                        <td>{{}}</td>
-                                        <td>
-                                            <select class="form-control input-circle" id="form_control_1" required>
-                                                <option value="" disabled selected hidden>select status</option>
-                                                <option value="3">Open</option>
-                                                <option value="4">Settled</option>
-                                            </select>
-                                        </td>
-                                        <td><a type="button" class="btn default" ui-sref="paymentDetails" style="margin-bottom:10%;">Show Detail</a></td>
+                                        <td>{{reportData.merchantName}}</td>
+                                        <td>{{reportData.netTransactionAmount}}</td>
+                                        <td>{{reportData.netOfferAmount}}</td>
+                                        <td>{{reportData.netPromoOfferAmount}}</td>
+                                        <td>{{reportData.netCashbackByMerchant}}</td>
+                                        <td>{{reportData.netFeeCharged}}</td>
+                                        <td>{{reportData.netSettlementAmount}}</td>
+                                        <td><span class="label label-sm label-success center">{{data.status}}</span></td>
+                                        <td><a type="button" class="btn default" ui-sref="paymentDetails({merchantId:reportData.merchantId, merchantName:reportData.merchantName})" style="margin-bottom:10%;">Show Detail</a></td>
                                         <td><a type="submit" class="btn button-color" ui-sref="paymentSettlement">Add Settlement</a> </td>
                                     </tr>
                                 </tbody>

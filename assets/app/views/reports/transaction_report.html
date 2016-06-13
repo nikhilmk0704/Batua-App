@@ -27,13 +27,13 @@
                                         <div class=" col-xs-3">
                                             <section class="input-group offerstartdate" style="margin-bottom:15px;">
                                                 <div class="input-group-addon input-circle-left"><a ng-click="openFrom($event)"><i class="fa fa-calendar"></i></a></div>
-                                                <input type="text" class="form-control input-circle-right dateinput" uib-datepicker-popup="dd/MM/yyyy" is-open="status.opened1" min-date="startDate" max-date="minDate" datepicker-mode="day" show-weeks="false" clear-text="false" show-button-bar="false" name="fromDate" ng-model="m.filterData.fromDate" required placeholder="From Date" style="width:97%" />
+                                                <input type="text" class="form-control input-circle-right dateinput" uib-datepicker-popup="dd/MM/yyyy" is-open="status.opened1" min-date="startDate" max-date="minDate" datepicker-mode="day" show-weeks="false" clear-text="false" show-button-bar="false" name="fromDate" ng-model="vm.filterData.fromDate" placeholder="From Date" style="width:97%" />
                                             </section>
                                         </div>
                                         <div class=" col-xs-3">
                                             <section class="input-group offerstartdate" style="margin-bottom:15px;">
                                                 <div class="input-group-addon input-circle-left"><a ng-click="openTo($event)"><i class="fa fa-calendar"></i></a></div>
-                                                <input type="text" class="form-control input-circle-right dateinput" uib-datepicker-popup="dd/MM/yyyy" is-open="status.opened2" min-date="m.filterData.fromDate" max-date="minDate" datepicker-mode="day" show-weeks="false" clear-text="false" show-button-bar="false" name="toDate" ng-model="m.filterData.toDate" required placeholder="From Date" style="width:97%" />
+                                                <input type="text" class="form-control input-circle-right dateinput" uib-datepicker-popup="dd/MM/yyyy" is-open="status.opened2" min-date="m.filterData.fromDate" max-date="minDate" datepicker-mode="day" show-weeks="false" clear-text="false" show-button-bar="false" name="toDate" ng-model="m.filterData.toDate" placeholder="From Date" style="width:97%" />
                                             </section>
                                         </div>
                                         <div class="col-xs-3" style="margin-bottom:15px;">
@@ -90,17 +90,17 @@
                             <tbody class="datatablecustom">
                                 <tr class="gradeX odd" role="row" ng-repeat="reportData in vm.reportsData" style="text-align:center;">
                                     <td>{{$index + 1}}</td>
-                                    <td>{{reportData.merchant.name}}</td>
-                                    <td>{{reportData.user.name?reportData.user.name:''}}</td>
-                                    <td>{{reportData.transactionDetail.orderNumber}}</td>
-                                    <td>{{reportData.transactionDetail.transactionId}}</td>
-                                    <td>{{reportData.transactionDetail.createdAt |date:shortDate}}</td>
-                                    <td>{{reportData.paidAmount}}</td>
-                                    <td>{{reportData.promocodeId?'':reportData.promocodeAmount}}</td>
-                                    <td>{{reportData.promocodeId?reportData.promocodeAmount:''}}</td>
-                                    <td>{{reportData.batuaCommission}}</td>
-                                    <td>{{reportData.cancelledBy?reportData.cancelledBy.name:''}}</td>
-                                    <td>{{reportData.cancellationDate?(reportData.cancellationDate |date:shortDate):''}}</td>
+                                    <td>{{reportData.merchantName}}</td>
+                                    <td>{{reportData.userName?reportData.userName:''}}</td>
+                                    <td>{{reportData.orderNumber}}</td>
+                                    <td>{{reportData.transactionId}}</td>
+                                    <td>{{reportData.transactionDate |date:shortDate}}</td>
+                                    <td>{{reportData.paymentAmount}}</td>
+                                    <td>{{reportData.cashbackByOffer}}</td>
+                                    <td>{{reportData.cashbackByPromo}}</td>
+                                    <td>{{reportData.amountCreditedToBatua}}</td>
+                                    <td>{{reportData.transactionCancelledBy?reportData.transactionCancelledBy:''}}</td>
+                                    <td>{{reportData.transactionCancelledOn?(reportData.transactionCancelledOn |date:shortDate):''}}</td>
                                     <td>{{reportData.cancellationDescription?reportData.cancellationDescription:''}}</td>
                                     <td><a type="button" class="btn button-color" ui-sref="cancelTransaction({paymentId:reportData.id})">Cancel Transaction</a></td>
                                 </tr>

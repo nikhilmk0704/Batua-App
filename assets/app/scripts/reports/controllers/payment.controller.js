@@ -1,19 +1,64 @@
 angular.module('app').controller('paymentController', ['$scope', '$state', 'reportsService', 'toastr', 'merchantList',
+
     function($scope, $state, reportsService, toastr, merchantList) {
 
         var vm = this;
         vm.merchantList = merchantList;
 
-        reportsService.getPaymentReport(function(response) {
-            if (response.status === 200) {
-                vm.reportsData = response.data;
-                return;
-            }
-            if (response.status === 400) {
-                return toastr.error(response.data.errors[0].message);
-            }
-            return toastr.error(response.data);
-        });
+        var params = {};
+
+        function init(params) {
+
+            reportsService.getPaymentReport(params, function(response) {
+                if (response.status === 200) {
+                    vm.reportsData = response.data;
+                    return;
+                }
+                if (response.status === 400) {
+                    return toastr.error(response.data.errors[0].message);
+                }
+                return toastr.error(response.data);
+            });
+        }
+
+        init(params);
+
+        vm.handleFilterClicked = function(data) {
+            params = {
+                merchantId: data.merchantId,
+                fromDate: data.fromDate,
+                toDate: data.toDate
+            };
+            init(params);
+        };
+
+        vm.clearFilters = function() {
+            delete(vm.filterData);
+            params = {};
+            init(params);
+        }
+
+        vm.exportData = function() {
+
+            vm.list = angular.copy(vm.reportsData);
+
+            vm.filteredData = _.map(vm.list, function(data) {
+
+                var reportsData = {
+                    'Merchant Name': data.merchantName,
+                    'Net Transaction Amt(Rs)': data.netTransactionAmount,
+                    'Net Offer Amt (Rs)': data.netOfferAmount,
+                    'Net Promo Offer Amt(Rs)': data.netPromoOfferAmount,
+                    'Cashback By Merchant(Rs)': data.netCashbackByMerchant,
+                    'Fee Charged(Rs)': data.netFeeCharged,
+                    'Settlement Amt(Rs)': data.netSettlementAmount,
+                    'Status': data.status
+                }
+                return reportsData;
+            });
+
+            alasql('SELECT * INTO XLSX("download.xlsx",{headers:true}) FROM ?', [vm.filteredData]);
+        }
 
         /*START of Add Settlement*/
 
@@ -33,34 +78,6 @@ angular.module('app').controller('paymentController', ['$scope', '$state', 'repo
         }
 
         /*END of Add Settlement*/
-
-        vm.exportData = function() {
-
-            vm.list = angular.copy(vm.reportsData);
-
-            vm.filteredData = _.map(vm.list, function(data) {
-                var userName = (data.user.name ? data.user.name : ''),
-                    offerCashback = (data.promocodeId ? '' : data.promocodeAmount),
-                    promoCashback = (data.promocodeId ? data.promocodeAmount : ''),
-                    transactionCancelledBy = (data.cancelledBy ? data.cancelledBy.name : ''),
-                    transactionCancelledOn = (data.cancellationDate ? (data.cancellationDate).format('YYYY-MM-DD') : ''),
-                    cancelledDesc = (data.cancellationDescription ? data.cancellationDescription : '');
-
-                var reportsData = {
-                    'Merchant Name': data.merchant.name,
-                    'Net Transaction Amt(Rs)': userName,
-                    'Net Offer Amt (Rs)': data.transactionDetail.orderNumber,
-                    'Net Promo Offer Amt(Rs)': data.transactionDetail.transactionId,
-                    'Cashback By Merchant(Rs)': (data.transactionDetail.createdAt).format('YYYY-MM-DD'),
-                    'Fee Charged(Rs)': data.paidAmount,
-                    'Settlement Amt(Rs)': offerCashback,
-                    'Status': promoCashback
-                }
-                return reportsData;
-            });
-
-            alasql('SELECT * INTO XLSX("download.xlsx",{headers:true}) FROM ?', [vm.filteredData]);
-        }
 
         /* START ui-bootstrap datepicker */
 

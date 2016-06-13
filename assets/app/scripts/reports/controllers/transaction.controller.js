@@ -5,55 +5,38 @@ angular.module('app').controller('transactionController', ['$scope', '$state', '
         vm.merchantList = merchantList;
         vm.users = users;
 
-        reportsService.getTransactionReport(function(response) {
-            if (response.status === 200) {
-                vm.reportsData = response.data;
-                reportsData = angular.copy(vm.reportsData);
-                return;
-            }
-            if (response.status === 400) {
-                return toastr.error(response.data.errors[0].message);
-            }
-            return toastr.error(response.data);
-        });
+        var params = {};
+
+        function init(params) {
+
+            reportsService.getTransactionReport(params, function(response) {
+                if (response.status === 200) {
+                    vm.reportsData = response.data;
+                    return;
+                }
+                if (response.status === 400) {
+                    return toastr.error(response.data.errors[0].message);
+                }
+                return toastr.error(response.data);
+            });
+        }
+
+        init(params);
 
         vm.handleFilterClicked = function(data) {
-
-            var filterParams = {};
-
-            vm.reportsData = reportsData;
-
-            if (!data) {
-                vm.reportsData = reportsData;
-            }
-
-            if (data) {
-                if (data.merchantId) {
-                    filterParams.merchantId = data.merchantId;
-                }
-                if (data.userId) {
-                    filterParams.userId = data.userId;
-                }
-                if (data.fromDate) {
-                    vm.reportsData = _.filter(reportsData, function(item) {
-                        return (moment(moment(data.fromDate, 'dd/MM/yyyy').format("YYYY-MM-DD")).isSameOrBefore(moment(item.instanceDate).format('YYYY-MM-DD')))
-                    });
-                }
-                if (data.toDate) {
-                    vm.reportsData = _.filter(vm.reportsData, function(item) {
-                        return (moment(moment(data.fromDate, 'dd/MM/yyyy').format("YYYY-MM-DD")).isSameOrAfter(moment(item.instanceDate).format('YYYY-MM-DD')))
-                        return item;
-                    });
-                }
-                var finalData = _.where(vm.reportsData, filterParams);
-                vm.reportsData = angular.copy(finalData);
-            }
+            params = {
+                merchantId: data.merchantId,
+                fromDate: data.fromDate,
+                toDate: data.toDate,
+                userId: data.userId
+            };
+            init(params);
         };
 
         vm.clearFilters = function() {
             delete(vm.filterData);
-            vm.reportsData = reportsData;
-            vm.handleFilterClicked();
+            params = {};
+            init(params);
         }
 
         vm.exportData = function() {
@@ -61,22 +44,20 @@ angular.module('app').controller('transactionController', ['$scope', '$state', '
             vm.list = angular.copy(vm.reportsData);
 
             vm.filteredData = _.map(vm.list, function(data) {
-                var userName = (data.user.name ? data.user.name : ''),
-                    offerCashback = (data.promocodeId ? '' : data.promocodeAmount),
-                    promoCashback = (data.promocodeId ? data.promocodeAmount : ''),
-                    transactionCancelledBy = (data.cancelledBy ? data.cancelledBy.name : ''),
-                    transactionCancelledOn = (data.cancellationDate ? (data.cancellationDate).format('YYYY-MM-DD') : ''),
+                var userName = (data.userName ? data.userName : ''),
+                    transactionCancelledBy = (data.transactionCancelledBy ? data.transactionCancelledBy : ''),
+                    transactionCancelledOn = (data.transactionCancelledOn ? data.transactionCancelledOn : ''),
                     cancelledDesc = (data.cancellationDescription ? data.cancellationDescription : '');
-                    
+
                 var reportsData = {
-                    'Merchant Name': data.merchant.name,
+                    'Merchant Name': data.merchantName,
                     'User Name': userName,
-                    'Order number': data.transactionDetail.orderNumber,
-                    'Transaction ID': data.transactionDetail.transactionId,
-                    'Transaction Date': (data.transactionDetail.createdAt).format('YYYY-MM-DD'),
-                    'Payment Amount(Rs)': data.paidAmount,
-                    'Cashback by Offer': offerCashback,
-                    'Cashback by PromoCode': promoCashback,
+                    'Order number': data.orderNumber,
+                    'Transaction ID': data.transactionId,
+                    'Transaction Date': data.transactionDate,
+                    'Payment Amount(Rs)': data.paymentAmount,
+                    'Cashback by Offer': data.cashbackByOffer,
+                    'Cashback by PromoCode': data.cashbackByPromo,
                     'Amount(Rs) credited to Batua': data.batuaCommission,
                     'Transaction cancelled by': transactionCancelledBy,
                     'Transaction cancelled on': transactionCancelledOn,

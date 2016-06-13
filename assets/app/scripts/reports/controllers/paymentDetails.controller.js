@@ -1,8 +1,11 @@
-angular.module('app').controller('paymentDetailsController', ['$state', 'reportsService', 'toastr', function($state, reportsService, toastr) {
+angular.module('app').controller('paymentDetailsController', ['$state', '$stateParams', 'reportsService', 'toastr', function($state, $stateParams, reportsService, toastr) {
 
     var vm = this;
 
-    reportsService.getPaymentDetailsAgainstMerchant(adminId, function(response) {
+    vm.merchantId = $stateParams.merchantId;
+    vm.merchantName = $stateParams.merchantName;
+
+    reportsService.getPaymentDetailsAgainstMerchant(merchantId, function(response) {
         if (response.status === 200) {
             vm.paymentDetails = response.data;
             return;
