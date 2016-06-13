@@ -13,12 +13,12 @@
         cfpLoadingBarProvider.includeSpinner = false;
 
         // For any unmatched url, redirect to /state1
-        $urlRouterProvider.otherwise("/login");
+        $urlRouterProvider.otherwise("/categoryList");
 
         // Now set up the states
         $stateProvider
 
-        .state('login', {
+            .state('login', {
             url: '/login',
             templateUrl: 'app/views/login/login.html',
             controller: 'loginController',
@@ -98,8 +98,8 @@
                 userGroups: ['userService', function(userService) {
                     return userService.getUserGroups();
                 }],
-                loggedInUser: ['loginService', 'authenticationService', function(loginService, authenticationService){
-                    if(loginService.getUserDetails().userGroup == 'Super Admin') {
+                loggedInUser: ['loginService', 'authenticationService', function(loginService, authenticationService) {
+                    if (loginService.getUserDetails().userGroup == 'Super Admin') {
                         return loginService.getUserDetails().userGroup;
                     }
                     authenticationService.clearCredentials();
@@ -114,8 +114,8 @@
             controller: 'editUserController',
             controllerAs: 'vm',
             resolve: {
-                loggedInUser: ['loginService', 'authenticationService', function(loginService, authenticationService){
-                    if(loginService.getUserDetails().userGroup == 'Super Admin') {
+                loggedInUser: ['loginService', 'authenticationService', function(loginService, authenticationService) {
+                    if (loginService.getUserDetails().userGroup == 'Super Admin') {
                         return loginService.getUserDetails().userGroup;
                     }
                     authenticationService.clearCredentials();
@@ -130,8 +130,8 @@
             controller: 'userController',
             controllerAs: 'vm',
             resolve: {
-                loggedInUser: ['loginService', 'authenticationService', function(loginService, authenticationService){
-                    if(loginService.getUserDetails().userGroup == 'Super Admin') {
+                loggedInUser: ['loginService', 'authenticationService', function(loginService, authenticationService) {
+                    if (loginService.getUserDetails().userGroup == 'Super Admin') {
                         return loginService.getUserDetails().userGroup;
                     }
                     authenticationService.clearCredentials();
@@ -210,6 +210,59 @@
             controllerAs: 'vm'
         })
 
+        .state('reports', {
+            url: '/reports',
+            templateUrl: 'app/views/reports/reports.html'
+        })
+
+        .state('payments', {
+            url: '/payments',
+            templateUrl: 'app/views/reports/payment_report.html',
+            controller: 'paymentController',
+            controllerAs: 'vm',
+            resolve: {
+                merchantList: ['merchantService', function(merchantService) {
+                    return merchantService.getAllActiveMerchants();
+                }]
+            }
+        })
+
+        .state('paymentDetails', {
+            url: '/paymentDetails?merchantId&merchantName',
+            templateUrl: 'app/views/reports/payment_details_report.html',
+            controller: 'paymentDetailsController',
+            controllerAs: 'vm'
+        })
+
+        .state('paymentSettlement', {
+            url: '/paymentSettlement',
+            templateUrl: 'app/views/reports/add_settlement_report.html',
+            controller: 'paymentController',
+            controllerAs: 'vm'
+        })
+
+        .state('transactions', {
+            url: '/transactions',
+            templateUrl: 'app/views/reports/transaction_report.html',
+            controller: 'transactionController',
+            controllerAs: 'vm',
+            resolve: {
+                merchantList: ['merchantService', function(merchantService) {
+                    return merchantService.getAllActiveMerchants();
+                }],
+                users: ['reportsService', function(reportsService) {
+                    return reportsService.getListOfUsers();
+                }]
+            }
+        })
+
+        .state('cancelTransaction', {
+            url: '/cancelTransaction/:paymentId',
+            templateUrl: 'app/views/reports/cancel_transaction.html',
+            controller: 'transactionController',
+            controllerAs: 'vm'
+        })
+
     }
 
     run.$inject = ['$rootScope', '$cookieStore', '$http', '$location', 'authenticationService', '$state', 'loginService'];
@@ -233,7 +286,7 @@
             var restrictedRoutes = ['/login', '/forgetPassword'];
             var restrictedPage = $.inArray($location.path(), restrictedRoutes) === -1;
             var restrictedPagesWithIds = ['/resetpassword'];
-            restrictedPagesWithIds.forEach(function (route) {
+            restrictedPagesWithIds.forEach(function(route) {
                 if ($location.path().substring(0, route.length) === route) {
                     restrictedPage = false;
                 }

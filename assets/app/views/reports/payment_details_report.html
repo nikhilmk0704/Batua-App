@@ -6,150 +6,46 @@
             <section class="portlet light bordered portletcustom" style="padding:0;">
                 <section class="portlet-title">
                     <div class="caption font-dark" style="padding-left:20px;padding-top:15px;">
-                        <span class="caption-subject bold uppercase"> Payment details Against <label><!--merchant name should come here--> Merchant </label></span>
+                        <span class="caption-subject bold uppercase"> Payment details Against <label> {{vm.merchantName}} </label></span>
                     </div>
                 </section>
                 <section class="portlet-body">
                     <div id="sample_1_wrapper" class="dataTables_wrapper no-footer">
                         <div class="table-scrollable">
-                            <table class="table table-striped table-bordered table-hover  order-column dataTable no-footer" id="sample_1" role="grid" aria-describedby="sample_1_info">
+                            <table class="table table-striped table-bordered table-hover  order-column dataTable no-footer" datatable="ng">
                                 <thead>
-                                    <tr role="row">
-                                        <th class="" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" aria-label="activate to sort column ascending" style="width: 100px;">Sl No. </th>
-                                        <th class="sorting" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" aria-label="  activate to sort column ascending" style="width:100%;">Users
-                                        </th>
-                                        <th class="" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" aria-label="activate to sort column ascending" style="width: 100px;"> Order Number </th>
-                                        <th class="" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" aria-sort="ascending" aria-label="activate to sort column descending" style="width: 108px;">Transaction ID</th>
-                                        <th class="" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" aria-label="activate to sort column ascending" style="width: 119px;"> Transaction Date</th>
-                                        <th class="" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" aria-label="activate to sort column ascending" style="width: 119px;"> Transaction Amt (Rs) </th>
-                                        <th class="" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" aria-label="activate to sort column ascending" style="width: 220px;"> Offer Amt (Rs) </th>
-                                        <th class="" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" aria-label="activate to sort column ascending" style="width: 220px;">Promo Offer Amt (Rs) </th>
-                                        <th class="" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" aria-label="activate to sort column ascending" style="width: 220px;">Promo Amt By Merchant (Rs) </th>
-                                        <th class="" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" aria-label="activate to sort column ascending" style="width: 220px;">Fee Charged(Rs) </th>
-                                        <th class="" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" aria-label="activate to sort column ascending" style="width: 220px;">Amount Credited to Batua(Rs) </th>
-                                        <th class="" tabindex="0" aria-controls="sample_1" rowspan="1" colspan="1" aria-label="activate to sort column ascending" style="width: 120px;"> Settlement Amount </th>
+                                    <tr role="row" ng-repeat="paymentDetail in vm.paymentDetails" style="text-align:center;">
+                                        <th style="width: 100px;"> Sr No. </th>
+                                        <th class="sorting" style="width:100%;"> Users </th>
+                                        <th style="width: 100px;"> Order Number </th>
+                                        <th style="width: 108px;"> Transaction ID </th>
+                                        <th style="width: 119px;"> Transaction Date </th>
+                                        <th style="width: 119px;"> Transaction Amount (Rs) </th>
+                                        <th style="width: 220px;"> Offer Amount (Rs) </th>
+                                        <th style="width: 220px;"> Promocode Amount (Rs) </th>
+                                        <th style="width: 220px;"> Promo/Offer Amount By Merchant (Rs) </th>
+                                        <th style="width: 220px;"> Fee Charged(Rs) </th>
+                                        <th style="width: 220px;"> Amount Credited to Batua(Rs) </th>
+                                        <th style="width: 120px;"> Settlement Amount </th>
                                     </tr>
                                 </thead>
                                 <tbody class="datatablecustom">
                                     <tr class="gradeX odd" role="row">
-                                        <td>1</td>
-                                        <td>demo user </td>
-                                        <td>123456</td>
-                                        <td> TRANS123</td>
-                                        <td> 12/1/2015 </td>
-                                        <td> 10000</td>
-                                        <td>1000 </td>
-                                        <td></td>
-                                        <td> 1000</td>
-                                        <td>100 </td>
-                                        <td> 10000</td>
-                                        <td>100 </td>
-                                    </tr>
-                                    <tr class="gradeX even" role="row">
-                                        <td>1</td>
-                                        <td>demo user </td>
-                                        <td>123456</td>
-                                        <td> TRANS123</td>
-                                        <td> 12/1/2015 </td>
-                                        <td> 10000</td>
-                                        <td></td>
-                                        <td>1000 </td>
-                                        <td> 1000</td>
-                                        <td>100 </td>
-                                        <td> 10000</td>
-                                        <td>100 </td>
-                                    </tr>
-                                    <tr class="gradeX odd" role="row">
-                                        <td>1</td>
-                                        <td>demo user </td>
-                                        <td>123456</td>
-                                        <td> TRANS123</td>
-                                        <td> 12/1/2015 </td>
-                                        <td> 10000</td>
-                                        <td>1000 </td>
-                                        <td></td>
-                                        <td> 1000</td>
-                                        <td>100 </td>
-                                        <td> 10000</td>
-                                        <td>100 </td>
-                                    </tr>
-                                    <tr class="gradeX even" role="row">
-                                        <td>1</td>
-                                        <td>demo user </td>
-                                        <td>123456</td>
-                                        <td> TRANS123</td>
-                                        <td> 12/1/2015 </td>
-                                        <td> 10000</td>
-                                        <td>1000 </td>
-                                        <td></td>
-                                        <td> 1000</td>
-                                        <td>100 </td>
-                                        <td> 10000</td>
-                                        <td>100 </td>
-                                    </tr>
-                                    <tr class="gradeX odd" role="row">
-                                        <td>1</td>
-                                        <td>demo user </td>
-                                        <td>123456</td>
-                                        <td> TRANS123</td>
-                                        <td> 12/1/2015 </td>
-                                        <td> 10000</td>
-                                        <td>1000 </td>
-                                        <td></td>
-                                        <td> 1000</td>
-                                        <td>100 </td>
-                                        <td> 10000</td>
-                                        <td>100 </td>
-                                    </tr>
-                                    <tr class="gradeX even" role="row">
-                                        <td>1</td>
-                                        <td>demo user </td>
-                                        <td>123456</td>
-                                        <td> TRANS123</td>
-                                        <td> 12/1/2015 </td>
-                                        <td> 10000</td>
-                                        <td>1000 </td>
-                                        <td></td>
-                                        <td> 1000</td>
-                                        <td>100 </td>
-                                        <td> 10000</td>
-                                        <td>100 </td>
+                                        <td>{{$index+1}}</td>
+                                        <td>{{paymentDetail.user?paymentDetail.user:''}}</td>
+                                        <td>{{paymentDetail.orderNumber}}</td>
+                                        <td>{{paymentDetail.transactionId}}</td>
+                                        <td>{{paymentDetail.transactionDate |date:shortDate}}</td>
+                                        <td>{{paymentDetail.transactionAmount}}</td>
+                                        <td>{{paymentDetail.offerAmount}}</td>
+                                        <td>{{paymentDetail.promoOfferAmount}}</td>
+                                        <td>{{paymentDetail.promoAmountByMerchant}}</td>
+                                        <td>{{paymentDetail.feeCharged}}</td>
+                                        <td>{{paymentDetail.amountCreditedToBatua}}</td>
+                                        <td>{{paymentDetail.settlementAmount}}</td>
                                     </tr>
                                 </tbody>
                             </table>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-7 col-sm-7 pull-right">
-                                <div class="dataTables_paginate paging_bootstrap_full_number" id="sample_1_paginate">
-                                    <ul class="pagination" style="visibility: visible;">
-                                        <li class="prev disabled">
-                                            <a href="#" title="First"><i class="fa fa-angle-double-left"></i></a>
-                                        </li>
-                                        <li class="prev disabled">
-                                            <a href="#" title="Prev"><i class="fa fa-angle-left"></i></a>
-                                        </li>
-                                        <li class="active">
-                                            <a href="#">1</a></li>
-                                        <li><a href="#">2</a>
-                                        </li>
-                                        <li>
-                                            <a href="#">3</a>
-                                        </li>
-                                        <li>
-                                            <a href="#">4</a>
-                                        </li>
-                                        <li>
-                                            <a href="#">5</a>
-                                        </li>
-                                        <li class="next">
-                                            <a href="#" title="Next"><i class="fa fa-angle-right"></i></a>
-                                        </li>
-                                        <li class="next">
-                                            <a href="#" title="Last"><i class="fa fa-angle-double-right"></i></a>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </section>

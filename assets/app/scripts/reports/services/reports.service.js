@@ -1,11 +1,11 @@
 (function() {    
     'use strict';
 
-    angular.module('app').factory('reportService', reportService);
+    angular.module('app').factory('reportsService', reportsService);
 
-    reportService.$inject = ['httpi', 'API'];
+    reportsService.$inject = ['httpi', 'API', '$q'];
 
-    function reportService(httpi, API) {
+    function reportsService(httpi, API, $q) {
 
         var service = {};
 
@@ -14,13 +14,15 @@
         service.getPaymentDetailsAgainstMerchant = getPaymentDetailsAgainstMerchant;
         service.cancelTransaction = cancelTransaction;
         service.getTransactionReport = getTransactionReport;
+        service.getListOfUsers = getListOfUsers;
 
         return service;
 
-        function getPaymentReport(callback) {
+        function getPaymentReport(params, callback) {
             httpi({
                 method: "get",
-                url: API.paymentReport
+                url: API.paymentReport,
+                params: params
             }).then(function(response) {
                 callback(response);
             }, function(response) {
@@ -28,14 +30,15 @@
             });
         }
 
-        function addSettlement(merchant, callback) {
+        function addSettlement(data, callback) {
             httpi({
                 method: "post",
                 url: API.addSettlement,
                 data: {
-                    id: merchant.id,
-                    name: merchant.name,
-                    description: merchant.shortCode
+                    name: data.name,
+                    date: data.date,
+                    referenceNumber: data.referenceNumber,
+                    description: data.description
                 }
             }).then(function(response) {
                 callback(response);
@@ -49,8 +52,7 @@
                 method: "get",
                 url: API.paymentDetails,
                 params: {
-                    adminId: adminId,
-                    id: merchantId
+                    merchantId: merchantId
                 }
             }).then(function(response) {
                 callback(response);
@@ -59,13 +61,15 @@
             });
         }
 
-        function cancelTransaction(transactionId, callback) {
+        function cancelTransaction(adminId, paymentId, data, callback) {
             httpi({
                 method: "put",
                 url: API.cancelTransaction,
                 data: {
-                    id: transactionId,
-                    status: status
+                    paymentId: paymentId,
+                    adminId: adminId,
+                    cancellationDate: data.cancellationDate,
+                    cancellationDescription: data.cancellationDescription
                 }
             }).then(function(response) {
                 callback(response);
@@ -74,16 +78,29 @@
             });
         }
 
-        function getTransactionReport(callback) {
+        function getTransactionReport(params, callback) {
             httpi({
                 method: "get",
-                url: API.transactionReport
+                url: API.transactionReport,
+                params: params
             }).then(function(response) {
                 callback(response);
             }, function(response) {
                 callback(response);
             });
         }
+
+        function getListOfUsers(callback) {
+            var deferred = $q.defer();
+            httpi({
+                method: "get",
+                url: API.activeMobileUsers
+            }).then(function(response) {
+                deferred.resolve(response.data);
+            });
+            return deferred.promise;
+        }
+
 
     }
 
