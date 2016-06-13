@@ -1,15 +1,15 @@
-angular.module('app').controller('paymentController', ['$scope', '$state', 'reportsService', 'toastr', 'merchantList',
-
-    function($scope, $state, reportsService, toastr, merchantList) {
+angular.module('app').controller('transactionController', ['$scope', '$state', '$stateParams', 'reportsService', 'loginService', 'toastr', 'merchantList', 'users',
+    function($scope, $state, $stateParams, reportsService, loginService, toastr, merchantList, users) {
 
         var vm = this;
         vm.merchantList = merchantList;
+        vm.users = users;
 
         var params = {};
 
         function init(params) {
 
-            reportsService.getPaymentReport(params, function(response) {
+            reportsService.getTransactionReport(params, function(response) {
                 if (response.status === 200) {
                     vm.reportsData = response.data;
                     return;
@@ -27,7 +27,8 @@ angular.module('app').controller('paymentController', ['$scope', '$state', 'repo
             params = {
                 merchantId: data.merchantId,
                 fromDate: data.fromDate,
-                toDate: data.toDate
+                toDate: data.toDate,
+                userId: data.userId
             };
             init(params);
         };
@@ -43,16 +44,24 @@ angular.module('app').controller('paymentController', ['$scope', '$state', 'repo
             vm.list = angular.copy(vm.reportsData);
 
             vm.filteredData = _.map(vm.list, function(data) {
+                var userName = (data.userName ? data.userName : ''),
+                    transactionCancelledBy = (data.transactionCancelledBy ? data.transactionCancelledBy : ''),
+                    transactionCancelledOn = (data.transactionCancelledOn ? data.transactionCancelledOn : ''),
+                    cancelledDesc = (data.cancellationDescription ? data.cancellationDescription : '');
 
                 var reportsData = {
                     'Merchant Name': data.merchantName,
-                    'Net Transaction Amt(Rs)': data.netTransactionAmount,
-                    'Net Offer Amt (Rs)': data.netOfferAmount,
-                    'Net Promo Offer Amt(Rs)': data.netPromoOfferAmount,
-                    'Cashback By Merchant(Rs)': data.netCashbackByMerchant,
-                    'Fee Charged(Rs)': data.netFeeCharged,
-                    'Settlement Amt(Rs)': data.netSettlementAmount,
-                    'Status': data.status
+                    'User Name': userName,
+                    'Order number': data.orderNumber,
+                    'Transaction ID': data.transactionId,
+                    'Transaction Date': data.transactionDate,
+                    'Payment Amount(Rs)': data.paymentAmount,
+                    'Cashback by Offer': data.cashbackByOffer,
+                    'Cashback by PromoCode': data.cashbackByPromo,
+                    'Amount(Rs) credited to Batua': data.batuaCommission,
+                    'Transaction cancelled by': transactionCancelledBy,
+                    'Transaction cancelled on': transactionCancelledOn,
+                    'Cancellation Description': cancelledDesc
                 }
                 return reportsData;
             });
@@ -60,24 +69,27 @@ angular.module('app').controller('paymentController', ['$scope', '$state', 'repo
             alasql('SELECT * INTO XLSX("download.xlsx",{headers:true}) FROM ?', [vm.filteredData]);
         }
 
-        /*START of Add Settlement*/
+        /*START of Cancel Transaction*/
 
-        vm.addSettlement = function(settlementDetails) {
+        vm.paymentId = $stateParams.paymentId;
 
-            reportsService.addSettlement(settlementDetails, function(response) {
+        vm.adminId = loginService.getUserDetails().id;
+
+        vm.cancelTransaction = function(cancellationDetails) {
+
+            reportsService.cancelTransaction(vm.adminId, vm.paymentId, cancellationDetails, function(response) {
                 if (response.status === 200) {
-                    $state.go('payments');
-                    return toastr.success('Settlement has been created successfully.');
+                    $state.go('transactions');
+                    return toastr.success('Request has been created successfully.');
                 }
                 if (response.status === 400) {
                     return toastr.error(response.data.errors[0].message);
                 }
                 return toastr.error(response.data);
             });
-
         }
 
-        /*END of Add Settlement*/
+        /*END of Cancel Transaction*/
 
         /* START ui-bootstrap datepicker */
 

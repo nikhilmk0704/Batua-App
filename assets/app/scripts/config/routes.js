@@ -28,7 +28,12 @@
             updatePromocode: "/promocode/:id",
             promocodeStatus: "/promocode/:id/status",
             pushNotification: "/admin/activeuser/notify",
-            activeMobileUsers: "/admin/activeuser"
+            activeMobileUsers: "/admin/activeuser",
+            paymentReport: "/admin/payment/settlement?merchantId=:merchantId&fromDate=:fromDate&toDate=:toDate",
+            paymentDetails: "/admin/payment/details?merchantId=:merchantId",
+            transactionReport: "/admin/transaction/report?merchantId=:merchantId&fromDate=:fromDate&toDate=:toDate&userId=:userId",
+            addSettlement: "/admin/settlement",
+            cancelTransaction: "/admin/transaction/cancel"
         }
 
     }
