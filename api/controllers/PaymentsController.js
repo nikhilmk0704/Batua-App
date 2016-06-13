@@ -33,6 +33,21 @@ module.exports = {
         });
     },
 
+    recharge: function(req, res) {
+
+        var params = req.body;
+
+        var paymentService = new PaymentService();
+
+        paymentService.recharge(params, function(err, result) {
+
+            if (err)
+                return res.badRequest(error.send(err));
+            return res.json(200, result);
+
+        });
+    },
+
     history: function(req, res) {
 
         var params = {};
