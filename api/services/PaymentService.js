@@ -185,13 +185,17 @@ class PaymentService {
                     UsersPaymentmodes.find({ where: { userId: userId } }).then(function(data) {
                         if (!data) {
                             UsersPaymentmodes.create(userPayObj);
-                            paymentData.balance = amount;
-                            callback(null, paymentData);
+                            var sendData={};
+                            sendData=JSON.parse(JSON.stringify(paymentData));
+                            sendData.balance = amount;
+                            callback(null, sendData);
                         }
                         if (data) {
                             UsersPaymentmodes.update({ balance: amount + data.balance }, { where: { userId: userId } });
-                            paymentData.balance = data.balance + amount;
-                            callback(null, paymentData);
+                            var sendData={};
+                            sendData=JSON.parse(JSON.stringify(paymentData));
+                            sendData.balance = data.balance + amount;
+                            callback(null, sendData);
                         }
                     })
                 });
