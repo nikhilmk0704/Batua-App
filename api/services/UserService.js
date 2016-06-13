@@ -1267,8 +1267,32 @@ class UserService {
                 return callback("Mobile Number is already Registered, but is in " + status + " Mode. Please contact Batua Admin");
             if (!isPhoneVerified)
                 return callback(null, { userId: result.id, isPhoneVerified: isPhoneVerified });
-            userService.updateAccessTokenAndShowResult(params, result, callback);
+            userService.updateAccessTokenAndShowResult(params, result, function(err, data) {
+                if (err)
+                    return callback(err);
+                userService.getWalletBalance(data.id, function(err, balance) {
+                    if (err)
+                        return callback(err);
+                    data.balance = balance;
+                    callback(null, data);
+                });
+            });
             return null;
+        }).catch(function(exception) {
+            callback(exception);
+        });
+    }
+
+    getWalletBalance(userId, callback) {
+
+        var getWalletBalanceQueryString = "SELECT balance FROM UsersPaymentmodes WHERE userId = :userId";
+        var options = {};
+        options.replacements = {};
+        options.replacements.userId = userId;
+        options.type = sequelize.QueryTypes.SELECT;
+
+        sequelize.query(getWalletBalanceQueryString, options).then(function(result) {
+            callback(null, result[0].balance);
         }).catch(function(exception) {
             callback(exception);
         });
