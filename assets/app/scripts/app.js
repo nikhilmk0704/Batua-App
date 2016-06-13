@@ -13,7 +13,7 @@
         cfpLoadingBarProvider.includeSpinner = false;
 
         // For any unmatched url, redirect to /state1
-        $urlRouterProvider.otherwise("/login");
+        $urlRouterProvider.otherwise("/categoryList");
 
         // Now set up the states
         $stateProvider
