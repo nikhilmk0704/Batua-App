@@ -596,7 +596,7 @@ class UserService {
     validateSalesAgent(params, result) {
         var name = result.userGroups.name;
         var status = result.status;
-        var isValidGroupName = (name == 'Field Sales Agent');
+        var isValidGroupName = (name != 'User');
         var isValidStatus = (status == 'Active');
         if (result && isValidGroupName && isValidStatus)
             return true;
@@ -1109,7 +1109,7 @@ class UserService {
 
     sendOtpForSignup(params, callback) {
         var userService = new UserService();
-        var userId = params.userId;
+        // var userId = params.userId;
         var phone = params.phone;
         var otp = userService.generateOtp();
         var isValidPhone = userService.isValidPhone(phone);
@@ -1117,11 +1117,11 @@ class UserService {
         findObject.include = userService.getIncludeModels();
         findObject.where = {};
         findObject.where.$and = {};
-        findObject.where.$and.id = userId;
+        findObject.where.$and.phone = phone;
         findObject.where.$and.$or = [{ googleId: { $ne: null } }, { facebookId: { $ne: null } }];
         findObject.where.$and.status = 'Drafted';
-        if (!userId)
-            return callback("Please give userId");
+        if (!phone)
+            return callback("Please give phone");
         if (!isValidPhone)
             return callback("Mobile Number should be 10 digit Number");
         userService.isPhoneExist(params, findObject, callback);
@@ -1159,23 +1159,23 @@ class UserService {
 
     updatePhoneForSendOtp(params, callback) {
         var userService = new UserService();
-        var userId = params.userId;
+        // var userId = params.userId;
         var phone = params.phone;
-        var updateObject = {};
-        var whereObject = {};
-        updateObject.phone = phone;
-        whereObject.where = {};
-        whereObject.where.id = userId;
-        Users.update(updateObject, whereObject).then(function(result) {
-            userService.sendSms(phone, function(err, result) {
-                if (result)
-                    return callback(null, { message: "OTP Sent" });
-                return callback(err);
-            });
-            return null;
-        }).catch(function(exception) {
-            callback(exception);
+        // var updateObject = {};
+        // var whereObject = {};
+        // updateObject.phone = phone;
+        // whereObject.where = {};
+        // whereObject.where.id = userId;
+        // Users.update(updateObject, whereObject).then(function(result) {
+        userService.sendSms(phone, function(err, result) {
+            if (result)
+                return callback(null, { message: "OTP Sent" });
+            return callback(err);
         });
+        // return null;
+        // }).catch(function(exception) {
+        //     callback(exception);
+        // });
     }
 
     /****************** OTP Verification After Signup In User App ********************/
@@ -1261,8 +1261,8 @@ class UserService {
             var group = result.userGroups.name;
             var isPhoneVerified = result.isPhoneVerified;
             var status = result.status;
-            if (result && group != 'User')
-                return callback("User does not exist");
+            // if (result && group != 'User')
+            //     return callback("User does not exist");
             if (status == 'Permanent Suspend' || status == 'Suspend')
                 return callback("Mobile Number is already Registered, but is in " + status + " Mode. Please contact Batua Admin");
             if (!isPhoneVerified)
@@ -1292,7 +1292,10 @@ class UserService {
         options.type = sequelize.QueryTypes.SELECT;
 
         sequelize.query(getWalletBalanceQueryString, options).then(function(result) {
-            callback(null, result[0].balance);
+            if (result && result.length)
+                callback(null, result[0].balance);
+            if (!result || !result.length)
+                callback(null, 0);
         }).catch(function(exception) {
             callback(exception);
         });

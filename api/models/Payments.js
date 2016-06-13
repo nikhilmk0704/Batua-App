@@ -70,45 +70,49 @@ module.exports = {
             as:'user',
             foreignKey: {
                 name: 'userId',
-                allowNull: false
+                defaultValue: null
             }
         });
         Payments.belongsTo(Users, { 
             as:'cancelledBy',
             foreignKey: {
-                name: 'adminId'
+                name: 'adminId',
+                defaultValue: null
             }
         });
         Payments.belongsTo(Promocodes, { 
             as:'promocode',
             foreignKey: {
                 name: 'promocodeId',
+                defaultValue: null
             }
         });
         Payments.belongsTo(Offers, {
             as:'offerDiscount',
             foreignKey: {
                 name: 'offerDiscountId',
+                defaultValue: null
             }
         });
         Payments.belongsTo(Merchants, { 
             as:'merchant',
             foreignKey: {
                 name: 'merchantId',
-                allowNull: false
+                defaultValue: null
             }
         });
         Payments.belongsTo(Paymentmodes, {
             as:'paymentMode',
             foreignKey: {
-                name: 'paymentModeId'
+                name: 'paymentModeId',
+                defaultValue: null
             }
         });
         Payments.belongsTo(TransactionDetails, {
             as:'transactionDetail',
             foreignKey: {
                 name: 'transactionDetailId',
-                allowNull: false
+                defaultValue: null
             }
         });
         Payments.belongsTo(Settlements, {

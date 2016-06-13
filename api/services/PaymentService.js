@@ -139,6 +139,66 @@ class PaymentService {
         });
     }
 
+    recharge(params, callback) {
+
+        var paymentId = params.paymentId;
+        var userId = params.userId;
+        var amount = params.amount;
+        var paymentmodeId = params.paymentmodeId;
+        var status = params.status;
+        var type = params.type;
+
+        var paymentsRepository = new PaymentsRepository();
+        var transactionDetailsRepository = new TransactionDetailsRepository();
+
+        generateOrderNo(function(orderNo) {
+            var saveTxnObj = {};
+            saveTxnObj.status = status;
+            saveTxnObj.paymentId = paymentId;
+            saveTxnObj.transactionId = orderNo;
+            saveTxnObj.orderNumber = orderNo;
+
+            transactionDetailsRepository.save(saveTxnObj, function(err, txnData) {
+                if (err)
+                    return callback(err);
+                var savePayObj = {};
+                savePayObj.userId = userId;
+                savePayObj.initialAmount = amount;
+                savePayObj.type = type;
+                savePayObj.reducedAmount = 0;
+                savePayObj.paidAmount = amount;
+                savePayObj.promocodeAmount = 0;
+                savePayObj.batuaCommission = 0;
+                savePayObj.merchantFee = 0;
+                savePayObj.isConfirmed = true;
+                savePayObj.isCancelled = false;
+                savePayObj.paymentmodeId = paymentmodeId;
+                savePayObj.transactionDetailId = txnData.id;
+
+                paymentsRepository.save(savePayObj, function(err, paymentData) {
+                    if (err)
+                        return callback(err);
+                    var userPayObj = {};
+                    userPayObj.userId = userId;
+                    userPayObj.paymentmodeId = paymentmodeId;
+                    userPayObj.balance = amount;
+                    UsersPaymentmodes.find({ where: { userId: userId } }).then(function(data) {
+                        if (!data) {
+                            UsersPaymentmodes.create(userPayObj);
+                            paymentData.balance = amount;
+                            callback(null, paymentData);
+                        }
+                        if (data) {
+                            UsersPaymentmodes.update({ balance: amount + data.balance }, { where: { userId: userId } });
+                            paymentData.balance = data.balance + amount;
+                            callback(null, paymentData);
+                        }
+                    })
+                });
+            });
+        });
+    }
+
     history(params, callback) {
 
         var userId = params.userId;
