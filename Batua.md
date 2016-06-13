@@ -402,17 +402,15 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
     
             [
                 {
-                    "id": 6,
-                    "merchantName": "vikash",
-                    "netTransactionAmount": 100000,
-                    "netOfferAmount": 10000,
-                    "netPromoOfferAmount": 10000,
-                    "netCashbackByMerchant": 10000,
-                    "netFeeCharged": 1000,
-                    "netSettlementAmount":1000,
-                    "status":"Open",
-                    "createdAt": "2016-04-06T07:38:39.000Z",
-                    "updatedAt": "2016-04-06T07:43:56.000Z"
+                    "merchantId": 36,
+                    "merchantName": "Sony",
+                    "status": "open",
+                    "netTransactionAmount": 20,
+                    "netOfferAmount": 0,
+                    "netPromoOfferAmount": 0,
+                    "netCashbackByMerchant": 0,
+                    "netFeeCharged": 1.78,
+                    "netSettlementAmount": 16.439999999999998
                 }
             ]
         
@@ -1334,6 +1332,58 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
                     ]
         }
 
+
+### Recharge Wallet [POST /api/user/recharge/wallet]
+
++ Request (application/json)
+
+    + Body
+    
+            {
+                "paymentId":"pay_121324qwqwq",
+                "userId":"52",
+                "amount":100,
+                "paymentmodeId":1,
+                "status":"success",
+                "type":"recharge"
+            }
+            
+        
++ Response 200 (application/json)
+
+            {
+                "adminId": null,
+                "promocodeId": null,
+                "offerDiscountId": null,
+                "merchantId": null,
+                "paymentModeId": null,
+                "settlementId": null,
+                "id": 60,
+                "userId": "52",
+                "initialAmount": 100,
+                "type": "recharge",
+                "reducedAmount": 0,
+                "paidAmount": 100,
+                "promocodeAmount": 0,
+                "batuaCommission": 0,
+                "merchantFee": 0,
+                "isConfirmed": true,
+                "isCancelled": false,
+                "transactionDetailId": 101,
+                "updatedAt": "2016-06-13T13:08:09.000Z",
+                "createdAt": "2016-06-13T13:08:09.000Z",
+                "balance": 250
+            }
+            
++ Response 400 (application/json)
+    
+        {
+            "errors":[
+                        {
+                            "message": "Merchant ID deos not exist"
+                        }
+                    ]
+        }
 ### Make Payment [POST /api/user/makePayment]
 
 + Request (application/json)
@@ -1348,6 +1398,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
               "paymentmodeId": "1",
               "status": "success",
               "offer": null,
+              "type":"recharge",        // or "payment"
               "promocode": {
                 "id": 1,
                 "promocode": "DEEVALI20",
