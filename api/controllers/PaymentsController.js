@@ -67,9 +67,15 @@ module.exports = {
 
     transactionReport: function(req, res) {
 
+        var params = {};
+        params.merchantId = req.query.merchantId;
+        params.userId = req.query.userId;
+        params.fromDate = req.query.fromDate;
+        params.toDate = req.query.toDate;
+
         var paymentService = new PaymentService();
 
-        paymentService.transactionReport(function(err, result) {
+        paymentService.transactionReport(params, function(err, result) {
             if (err)
                 return res.badRequest(error.send(err));
             if (_.isEmpty(result))

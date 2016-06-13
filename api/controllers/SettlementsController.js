@@ -18,6 +18,9 @@ module.exports = {
         params.date = req.body.date;
         params.referenceNumber = req.body.referenceNumber;
         params.description = req.body.description;
+        params.merchantId = req.body.merchantId;
+        params.fromDate = req.body.fromDate;
+        params.toDate = req.body.toDate;
 
         var settlementService = new SettlementService();
 
@@ -31,10 +34,15 @@ module.exports = {
 
     report: function(req, res) {
 
+        var params = {};
+        params.merchantId = req.query.merchantId;
+        params.fromDate = req.query.fromDate;
+        params.toDate = req.query.toDate;
+
         var settlementService = new SettlementService();
 
-        settlementService.getReport(function(err, result) {
-            
+        settlementService.getReport(params, function(err, result) {
+
             if (err)
                 return res.badRequest(error.send(err));
 

@@ -111,5 +111,12 @@ module.exports = {
                 allowNull: false
             }
         });
+        Payments.belongsTo(Settlements, {
+            as:'settlement',
+            foreignKey: {
+                name: 'settlementId',
+                defaultValue: null
+            }
+        });
     }
 };
