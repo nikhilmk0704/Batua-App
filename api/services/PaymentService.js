@@ -151,55 +151,75 @@ class PaymentService {
         var paymentsRepository = new PaymentsRepository();
         var transactionDetailsRepository = new TransactionDetailsRepository();
 
-        generateOrderNo(function(orderNo) {
-            var saveTxnObj = {};
-            saveTxnObj.status = status;
-            saveTxnObj.paymentId = paymentId;
-            saveTxnObj.transactionId = orderNo;
-            saveTxnObj.orderNumber = orderNo;
+        request({
+            method: 'POST',
+            url: 'https://' + sails.config.connections.razorpayKeyId + ':' + sails.config.connections.razorPayKeySecret + '@api.razorpay.com/v1/payments/' + paymentId + '/capture',
+            form: {
+                amount: parseFloat(params.amount) * 100
+            }
+        }, function(error, response, body) {
 
-            transactionDetailsRepository.save(saveTxnObj, function(err, txnData) {
-                if (err)
-                    return callback(err);
-                var savePayObj = {};
-                savePayObj.userId = userId;
-                savePayObj.initialAmount = amount;
-                savePayObj.type = type;
-                savePayObj.reducedAmount = 0;
-                savePayObj.paidAmount = amount;
-                savePayObj.promocodeAmount = 0;
-                savePayObj.batuaCommission = 0;
-                savePayObj.merchantFee = 0;
-                savePayObj.isConfirmed = true;
-                savePayObj.isCancelled = false;
-                savePayObj.paymentmodeId = paymentmodeId;
-                savePayObj.transactionDetailId = txnData.id;
+            var body = JSON.parse(body);
 
-                paymentsRepository.save(savePayObj, function(err, paymentData) {
-                    if (err)
-                        return callback(err);
-                    var userPayObj = {};
-                    userPayObj.userId = userId;
-                    userPayObj.paymentmodeId = paymentmodeId;
-                    userPayObj.balance = amount;
-                    UsersPaymentmodes.find({ where: { userId: userId } }).then(function(data) {
-                        if (!data) {
-                            UsersPaymentmodes.create(userPayObj);
-                            var sendData = {};
-                            sendData = JSON.parse(JSON.stringify(paymentData));
-                            sendData.balance = amount;
-                            callback(null, sendData);
-                        }
-                        if (data) {
-                            UsersPaymentmodes.update({ balance: amount + data.balance }, { where: { userId: userId } });
-                            var sendData = {};
-                            sendData = JSON.parse(JSON.stringify(paymentData));
-                            sendData.balance = data.balance + amount;
-                            callback(null, sendData);
-                        }
-                    })
+            if (response.statusCode == 200) {
+                generateOrderNo(function(orderNo) {
+                    var saveTxnObj = {};
+                    saveTxnObj.status = status;
+                    saveTxnObj.paymentId = paymentId;
+                    saveTxnObj.transactionId = orderNo;
+                    saveTxnObj.orderNumber = orderNo;
+                    saveTxnObj.mode = body.method;
+
+                    transactionDetailsRepository.save(saveTxnObj, function(err, txnData) {
+                        if (err)
+                            return callback(err);
+                        var savePayObj = {};
+                        savePayObj.userId = userId;
+                        savePayObj.initialAmount = amount;
+                        savePayObj.type = type;
+                        savePayObj.reducedAmount = 0;
+                        savePayObj.paidAmount = amount;
+                        savePayObj.promocodeAmount = 0;
+                        savePayObj.batuaCommission = 0;
+                        savePayObj.merchantFee = 0;
+                        savePayObj.isConfirmed = true;
+                        savePayObj.isCancelled = false;
+                        savePayObj.paymentmodeId = paymentmodeId;
+                        savePayObj.transactionDetailId = txnData.id;
+
+                        paymentsRepository.save(savePayObj, function(err, paymentData) {
+                            if (err)
+                                return callback(err);
+                            var userPayObj = {};
+                            userPayObj.userId = userId;
+                            userPayObj.paymentmodeId = paymentmodeId;
+                            userPayObj.balance = amount;
+                            UsersPaymentmodes.find({ where: { userId: userId } }).then(function(data) {
+                                if (!data) {
+                                    UsersPaymentmodes.create(userPayObj);
+                                    var sendData = {};
+                                    sendData = JSON.parse(JSON.stringify(paymentData));
+                                    sendData.balance = amount;
+                                    callback(null, sendData);
+                                }
+                                if (data) {
+                                    UsersPaymentmodes.update({ balance: amount + data.balance }, { where: { userId: userId } });
+                                    var sendData = {};
+                                    sendData = JSON.parse(JSON.stringify(paymentData));
+                                    sendData.balance = data.balance + amount;
+                                    sendData.mode = txnData.mode;
+                                    callback(null, sendData);
+                                }
+                            });
+                        });
+                    });
                 });
-            });
+            } else {
+                var newErr = {}
+                newErr.errorCode = 406;
+                newErr.message = body.error.description;
+                return callback(newErr, null);
+            }
         });
     }
 
@@ -212,7 +232,9 @@ class PaymentService {
         var whereObject = {};
         whereObject.include = includeModels();
         whereObject.where = {};
-        whereObject.where.userId = userId;
+        whereObject.where.$and = {};
+        whereObject.where.$and.userId = userId;
+        whereObject.where.$and.type.$not = 'recharge';
         whereObject.order = [
             ['createdAt', 'DESC']
         ];
@@ -315,8 +337,8 @@ class PaymentService {
                 count++;
                 var txnObj = {};
                 txnObj.id = obj.id;
-                txnObj.merchantName = obj.merchant.name;
-                txnObj.userName = obj.user.name;
+                txnObj.merchantName = (obj.merchant) ? (obj.merchant.name) : (null);
+                txnObj.userName = (obj.user) ? (obj.user.name) : (null);
                 txnObj.orderNumber = obj.transactionDetail.orderNumber;
                 txnObj.transactionId = obj.transactionDetail.paymentId;
                 txnObj.transactionDate = obj.createdAt;
