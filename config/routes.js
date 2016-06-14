@@ -118,6 +118,7 @@ module.exports.routes = {
     'post /api/user/validatePromocode': 'DiscountValidateController.validatePromocode',
     'post /api/user/validateOffer': 'DiscountValidateController.validateOffer',
     'post /api/user/makePayment': 'PaymentsController.doPayment',
+    'post /api/user/makeBatuaPayment': 'PaymentsController.batuaWalletPayment',
     'post /api/user/recharge/wallet': 'PaymentsController.recharge',
     'post /api/user/yesbankwallet/generateotp': 'PaymentsController.yesBankGenerateOtp',
     'post /api/user/yesbankwallet/verifyotp': 'PaymentsController.yesBankVerifyOtp',
