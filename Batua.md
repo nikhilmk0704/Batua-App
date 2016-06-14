@@ -1722,6 +1722,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
     
             {
                 "phone":"9876543219",
+                "userId":"71",
                 "otp":"111111"
             }
 

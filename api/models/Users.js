@@ -90,6 +90,14 @@ module.exports = {
         },
         locationUpdateTime: {
             type: Sequelize.DATE
+        },
+        yesAuthToken: {
+            type: Sequelize.STRING,
+            defaultValue: null
+        },
+        yesPhone: {
+            type: Sequelize.STRING,
+            defaultValue: null
         }
     },
     options: {

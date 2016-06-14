@@ -124,6 +124,7 @@ module.exports.routes = {
     'post /api/user/yesbankwallet/verifyotp': 'PaymentsController.yesBankVerifyOtp',
     'post /api/user/yesbankwallet/executethirdpartypayment': 'PaymentsController.yesBankExecuteTxn',
     'post /api/user/yesbankwallet/makepayment': 'PaymentsController.makeYesBankWalletPayment',
+    'post /api/user/yesbankwallet': 'PaymentsController.getYesWalletBalance',
     'get /api/user/:userId/payment/history': 'PaymentsController.history',
     'get /api/user/:userId/wallet': 'PaymentsController.wallet',
 

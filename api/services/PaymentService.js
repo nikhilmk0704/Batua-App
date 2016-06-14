@@ -545,6 +545,7 @@ class PaymentService {
     }
 
     verifyOtp(params, callback) {
+        var userId = params.userId;
         var phone = params.phone;
         var otp = params.otp;
         var merchantSecretKey = sails.config.connections.merchantSecretKey;
@@ -571,6 +572,27 @@ class PaymentService {
             var text = "" + phone + "|" + psk;
             newParams.signature = generateSignature(text);
             getBalanceThirdParty(newParams, callback);
+            Users.update({ yesAuthToken: body.auth_token, yesPhone: phone }, { where: { id: userId } });
+        });
+    }
+
+    getYesWalletBalance(params, callback) {
+        var userId = params.userId;
+        Users.find({ where: { id: userId } }).then(function(data) {
+            if (!data)
+                return callback("Incorrect userId !!!");
+            if (data && !data.yesAuthToken)
+                return callback("Please Verify YES Wallet !!!");
+            var psk = sails.config.connections.psk;
+            var newParams = {};
+            newParams.phone = data.yesPhone;
+            newParams.authToken = data.yesAuthToken;
+            newParams.merchantSecretKey = sails.config.connections.merchantSecretKey;
+            var text = "" + data.yesPhone + "|" + psk;
+            newParams.signature = generateSignature(text);
+            getBalanceThirdParty(newParams, callback);
+        }).catch(function(exception) {
+            callback(exception);
         });
     }
 
@@ -579,7 +601,7 @@ class PaymentService {
         var merchantSecretKey = sails.config.connections.merchantSecretKey;
         var amount = +params.amount;
         var authToken = params.authToken;
-        var merchantReferenceNumber = sails.config.connections.merchantReferenceNumber;
+        var merchantReferenceNumber = "ref" + (new Date().getTime());
         var psk = sails.config.connections.psk;
         var text = "" + phone + "|" + psk + "|" + amount + "|" + merchantReferenceNumber;
         var signature = generateSignature(text);
@@ -592,7 +614,7 @@ class PaymentService {
                 "mobile_number": phone,
                 "merchant_secret_key": merchantSecretKey,
                 "amount": amount,
-                "merchent_reference_number": merchantReferenceNumber,
+                "merchant_reference_number": merchantReferenceNumber,
                 "description": "test1",
                 "signature": signature,
                 "auth_token": authToken
@@ -609,14 +631,12 @@ class PaymentService {
     makeYesBankWalletPayment(params, callback) {
 
         generateOrderNo(function(sequenceNumber) {
-
             var transactionDetailParam = {};
-
             transactionDetailParam.orderNumber = sequenceNumber;
             transactionDetailParam.transactionId = sequenceNumber;
             transactionDetailParam.paymentId = params.paymentId;
             transactionDetailParam.status = params.status;
-            transactionDetailParam.mode = 'Yes Wallet';
+            transactionDetailParam.mode = 'Wallet';
 
             var transactionDetailsRepository = new TransactionDetailsRepository();
 
@@ -717,6 +737,7 @@ class PaymentService {
     }
 
 }
+
 module.exports = PaymentService;
 
 function getWalletBalance(userId, callback) {
