@@ -1483,6 +1483,7 @@ class UserService {
                     loggedinResult.balance = balance;
                     return callback(null, loggedinResult);
                 });
+                return null;
             }
             return callback("Something went Wrong");
         }).catch(function(exception) {
