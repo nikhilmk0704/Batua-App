@@ -143,7 +143,7 @@ class PaymentService {
 
         var paymentId = params.paymentId;
         var userId = params.userId;
-        var amount = params.amount;
+        var amount = parseFloat(params.amount);
         var paymentmodeId = params.paymentmodeId;
         var status = params.status;
         var type = params.type;
@@ -206,7 +206,8 @@ class PaymentService {
                                     UsersPaymentmodes.update({ balance: amount + data.balance }, { where: { userId: userId } });
                                     var sendData = {};
                                     sendData = JSON.parse(JSON.stringify(paymentData));
-                                    sendData.balance = data.balance + amount;
+                                    var total = parseFloat(data.balance) + parseFloat(amount);
+                                    sendData.balance = +total.toFixed(2);
                                     sendData.mode = txnData.mode;
                                     callback(null, sendData);
                                 }
@@ -223,6 +224,129 @@ class PaymentService {
         });
     }
 
+    batuaWalletPayment(params, callback) {
+
+        generateOrderNo(function(sequenceNumber) {
+
+            var transactionDetailParam = {};
+
+            transactionDetailParam.orderNumber = sequenceNumber;
+            transactionDetailParam.transactionId = sequenceNumber;
+            transactionDetailParam.paymentId = "pay_" + sequenceNumber;
+            transactionDetailParam.status = params.status;
+            transactionDetailParam.mode = "wallet";
+
+            var transactionDetailsRepository = new TransactionDetailsRepository();
+
+            transactionDetailsRepository.save(transactionDetailParam, function(err, transactionDetail) {
+                if (err)
+                    return callback(err, null);
+                /*---save payment for each transaction---*/
+
+                var savePaymentParam = {};
+
+                savePaymentParam.transactionDetailId = transactionDetail.id;
+                savePaymentParam.userId = params.userId;
+                savePaymentParam.merchantId = params.merchantId;
+                savePaymentParam.paymentModeId = params.paymentmodeId;
+                savePaymentParam.type = params.type;
+                if (params.promocode) {
+                    savePaymentParam.promocodeId = params.promocode.id;
+                } else {
+                    savePaymentParam.promocodeId = null;
+                }
+                if (params.offer) {
+                    savePaymentParam.offerDiscountId = params.offer.id;
+                } else {
+                    savePaymentParam.offerDiscountId = null;
+                }
+
+                getMerchantFee(params.merchantId, function(merchantFee) {
+                    if (params.promocode) {
+
+                        promocodeOperation(params, merchantFee[0].fees, function(resultArray) {
+                            savePaymentParam.initialAmount = parseFloat(params.amount);
+                            savePaymentParam.reducedAmount = (parseFloat(resultArray.reducedAmount) + parseFloat(resultArray.deductionAmountFromAmountAfterPromocodeApply) + parseFloat(resultArray.fee));
+                            savePaymentParam.paidAmount = parseFloat(resultArray.paidAmount);
+                            savePaymentParam.promocodeAmount = parseFloat(resultArray.reducedAmount);
+                            savePaymentParam.batuaCommission = parseFloat(resultArray.deductionAmountFromAmountAfterPromocodeApply);
+                            savePaymentParam.merchantFee = parseFloat(resultArray.fee);
+
+                            return savePaymentDetails(savePaymentParam, function(err, result) {
+                                if (err) {
+                                    return callback(err, null);
+                                }
+                                updateBatuaWallet(params.userId, params.amount, function(newBalance) {
+                                    findPaymentDetail(result, function(err, detailResult) {
+                                        if (err) {
+                                            return callback(err, null);
+                                        }
+                                        var resultObj = {};
+                                        resultObj = JSON.parse(JSON.stringify(detailResult));
+                                        resultObj.balance = newBalance;
+                                        return callback(null, resultObj);
+                                    });
+                                });
+                            });
+                        });
+
+
+                    } else if (params.offer) {
+                        offerOperation(params, merchantFee[0].fees, function(resultArray) {
+                            savePaymentParam.initialAmount = parseFloat(params.amount);
+                            savePaymentParam.reducedAmount = (parseFloat(resultArray.reducedAmount) + parseFloat(resultArray.fee));
+                            savePaymentParam.paidAmount = parseFloat(resultArray.paidAmount);
+                            savePaymentParam.promocodeAmount = parseFloat(resultArray.reducedAmount);
+                            savePaymentParam.batuaCommission = parseFloat(resultArray.deductionAmountFromAmountAfterPromocodeApply);
+                            savePaymentParam.merchantFee = parseFloat(resultArray.fee);
+                            return savePaymentDetails(savePaymentParam, function(err, result) {
+                                if (err) {
+                                    return callback(err, null);
+                                }
+                                updateBatuaWallet(params.userId, params.amount, function(newBalance) {
+                                    findPaymentDetail(result, function(err, detailResult) {
+                                        if (err) {
+                                            return callback(err, null);
+                                        }
+                                        var resultObj = {};
+                                        resultObj = JSON.parse(JSON.stringify(detailResult));
+                                        resultObj.balance = newBalance;
+                                        return callback(null, resultObj);
+                                    });
+                                });
+                            });
+                        });
+
+                    } else {
+                        var deductionFee = parseFloat(params.amount) * (parseFloat(merchantFee[0].fees) / 100)
+                        savePaymentParam.initialAmount = parseFloat(params.amount);
+                        savePaymentParam.reducedAmount = deductionFee;
+                        savePaymentParam.paidAmount = parseFloat(params.amount) - deductionFee;
+                        savePaymentParam.promocodeAmount = 0;
+                        savePaymentParam.batuaCommission = 0;
+                        savePaymentParam.merchantFee = parseFloat(deductionFee);
+                        return savePaymentDetails(savePaymentParam, function(err, result) {
+                            if (err) {
+                                return callback(err, null);
+                            }
+                            updateBatuaWallet(params.userId, params.amount, function(newBalance) {
+                                findPaymentDetail(result, function(err, detailResult) {
+                                    if (err) {
+                                        return callback(err, null);
+                                    }
+                                    var resultObj = {};
+                                    resultObj = JSON.parse(JSON.stringify(detailResult));
+                                    resultObj.balance = newBalance;
+                                    return callback(null, resultObj);
+                                });
+                            });
+                        });
+                    }
+                });
+            });
+        });
+    }
+
     history(params, callback) {
 
         var userId = params.userId;
@@ -234,6 +358,7 @@ class PaymentService {
         whereObject.where = {};
         whereObject.where.$and = {};
         whereObject.where.$and.userId = userId;
+        whereObject.where.$and.type = {};
         whereObject.where.$and.type.$not = 'recharge';
         whereObject.order = [
             ['createdAt', 'DESC']
@@ -999,4 +1124,14 @@ function generateSignature(text) {
     var sha = crypto.createHash('sha512').update(text);
     var result = sha.digest('hex');
     return result;
+}
+
+function updateBatuaWallet(userId, amount, callback) {
+
+    UsersPaymentmodes.find({ where: { userId: userId } }).then(function(oldBalance) {
+        var balance = +(parseFloat(oldBalance.balance) - parseFloat(amount)).toFixed(2);
+        UsersPaymentmodes.update({ balance: balance }, { where: { userId: userId } }).then(function(newBalance) {
+            callback(balance);
+        });
+    });
 }

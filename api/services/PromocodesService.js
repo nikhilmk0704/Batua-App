@@ -35,6 +35,7 @@ class PromocodesService {
 
             return addPromoCodeToMerchants(bulkSaveParams, function(err, merchantSaveResult) {
                 if (err) {
+                    Promocodes.destroy({ where: { id: result.id } });
                     return callback(err,null);
                 }
                 return callback(null, result);

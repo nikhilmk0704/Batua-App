@@ -1384,6 +1384,7 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
                         }
                     ]
         }
+
 ### Make Payment [POST /api/user/makePayment]
 
 + Request (application/json)
@@ -1526,6 +1527,161 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
           "promocodeAmount": 50,
           "batuaCommission": 1,
           "merchantFee": 499.5
+        }
+            
++ Response 400 (application/json)
+    
+        {
+          "errors": [
+            {
+              "message": "ER_NO_REFERENCED_ROW_2: Cannot add or update a child row: a foreign key constraint fails (`batua`.`payments`, CONSTRAINT `payments_ibfk_2` FOREIGN KEY (`promocodeId`) REFERENCES `Promocodes` (`id`) ON DELETE SET NULL ON UPDATE CASCADE)"
+            }
+          ]
+        }
+
+
+### Make Batua Payment [POST /api/user/makeBatuaPayment]
+
++ Request (application/json)
+
+    + Body
+    
+            {
+              "merchantId": "7",
+              "userId": "4",
+              "amount": "1000",
+              "paymentmodeId": "1",
+              "status": "success",
+              "offer": null,
+              "type":"payment",
+              "promocode": {
+                "id": 1,
+                "promocode": "DEEVALI20",
+                "discountPercentage": 10,
+                "description": "Clearance Sale",
+                "maximumAmountLimit": 50,
+                "validFrom": "2016-05-01T11:03:12.000Z",
+                "validTo": "2016-05-12T11:03:12.000Z",
+                "percentageCostBourneByBatua": 5,
+                "percentageCostBourneByMerchant": 2,
+                "status": "Active",
+                "createdAt": "2016-05-04T09:02:48.000Z",
+                "updatedAt": "2016-05-04T09:02:48.000Z"
+                }
+            }
+            
+        
++ Response 200 (application/json)
+
+        {
+          "id": 48,
+          "initialAmount": 1000,
+          "reducedAmount": 550.5,
+          "paidAmount": 499.5,
+          "isConfirmed": false,
+          "isCancelled": false,
+          "type": null,
+          "canccellationDate": null,
+          "cancellationDescription": null,
+          "createdAt": "2016-05-13T10:29:53.000Z",
+          "updatedAt": "2016-05-13T10:29:53.000Z",
+          "userId": 4,
+          "promocodeId": 1,
+          "offerDiscountId": null,
+          "merchantId": 7,
+          "paymentModeId": 1,
+          "transactionDetailId": 96,
+          "merchant": {
+            "id": 7,
+            "name": "Hashim123",
+            "shortCode": "hashim1020",
+            "profileImageUrl": "url",
+            "phone": 2147483647,
+            "email": null,
+            "address": null,
+            "latitude": null,
+            "longitude": null,
+            "averageRating": null,
+            "reviewersCount": null,
+            "fees": 50,
+            "bankName": "HDFC",
+            "branchName": "Kormanagala",
+            "accountHolder": "Kajal",
+            "accountNumber": 9876543210987654,
+            "ifscCode": "HDFC001",
+            "status": "Pending for approval",
+            "createdAt": "2016-04-05T05:11:31.000Z",
+            "updatedAt": "2016-04-05T05:11:31.000Z",
+            "locationId": null,
+            "createdSalesId": 2,
+            "categoryId": 2
+          },
+          "user": {
+            "id": 4,
+            "name": "vikash",
+            "phone": 123457685,
+            "profileImageUrl": "url",
+            "email": "nikhil@tecsolsoftware.com",
+            "isPhoneVerified": false,
+            "facebookId": null,
+            "googleId": null,
+            "batuaId": null,
+            "password": null,
+            "pin": null,
+            "isPinActivated": false,
+            "otp": null,
+            "status": "Active",
+            "latitude": null,
+            "longitude": null,
+            "locationUpdateTime": null,
+            "createdAt": "2016-04-05T05:45:38.000Z",
+            "updatedAt": "2016-04-05T05:45:38.000Z",
+            "userGroupId": 3
+          },
+          "promocode": {
+            "id": 1,
+            "promocode": "DEEVALI20",
+            "discountPercentage": 20,
+            "description": "Clearance Sale",
+            "maximumAmountLimit": 2500,
+            "validFrom": "2016-05-01T11:03:12.000Z",
+            "validTo": "2016-05-12T11:03:12.000Z",
+            "percentageCostBourneByBatua": 5,
+            "percentageCostBourneByMerchant": 2,
+            "status": "Active",
+            "createdAt": "2016-05-04T09:02:48.000Z",
+            "updatedAt": "2016-05-04T09:02:48.000Z"
+          },
+          "offerDiscount": null,
+          "transactionDetail": {
+            "id": 96,
+            "bankName": null,
+            "orderNumber": "130520160096",
+            "transactionId": "130520160096",
+            "mode": null,
+            "status": "success",
+            "paymentId": "pay_5SUr0HtJ3H2Z2d",
+            "amount": null,
+            "additionalCharges": 0,
+            "netAmountDebited": null,
+            "bankReferenceNumber": null,
+            "cardType": null,
+            "cardNumber": null,
+            "expiryDate": null,
+            "createdAt": "2016-05-13T10:29:53.000Z",
+            "updatedAt": "2016-05-13T10:29:53.000Z"
+          },
+          "paymentMode": {
+            "id": 1,
+            "paymentMode": "razorpay",
+            "walletType": null,
+            "createdAt": null,
+            "updatedAt": null
+          },
+          "promocodeAmount": 50,
+          "batuaCommission": 1,
+          "merchantFee": 499.5,
+          "balance":1000.89
         }
             
 + Response 400 (application/json)
