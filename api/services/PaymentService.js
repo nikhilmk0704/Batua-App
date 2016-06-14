@@ -358,6 +358,7 @@ class PaymentService {
         whereObject.where = {};
         whereObject.where.$and = {};
         whereObject.where.$and.userId = userId;
+        whereObject.where.$and.type = {};
         whereObject.where.$and.type.$not = 'recharge';
         whereObject.order = [
             ['createdAt', 'DESC']
