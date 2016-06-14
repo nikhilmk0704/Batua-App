@@ -185,15 +185,15 @@ class PaymentService {
                     UsersPaymentmodes.find({ where: { userId: userId } }).then(function(data) {
                         if (!data) {
                             UsersPaymentmodes.create(userPayObj);
-                            var sendData={};
-                            sendData=JSON.parse(JSON.stringify(paymentData));
+                            var sendData = {};
+                            sendData = JSON.parse(JSON.stringify(paymentData));
                             sendData.balance = amount;
                             callback(null, sendData);
                         }
                         if (data) {
                             UsersPaymentmodes.update({ balance: amount + data.balance }, { where: { userId: userId } });
-                            var sendData={};
-                            sendData=JSON.parse(JSON.stringify(paymentData));
+                            var sendData = {};
+                            sendData = JSON.parse(JSON.stringify(paymentData));
                             sendData.balance = data.balance + amount;
                             callback(null, sendData);
                         }
@@ -577,7 +577,10 @@ function getWalletBalance(userId, callback) {
     options.type = sequelize.QueryTypes.SELECT;
 
     sequelize.query(getWalletBalanceQueryString, options).then(function(result) {
-        callback(null, result[0].balance);
+        if (result && result.length)
+            callback(null, result[0].balance);
+        if (!result || !result.length)
+            callback(null, 0);
     }).catch(function(exception) {
         callback(exception);
     });
