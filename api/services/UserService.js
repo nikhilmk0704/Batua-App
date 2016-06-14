@@ -1475,8 +1475,15 @@ class UserService {
                 return callback("Incorrect PIN");
             loggedinResult.isPinActivated = true;
             loggedinResult.isPinSet = true;
-            if (result.pin == pin)
-                return callback(null, loggedinResult);
+            if (result.pin == pin) {
+                var userService = new UserService();
+                userService.getWalletBalance(loggedinResult.id, function(err, balance) {
+                    if (err)
+                        return callback(err);
+                    loggedinResult.balance = balance;
+                    return callback(null, loggedinResult);
+                });
+            }
             return callback("Something went Wrong");
         }).catch(function(exception) {
             callback(exception);
