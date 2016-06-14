@@ -320,7 +320,7 @@ class UserService {
                 return callback("Incorrect User Id");
             var group = result.userGroups.name;
             var status = result.status;
-            if (group == 'Field Sales Agent' || status != "Active")
+            if (group != 'Super Admin' || group != 'Admin' || status != "Active")
                 return callback("Does not exist !");
             if (result.password != md5(currentPassword))
                 return callback("Incorrect Current Password");
@@ -625,7 +625,7 @@ class UserService {
         Users.find(findObject).then(function(result) {
             var status = result.status;
             var group = result.userGroups.name;
-            if (status != 'Active' || group != 'Field Sales Agent')
+            if (status != 'Active' || group == 'User')
                 return callback('Field Sales Agent does not exist');
             userService.validateGoogleId(params, result, callback);
             return null;
@@ -690,7 +690,7 @@ class UserService {
             var status = result.status;
             if ((result.facebookId || result.googleId) && userType == 'User')
                 return callback("Already a social user");
-            if (group != userType || status != 'Active')
+            if ( /*group != userType ||*/ status != 'Active')
                 return callback("" + userType + " does not exist !");
             userService.sendOtp(phone, callback);
             return null;
@@ -811,8 +811,8 @@ class UserService {
         Users.find(findObject).then(function(result) {
             if (!result)
                 return callback("Incorrect userId");
-            if (result.userGroups.name != userType)
-                return callback("Not a " + userType + " !");
+            // if (result.userGroups.name != userType)
+            //     return callback("Not a " + userType + " !");
             userService.salesAgentUpdatePassword(params, callback);
             return null;
         }).catch(function(exception) {
@@ -1118,7 +1118,7 @@ class UserService {
         findObject.where = {};
         findObject.where.$and = {};
         findObject.where.$and.phone = phone;
-        findObject.where.$and.$or = [{ googleId: { $ne: null } }, { facebookId: { $ne: null } }];
+        // findObject.where.$and.$or = [{ googleId: { $ne: null } }, { facebookId: { $ne: null } }];
         findObject.where.$and.status = 'Drafted';
         if (!phone)
             return callback("Please give phone");
@@ -1369,8 +1369,8 @@ class UserService {
         var email = params.email;
         var resultedEmail = userData.email;
         var userGroupName = userData.userGroups.name;
-        if (userData && userGroupName != "User")
-            return callback("User does not exist");
+        // if (userData && userGroupName != "User")
+        //     return callback("User does not exist");
         if (userData && email && resultedEmail)
             return callback("Email Is One Time Editable");
         if (userData && ((!resultedEmail && email) || (resultedEmail && !email)))
@@ -1467,7 +1467,7 @@ class UserService {
             loggedinResult.phone = result.phone;
             loggedinResult.isPhoneVerified = result.isPhoneVerified;
             loggedinResult.userGroup = result.userGroups.name;
-            if (result.userGroups.name != 'User' || result.status != 'Active')
+            if ( /*result.userGroups.name != 'User' ||*/ result.status != 'Active')
                 return callback("User does not exist");
             if (!result.isPinActivated)
                 return callback("PIN is not Active");
@@ -1475,8 +1475,15 @@ class UserService {
                 return callback("Incorrect PIN");
             loggedinResult.isPinActivated = true;
             loggedinResult.isPinSet = true;
-            if (result.pin == pin)
-                return callback(null, loggedinResult);
+            if (result.pin == pin) {
+                var userService = new UserService();
+                userService.getWalletBalance(loggedinResult.id, function(err, balance) {
+                    if (err)
+                        return callback(err);
+                    loggedinResult.balance = balance;
+                    return callback(null, loggedinResult);
+                });
+            }
             return callback("Something went Wrong");
         }).catch(function(exception) {
             callback(exception);
@@ -1510,7 +1517,7 @@ class UserService {
                 return callback("Incorrect userId");
             var group = result.userGroups.name;
             var status = result.status;
-            if (group != 'User' || status != 'Active')
+            if ( /*group != 'User' ||*/ status != 'Active')
                 return callback("User does not exist");
             userService.updatePinForResetPin(params, callback);
             return null;
@@ -1563,7 +1570,7 @@ class UserService {
         Users.find(findObject).then(function(result) {
             if (!result)
                 return callback("Incorrect User Id");
-            if (result.userGroups.name != 'User' || result.status != "Active")
+            if ( /*result.userGroups.name != 'User' ||*/ result.status != "Active")
                 return callback("User does not exist");
             if (!result.isPinActivated)
                 return callback("Please Enable PIN Settings");
