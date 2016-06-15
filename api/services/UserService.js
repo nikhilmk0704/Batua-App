@@ -1119,7 +1119,7 @@ class UserService {
         findObject.where.$and = {};
         findObject.where.$and.phone = phone;
         // findObject.where.$and.$or = [{ googleId: { $ne: null } }, { facebookId: { $ne: null } }];
-        findObject.where.$and.status = 'Drafted';
+        // findObject.where.$and.status = 'Drafted';
         if (!phone)
             return callback("Please give phone");
         if (!isValidPhone)
