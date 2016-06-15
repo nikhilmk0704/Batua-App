@@ -1148,8 +1148,8 @@ class UserService {
         Users.find(findObject).then(function(result) {
             if (!result)
                 return callback("Incorrect Id");
-            if (result && result.userGroups.name != 'User')
-                return callback("User does not exist");
+            // if (result && result.userGroups.name != 'User')
+            //     return callback("User does not exist");
             userService.updatePhoneForSendOtp(params, callback);
             return null;
         }).catch(function(exception) {

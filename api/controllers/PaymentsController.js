@@ -182,6 +182,23 @@ module.exports = {
 
     },
 
+    getYesWalletBalance: function(req, res) {
+
+        var params = req.body;
+
+        var paymentService = new PaymentService();
+
+        paymentService.getYesWalletBalance(params, function(err, result) {
+
+            if (err)
+                return res.badRequest(error.send(err));
+
+            return res.json(200, result);
+
+        });
+
+    },
+
     makeYesBankWalletPayment: function(req, res) {
 
         var params = req.body;
