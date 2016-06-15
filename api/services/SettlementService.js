@@ -61,23 +61,34 @@ class SettlementService {
         var merchantId = params.merchantId;
         var fromDate = params.fromDate;
         var toDate = params.toDate;
+        var isValidFromDate = (fromDate.length > 2);
+        var isValidToDate = (toDate.length > 2);
+
+        if ((isValidFromDate && !isValidToDate) || (!isValidFromDate && isValidToDate))
+            return callback("Select From Date and To Date both or none");
 
         var reportArray = [];
         if (merchantId) {
             getTotalSettlements(merchantId, fromDate, toDate, function(err, result) {
-                reportArray.push(result);
-                return callback(null, reportArray);
+                if (result) {
+                    reportArray.push(result);
+                    return callback(null, reportArray);
+                }
+                return callback(null, []);
             });
         }
         if (!merchantId) {
             var count = 0;
             var queryString = "SELECT DISTINCT merchantId FROM Payments WHERE isCancelled = false";
             sequelize.query(queryString).spread(function(metaData, data) {
+                if (!data.length)
+                    return callback("No Settlements");
                 data.forEach(function(merchantObj) {
                     var newMerchantId = merchantObj.merchantId;
                     getTotalSettlements(newMerchantId, fromDate, toDate, function(err, result) {
                         count++;
-                        reportArray.push(result);
+                        if(result)
+                            reportArray.push(result);
                         if (count == data.length) {
                             return callback(null, reportArray);
                         }
@@ -93,9 +104,14 @@ class SettlementService {
         var merchantId = params.merchantId;
         var fromDate = params.fromDate;
         var toDate = params.toDate;
+        var isValidFromDate = (fromDate.length > 2);
+        var isValidToDate = (toDate.length > 2);
 
         if (!merchantId || !merchantId.length)
             return callback("Merchant Id Not Found !!!");
+
+        if ((isValidFromDate && !isValidToDate) || (!isValidFromDate && isValidToDate))
+            return callback("Select From Date and To Date both or none");
 
         var whereObject = {};
         whereObject.where = {};
@@ -104,8 +120,15 @@ class SettlementService {
         whereObject.where.$and.merchantId = params.merchantId;
         whereObject.where.$and.isCancelled = false;
 
-        if (fromDate && toDate)
+        if (isValidFromDate && isValidToDate) {
+            fromDate = fromDate.replace(/"/g, "");
+            toDate = toDate.replace(/"/g, "");
+            fromDate = moment(fromDate).format('YYYY-MM-DD');
+            toDate = moment(toDate).format('YYYY-MM-DD');
+            toDate=moment(moment(toDate).add(1, 'days')._d).format('YYYY-MM-DD');
+            whereObject.where.$and.createdAt = {};
             whereObject.where.$and.createdAt.$between = [fromDate, toDate];
+        }
 
         var detailsArray = [];
 
@@ -150,7 +173,8 @@ class SettlementService {
 module.exports = SettlementService;
 
 function getTotalSettlements(newMerchantId, fromDate, toDate, callback) {
-
+    var isValidFromDate = (fromDate.length > 2);
+    var isValidToDate = (toDate.length > 2);
     var whereObject = {};
     whereObject.where = {};
     whereObject.include = includeModels();
@@ -158,8 +182,15 @@ function getTotalSettlements(newMerchantId, fromDate, toDate, callback) {
     whereObject.where.$and.merchantId = newMerchantId;
     whereObject.where.$and.isCancelled = false;
 
-    if (fromDate && toDate)
+    if (isValidFromDate && isValidToDate) {
+        fromDate = fromDate.replace(/"/g, "");
+        toDate = toDate.replace(/"/g, "");
+        fromDate = moment(fromDate).format('YYYY-MM-DD');
+        toDate = moment(toDate).format('YYYY-MM-DD');
+        toDate = moment(moment(toDate).add(1, 'days')._d).format('YYYY-MM-DD');
+        whereObject.where.$and.createdAt = {};
         whereObject.where.$and.createdAt.$between = [fromDate, toDate];
+    }
 
     var detailsArray = [];
     var sumObj = {};

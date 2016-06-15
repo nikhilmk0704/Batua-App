@@ -45,7 +45,8 @@ module.exports = {
 
             if (err)
                 return res.badRequest(error.send(err));
-
+            if (_.isEmpty(result))
+                return res.notFound(error.send('No Settlements'));
             return res.json(200, result);
         });
     },
@@ -63,7 +64,8 @@ module.exports = {
 
             if (err)
                 return res.badRequest(error.send(err));
-
+            if (_.isEmpty(result))
+                return res.notFound(error.send('No Payment Details'));
             return res.json(200, result);
         });
 
