@@ -1736,6 +1736,26 @@ Batua is a Payment Andriod Mobile Application targeting the general public users
             }
 
 
+### Get Yes Bank Wallet Balance[POST /api/user/yesbankwallet]
+
++ Request (application/json)
+            
+    + Body
+    
+            {
+                "userId":"71"
+            }
+
++ Response 200 (application/json)
+
+            {
+                "code": 0,
+                "auth_token": "7a4ec066-eedf-48b1-8e2e-1e1d21edd03e",
+                "balance": 7764.34,
+                "status_code": "SUCCESS"
+            }
+
+
 ### Yes Bank Wallet Execute Transaction [POST /api/user/yesbankwallet/executethirdpartypayment]
 
 + Request (application/json)
