@@ -585,7 +585,9 @@ class UserService {
         var resultedPassword = userData.password;
         var isValidPassword = (resultedPassword == md5(requestedPassword));
         var isValidSales = userService.validateSalesAgent(params, userData);
-        if (isValidSales && isValidPassword) {
+        if (!isValidSales)
+            return callback("Permission Denied");
+        if (isValidPassword) {
             userService.updateAccessTokenAndShowResult(params, userData, callback);
             return null;
         }
@@ -1188,7 +1190,7 @@ class UserService {
         findObject.where = {};
         findObject.where.$and = {};
         findObject.where.$and.phone = phone;
-        findObject.where.$and.status = 'Drafted';
+        //findObject.where.$and.status = 'Drafted';
         findObject.include = userService.getIncludeModels();
         userService.validateOtpVerification(params, findObject, callback);
     }
