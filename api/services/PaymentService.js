@@ -6,6 +6,7 @@ var TransactionDetailsRepository = require('../repositories/TransactionDetailsRe
 
 var request = require('request');
 var crypto = require('crypto');
+var moment = require('moment');
 
 class PaymentService {
 
@@ -237,7 +238,7 @@ class PaymentService {
                 transactionDetailParam.transactionId = sequenceNumber;
                 transactionDetailParam.paymentId = "pay_" + sequenceNumber;
                 transactionDetailParam.status = params.status;
-                transactionDetailParam.mode = "wallet";
+                transactionDetailParam.mode = "Batua Wallet";
 
                 var transactionDetailsRepository = new TransactionDetailsRepository();
 
@@ -422,6 +423,11 @@ class PaymentService {
         var userId = params.userId;
         var fromDate = params.fromDate;
         var toDate = params.toDate;
+        var isValidFromDate = (fromDate.length > 2);
+        var isValidToDate = (toDate.length > 2);
+
+        if ((isValidFromDate && !isValidToDate) || (!isValidFromDate && isValidToDate))
+            return callback("Select From Date and To Date both or none");
 
         var paymentsRepository = new PaymentsRepository();
 
@@ -451,17 +457,27 @@ class PaymentService {
             as: 'settlement',
             required: false
         }];
-        whereObject.where = {};
-        whereObject.where.$and = {};
+        (merchantId || userId || isValidFromDate || isValidToDate) ? (whereObject.where = {}) : (null);
+        (merchantId || userId || isValidFromDate || isValidToDate) ? (whereObject.where.$and = {}) : (null);
         (merchantId) ? (whereObject.where.$and.merchantId = merchantId) : (null);
         (userId) ? (whereObject.where.$and.userId = userId) : (null);
-        (fromDate && toDate) ? (whereObject.where.$and.createdAt.$between = [fromDate, toDate]) : (null);
+        (isValidFromDate && isValidToDate) ? (whereObject.where.$and.createdAt = {}) : (null);
+        if (isValidFromDate && isValidToDate) {
+            fromDate = fromDate.replace(/"/g, "");
+            toDate = toDate.replace(/"/g, "");
+            fromDate = moment(fromDate).format('YYYY-MM-DD');
+            toDate = moment(toDate).format('YYYY-MM-DD');
+            toDate=moment(moment(toDate).add(1, 'days')._d).format('YYYY-MM-DD');
+            whereObject.where.$and.createdAt.$between = [fromDate, toDate]
+        }
         whereObject.order = [
             ['createdAt', 'DESC']
         ];
         var txnArray = [];
         var count = 0;
         Payments.findAll(whereObject).then(function(result) {
+            if (!result.length)
+                return callback(null, []);
             result.forEach(function(obj) {
                 count++;
                 var txnObj = {};
@@ -636,7 +652,7 @@ class PaymentService {
             transactionDetailParam.transactionId = sequenceNumber;
             transactionDetailParam.paymentId = params.paymentId;
             transactionDetailParam.status = params.status;
-            transactionDetailParam.mode = 'Wallet';
+            transactionDetailParam.mode = 'Yes Bank';
 
             var transactionDetailsRepository = new TransactionDetailsRepository();
 
