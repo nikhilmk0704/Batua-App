@@ -545,9 +545,9 @@ class PaymentService {
     }
 
     verifyOtp(params, callback) {
-        var userId = params.userId;
+        var userId = "" + params.userId;
         var phone = params.phone;
-        var otp = params.otp;
+        var otp = "" + params.otp;
         var merchantSecretKey = sails.config.connections.merchantSecretKey;
         request({
             method: 'POST',
@@ -615,7 +615,7 @@ class PaymentService {
                 "merchant_secret_key": merchantSecretKey,
                 "amount": amount,
                 "merchant_reference_number": merchantReferenceNumber,
-                "description": "test1",
+                "description": params.description,
                 "signature": signature,
                 "auth_token": authToken
             }
