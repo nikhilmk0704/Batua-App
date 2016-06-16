@@ -1111,7 +1111,7 @@ class UserService {
 
     sendOtpForSignup(params, callback) {
         var userService = new UserService();
-        // var userId = params.userId;
+        var userId = params.userId;
         var phone = params.phone;
         var otp = userService.generateOtp();
         var isValidPhone = userService.isValidPhone(phone);
@@ -1119,7 +1119,7 @@ class UserService {
         findObject.include = userService.getIncludeModels();
         findObject.where = {};
         findObject.where.$and = {};
-        findObject.where.$and.phone = phone;
+        findObject.where.$and.id = userId;
         // findObject.where.$and.$or = [{ googleId: { $ne: null } }, { facebookId: { $ne: null } }];
         // findObject.where.$and.status = 'Drafted';
         if (!phone)
@@ -1161,23 +1161,23 @@ class UserService {
 
     updatePhoneForSendOtp(params, callback) {
         var userService = new UserService();
-        // var userId = params.userId;
+        var userId = params.userId;
         var phone = params.phone;
-        // var updateObject = {};
-        // var whereObject = {};
-        // updateObject.phone = phone;
-        // whereObject.where = {};
-        // whereObject.where.id = userId;
-        // Users.update(updateObject, whereObject).then(function(result) {
+        var updateObject = {};
+        var whereObject = {};
+        updateObject.phone = phone;
+        whereObject.where = {};
+        whereObject.where.id = userId;
+        Users.update(updateObject, whereObject).then(function(result) {
         userService.sendSms(phone, function(err, result) {
             if (result)
                 return callback(null, { message: "OTP Sent" });
             return callback(err);
         });
-        // return null;
-        // }).catch(function(exception) {
-        //     callback(exception);
-        // });
+        return null;
+        }).catch(function(exception) {
+            callback(exception);
+        });
     }
 
     /****************** OTP Verification After Signup In User App ********************/
@@ -1607,7 +1607,7 @@ class UserService {
         var email = params.email;
         var query = params.query;
         userService.respondContact(email, 'support@thebatua.com', 'User');
-        userService.respondContact('support@thebatua.com', email, 'Batua');
+        userService.respondContact('support@thebatua.com', "support@thebatua.com", 'Batua');
         callback(null, { message: "Email Sent" });
     }
 
@@ -1617,13 +1617,15 @@ class UserService {
         params.sender = emailFrom;
         params.receivers = [];
         params.receivers.push(emailTo);
-        params.subjectText = 'Welcome to Batua !!!';
-        params.bodyText = 'Welcome to Batua !!!';
         if (emailToUserType == 'User') {
+            params.subjectText = 'Thank you for contacting us';
+            params.bodyText = '';
             var templatPath = './api/templates/contact-us/response_contact_us.ejs';
             params.htmlTemplate = fs.readFileSync(templatPath, "utf-8");
         }
         if (emailToUserType == 'Batua') {
+            params.subjectText = 'Query from ' + emailTo;
+            params.bodyText = '';
             var templatPath = './api/templates/contact-us/query_contact_us.ejs';
             var template = fs.readFileSync(templatPath, "utf-8");
             var query = params.query;
@@ -1636,6 +1638,7 @@ class UserService {
                 console.log(result);
         });
     }
+
 
     /********************** Logout From User App ***********************/
 

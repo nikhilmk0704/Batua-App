@@ -102,16 +102,16 @@ class SettlementService {
     getDetails(params, callback) {
 
         var merchantId = params.merchantId;
-        var fromDate = params.fromDate;
-        var toDate = params.toDate;
-        var isValidFromDate = (fromDate.length > 2);
-        var isValidToDate = (toDate.length > 2);
+        // var fromDate = params.fromDate;
+        // var toDate = params.toDate;
+        // var isValidFromDate = (fromDate.length > 2);
+        // var isValidToDate = (toDate.length > 2);
 
         if (!merchantId || !merchantId.length)
             return callback("Merchant Id Not Found !!!");
 
-        if ((isValidFromDate && !isValidToDate) || (!isValidFromDate && isValidToDate))
-            return callback("Select From Date and To Date both or none");
+        // if ((isValidFromDate && !isValidToDate) || (!isValidFromDate && isValidToDate))
+        //     return callback("Select From Date and To Date both or none");
 
         var whereObject = {};
         whereObject.where = {};
@@ -120,15 +120,15 @@ class SettlementService {
         whereObject.where.$and.merchantId = params.merchantId;
         whereObject.where.$and.isCancelled = false;
 
-        if (isValidFromDate && isValidToDate) {
-            fromDate = fromDate.replace(/"/g, "");
-            toDate = toDate.replace(/"/g, "");
-            fromDate = moment(fromDate).format('YYYY-MM-DD');
-            toDate = moment(toDate).format('YYYY-MM-DD');
-            toDate=moment(moment(toDate).add(1, 'days')._d).format('YYYY-MM-DD');
-            whereObject.where.$and.createdAt = {};
-            whereObject.where.$and.createdAt.$between = [fromDate, toDate];
-        }
+        // if (isValidFromDate && isValidToDate) {
+        //     fromDate = fromDate.replace(/"/g, "");
+        //     toDate = toDate.replace(/"/g, "");
+        //     fromDate = moment(fromDate).format('YYYY-MM-DD');
+        //     toDate = moment(toDate).format('YYYY-MM-DD');
+        //     toDate=moment(moment(toDate).add(1, 'days')._d).format('YYYY-MM-DD');
+        //     whereObject.where.$and.createdAt = {};
+        //     whereObject.where.$and.createdAt.$between = [fromDate, toDate];
+        // }
 
         var detailsArray = [];
 
