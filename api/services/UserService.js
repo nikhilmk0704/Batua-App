@@ -1169,12 +1169,12 @@ class UserService {
         whereObject.where = {};
         whereObject.where.id = userId;
         Users.update(updateObject, whereObject).then(function(result) {
-        userService.sendSms(phone, function(err, result) {
-            if (result)
-                return callback(null, { message: "OTP Sent" });
-            return callback(err);
-        });
-        return null;
+            userService.sendSms(phone, function(err, result) {
+                if (result)
+                    return callback(null, { message: "OTP Sent" });
+                return callback(err);
+            });
+            return null;
         }).catch(function(exception) {
             callback(exception);
         });
@@ -1497,7 +1497,26 @@ class UserService {
 
     forgotPin(params, callback) {
         var userService = new UserService();
-        userService.forgotPassword(params, callback);
+        var phone = params.phone;
+        var isValidPhone = userService.isValidPhone(phone);
+        if (!isValidPhone)
+            return callback("Mobile Number should be 10 digit Number");
+        var findObject = {};
+        findObject.where = {};
+        findObject.where.phone = phone;
+        findObject.include = userService.getIncludeModels();
+        Users.find(findObject).then(function(result) {
+            if (!result)
+                return callback("Unregistered Mobile Number");
+            var group = result.userGroups.name;
+            var status = result.status;
+            if (status != 'Active')
+                return callback("does not exist !");
+            userService.sendOtp(phone, callback);
+            return null;
+        }).catch(function(exception) {
+            callback(exception);
+        });
     }
 
     /****************** Set Or Reset PIN ***********************/

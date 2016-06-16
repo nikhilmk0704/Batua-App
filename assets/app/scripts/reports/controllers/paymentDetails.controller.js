@@ -5,7 +5,7 @@ angular.module('app').controller('paymentDetailsController', ['$state', '$stateP
     vm.merchantId = $stateParams.merchantId;
     vm.merchantName = $stateParams.merchantName;
 
-    reportsService.getPaymentDetailsAgainstMerchant(merchantId, function(response) {
+    reportsService.getPaymentDetailsAgainstMerchant(vm.merchantId, function(response) {
         if (response.status === 200) {
             vm.paymentDetails = response.data;
             return;
