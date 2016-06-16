@@ -1111,7 +1111,7 @@ class UserService {
 
     sendOtpForSignup(params, callback) {
         var userService = new UserService();
-        // var userId = params.userId;
+        var userId = params.userId;
         var phone = params.phone;
         var otp = userService.generateOtp();
         var isValidPhone = userService.isValidPhone(phone);
@@ -1119,7 +1119,7 @@ class UserService {
         findObject.include = userService.getIncludeModels();
         findObject.where = {};
         findObject.where.$and = {};
-        findObject.where.$and.phone = phone;
+        findObject.where.$and.id = userId;
         // findObject.where.$and.$or = [{ googleId: { $ne: null } }, { facebookId: { $ne: null } }];
         // findObject.where.$and.status = 'Drafted';
         if (!phone)
@@ -1161,23 +1161,23 @@ class UserService {
 
     updatePhoneForSendOtp(params, callback) {
         var userService = new UserService();
-        // var userId = params.userId;
+        var userId = params.userId;
         var phone = params.phone;
-        // var updateObject = {};
-        // var whereObject = {};
-        // updateObject.phone = phone;
-        // whereObject.where = {};
-        // whereObject.where.id = userId;
-        // Users.update(updateObject, whereObject).then(function(result) {
+        var updateObject = {};
+        var whereObject = {};
+        updateObject.phone = phone;
+        whereObject.where = {};
+        whereObject.where.id = userId;
+        Users.update(updateObject, whereObject).then(function(result) {
         userService.sendSms(phone, function(err, result) {
             if (result)
                 return callback(null, { message: "OTP Sent" });
             return callback(err);
         });
-        // return null;
-        // }).catch(function(exception) {
-        //     callback(exception);
-        // });
+        return null;
+        }).catch(function(exception) {
+            callback(exception);
+        });
     }
 
     /****************** OTP Verification After Signup In User App ********************/
