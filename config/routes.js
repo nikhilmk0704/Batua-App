@@ -78,8 +78,8 @@ module.exports.routes = {
     'get /api/admin/transaction/report': 'PaymentsController.transactionReport',
     'put /api/admin/transaction/cancel': 'PaymentsController.cancel',
     'post /api/admin/settlement': 'SettlementsController.create',
-    'get /api/admin/settlement/report': 'SettlementsController.report',
-    'get /api/admin/settlement/details': 'SettlementsController.details',
+    'get /api/admin/payment/settlement': 'SettlementsController.report',
+    'get /api/admin/payment/details': 'SettlementsController.details',
     'put /api/admin/activeuser/notify': 'UsersController.sendPushNotificationByAdmin',
     'put /api/admin/user/logout': 'UsersController.adminLogout',
 
