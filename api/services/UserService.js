@@ -1607,7 +1607,7 @@ class UserService {
         var email = params.email;
         var query = params.query;
         userService.respondContact(email, 'support@thebatua.com', 'User');
-        userService.respondContact('support@thebatua.com', email, 'Batua');
+        userService.respondContact('support@thebatua.com', "support@thebatua.com", 'Batua');
         callback(null, { message: "Email Sent" });
     }
 
@@ -1617,13 +1617,15 @@ class UserService {
         params.sender = emailFrom;
         params.receivers = [];
         params.receivers.push(emailTo);
-        params.subjectText = 'Welcome to Batua !!!';
-        params.bodyText = 'Welcome to Batua !!!';
         if (emailToUserType == 'User') {
+            params.subjectText = 'Thank you for contacting us';
+            params.bodyText = '';
             var templatPath = './api/templates/contact-us/response_contact_us.ejs';
             params.htmlTemplate = fs.readFileSync(templatPath, "utf-8");
         }
         if (emailToUserType == 'Batua') {
+            params.subjectText = 'Query from ' + emailTo;
+            params.bodyText = '';
             var templatPath = './api/templates/contact-us/query_contact_us.ejs';
             var template = fs.readFileSync(templatPath, "utf-8");
             var query = params.query;
@@ -1636,6 +1638,7 @@ class UserService {
                 console.log(result);
         });
     }
+
 
     /********************** Logout From User App ***********************/
 
