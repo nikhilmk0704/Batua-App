@@ -1126,7 +1126,7 @@ class UserService {
             return callback("Please give phone");
         if (!isValidPhone)
             return callback("Mobile Number should be 10 digit Number");
-        userService.isPhoneExist(params, findObject, callback);
+        userService.validateOtpForSignup(params, findObject, callback);
     }
 
     isPhoneExist(params, findObject, callback) {
