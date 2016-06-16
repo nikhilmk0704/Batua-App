@@ -331,12 +331,12 @@ class MerchantService {
             var groupName = (data && data.userGroups.name);
             var merchantService = new MerchantService();
             var merchantRepository = new MerchantRepository();
-            if (data && id && groupName != 'User') {
+            if (data && id /*&& groupName != 'User'*/) {
                 params.where.id = id;
                 merchantRepository.find(params, callback);
                 return null;
             }
-            if (data && userId && groupName == 'User') {
+            if (data && userId /*&& groupName == 'User'*/) {
                 var merchantService = new MerchantService();
                 params.where.status = 'Active';
                 (id) ? (params.where.id = id) : (params);
@@ -350,14 +350,14 @@ class MerchantService {
                 });
                 return null;
             }
-            if (data && salesAgentId && !id && groupName == 'Field Sales Agent') {
+            if (data && salesAgentId && !id /*&& groupName == 'Field Sales Agent'*/) {
                 params.where.$and = {};
                 params.where.$and.createdSalesId = salesAgentId;
                 params.where.$and.$or = [{ status: "Pending for approval" }, { status: "Active" }, { status: "Drafted" }];
                 merchantRepository.findAll(params, callback);
                 return null;
             }
-            if (data && adminId && !id && (groupName == 'Admin' || groupName == 'Super Admin')) {
+            if (data && adminId && !id /*&& (groupName == 'Admin' || groupName == 'Super Admin')*/) {
                 params.where.status = {};
                 params.where.status.$not = "Permanent Suspend";
                 merchantRepository.findAll(params, callback);

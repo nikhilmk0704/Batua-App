@@ -7,6 +7,7 @@ var TransactionDetailsRepository = require('../repositories/TransactionDetailsRe
 var request = require('request');
 var crypto = require('crypto');
 var moment = require('moment');
+var fs = require('fs');
 
 class PaymentService {
 
@@ -78,6 +79,15 @@ class PaymentService {
                                             if (err) {
                                                 return callback(err, null);
                                             }
+                                            var sendObj = {};
+                                            sendObj.amount = detailResult.initialAmount;
+                                            sendObj.type = detailResult.transactionDetail.mode;
+                                            sendObj.merchantName = detailResult.merchant.name;
+                                            sendObj.transactionId = detailResult.transactionDetail.transactionId;
+                                            sendObj.createdAt = detailResult.createdAt;
+                                            sendObj.balance = detailResult.balance;
+                                            sendSuccessPayment(sendObj, 'support@thebatua.com', detailResult.user.email, 'User');
+                                            sendSuccessPayment(sendObj, 'support@thebatua.com', detailResult.merchant.email, 'Merchant');
                                             return callback(null, detailResult);
                                         });
 
@@ -101,6 +111,15 @@ class PaymentService {
                                             if (err) {
                                                 return callback(err, null);
                                             }
+                                            var sendObj = {};
+                                            sendObj.amount = detailResult.initialAmount;
+                                            sendObj.type = detailResult.transactionDetail.mode;
+                                            sendObj.merchantName = detailResult.merchant.name;
+                                            sendObj.transactionId = detailResult.transactionDetail.transactionId;
+                                            sendObj.createdAt = detailResult.createdAt;
+                                            sendObj.balance = detailResult.balance;
+                                            sendSuccessPayment(sendObj, 'support@thebatua.com', detailResult.user.email, 'User');
+                                            sendSuccessPayment(sendObj, 'support@thebatua.com', detailResult.merchant.email, 'Merchant');
                                             return callback(null, detailResult);
                                         });
 
@@ -123,6 +142,15 @@ class PaymentService {
                                         if (err) {
                                             return callback(err, null);
                                         }
+                                        var sendObj = {};
+                                        sendObj.amount = detailResult.initialAmount;
+                                        sendObj.type = detailResult.transactionDetail.mode;
+                                        sendObj.merchantName = detailResult.merchant.name;
+                                        sendObj.transactionId = detailResult.transactionDetail.transactionId;
+                                        sendObj.createdAt = detailResult.createdAt;
+                                        sendObj.balance = detailResult.balance;
+                                        sendSuccessPayment(sendObj, 'support@thebatua.com', detailResult.user.email, 'User');
+                                        sendSuccessPayment(sendObj, 'support@thebatua.com', detailResult.merchant.email, 'Merchant');
                                         return callback(null, detailResult);
                                     });
                                 });
@@ -288,6 +316,15 @@ class PaymentService {
                                             var resultObj = {};
                                             resultObj = JSON.parse(JSON.stringify(detailResult));
                                             resultObj.balance = newBalance;
+                                            var sendObj = {};
+                                            sendObj.amount = detailResult.initialAmount;
+                                            sendObj.type = detailResult.transactionDetail.mode;
+                                            sendObj.merchantName = detailResult.merchant.name;
+                                            sendObj.transactionId = detailResult.transactionDetail.transactionId;
+                                            sendObj.createdAt = detailResult.createdAt;
+                                            sendObj.balance = resultObj.balance;
+                                            sendSuccessPayment(sendObj, 'support@thebatua.com', detailResult.user.email, 'User');
+                                            sendSuccessPayment(sendObj, 'support@thebatua.com', detailResult.merchant.email, 'Merchant');
                                             return callback(null, resultObj);
                                         });
                                     });
@@ -315,6 +352,15 @@ class PaymentService {
                                             var resultObj = {};
                                             resultObj = JSON.parse(JSON.stringify(detailResult));
                                             resultObj.balance = newBalance;
+                                            var sendObj = {};
+                                            sendObj.amount = detailResult.initialAmount;
+                                            sendObj.type = detailResult.transactionDetail.mode;
+                                            sendObj.merchantName = detailResult.merchant.name;
+                                            sendObj.transactionId = detailResult.transactionDetail.transactionId;
+                                            sendObj.createdAt = detailResult.createdAt;
+                                            sendObj.balance = resultObj.balance;
+                                            sendSuccessPayment(sendObj, 'support@thebatua.com', detailResult.user.email, 'User');
+                                            sendSuccessPayment(sendObj, 'support@thebatua.com', detailResult.merchant.email, 'Merchant');
                                             return callback(null, resultObj);
                                         });
                                     });
@@ -341,6 +387,16 @@ class PaymentService {
                                         var resultObj = {};
                                         resultObj = JSON.parse(JSON.stringify(detailResult));
                                         resultObj.balance = newBalance;
+                                        var sendObj = {};
+                                        sendObj.amount = detailResult.initialAmount;
+                                        sendObj.type = detailResult.transactionDetail.mode;
+                                        sendObj.merchantName = detailResult.merchant.name;
+                                        sendObj.transactionId = detailResult.transactionDetail.transactionId;
+                                        sendObj.createdAt = detailResult.createdAt;
+                                        sendObj.balance = resultObj.balance;
+                                        console.log(sendObj);
+                                        sendSuccessPayment(sendObj, 'support@thebatua.com', detailResult.user.email, 'User');
+                                        sendSuccessPayment(sendObj, 'support@thebatua.com', detailResult.merchant.email, 'Merchant');
                                         return callback(null, resultObj);
                                     });
                                 });
@@ -467,7 +523,7 @@ class PaymentService {
             toDate = toDate.replace(/"/g, "");
             fromDate = moment(fromDate).format('YYYY-MM-DD');
             toDate = moment(toDate).format('YYYY-MM-DD');
-            toDate=moment(moment(toDate).add(1, 'days')._d).format('YYYY-MM-DD');
+            toDate = moment(moment(toDate).add(1, 'days')._d).format('YYYY-MM-DD');
             whereObject.where.$and.createdAt.$between = [fromDate, toDate]
         }
         whereObject.order = [
@@ -698,6 +754,15 @@ class PaymentService {
                                     if (err) {
                                         return callback(err, null);
                                     }
+                                    var sendObj = {};
+                                    sendObj.amount = detailResult.initialAmount;
+                                    sendObj.type = detailResult.transactionDetail.mode;
+                                    sendObj.merchantName = detailResult.merchant.name;
+                                    sendObj.transactionId = detailResult.transactionDetail.transactionId;
+                                    sendObj.createdAt = detailResult.createdAt;
+                                    sendObj.balance = detailResult.balance;
+                                    sendSuccessPayment(sendObj, 'support@thebatua.com', detailResult.user.email, 'User');
+                                    sendSuccessPayment(sendObj, 'support@thebatua.com', detailResult.merchant.email, 'Merchant');
                                     return callback(null, detailResult);
                                 });
 
@@ -721,6 +786,15 @@ class PaymentService {
                                     if (err) {
                                         return callback(err, null);
                                     }
+                                    var sendObj = {};
+                                    sendObj.amount = detailResult.initialAmount;
+                                    sendObj.type = detailResult.transactionDetail.mode;
+                                    sendObj.merchantName = detailResult.merchant.name;
+                                    sendObj.transactionId = detailResult.transactionDetail.transactionId;
+                                    sendObj.createdAt = detailResult.createdAt;
+                                    sendObj.balance = detailResult.balance;
+                                    sendSuccessPayment(sendObj, 'support@thebatua.com', detailResult.user.email, 'User');
+                                    sendSuccessPayment(sendObj, 'support@thebatua.com', detailResult.merchant.email, 'Merchant');
                                     return callback(null, detailResult);
                                 });
 
@@ -743,6 +817,15 @@ class PaymentService {
                                 if (err) {
                                     return callback(err, null);
                                 }
+                                var sendObj = {};
+                                sendObj.amount = detailResult.initialAmount;
+                                sendObj.type = detailResult.transactionDetail.mode;
+                                sendObj.merchantName = detailResult.merchant.name;
+                                sendObj.transactionId = detailResult.transactionDetail.transactionId;
+                                sendObj.createdAt = detailResult.createdAt;
+                                sendObj.balance = detailResult.balance;
+                                sendSuccessPayment(sendObj, 'support@thebatua.com', detailResult.user.email, 'User');
+                                sendSuccessPayment(sendObj, 'support@thebatua.com', detailResult.merchant.email, 'Merchant');
                                 return callback(null, detailResult);
                             });
                         });
@@ -880,7 +963,7 @@ function findPaymentDetail(paymentResponse, callback) {
         }, {
             model: Paymentmodes,
             as: 'paymentMode',
-            required: false
+            required: true
         }, {
             model: Settlements,
             as: 'settlement',
@@ -892,7 +975,11 @@ function findPaymentDetail(paymentResponse, callback) {
             if (err) {
                 return callback(err, null);
             }
-            return callback(null, findResult);
+            UsersPaymentmodes.find({ userId: findResult.user.id }).then(function(data) {
+                var result = JSON.parse(JSON.stringify(findResult));
+                result.balance = (data) ? (data.balance) : (0);
+                return callback(null, result);
+            });
         });
     });
 
@@ -1179,12 +1266,64 @@ function updateBatuaWallet(userId, amount, callback) {
 
 function checkWallet(userId, amount, callback) {
     UsersPaymentmodes.find({ where: { userId: userId } }).then(function(data) {
-        if (!data)
-            return callback("incorrect userId");
+        if (!data) {
+            UsersPaymentmodes.create({ userId: userId, balance: 0, paymentmodeId: 3 });
+            return callback("Insufficient balance");
+        }
         if (data && data.balance < amount)
-            return callback("Wallet balance is less");
+            return callback("Insufficient balance");
         return callback(null, data);
     }).catch(function(exception) {
         callback(exception);
+    });
+}
+
+function sendSuccessPayment(sendObj, emailFrom, emailTo, emailToUserType) {
+    var awsSesService = new AwsSesService();
+    var params = {};
+    params.sender = emailFrom;
+    params.receivers = [];
+    params.subjectText = 'Successful Payment Done';
+    params.receivers.push(emailTo);
+    if (emailToUserType == 'User') {
+        params.bodyText = '';
+        var templatPath = './api/templates/success-payments/success-user.ejs';
+        var template = fs.readFileSync(templatPath, "utf-8");
+        var mapObject = {};
+        mapObject.ReceivedAmt = sendObj.amount; // Capital case because of template is using the same 
+        mapObject.DebitCard = sendObj.type;
+        mapObject.MerchantName = sendObj.merchantName;
+        mapObject.transid = sendObj.transactionId;
+        mapObject.DateOfCredit = sendObj.createdAt;
+        mapObject.CreditAmount = sendObj.amount;
+        mapObject.AcountBalance = sendObj.amount;
+        var regExp = new RegExp(Object.keys(mapObject).join("|"), "gi");
+        var htmlTemplate = template.replace(regExp, function(matched) {
+            return mapObject[matched];
+        });
+        params.htmlTemplate = htmlTemplate;
+    }
+    if (emailToUserType == 'Merchant') {
+        params.bodyText = '';
+        var templatPath = './api/templates/success-payments/success-merchant.ejs';
+        var template = fs.readFileSync(templatPath, "utf-8");
+        var mapObject = {};
+        mapObject.DebitCard = sendObj.type;
+        mapObject.MerchantName = sendObj.merchantName;
+        mapObject.transid = sendObj.transactionId;
+        mapObject.DateOfDebit = sendObj.createdAt;
+        mapObject.DebitAmount = sendObj.amount;
+        mapObject.WalletBalance = sendObj.balance;
+        var regExp = new RegExp(Object.keys(mapObject).join("|"), "gi");
+        var htmlTemplate = template.replace(regExp, function(matched) {
+            return mapObject[matched];
+        });
+        params.htmlTemplate = htmlTemplate;
+    }
+    awsSesService.sendEmail(params, function(err, result) {
+        if (err)
+            console.log(err);
+        else
+            console.log(result);
     });
 }
