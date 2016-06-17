@@ -320,10 +320,10 @@ class UserService {
                 return callback("Incorrect User Id");
             var group = result.userGroups.name;
             var status = result.status;
-            if (group != 'Super Admin' || group != 'Admin' || status != "Active")
-                return callback("Does not exist !");
+            // if (group != 'Super Admin' || group != 'Admin' || status != "Active")
+            //     return callback("Does not exist !");
             if (result.password != md5(currentPassword))
-                return callback("Incorrect Current Password");
+                return callback("Incorrect Old Password");
             if (result.password == md5(currentPassword)) {
                 userService.setNewPassword(userId, newPassword, callback);
                 return null;
