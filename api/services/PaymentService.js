@@ -394,7 +394,6 @@ class PaymentService {
                                         sendObj.transactionId = detailResult.transactionDetail.transactionId;
                                         sendObj.createdAt = detailResult.createdAt;
                                         sendObj.balance = resultObj.balance;
-                                        console.log(sendObj);
                                         sendSuccessPayment(sendObj, 'support@thebatua.com', detailResult.user.email, 'User');
                                         sendSuccessPayment(sendObj, 'support@thebatua.com', detailResult.merchant.email, 'Merchant');
                                         return callback(null, resultObj);
@@ -1015,7 +1014,6 @@ function generateOrderNo(callback) {
         " AND TABLE_NAME = 'TransactionDetails'";
 
     sequelize.query(rawQueryString, { type: sequelize.QueryTypes.SELECT }).then(function(result) {
-        console.log(result);
         if (result) {
             if (result.length > 0) {
                 var sequenceNumber = result[0].AUTO_INCREMENT < 100 ? '00' + result[0].AUTO_INCREMENT : result[0].AUTO_INCREMENT
@@ -1287,7 +1285,7 @@ function sendSuccessPayment(sendObj, emailFrom, emailTo, emailToUserType) {
     params.receivers.push(emailTo);
     if (emailToUserType == 'User') {
         params.bodyText = '';
-        var templatPath = './api/templates/success-payments/success-user.ejs';
+        var templatPath = './api/templates/success-payments/success-merchant.ejs';
         var template = fs.readFileSync(templatPath, "utf-8");
         var mapObject = {};
         mapObject.ReceivedAmt = sendObj.amount; // Capital case because of template is using the same 
@@ -1305,7 +1303,7 @@ function sendSuccessPayment(sendObj, emailFrom, emailTo, emailToUserType) {
     }
     if (emailToUserType == 'Merchant') {
         params.bodyText = '';
-        var templatPath = './api/templates/success-payments/success-merchant.ejs';
+        var templatPath = './api/templates/success-payments/success-user.ejs';
         var template = fs.readFileSync(templatPath, "utf-8");
         var mapObject = {};
         mapObject.DebitCard = sendObj.type;
