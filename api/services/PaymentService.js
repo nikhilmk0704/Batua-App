@@ -974,7 +974,7 @@ function findPaymentDetail(paymentResponse, callback) {
             if (err) {
                 return callback(err, null);
             }
-            UsersPaymentmodes.find({ userId: findResult.user.id }).then(function(data) {
+            UsersPaymentmodes.find({ where: { userId: findResult.user.id } }).then(function(data) {
                 var result = JSON.parse(JSON.stringify(findResult));
                 result.balance = (data) ? (data.balance) : (0);
                 return callback(null, result);
