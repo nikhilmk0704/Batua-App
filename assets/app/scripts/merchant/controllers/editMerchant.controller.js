@@ -21,6 +21,15 @@ angular.module('app').controller('editMerchantController', ['$state', 'merchantS
             if (response.status === 400) {
                 return toastr.error(response.data.errors[0].message);
             }
+            if (response.status === 404) {
+                return toastr.error("No Data Found.");
+            }
+            if (response.status === 502) {
+                return toastr.error("Database Connection Error.");
+            }
+            if (response.status === 500) {
+                return toastr.error("Server Issue.");
+            }
             return toastr.error(response.data);
         });
 
@@ -58,6 +67,15 @@ angular.module('app').controller('editMerchantController', ['$state', 'merchantS
                 if (response.status === 400) {
                     return toastr.error(response.data.errors[0].message);
                 }
+                if (response.status === 404) {
+                    return toastr.error("No Data Found.");
+                }
+                if (response.status === 502) {
+                    return toastr.error("Database Connection Error.");
+                }
+                if (response.status === 500) {
+                    return toastr.error("Server Issue.");
+                }
                 return toastr.error(response.data);
             });
         };
@@ -90,9 +108,18 @@ angular.module('app').controller('editMerchantController', ['$state', 'merchantS
                 if (response.status === 400) {
                     return toastr.error(response.data.errors[0].message);
                 }
+                if (response.status === 404) {
+                    return toastr.error("No Data Found.");
+                }
+                if (response.status === 502) {
+                    return toastr.error("Database Connection Error.");
+                }
+                if (response.status === 500) {
+                    return toastr.error("Server Issue.");
+                }
                 return toastr.error(response.data);
             });
-            
+
 
         };
 
@@ -105,8 +132,8 @@ angular.module('app').controller('editMerchantController', ['$state', 'merchantS
             if ((file = file.file)) {
                 image = new Image();
                 image.onload = function() {
-                    if (this.width < 320 || this.height < 240) {
-                        return toastr.error("Please select an image above 320px width and 240px height");
+                    if (this.width < 600 || this.height < 600) {
+                        return toastr.error("Please select an image above 600px width and 600px height");
                     }
                     return handleUploadImage(file, event, $flow);
                 }
@@ -126,6 +153,15 @@ angular.module('app').controller('editMerchantController', ['$state', 'merchantS
                 if (response.status === 400) {
                     return toastr.error(response.data.errors[0].message);
                 }
+                if (response.status === 404) {
+                    return toastr.error("No Data Found.");
+                }
+                if (response.status === 502) {
+                    return toastr.error("Database Connection Error.");
+                }
+                if (response.status === 500) {
+                    return toastr.error("Server Issue.");
+                }
                 return toastr.error(response.data);
             });
         };
@@ -140,8 +176,8 @@ angular.module('app').controller('editMerchantController', ['$state', 'merchantS
                     $scope.$apply(function() {
                         vm.editMerchantData.profileImageUrl = imgOld;
                     });
-                    if (this.width < 320 || this.height < 240) {
-                        return toastr.error("Please select an image above 320px width and 240px height");
+                    if (this.width < 600 || this.height < 600) {
+                        return toastr.error("Please select an image above 600px width and 600px height");
                     }
                     return handleProfileImageUpload(file, event, $flow);
                 }
@@ -166,6 +202,15 @@ angular.module('app').controller('editMerchantController', ['$state', 'merchantS
                 }
                 if (response.status === 400) {
                     return toastr.error(response.data.errors[0].message);
+                }
+                if (response.status === 404) {
+                    return toastr.error("No Data Found.");
+                }
+                if (response.status === 502) {
+                    return toastr.error("Database Connection Error.");
+                }
+                if (response.status === 500) {
+                    return toastr.error("Server Issue.");
                 }
                 return toastr.error(response.data);
             });

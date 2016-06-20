@@ -21,6 +21,15 @@ angular.module('app').controller('addOfferController', ['$scope', '$state', 'off
                     vm.merchantsHaveOffer = response.data;
                     return vm.showListOfMerchantsModal();
                 }
+                if (response.status === 404) {
+                    return toastr.error("No Data Found.");
+                }
+                if (response.status === 502) {
+                    return toastr.error("Database Connection Error.");
+                }
+                if (response.status === 500) {
+                    return toastr.error("Server Issue.");
+                }
                 return toastr.error(response.data);
             });
         };
