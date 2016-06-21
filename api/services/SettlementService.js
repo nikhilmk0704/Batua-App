@@ -87,7 +87,7 @@ class SettlementService {
                     var newMerchantId = merchantObj.merchantId;
                     getTotalSettlements(newMerchantId, fromDate, toDate, function(err, result) {
                         count++;
-                        if(result)
+                        if (result)
                             reportArray.push(result);
                         if (count == data.length) {
                             return callback(null, reportArray);
@@ -199,7 +199,15 @@ function getTotalSettlements(newMerchantId, fromDate, toDate, callback) {
         var count = 0;
         sumObj.merchantId = result[0].merchantId;
         sumObj.merchantName = result[0].merchant.name;
-        sumObj.status = (result[0].settlementId) ? ('settled') : ('open');
+
+        if (result[0].settlementId) {
+            sumObj.status = 'Settled'
+        }
+
+        if (!result[0].settlementId) {
+            sumObj.status = 'Open'
+        }
+
         result.forEach(function(obj) {
             count++;
             var detailsObj = {};
