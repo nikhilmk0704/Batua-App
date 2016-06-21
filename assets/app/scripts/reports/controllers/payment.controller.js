@@ -1,6 +1,6 @@
-angular.module('app').controller('paymentController', ['$scope', '$state', 'reportsService', 'toastr', 'merchantList',
+angular.module('app').controller('paymentController', ['$scope', '$state', '$stateParams', 'reportsService', 'toastr', 'merchantList',
 
-    function($scope, $state, reportsService, toastr, merchantList) {
+    function($scope, $state, $stateParams, reportsService, toastr, merchantList) {
 
         var vm = this;
         vm.merchantList = merchantList;
@@ -71,7 +71,15 @@ angular.module('app').controller('paymentController', ['$scope', '$state', 'repo
 
         /*START of Add Settlement*/
 
+        vm.merchantId = $stateParams.merchantId;
+        vm.merchantName = $stateParams.merchantName;
+
+        var settlementDetails = {};
+        settlementDetails.name = vm.merchantName;
+
         vm.addSettlement = function(settlementDetails) {
+
+            settlementDetails.merchantId = vm.merchantId;
 
             reportsService.addSettlement(settlementDetails, function(response) {
                 if (response.status === 200) {
