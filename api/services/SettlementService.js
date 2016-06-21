@@ -32,24 +32,52 @@ class SettlementService {
         settlementRepository.save(params, function(err, result) {
             if (err)
                 return callback(err);
-            var whereObject = {};
-            whereObject.where = {};
+            //var whereObject = {};
+            //whereObject.where = {};
+
             if (date) {
-                whereObject.where.$and = {};
-                whereObject.where.$and.merchantId = params.merchantId;
-                whereObject.where.$and.settlementId = null;
-                // whereObject.where.$and.createdAt.$between = [fromDate, toDate];
-                whereObject.where.$and.createdAt = moment(date).format('YYYY-MM-DD');
+                var query = 'UPDATE Payments set settlementId=:settlementId where ' +
+                    ' merchantId= :merchantId and settlementId is null and DATE(createdAt)= :date';
+
+                var replacements = {
+                    settlementId: result.id,
+                    merchantId: params.merchantId,
+                    date: moment(date).format('YYYY-MM-DD');
+                };
+
             }
+
             if (!date) {
-                whereObject.where.$and = {};
-                whereObject.where.$and.merchantId = params.merchantId;
-                whereObject.where.$and.settlementId = null;
+                var query = 'UPDATE Payments set settlementId=:settlementId where ' +
+                    ' merchantId= :merchantId and settlementId is null';
+
+                var replacements = {
+                    settlementId: result.id,
+                    merchantId: params.merchantId
+                };
+
             }
-            var updateObject = {};
-            updateObject.settlementId = result.id;
+
+            // if (date) {
+            //     whereObject.where.$and = {};
+            //     whereObject.where.$and.merchantId = params.merchantId;
+            //     whereObject.where.$and.settlementId = null;
+            //     // whereObject.where.$and.createdAt.$between = [fromDate, toDate];
+            //     //whereObject.where.$and.createdAt = moment(date).format('YYYY-MM-DD');
+            //     whereObject.where.$and.createdAt.$gte = moment(date).format('YYYY-MM-DD HH:mm:ss');
+            // }
+            // if (!date) {
+            //     whereObject.where.$and = {};
+            //     whereObject.where.$and.merchantId = params.merchantId;
+            //     whereObject.where.$and.settlementId = null;
+            // }
+            //var updateObject = {};
+            //updateObject.settlementId = result.id;
             var paymentsRepository = new PaymentsRepository();
-            paymentsRepository.update(updateObject, whereObject, function(error, updateResult) {
+
+            var queryType = sequelize.QueryTypes.UPDATE;
+
+            paymentsRepository.exec(query, replacements, queryType, function(error, updateResult) {
                 if (error)
                     return callback(error);
                 return callback(null, result);
