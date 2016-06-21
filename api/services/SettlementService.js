@@ -32,8 +32,8 @@ class SettlementService {
         settlementRepository.save(params, function(err, result) {
             if (err)
                 return callback(err);
-            var whereObject = {};
-            whereObject.where = {};
+            //var whereObject = {};
+            //whereObject.where = {};
 
             if (date) {
                 var query = 'UPDATE Payments set settlementId=:settlementId where ' +
