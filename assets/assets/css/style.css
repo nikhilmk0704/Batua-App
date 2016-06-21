@@ -145,7 +145,8 @@ table.dataTable thead .sorting {
 
 .dpholder {
     margin-top: 25%;
-    height: 150px;
+    height: 180px;
+    width: 180px;
     border: 1px solid #cecece;
     padding: 0px;
 }
@@ -500,7 +501,8 @@ ul {
 }
 
 .imgholder {
-    height: 150px;
+    height: 180px;
+    width: 180px;
     border: 1px solid black;
     float: left;
     padding-left: 0px;

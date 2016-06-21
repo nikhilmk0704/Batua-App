@@ -135,6 +135,9 @@ angular.module('app').controller('editMerchantController', ['$state', 'merchantS
                     if (this.width < 600 || this.height < 600) {
                         return toastr.error("Please select an image above 600px width and 600px height");
                     }
+                    if (this.width != this.height) {
+                        return toastr.error("Please select an image of 1:1 ratio");
+                    }
                     return handleUploadImage(file, event, $flow);
                 }
                 image.onerror = function() {
@@ -148,7 +151,8 @@ angular.module('app').controller('editMerchantController', ['$state', 'merchantS
             imageUpload.uploadImage(file, function(response) {
                 $flow.files = [];
                 if (response.status === 200) {
-                    return vm.uploadedImages.push(response.data);
+                    vm.uploadedImages.push(response.data);
+                    return toastr.success('Image is uploaded successfully');
                 }
                 if (response.status === 400) {
                     return toastr.error(response.data.errors[0].message);
@@ -179,6 +183,9 @@ angular.module('app').controller('editMerchantController', ['$state', 'merchantS
                     if (this.width < 600 || this.height < 600) {
                         return toastr.error("Please select an image above 600px width and 600px height");
                     }
+                    if (this.width != this.height) {
+                        return toastr.error("Please select an image of 1:1 ratio");
+                    }
                     return handleProfileImageUpload(file, event, $flow);
                 }
                 image.onerror = function() {
@@ -199,6 +206,7 @@ angular.module('app').controller('editMerchantController', ['$state', 'merchantS
                         vm.editMerchantData.profileImageUrl = response.data;
                         return vm.editMerchantData.profileImageUrl;
                     }, 1500);
+                    return toastr.success('Profile image is uploaded successfully');
                 }
                 if (response.status === 400) {
                     return toastr.error(response.data.errors[0].message);
