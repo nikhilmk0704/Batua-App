@@ -71,18 +71,14 @@ angular.module('app').controller('paymentController', ['$scope', '$state', '$sta
 
         /*START of Add Settlement*/
 
-        vm.merchantId = $stateParams.merchantId;
-        vm.merchantName = $stateParams.merchantName;
-
-        var settlementDetails = {};
-        settlementDetails.name = vm.merchantName;
+        vm.settlementDetails = {};
+        vm.settlementDetails.merchantId = $stateParams.merchantId;
+        vm.settlementDetails.name = $stateParams.merchantName;
 
         vm.addSettlement = function(settlementDetails) {
 
-            settlementDetails.merchantId = vm.merchantId;
-
             reportsService.addSettlement(settlementDetails, function(response) {
-                if (response.status === 200) {
+                if (response.status === 201) {
                     $state.go('payments');
                     return toastr.success('Settlement has been created successfully.');
                 }
