@@ -34,14 +34,14 @@ class SettlementService {
                 return callback(err);
             var whereObject = {};
             whereObject.where = {};
-            if (fromDate && toDate) {
+            if (date) {
                 whereObject.where.$and = {};
                 whereObject.where.$and.merchantId = params.merchantId;
                 whereObject.where.$and.settlementId = null;
                 // whereObject.where.$and.createdAt.$between = [fromDate, toDate];
-                whereObject.where.$and.createdAt = moment(testDate).format('YYYY-MM-DD');
+                whereObject.where.$and.createdAt = moment(date).format('YYYY-MM-DD');
             }
-            if (!fromDate && !toDate) {
+            if (!date) {
                 whereObject.where.$and = {};
                 whereObject.where.$and.merchantId = params.merchantId;
                 whereObject.where.$and.settlementId = null;
