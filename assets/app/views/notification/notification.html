@@ -10,42 +10,42 @@
                 </section>
                 <section class="portlet-body form">
                     <div class="form-horizontal">
-                        <form class="addpromo-form" ng-submit="vm.pushNotification(message)" name="notificationForm" role="form" novalidate>
-                            <div class="dataTables_wrapper no-footer" style="margin-top: 30px;" ng-show="vm.mobileUsers.length">
-                                <div class="table-scrollable">
-                                    <table class="table table-striped table-bordered table-hover table-checkable order-column dataTable no-footer responsive" datatable="ng">
-                                        <thead>
-                                            <tr role="row">
-                                                <th class="sorting_disabled" style="width: 88px;">
-                                                    <div class="checker">
-                                                        <span>
+                        <div class="dataTables_wrapper no-footer" style="margin-top: 30px;" ng-show="vm.mobileUsers.length">
+                            <div class="table-scrollable">
+                                <table class="table table-striped table-bordered table-hover table-checkable order-column dataTable no-footer responsive" datatable="ng">
+                                    <thead>
+                                        <tr role="row">
+                                            <th class="sorting_disabled" style="width: 88px;">
+                                                <div class="checker">
+                                                    <span>
                                                             <input type="checkbox" ng-model="vm.selectedAll" ng-click="vm.checkAll()">
                                                         </span>
-                                                    </div>
-                                                </th>
-                                                <th tabindex="0" aria-controls="sample_1" aria-label="activate to sort column ascending" style="width: 100px;">Sr No. </th>
-                                                <th tabindex="0" aria-controls="sample_1" aria-label="  activate to sort column ascending" style="width:200px;"> Name
-                                                </th>
-                                                <th tabindex="0" aria-controls="sample_1" aria-label="activate to sort column ascending" style="width:200px;">Email </th>
-                                                <th tabindex="0" aria-controls="sample_1" aria-sort="ascending" aria-label="activate to sort column descending" style="width:208px;">Mobile No.</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody class="datatablecustom">
-                                            <tr class="gradeX odd" role="row" ng-repeat="mobileUser in vm.mobileUsers">
-                                                <td>
-                                                    <div class="checker">
-                                                        <span><input type="checkbox" value="{{mobileUser.id}}" ng-model="mobileUser.selected"></span>
-                                                    </div>
-                                                </td>
-                                                <td>{{$index+1}}</td>
-                                                <td>{{mobileUser.name}}</td>
-                                                <td>{{mobileUser.email}}</td>
-                                                <td>{{mobileUser.phone}}</td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
-                                </div>
+                                                </div>
+                                            </th>
+                                            <th tabindex="0" aria-controls="sample_1" aria-label="activate to sort column ascending" style="width: 100px;">Sr No. </th>
+                                            <th tabindex="0" aria-controls="sample_1" aria-label="  activate to sort column ascending" style="width:200px;"> Name
+                                            </th>
+                                            <th tabindex="0" aria-controls="sample_1" aria-label="activate to sort column ascending" style="width:200px;">Email </th>
+                                            <th tabindex="0" aria-controls="sample_1" aria-sort="ascending" aria-label="activate to sort column descending" style="width:208px;">Mobile No.</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody class="datatablecustom">
+                                        <tr class="gradeX odd" role="row" ng-repeat="mobileUser in vm.mobileUsers">
+                                            <td>
+                                                <div class="checker">
+                                                    <span><input type="checkbox" value="{{mobileUser.id}}" ng-model="mobileUser.selected"></span>
+                                                </div>
+                                            </td>
+                                            <td>{{$index+1}}</td>
+                                            <td>{{mobileUser.name}}</td>
+                                            <td>{{mobileUser.email}}</td>
+                                            <td>{{mobileUser.phone}}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
+                        </div>
+                        <form class="addpromo-form" ng-submit="vm.pushNotification(message)" name="notificationForm" role="form" novalidate>
                             <section class="table-toolbar" style="margin-top: 40px;">
                                 <div class="row">
                                     <section class="form-group" ng-class="{'has-error': notificationForm.message.$invalid && !notificationForm.message.$pristine}">
