@@ -36,13 +36,13 @@ class SettlementService {
             //whereObject.where = {};
 
             if (date) {
-                var query = 'UPDATE Payments set settlementId=:settlementId where ' +
+                var query = 'UPDATE Payments set settlementId=:settlementId, updatedAt=:updatedAt where ' +
                     ' merchantId= :merchantId and settlementId is null ';
 
                 var replacements = {
                     settlementId: result.id,
-                    merchantId: params.merchantId
-                        //date: moment(moment(date).add(1, "days")).format("YYYY-MM-DD")
+                    merchantId: params.merchantId,
+                    updatedAt: moment(moment(date).add(1, "days")).format("YYYY-MM-DD HH:mm:ss")
                 };
 
             }
