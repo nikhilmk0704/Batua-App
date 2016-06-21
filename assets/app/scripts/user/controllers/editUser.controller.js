@@ -65,6 +65,9 @@ angular.module('app').controller('editUserController', ['$scope', '$state', '$ti
                     if (this.width < 600 || this.height < 600) {
                         return toastr.error("Please select an image above 600px width and 600px height");
                     }
+                    if (this.width != this.height) {
+                        return toastr.error("Please select an image of 1:1 ratio");
+                    }
                     return handleProfileImageUpload(file, event, $flow);
                 }
                 image.onerror = function() {
@@ -84,6 +87,7 @@ angular.module('app').controller('editUserController', ['$scope', '$state', '$ti
                             vm.editUserData.profileImageUrl = responseData;
                         });
                     }, 1500);
+                    toastr.success('Profile image is uploaded successfully');
                     return vm.editUserData.profileImageUrl;
                 }
                 if (response.status === 400) {
