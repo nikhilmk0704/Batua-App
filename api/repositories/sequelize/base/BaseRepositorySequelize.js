@@ -30,11 +30,11 @@ class BaseRepositorySequelize {
         });
         var duplicateObject = {};
         duplicateObject.updateOnDuplicate = [baseAttribute, associateAttribute];
-        
+
         this.modelType.bulkCreate(data, duplicateObject).then(function(result) {
             callback(null, result);
         }).catch(function(exception) {
-            callback(exception,null);
+            callback(exception, null);
         });
     }
 
@@ -100,18 +100,18 @@ class BaseRepositorySequelize {
         });
     }
 
-    count(object,callback){
-        this.modelType.count(object).then(function(result){
-            callback(null,result);
-        }).catch(function(exception){
+    count(object, callback) {
+        this.modelType.count(object).then(function(result) {
+            callback(null, result);
+        }).catch(function(exception) {
             callback(exception);
         });
     }
 
-    upload(object,credential,callback){
+    upload(object, credential, callback) {
         domain.run(function safelyUpload() {
             if (req.file('image')._files.length > 0) {
-                req.file('image').upload(credential, function (err, uploadedFiles) {
+                req.file('image').upload(credential, function(err, uploadedFiles) {
                     if (err || (!(uploadedFiles[0]))) return error.send(res, 400, err);
                     else {
                         var url = uploadedFiles[0].extra.Location;
@@ -126,6 +126,18 @@ class BaseRepositorySequelize {
                 });
             }
         })
+    }
+
+
+    exec(query, replacements, queryType, callback) {
+        sequelize.query(query, {
+            replacements: replacements,
+            type: queryType
+        }).then(function(result) {
+            callback(null, result);
+        }).catch(function(exception) {
+            callback(exception);
+        });
     }
 }
 
