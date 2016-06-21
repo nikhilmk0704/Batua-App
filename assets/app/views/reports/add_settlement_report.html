@@ -32,7 +32,7 @@
                                         </label>
                                         <section class="input-group col-xs-8  offerstartdate" style="margin-bottom:15px;padding-left:15px;">
                                             <div class="input-group-addon input-circle-left"><a ng-click="openFrom($event)"><i class="fa fa-calendar"></i></a></div>
-                                            <input type="text" class="form-control input-circle-right dateinput" uib-datepicker-popup="dd/MM/yyyy" is-open="status.opened" min-date="minDate" max-date="maxDate" datepicker-mode="day" show-weeks="false" clear-text="false" show-button-bar="false" name="date" ng-model="vm.settlementDetails.date" required placeholder="Settlement Date as DD/MM/YYYY" style="width:97%" />
+                                            <input type="text" class="form-control input-circle-right dateinput" uib-datepicker-popup="dd/MM/yyyy" is-open="status.opened" min-date="startDate" max-date="maxDate" datepicker-mode="day" show-weeks="false" clear-text="false" show-button-bar="false" name="date" ng-model="vm.settlementDetails.date" required placeholder="Settlement Date as DD/MM/YYYY" style="width:97%" />
                                         </section>
                                         <span class="help-block text-danger col-xs-8 col-xs-push-3" ng-if="!settlementForm.date.$pristine && settlementForm.date.$invalid" ng-messages="settlementForm.date.$error"> Please select a valid  date </span>
                                     </section>
