@@ -42,7 +42,7 @@ class SettlementService {
                 var replacements = {
                     settlementId: result.id,
                     merchantId: params.merchantId
-                    //date: moment(moment(date).add(1, "days")).format("YYYY-MM-DD")
+                        //date: moment(moment(date).add(1, "days")).format("YYYY-MM-DD")
                 };
 
             }
@@ -241,6 +241,7 @@ function getTotalSettlements(newMerchantId, fromDate, toDate, callback) {
         result.forEach(function(obj) {
             count++;
             var detailsObj = {};
+            detailsObj.transactionId = obj.paymentId;
             detailsObj.merchantId = obj.merchantId;
             detailsObj.merchantName = obj.merchant.name;
             detailsObj.transactionAmount = obj.initialAmount;
@@ -296,7 +297,7 @@ function includeModels() {
     }, {
         model: TransactionDetails,
         as: 'transactionDetail',
-        attributes: ['id', 'orderNumber', 'transactionId', 'mode'],
+        attributes: ['id', 'orderNumber', 'transactionId', 'mode', 'paymentId'],
         required: false
     }, {
         model: Paymentmodes,
