@@ -12,6 +12,15 @@ angular.module('app').controller('merchantController', ['$state', 'merchantServi
         if (response.status === 400) {
             return toastr.error(response.data.errors[0].message);
         }
+        if (response.status === 404) {
+            return toastr.error("No Data Found.");
+        }
+        if (response.status === 502) {
+            return toastr.error("Database Connection Error.");
+        }
+        if (response.status === 500) {
+            return toastr.error("Server Issue.");
+        }
         return toastr.error(response.data);
     });
 
@@ -45,6 +54,15 @@ angular.module('app').controller('merchantController', ['$state', 'merchantServi
             if (response.status === 400) {
                 return toastr.error(response.data.errors[0].message);
             }
+            if (response.status === 404) {
+                return toastr.error("No Data Found.");
+            }
+            if (response.status === 502) {
+                return toastr.error("Database Connection Error.");
+            }
+            if (response.status === 500) {
+                return toastr.error("Server Issue.");
+            }
             return toastr.error(response.data);
         });
     };
@@ -53,9 +71,9 @@ angular.module('app').controller('merchantController', ['$state', 'merchantServi
 
         vm.listOfMerchants = angular.copy(vm.merchants);
 
-        vm.filteredData = _.map(vm.listOfMerchants, function(data){
+        vm.filteredData = _.map(vm.listOfMerchants, function(data) {
             var cityName = ((data.locations && data.locations.cities) ? data.locations.cities.name : '');
-            var merchants = {'Name': data.name, 'Category': data.categories.name, 'ShortCode': data.shortCode, 'City': cityName, 'Created By': data.users.name, 'Status':data.status}
+            var merchants = { 'Name': data.name, 'Category': data.categories.name, 'ShortCode': data.shortCode, 'City': cityName, 'Created By': data.users.name, 'Status': data.status }
             return merchants;
         });
 
