@@ -11,8 +11,9 @@ class SettlementService {
 
     save(params, callback) {
 
-        var fromDate = params.fromDate;
-        var toDate = params.toDate;
+        //var fromDate = params.fromDate;
+        //var toDate = params.toDate;
+        var date = params.date;
 
         if (!params.name)
             return callback("Please provide Name");
@@ -37,7 +38,8 @@ class SettlementService {
                 whereObject.where.$and = {};
                 whereObject.where.$and.merchantId = params.merchantId;
                 whereObject.where.$and.settlementId = null;
-                whereObject.where.$and.createdAt.$between = [fromDate, toDate];
+                // whereObject.where.$and.createdAt.$between = [fromDate, toDate];
+                whereObject.where.$and.createdAt = moment(testDate).format('YYYY-MM-DD');
             }
             if (!fromDate && !toDate) {
                 whereObject.where.$and = {};
