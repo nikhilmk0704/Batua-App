@@ -265,7 +265,15 @@
             url: '/cancelTransaction/:paymentId',
             templateUrl: 'app/views/reports/cancel_transaction.html',
             controller: 'transactionController',
-            controllerAs: 'vm'
+            controllerAs: 'vm',
+            resolve: {
+                merchantList: ['merchantService', function(merchantService) {
+                    return merchantService.getAllActiveMerchants();
+                }],
+                users: ['reportsService', function(reportsService) {
+                    return reportsService.getListOfUsers();
+                }]
+            }
         })
 
     }
