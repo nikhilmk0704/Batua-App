@@ -42,7 +42,7 @@ class SettlementService {
                 var replacements = {
                     settlementId: result.id,
                     merchantId: params.merchantId,
-                    date: moment(date).format('YYYY-MM-DD');
+                    date: moment(moment(date).add(1, "days")).format("YYYY-MM-DD")
                 };
 
             }
