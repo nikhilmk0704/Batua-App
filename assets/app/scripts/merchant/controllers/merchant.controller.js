@@ -25,14 +25,14 @@ angular.module('app').controller('merchantController', ['$state', 'merchantServi
     });
 
     vm.editMerchantData = function(merchant) {
-        if (merchant.status == 'Drafted' || merchant.status == 'Suspend') {
+        if (merchant.status == 'Suspend') {
             return;
         }
         $state.go('editMerchant', { merchantId: merchant.id });
     };
 
     vm.checkMerchantStatus = function(merchant) {
-        if (merchant.status == 'Drafted' || merchant.status == 'Suspend') {
+        if (merchant.status == 'Suspend') {
             return true;
         }
         return false;

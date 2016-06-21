@@ -57,7 +57,12 @@ angular.module('app').controller('editMerchantController', ['$state', 'merchantS
             }
 
             coordinates = vm.coordinates;
-            status = "Active";
+
+            if (vm.editMerchantData.status == 'Drafted') {
+                status = "Drafted";
+            } else {
+                status = "Active";
+            }
 
             merchantService.updateMerchant(merchant, imageGallery, cityId, coordinates, status, function(response) {
                 if (response.status === 200) {

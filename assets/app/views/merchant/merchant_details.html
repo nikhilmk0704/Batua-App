@@ -197,7 +197,7 @@ BEGIN CONTENT BODY -->
                                     </section>
                                     <div class="form-actions rightshift" style="margin-bottom:15px;">
                                         <button type="submit" class="btn button-color margin-form-btn" ng-show="vm.editMerchantData.status == 'Pending for approval'" ng-disabled="merchantForm.$invalid">Make Active</button>
-                                        <button type="submit" class="btn button-color margin-form-btn" ng-show="vm.editMerchantData.status == 'Active'" ng-disabled="merchantForm.$invalid">Update</button>
+                                        <button type="submit" class="btn button-color margin-form-btn" ng-show="vm.editMerchantData.status == 'Active' || vm.editMerchantData.status == 'Drafted'" ng-disabled="merchantForm.$invalid">Update</button>
                                         <button type="button" class="btn default margin-form-btn" ui-sref="merchantList">Cancel</button>
                                     </div>
                                 </form>
