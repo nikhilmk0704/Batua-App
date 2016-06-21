@@ -235,7 +235,7 @@
         })
 
         .state('paymentSettlement', {
-            url: '/paymentSettlement',
+            url: '/paymentSettlement?merchantId&merchantName',
             templateUrl: 'app/views/reports/add_settlement_report.html',
             controller: 'paymentController',
             controllerAs: 'vm',

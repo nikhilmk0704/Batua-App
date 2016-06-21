@@ -15,14 +15,14 @@
                 <section class="portlet-body form">
                     <div class="form-horizontal">
                         <div class="form-body">
-                            <form ng-submit="vm.addSettlement(settlementDetails)" name="settlementForm" role="form" novalidate>
+                            <form ng-submit="vm.addSettlement(vm.settlementDetails)" name="settlementForm" role="form" novalidate>
                                 <section class="form-group col-xs-12">
                                     <section class="form-group" ng-class="{'has-error': settlementForm.merchantName.$invalid && !settlementForm.merchantName.$pristine}">
                                         <label class="control-label col-xs-3">Name:
                                             <span class="required"> * </span>
                                         </label>
                                         <div class="col-xs-8">
-                                            <input type="text" class="form-control input-circle" id="merchantName" name="merchantName" placeholder="Merchant Name" style="margin-bottom:10px;" ng-model="settlementDetails.name" required />
+                                            <input type="text" class="form-control input-circle" id="merchantName" name="merchantName" placeholder="Merchant Name" style="margin-bottom:10px;" ng-model="vm.settlementDetails.name" required />
                                             <span class="help-block text-danger" ng-if="!settlementForm.merchantName.$pristine && settlementForm.merchantName.$invalid" ng-messages="settlementForm.merchantName.$error">Please enter a valid name </span>
                                         </div>
                                     </section>
@@ -32,7 +32,7 @@
                                         </label>
                                         <section class="input-group col-xs-8  offerstartdate" style="margin-bottom:15px;padding-left:15px;">
                                             <div class="input-group-addon input-circle-left"><a ng-click="openFrom($event)"><i class="fa fa-calendar"></i></a></div>
-                                            <input type="text" class="form-control input-circle-right dateinput" uib-datepicker-popup="dd/MM/yyyy" is-open="status.opened" min-date="minDate" max-date="maxDate" datepicker-mode="day" show-weeks="false" clear-text="false" show-button-bar="false" name="date" ng-model="settlementDetails.date" required placeholder="Settlement Date as DD/MM/YYYY" style="width:97%" />
+                                            <input type="text" class="form-control input-circle-right dateinput" uib-datepicker-popup="dd/MM/yyyy" is-open="status.opened" min-date="minDate" max-date="maxDate" datepicker-mode="day" show-weeks="false" clear-text="false" show-button-bar="false" name="date" ng-model="vm.settlementDetails.date" required placeholder="Settlement Date as DD/MM/YYYY" style="width:97%" />
                                         </section>
                                         <span class="help-block text-danger col-xs-8 col-xs-push-3" ng-if="!settlementForm.date.$pristine && settlementForm.date.$invalid" ng-messages="settlementForm.date.$error"> Please select a valid  date </span>
                                     </section>
@@ -41,7 +41,7 @@
                                             <span class="required"> * </span>
                                         </label>
                                         <div class="col-xs-8">
-                                            <input type="text" class="form-control input-circle" id="refnumber" name="refnumber" placeholder="Reference number" style="margin-bottom:10px;" ng-model="settlementDetails.referenceNumber" required />
+                                            <input type="text" class="form-control input-circle" id="refnumber" name="refnumber" placeholder="Reference number" style="margin-bottom:10px;" ng-model="vm.settlementDetails.referenceNumber" required />
                                             <span class="help-block text-danger" ng-if="!settlementForm.refnumber.$pristine && settlementForm.refnumber.$invalid" ng-messages="settlementForm.refnumber.$error">Please enter a refernce number </span>
                                         </div>
                                     </section>
@@ -50,7 +50,7 @@
                                             <span class="required"> * </span>
                                         </label>
                                         <div class="col-xs-8">
-                                            <textarea class="form-control input-circle col-xs-12" rows="3" id="desc" name="desc" placeholder="Enter Settlement Description" style="margin-bottom:15px;" ng-model="settlementDetails.description" required></textarea>
+                                            <textarea class="form-control input-circle col-xs-12" rows="3" id="desc" name="desc" placeholder="Enter Settlement Description" style="margin-bottom:15px;" ng-model="vm.settlementDetails.description" required></textarea>
                                             <span class="help-block text-danger" ng-if="!settlementForm.desc.$pristine && settlementForm.desc.$invalid" ng-messages="settlementForm.desc.$error">Please enter description for the settlement </span>
                                         </div>
                                     </section>

@@ -35,6 +35,7 @@
                 method: "post",
                 url: API.addSettlement,
                 data: {
+                    merchantId: data.merchantId,
                     name: data.name,
                     date: data.date,
                     referenceNumber: data.referenceNumber,
