@@ -238,7 +238,12 @@
             url: '/paymentSettlement?merchantId&merchantName',
             templateUrl: 'app/views/reports/add_settlement_report.html',
             controller: 'paymentController',
-            controllerAs: 'vm'
+            controllerAs: 'vm',
+            resolve: {
+                merchantList: ['merchantService', function(merchantService) {
+                    return merchantService.getAllActiveMerchants();
+                }]
+            }
         })
 
         .state('transactions', {

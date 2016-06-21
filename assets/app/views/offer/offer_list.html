@@ -40,6 +40,7 @@
                                         <th tabindex="0" aria-controls="sample_1" aria-label="activate to sort column ascending"> Valid-From </th>
                                         <th tabindex="0" aria-controls="sample_1" aria-label="activate to sort column ascending"> Valid-To </th>
                                         <th class="desc" tabindex="0" aria-controls="sample_1" aria-label="activate to sort column ascending"> Description </th>
+                                        <th tabindex="0" aria-controls="sample_1" aria-label="activate to sort column ascending"> Offer Created Time </th>
                                         <th class="status" tabindex="0" aria-controls="sample_1" aria-label="activate to sort column ascending"> Status </th>
                                         <th class="action" tabindex="0" aria-controls="sample_1" aria-label="activate to sort column ascending"> Action </th>
                                     </tr>
@@ -53,6 +54,7 @@
                                         <td>{{offer.validFrom |date : "mediumDate"}}</td>
                                         <td>{{offer.validTo |date : "mediumDate"}}</td>
                                         <td class="desc">{{offer.description}}</td>
+                                        <td>{{offer.createdAt | date:"medium"}}</td>
                                         <td>
                                             <select class="form-control input-circle" style="width:180px;" ng-change="vm.setStatus(offer.id, offer.status)" ng-model="offer.status" ng-disabled="offer.status=='Expired'"> 
                                                 <option value="" disabled selected hidden>select status</option>

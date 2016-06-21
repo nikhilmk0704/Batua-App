@@ -44,6 +44,7 @@
                                         <th tabindex="0" aria-controls="sample_1" aria-label=" activate to sort column ascending"> Description </th>
                                         <th class="promo" tabindex="0" aria-controls="sample_1" aria-label="activate to sort column ascending"> Percentage By Batua </th>
                                         <th class="promo" tabindex="0" aria-controls="sample_1" aria-label="activate to sort column ascending"> Percentage By Merchant</th>
+                                        <th tabindex="0" aria-controls="sample_1" aria-label="activate to sort column ascending"> Promocode Created Time </th>
                                         <th class="status" tabindex="0" aria-controls="sample_1" aria-label="  activate to sort column ascending"> Status </th>
                                         <th class="action" tabindex="0" aria-controls="sample_1" aria-label="  activate to sort column ascending"> Action </th>
                                     </tr>
@@ -59,6 +60,7 @@
                                         <td>{{promocode.description}}</td>
                                         <td>{{promocode.percentageCostBourneByBatua}}%</td>
                                         <td>{{promocode.percentageCostBourneByMerchant}}%</td>
+                                        <td>{{promocode.createdAt | date:"medium"}}</td>
                                         <td>
                                             <select class="form-control input-circle" style="width:180px;" ng-change="vm.setStatus(promocode.id, promocode.status)" ng-model="promocode.status"  ng-disabled="promocode.status=='Expired'">
                                                 <option value="" disabled selected hidden>select status</option>

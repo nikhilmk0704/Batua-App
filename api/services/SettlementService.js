@@ -11,8 +11,9 @@ class SettlementService {
 
     save(params, callback) {
 
-        var fromDate = params.fromDate;
-        var toDate = params.toDate;
+        //var fromDate = params.fromDate;
+        //var toDate = params.toDate;
+        var date = params.date;
 
         if (!params.name)
             return callback("Please provide Name");
@@ -33,13 +34,14 @@ class SettlementService {
                 return callback(err);
             var whereObject = {};
             whereObject.where = {};
-            if (fromDate && toDate) {
+            if (date) {
                 whereObject.where.$and = {};
                 whereObject.where.$and.merchantId = params.merchantId;
                 whereObject.where.$and.settlementId = null;
-                whereObject.where.$and.createdAt.$between = [fromDate, toDate];
+                // whereObject.where.$and.createdAt.$between = [fromDate, toDate];
+                whereObject.where.$and.createdAt = moment(date).format('YYYY-MM-DD');
             }
-            if (!fromDate && !toDate) {
+            if (!date) {
                 whereObject.where.$and = {};
                 whereObject.where.$and.merchantId = params.merchantId;
                 whereObject.where.$and.settlementId = null;
@@ -87,7 +89,7 @@ class SettlementService {
                     var newMerchantId = merchantObj.merchantId;
                     getTotalSettlements(newMerchantId, fromDate, toDate, function(err, result) {
                         count++;
-                        if(result)
+                        if (result)
                             reportArray.push(result);
                         if (count == data.length) {
                             return callback(null, reportArray);
@@ -199,7 +201,15 @@ function getTotalSettlements(newMerchantId, fromDate, toDate, callback) {
         var count = 0;
         sumObj.merchantId = result[0].merchantId;
         sumObj.merchantName = result[0].merchant.name;
-        sumObj.status = (result[0].settlementId) ? ('settled') : ('open');
+
+        if (result[0].settlementId) {
+            sumObj.status = 'Settled'
+        }
+
+        if (!result[0].settlementId) {
+            sumObj.status = 'Open'
+        }
+
         result.forEach(function(obj) {
             count++;
             var detailsObj = {};

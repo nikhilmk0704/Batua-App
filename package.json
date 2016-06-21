@@ -57,7 +57,8 @@
     "sequelize": "^3.19.3",
     "sequelize-cli": "^2.3.1",
     "skipper-s3": "^0.5.6",
-    "underscore": "^1.8.3"
+    "underscore": "^1.8.3",
+    "unirest": "^0.5.0"
   },
   "scripts": {
     "debug": "node debug app.js",
