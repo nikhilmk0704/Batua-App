@@ -37,26 +37,26 @@ class SettlementService {
 
             if (date) {
                 var query = 'UPDATE Payments set settlementId=:settlementId where ' +
-                    ' merchantId= :merchantId and settlementId is null and DATE(createdAt)= :date';
-
-                var replacements = {
-                    settlementId: result.id,
-                    merchantId: params.merchantId,
-                    date: moment(moment(date).add(1, "days")).format("YYYY-MM-DD")
-                };
-
-            }
-
-            if (!date) {
-                var query = 'UPDATE Payments set settlementId=:settlementId where ' +
-                    ' merchantId= :merchantId and settlementId is null';
+                    ' merchantId= :merchantId and settlementId is null ';
 
                 var replacements = {
                     settlementId: result.id,
                     merchantId: params.merchantId
+                    //date: moment(moment(date).add(1, "days")).format("YYYY-MM-DD")
                 };
 
             }
+
+            // if (!date) {
+            //     var query = 'UPDATE Payments set settlementId=:settlementId where ' +
+            //         ' merchantId= :merchantId and settlementId is null';
+
+            //     var replacements = {
+            //         settlementId: result.id,
+            //         merchantId: params.merchantId
+            //     };
+
+            // }
 
             // if (date) {
             //     whereObject.where.$and = {};
