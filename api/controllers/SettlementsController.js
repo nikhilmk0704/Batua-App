@@ -19,9 +19,9 @@ module.exports = {
         params.referenceNumber = req.body.referenceNumber;
         params.description = req.body.description;
         params.merchantId = req.body.merchantId;
-        params.fromDate = req.body.fromDate;
-        params.toDate = req.body.toDate;
-
+        //params.fromDate = req.body.fromDate;
+        //params.toDate = req.body.toDate;
+        params.date = req.body.date;
         var settlementService = new SettlementService();
 
         settlementService.save(params, function(err, result) {
