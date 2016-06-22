@@ -57,7 +57,14 @@ module.exports = {
         paymentService.batuaWalletPayment(params, function(err, result) {
 
             if (err) {
-                err1.message = err;
+                if (typeof err == "object" && err.name) {
+                    err1.message = err.name
+                }
+
+                if (typeof err == "string") {
+                    err1.message = err;
+                }
+
                 paymentService.errorConstructionForPayment(params, function(error1, result1) {
                     if (error1) {
                         return res.badRequest(error.send(error1));
