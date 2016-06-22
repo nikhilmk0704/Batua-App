@@ -219,17 +219,28 @@ module.exports = {
     makeYesBankWalletPayment: function(req, res) {
 
         var params = req.body;
+        var err1 = {};
 
         var paymentService = new PaymentService();
 
         paymentService.makeYesBankWalletPayment(params, function(err, result) {
+            if (err) {
+                err1.message = err;
+                paymentService.errorConstructionForPayment(params, function(error1, result1) {
+                    if (error1) {
+                        return res.badRequest(error.send(error1));
+                    }
 
-            if (err)
-                return res.badRequest(error.send(err));
+                    if (result1) {
+                        err1.result = result1;
+                        return res.json(sails.config.globals.paymentRazorPayErrorCode, error.errorConstructionForPayment(err1));
+                    }
+                });
+            }
 
-            return res.json(200, result);
-
+            if (result) {
+                return res.json(200, result);
+            }
         });
-
     },
 };
