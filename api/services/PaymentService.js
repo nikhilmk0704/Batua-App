@@ -843,6 +843,7 @@ class PaymentService {
         async.waterfall([
             async.apply(getMerchantDetails, self),
             getTransactionDetails,
+            getCreatedAt,
             getIntialAmount,
             getPromoCodeAmount
         ], function(error, result) {
