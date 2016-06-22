@@ -70,7 +70,9 @@ module.exports = {
                 });
             }
 
-            return res.json(200, result);
+            if (result) {
+                return res.json(200, result);
+            }
 
         });
     },
