@@ -65,7 +65,7 @@ module.exports = {
 
                     if (result1) {
                         err1.result = result1;
-                        return res.badRequest(error.errorConstructionForPayment(err1));
+                        return res.json(sails.config.globals.paymentRazorPayErrorCode, error.errorConstructionForPayment(err1));
                     }
                 });
             }

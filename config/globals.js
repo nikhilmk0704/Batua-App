@@ -61,5 +61,6 @@ module.exports.globals = {
 
     models: true,
 
-    unAuthorisedUserErrorCode: 401
+    unAuthorisedUserErrorCode: 401,
+    paymentRazorPayErrorCode: 406
 };
