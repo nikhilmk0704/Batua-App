@@ -960,7 +960,7 @@ function getPromoCodeAmount(self, callback) {
     }
 
     if (self.offer) {
-        offerOperation(self, self.merchant.fees, function(resultArray) {
+        offerCodeComputation(self, self.merchant.fees, function(resultArray) {
             savePaymentParam.initialAmount = parseFloat(self.amount);
             savePaymentParam.reducedAmount = (parseFloat(resultArray.reducedAmount) + parseFloat(resultArray.fee));
             savePaymentParam.paidAmount = parseFloat(resultArray.paidAmount);
