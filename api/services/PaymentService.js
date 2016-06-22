@@ -870,7 +870,7 @@ function getMerchantDetails(self, callback) {
     }
 
     merchantRepository.exec(query, replacements, queryType, function(err, result) {
-        if (err || result.length < 0) {
+        if (err || result.length < = 0) {
             self.merchant = {};
             self.merchant.id = null;
             self.merchant.name = null;
