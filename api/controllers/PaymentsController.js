@@ -58,13 +58,13 @@ module.exports = {
 
             if (err) {
                 err1 = err;
-                paymentService.errorConstructionForPayment(params, function(error1, result) {
+                paymentService.errorConstructionForPayment(params, function(error1, result1) {
                     if (error1) {
                         return res.badRequest(error.send(error1));
                     }
 
                     if (result) {
-                        err1.result = result;
+                        err1.result = result1;
                         return res.badRequest(error.errorConstructionForPayment(err1));
                     }
                 });
