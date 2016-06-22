@@ -859,46 +859,55 @@ module.exports = PaymentService;
 
 function getMerchantDetails(self, callback) {
 
-    var merchantRepository = new MerchantRepository();
-    var merchantId = self.merchantId;
+    if (self.merchantId) {
+        var merchantRepository = new MerchantRepository();
+        var merchantId = self.merchantId;
 
-    var query = "SELECT *,NOW() as currentDate FROM Merchants where id= :merchantId";
+        var query = "SELECT *,NOW() as currentDate FROM Merchants where id= :merchantId";
 
-    var queryType = sequelize.QueryTypes.SELECT;
+        var queryType = sequelize.QueryTypes.SELECT;
 
-    var replacements = {
-        merchantId: merchantId
-    };
+        var replacements = {
+            merchantId: merchantId
+        };
 
-    merchantRepository.exec(query, replacements, queryType, function(err, result) {
-        if (err) {
-            self.merchant = {};
-            self.merchant.id = null;
-            self.merchant.name = null;
-            self.merchant.address = null;
-            self.merchant.fees = null;
-            return callback(null, self);
-        }
+        merchantRepository.exec(query, replacements, queryType, function(err, result) {
+            if (err) {
+                self.merchant = {};
+                self.merchant.id = null;
+                self.merchant.name = null;
+                self.merchant.address = null;
+                self.merchant.fees = null;
+                return callback(null, self);
+            }
 
-        if (result.length > 0) {
-            self.merchant = {};
-            self.merchant.id = result[0].id;
-            self.merchant.name = result[0].name;
-            self.merchant.address = result[0].address;
-            self.merchant.fees = result[0].fees
-            return callback(null, self);
-        }
+            if (result.length > 0) {
+                self.merchant = {};
+                self.merchant.id = result[0].id;
+                self.merchant.name = result[0].name;
+                self.merchant.address = result[0].address;
+                self.merchant.fees = result[0].fees
+                return callback(null, self);
+            }
 
-        if (result.length == 0) {
-            self.merchant = {};
-            self.merchant.id = null;
-            self.merchant.name = null;
-            self.merchant.address = null;
-            self.merchant.fees = null;
-            return callback(null, self);
-        }
-    });
+            if (result.length == 0) {
+                self.merchant = {};
+                self.merchant.id = null;
+                self.merchant.name = null;
+                self.merchant.address = null;
+                self.merchant.fees = null;
+                return callback(null, self);
+            }
+        });
+    }
 
+    if (!self.merchantId) {
+        self.merchant = {};
+        self.merchant.id = null;
+        self.merchant.name = null;
+        self.merchant.address = null;
+        self.merchant.fees = null
+    }
 }
 
 function getTransactionDetails(self, callback) {
