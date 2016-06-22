@@ -912,7 +912,7 @@ function getPromoCodeAmount(self, callback) {
     if (self.promocode) {
 
         promoCodeComputation(self, self.merchant.fees, function(resultArray) {
-            savePaymentParam.initialAmount = parseFloat(params.amount);
+            savePaymentParam.initialAmount = parseFloat(self.amount);
             savePaymentParam.reducedAmount = (parseFloat(resultArray.reducedAmount) + parseFloat(resultArray.deductionAmountFromAmountAfterPromocodeApply) + parseFloat(resultArray.fee));
             savePaymentParam.paidAmount = parseFloat(resultArray.paidAmount);
             savePaymentParam.promocodeAmount = parseFloat(resultArray.reducedAmount);
@@ -926,7 +926,7 @@ function getPromoCodeAmount(self, callback) {
 
     if (self.offer) {
         offerOperation(self, self.merchant.fees, function(resultArray) {
-            savePaymentParam.initialAmount = parseFloat(params.amount);
+            savePaymentParam.initialAmount = parseFloat(self.amount);
             savePaymentParam.reducedAmount = (parseFloat(resultArray.reducedAmount) + parseFloat(resultArray.fee));
             savePaymentParam.paidAmount = parseFloat(resultArray.paidAmount);
             savePaymentParam.promocodeAmount = parseFloat(resultArray.reducedAmount);
