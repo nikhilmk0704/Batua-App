@@ -34,7 +34,7 @@ module.exports = {
     errorConstructionForYesBankWalletBalance: function(err) {
         var errorObject = {};
         errorObject.errors = [];
-        errorObject.errors.push({ message: err.code });
+        errorObject.errors.push({ message: err.code.toString() });
         return errorObject;
 
     }
