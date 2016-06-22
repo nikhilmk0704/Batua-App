@@ -1238,6 +1238,7 @@ function getBalanceThirdParty(params, callback) {
             "auth_token": authToken
         }
     }, function(error, response, body) {
+        body.yesPhone = phone;
         if (error)
             return callback(error, null);
         if (body.code)
