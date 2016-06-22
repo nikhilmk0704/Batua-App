@@ -51,13 +51,25 @@ module.exports = {
     batuaWalletPayment: function(req, res) {
 
         var params = req.body;
-
         var paymentService = new PaymentService();
+        var err1;
 
         paymentService.batuaWalletPayment(params, function(err, result) {
 
-            if (err)
-                return res.badRequest(error.send(err));
+            if (err) {
+                err1 = err;
+                paymentService.errorConstructionForPayment(params, function(error1, result) {
+                    if (error1) {
+                        return res.badRequest(error.send(error1));
+                    }
+
+                    if (result) {
+                        err1.result = result;
+                        return res.badRequest(error.errorConstructionForPayment(err1));
+                    }
+                });
+            }
+
             return res.json(200, result);
 
         });
