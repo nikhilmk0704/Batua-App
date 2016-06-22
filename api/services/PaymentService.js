@@ -867,15 +867,14 @@ function getMerchantDetails(self, callback) {
 
     var replacements = {
         merchantId: merchantId
-    }
+    };
 
     merchantRepository.exec(query, replacements, queryType, function(err, result) {
-        if (err || result.length < = 0) {
+        if (err) {
             self.merchant = {};
             self.merchant.id = null;
             self.merchant.name = null;
             self.merchant.address = null;
-            self.createdAt = result[0].currentDate;
             self.merchant.fees = null;
             return callback(null, self);
         }
@@ -885,11 +884,18 @@ function getMerchantDetails(self, callback) {
             self.merchant.id = result[0].id;
             self.merchant.name = result[0].name;
             self.merchant.address = result[0].address;
-            self.createdAt = result[0].currentDate;
             self.merchant.fees = result[0].fees
             return callback(null, self);
         }
 
+        if (result.length == 0) {
+            self.merchant = {};
+            self.merchant.id = null;
+            self.merchant.name = null;
+            self.merchant.address = null;
+            self.merchant.fees = null;
+            return callback(null, self);
+        }
     });
 
 }
@@ -904,6 +910,34 @@ function getTransactionDetails(self, callback) {
 function getIntialAmount(self, callback) {
     self.initialAmount = self.amount;
     return callback(null, self);
+}
+
+function getCreatedAt(self, callback) {
+    var merchantRepository = new MerchantRepository();
+
+    var query = "SELECT NOW() as currentDate FROM dual";
+
+    var queryType = sequelize.QueryTypes.SELECT;
+
+    var replacements = {};
+
+    merchantRepository.exec(query, replacements, queryType, function(err, result) {
+        if (err) {
+            self.createdAt = null;
+            return callback(null, self);
+        }
+
+        if (result.length > 0) {
+            self.createdAt = result[0].currentDate;
+            return callback(null, self);
+        }
+
+        if (result.length == 0) {
+            self.createdAt = null;
+            return callback(null, self);
+        }
+
+    });
 }
 
 function getPromoCodeAmount(self, callback) {
