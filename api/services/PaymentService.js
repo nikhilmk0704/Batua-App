@@ -1274,6 +1274,22 @@ function generateOrderNo(callback) {
 
 function getMerchantFee(merchantId, callback) {
 
+    // var query = "SELECT `fees` FROM `Merchants` WHERE 1 AND `id` = :merchantId";
+    // var replacements = {
+    //     merchantId: merchantId
+    // };
+    // var queryType = sequelize.QueryTypes.SELECT;
+
+    // merchantRepository.exec(query, replacements, queryType, function(err, result) {
+    //     if (err || result.length == 0 || result.length < 0) {
+    //         return callback(null, "The given merchant does not exist");
+    //     }
+
+    //     if (result.length > 0) {
+    //         return callback(result);
+    //     }
+    // });
+
     var rawQueryString = "SELECT `fees` FROM `Merchants` WHERE 1 AND `id` = :merchantId";
     sequelize.query(rawQueryString, {
         replacements: { merchantId: merchantId },
