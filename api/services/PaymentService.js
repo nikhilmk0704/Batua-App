@@ -3,6 +3,7 @@
 var PaymentsRepository = require('../repositories/PaymentsRepository.js');
 
 var TransactionDetailsRepository = require('../repositories/TransactionDetailsRepository.js');
+var MerchantRepository = require('../repositories/MerchantRepository.js');
 
 var request = require('request');
 var crypto = require('crypto');
@@ -834,9 +835,204 @@ class PaymentService {
         });
     }
 
+    errorConstructionForPayment(err, callback) {
+
+        var self = this;
+        self = err.body;
+
+        async.waterfall([
+            async.apply(getMerchantDetails, self),
+            getTransactionDetails,
+            getIntialAmount,
+            getPromoCodeAmount
+        ], function(error, result) {
+            if (error || result) {
+                return callback(null, self);
+            }
+        });
+    }
+
 }
 
 module.exports = PaymentService;
+
+function getMerchantDetails(self, callback) {
+
+    var merchantRepository = new MerchantRepository();
+    var merchantId = self.merchantId;
+
+    var query = "SELECT *,NOW() as currentDate FROM Merchants where id= :merchantId";
+
+    var queryType = sequelize.QueryTypes.SELECT;
+
+    var replacement = {
+        merchantId: merchantId
+    }
+
+    merchantRepository.exec(query, replacements, queryType, function(err, result) {
+        if (err || result.length < 0) {
+            self.merchant = {};
+            self.merchant.id = null;
+            self.merchant.name = null;
+            self.merchant.address = null;
+            self.createdAt = result[0].currentDate;
+            self.merchant.fees = null;
+            return callback(null, self);
+        }
+
+        if (result.length > 0) {
+            self.merchant = {};
+            self.merchant.id = result[0].id;
+            self.merchant.name = result[0].name;
+            self.merchant.address = result[0].address;
+            self.createdAt = result[0].currentDate;
+            self.merchant.fees = result[0].fees
+            return callback(null, self);
+        }
+
+    });
+
+}
+
+function getTransactionDetails(self, callback) {
+    self.transactionDetail = {};
+    self.transactionDetail.orderNumber = null;
+    self.transactionDetail.transactionId = null;
+    return callback(null, self);
+}
+
+function getIntialAmount(self, callback) {
+    self.initialAmount = self.amount;
+    return callback(null, self);
+}
+
+function getPromoCodeAmount(self, callback) {
+    var savePaymentParam = {};
+
+    if (self.promocode) {
+
+        promoCodeComputation(self, self.merchant.fees, function(resultArray) {
+            savePaymentParam.initialAmount = parseFloat(params.amount);
+            savePaymentParam.reducedAmount = (parseFloat(resultArray.reducedAmount) + parseFloat(resultArray.deductionAmountFromAmountAfterPromocodeApply) + parseFloat(resultArray.fee));
+            savePaymentParam.paidAmount = parseFloat(resultArray.paidAmount);
+            savePaymentParam.promocodeAmount = parseFloat(resultArray.reducedAmount);
+            savePaymentParam.batuaCommission = parseFloat(resultArray.deductionAmountFromAmountAfterPromocodeApply);
+            savePaymentParam.merchantFee = parseFloat(resultArray.fee);
+        });
+
+        self.promocodeAmount = savePaymentParam.promocodeAmount;
+        return callback(null, self);
+    }
+
+    if (self.offer) {
+        offerOperation(self, self.merchant.fees, function(resultArray) {
+            savePaymentParam.initialAmount = parseFloat(params.amount);
+            savePaymentParam.reducedAmount = (parseFloat(resultArray.reducedAmount) + parseFloat(resultArray.fee));
+            savePaymentParam.paidAmount = parseFloat(resultArray.paidAmount);
+            savePaymentParam.promocodeAmount = parseFloat(resultArray.reducedAmount);
+            savePaymentParam.batuaCommission = parseFloat(resultArray.deductionAmountFromAmountAfterPromocodeApply);
+            savePaymentParam.merchantFee = parseFloat(resultArray.fee);
+
+        });
+
+        self.promocodeAmount = savePaymentParam.promocodeAmount;
+        return callback(null, self);
+    }
+}
+
+function offerCodeComputation(params, fee, callback) {
+
+    var discountPercentage = params.offer.discountPercentage;
+    var amount = params.amount;
+    var maximumAmountLimit = params.offer.maximumAmountLimit;
+
+    /*------------ calculate discount amount -----------*/
+
+    var reducedAmount = amount * (discountPercentage / 100);
+
+    /*------------ /calculate discount amount -----------*/
+
+    /*------------ Check discount amount greater than maximumAmountLimit -----------*/
+
+    if (reducedAmount > maximumAmountLimit) {
+        reducedAmount = maximumAmountLimit;
+    }
+    /*------------ /Check discount amount greater than maximumAmountLimit -----------*/
+
+    /*------------ get amount after offer applied  -----------*/
+
+    var amountAfterOfferApply = amount - reducedAmount;
+
+    /*------------ /get amount after offer applied  -----------*/
+
+
+    /*------------ Paid Amount To Merchants -----------*/
+    var deductionFee = amountAfterOfferApply * (fee / 100);
+    var paidAmount = amountAfterOfferApply - deductionFee;
+
+    var returnObject = {};
+
+    returnObject.reducedAmount = reducedAmount;
+    returnObject.amountAfterOfferApply = amountAfterOfferApply;
+    returnObject.paidAmount = paidAmount;
+    returnObject.fee = deductionFee;
+    returnObject.deductionAmountFromAmountAfterPromocodeApply = 0;
+
+    return callback(returnObject);
+}
+
+function promoCodeComputation(params, fee, callback) {
+    var discountPercentage = params.promocode.discountPercentage;
+    var amount = params.amount;
+    var maximumAmountLimit = params.promocode.maximumAmountLimit;
+
+    /*------------ calculate discount amount -----------*/
+
+    var reducedAmount = amount * (discountPercentage / 100);
+
+    /*------------ /calculate discount amount -----------*/
+
+    /*------------ Check discount amount greater than maximumAmountLimit -----------*/
+
+    if (reducedAmount > maximumAmountLimit) {
+        reducedAmount = maximumAmountLimit;
+    }
+
+    /*------------ /Check discount amount greater than maximumAmountLimit -----------*/
+
+    /*------------ get amount after promocode applied  -----------*/
+
+    var amountAfterPromocodeApply = amount - reducedAmount;
+
+    /*------------ /get amount after promocode applied  -----------*/
+
+
+    /*------------ % cost bourned by merchnats -----------*/
+
+    var merchantBournedPercentage = params.promocode.percentageCostBourneByMerchant;
+
+    var deductionAmountFromAmountAfterPromocodeApply = reducedAmount * (merchantBournedPercentage / 100);
+
+    /*------------ /% cost bourned by merchnats -----------*/
+
+    var payAmountAfterBurned = amount - deductionAmountFromAmountAfterPromocodeApply;
+
+    /*------------ Paid Amount To Merchants -----------*/
+    var deductionFee = payAmountAfterBurned * (fee / 100);
+    var paidAmount = payAmountAfterBurned - deductionFee;
+
+    var returnObject = {};
+
+    returnObject.reducedAmount = reducedAmount;
+    returnObject.amountAfterPromocodeApply = amountAfterPromocodeApply;
+    returnObject.deductionAmountFromAmountAfterPromocodeApply = deductionAmountFromAmountAfterPromocodeApply;
+    returnObject.paidAmount = paidAmount;
+    returnObject.fee = deductionFee;
+
+    return callback(returnObject);
+}
+
+
 
 function getWalletBalance(userId, callback) {
 
