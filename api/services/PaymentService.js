@@ -865,7 +865,7 @@ function getMerchantDetails(self, callback) {
 
     var queryType = sequelize.QueryTypes.SELECT;
 
-    var replacement = {
+    var replacements = {
         merchantId: merchantId
     }
 
