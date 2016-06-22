@@ -190,9 +190,15 @@ module.exports = {
 
         paymentService.getYesWalletBalance(params, function(err, result) {
 
-            if (err)
-                return res.badRequest(error.send(err));
+            if (err) {
+                if (err.code) {
+                    return res.json(sails.config.globals.unAuthorisedUserErrorCode, error.errorConstructionForYesBankWalletBalance(err));
+                }
 
+                if (!err.code) {
+                    return res.badRequest(error.send(err));
+                }
+            }
             return res.json(200, result);
 
         });
