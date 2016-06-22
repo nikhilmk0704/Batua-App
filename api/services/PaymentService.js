@@ -973,6 +973,11 @@ function getPromoCodeAmount(self, callback) {
         self.promocodeAmount = savePaymentParam.promocodeAmount;
         return callback(null, self);
     }
+
+    if (!self.promocode && !self.offer) {
+        self.promocodeAmount = 0;
+        return callback(null, self);
+    }
 }
 
 function offerCodeComputation(params, fee, callback) {
