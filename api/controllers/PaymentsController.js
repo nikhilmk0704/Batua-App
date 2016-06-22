@@ -14,6 +14,7 @@ module.exports = {
     doPayment: function(req, res) {
 
         var params = req.body;
+        var err1 = {};
 
         var paymentService = new PaymentService();
 
@@ -56,7 +57,7 @@ module.exports = {
             if (result) {
                 return res.json(200, result);
             }
-            
+
         });
     },
 
