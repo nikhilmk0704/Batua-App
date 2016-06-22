@@ -835,10 +835,10 @@ class PaymentService {
         });
     }
 
-    errorConstructionForPayment(err, callback) {
+    errorConstructionForPayment(params, callback) {
 
         var self = this;
-        self = err.body;
+        self = params;
 
         async.waterfall([
             async.apply(getMerchantDetails, self),
