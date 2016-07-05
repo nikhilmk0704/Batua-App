@@ -185,8 +185,8 @@ class SettlementService {
                     detailsObj.promoOfferAmount = obj.promocodeAmount;
                     detailsObj.promoAmountByMerchant = obj.promocodeAmount - obj.batuaCommission;
                 }
-                //detailsObj.feeCharged = obj.reducedAmount;
-                detailsObj.feeCharged = obj.deductionFee / obj.merchantFee;
+                detailsObj.feeCharged = obj.reducedAmount;
+                //detailsObj.feeCharged = obj.deductionFee / obj.merchantFee;
                 detailsObj.amountCreditedToBatua = obj.paidAmount;
                 detailsObj.settlementAmount = obj.paidAmount - obj.merchantFee;
                 detailsArray.push(detailsObj);
