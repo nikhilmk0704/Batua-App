@@ -27,6 +27,8 @@ class SettlementService {
             return callback("Please provide Description");
         if (!params.merchantId)
             return callback("Please provide Merchant Id");
+        if (!params.paymentId)
+            return callback("Please provide Payment Id");
 
         var settlementRepository = new SettlementRepository();
         settlementRepository.save(params, function(err, result) {
@@ -37,12 +39,13 @@ class SettlementService {
 
             if (date) {
                 var query = 'UPDATE Payments set settlementId=:settlementId, updatedAt=:updatedAt where ' +
-                    ' merchantId= :merchantId and settlementId is null ';
+                    ' merchantId= :merchantId and id=:paymentId and settlementId is null ';
 
                 var replacements = {
                     settlementId: result.id,
                     merchantId: params.merchantId,
-                    updatedAt: moment(moment(date).add(1, "days")).format("YYYY-MM-DD HH:mm:ss")
+                    updatedAt: moment(moment(date).add(1, "days")).format("YYYY-MM-DD HH:mm:ss"),
+                    paymentId: params.paymentId
                 };
 
             }
@@ -173,6 +176,7 @@ class SettlementService {
                 detailsObj.transactionId = obj.transactionDetail.paymentId;
                 detailsObj.transactionDate = obj.createdAt;
                 detailsObj.transactionAmount = obj.initialAmount;
+                detailsObj.settlement = obj.settlement;
                 if (!obj.offerDiscountId)
                     detailsObj.offerAmount = 0;
                 if (obj.offerAmount)
@@ -232,21 +236,18 @@ function getTotalSettlements(newMerchantId, fromDate, toDate, callback) {
         sumObj.merchantId = result[0].merchantId;
         sumObj.merchantName = result[0].merchant.name;
 
-        if (result[0].settlementId) {
-            sumObj.status = 'Settled'
-        }
-
-        if (!result[0].settlementId) {
-            sumObj.status = 'Open'
-        }
-
         result.forEach(function(obj) {
+            
             count++;
             var detailsObj = {};
             detailsObj.transactionId = obj.paymentId;
             detailsObj.merchantId = obj.merchantId;
             detailsObj.merchantName = obj.merchant.name;
             detailsObj.transactionAmount = obj.initialAmount;
+            detailsObj.unSettledAmount = 0.0;
+            detailsObj.settledAmount = 0.0;
+           
+            
             if (!obj.offerDiscountId)
                 detailsObj.offerAmount = 0;
             if (obj.offerAmount)
@@ -259,6 +260,13 @@ function getTotalSettlements(newMerchantId, fromDate, toDate, callback) {
                 detailsObj.promoOfferAmount = obj.promocodeAmount;
                 detailsObj.promoAmountByMerchant = obj.promocodeAmount - obj.batuaCommission;
             }
+            if(obj.settlementId != null){
+                detailsObj.settledAmount = obj.initialAmount;
+            }
+            if(obj.settlementId === null){
+                detailsObj.unSettledAmount = obj.initialAmount;
+            }
+            
             detailsObj.feeCharged = obj.reducedAmount;
             detailsObj.settlementAmount = obj.paidAmount - obj.merchantFee;
             detailsArray.push(detailsObj);
@@ -269,12 +277,14 @@ function getTotalSettlements(newMerchantId, fromDate, toDate, callback) {
                 sumObj.netCashbackByMerchant = math.sum(_.pluck(detailsArray, 'promoAmountByMerchant'));
                 sumObj.netFeeCharged = math.sum(_.pluck(detailsArray, 'feeCharged'));
                 sumObj.netSettlementAmount = math.sum(_.pluck(detailsArray, 'settlementAmount'));
+                sumObj.settledAmount = math.sum(_.pluck(detailsArray, 'settledAmount'));
+                sumObj.unSettledAmount = math.sum(_.pluck(detailsArray, 'unSettledAmount'));
                 callback(null, sumObj);
             }
         });
-    }).catch(function(exception) {
+    })/*.catch(function(exception) {
         callback(exception);
-    });
+    })*/;
 }
 
 function includeModels() {
