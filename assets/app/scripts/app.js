@@ -235,15 +235,19 @@
         })
 
         .state('paymentSettlement', {
-            url: '/paymentSettlement?merchantId&merchantName',
+            url: '/paymentSettlement',
             templateUrl: 'app/views/reports/add_settlement_report.html',
-            controller: 'paymentController',
-            controllerAs: 'vm',
-            resolve: {
-                merchantList: ['merchantService', function(merchantService) {
-                    return merchantService.getAllActiveMerchants();
-                }]
-            }
+            controller: 'paymentDetailsController',
+            controllerAs: 'vm'
+
+        })
+
+        .state('settlementDetails', {
+            url: '/settlementDetails?merchantId&merchantName',
+            templateUrl: 'app/views/reports/settlement_details_report.html',
+            controller: 'paymentDetailsController',
+            controllerAs: 'vm'
+
         })
 
         .state('transactions', {

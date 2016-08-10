@@ -72,7 +72,6 @@
                                         <th style="width: 119px;"> Cashback By Merchant(Rs) </th>
                                         <th style="width: 220px;"> Fee Charged(Rs) </th>
                                         <th style="width: 220px;"> Settlement Amount(Rs) </th>
-                                        <!-- <th style="width: 220px;"> Status </th> -->
                                         <th style="width: 120px; text-align:center;"> Action </th>
                                     </tr>
                                 </thead>
@@ -86,12 +85,9 @@
                                         <td>{{reportData.netCashbackByMerchant}}</td>
                                         <td>{{reportData.netFeeCharged}}</td>
                                         <td>{{reportData.netSettlementAmount}}</td>
-                                        <td><span class="label label-sm label-success center">{{reportData.status}}</span></td>
                                         <td>
                                             <a type="button" class="btn default" ui-sref="paymentDetails({merchantId:reportData.merchantId, merchantName:reportData.merchantName})" style="margin-bottom:10%;">Show Detail</a>
-                                            <a type="submit" class="btn button-color" ui-sref="paymentSettlement({merchantId:reportData.merchantId, merchantName:reportData.merchantName})">Add Settlement</a>
                                         </td>
-                                        <!-- <td><a type="submit" class="btn button-color" ui-sref="paymentSettlement">Add Settlement</a> </td> -->
                                     </tr>
                                 </tbody>
                             </table>
