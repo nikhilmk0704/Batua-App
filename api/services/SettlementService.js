@@ -284,7 +284,6 @@ function getTotalSettlements(newMerchantId, fromDate, toDate, callback) {
             detailsObj.settlementAmount = obj.paidAmount - obj.merchantFee;
             detailsArray.push(detailsObj);
             if (count == result.length) {
-                console.log('everything fine');
                 sumObj.netTransactionAmount = math.sum(_.pluck(detailsArray, 'transactionAmount'));
                 sumObj.netOfferAmount = math.sum(_.pluck(detailsArray, 'offerAmount'));
                 sumObj.netPromoOfferAmount = math.sum(_.pluck(detailsArray, 'promoOfferAmount'));
