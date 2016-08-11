@@ -96,7 +96,6 @@ class SettlementService {
         var toDate = params.toDate;
         var isValidFromDate = (fromDate.length > 2);
         var isValidToDate = (toDate.length > 2);
-
         if ((isValidFromDate && !isValidToDate) || (!isValidFromDate && isValidToDate))
             return callback("Select From Date and To Date both or none");
 
@@ -117,6 +116,7 @@ class SettlementService {
                 if (!data.length)
                     return callback("No Settlements");
                 data.forEach(function(merchantObj) {
+                    console.log(merchantObj.merchantId);
                     var newMerchantId = merchantObj.merchantId;
                     getTotalSettlements(newMerchantId, fromDate, toDate, function(err, result) {
                         count++;
@@ -209,6 +209,7 @@ class SettlementService {
 module.exports = SettlementService;
 
 function getTotalSettlements(newMerchantId, fromDate, toDate, callback) {
+    console.log(newMerchantId);
     var isValidFromDate = (fromDate.length > 2);
     var isValidToDate = (toDate.length > 2);
     var whereObject = {};
@@ -227,7 +228,6 @@ function getTotalSettlements(newMerchantId, fromDate, toDate, callback) {
         whereObject.where.$and.createdAt = {};
         whereObject.where.$and.createdAt.$between = [fromDate, toDate];
     }
-
     var detailsArray = [];
     var sumObj = {};
 
@@ -244,14 +244,27 @@ function getTotalSettlements(newMerchantId, fromDate, toDate, callback) {
             detailsObj.merchantId = obj.merchantId;
             detailsObj.merchantName = obj.merchant.name;
             detailsObj.transactionAmount = obj.initialAmount;
+            
+            detailsObj.netTransactionAmount = 0.0;
+            detailsObj.netOfferAmount = 0.0;
+            detailsObj.netPromoOfferAmount = 0.0;
+            detailsObj.netCashbackByMerchant = 0.0;
+            detailsObj.netFeeCharged = 0.0;
+            detailsObj.netSettlementAmount = 0.0;
+            detailsObj.settledAmount = 0.0;
             detailsObj.unSettledAmount = 0.0;
             detailsObj.settledAmount = 0.0;
-           
             
-            if (!obj.offerDiscountId)
+            if (!obj.offerDiscountId){
                 detailsObj.offerAmount = 0;
-            if (obj.offerAmount)
-                detailsObj.offerAmount = obj.promocodeAmount;
+            }
+                
+            if (obj.offerAmount){
+                 detailsObj.offerAmount = obj.promocodeAmount;
+             }else{
+                 detailsObj.offerAmount = 0;
+             }
+               
             if (!obj.promocodeId) {
                 detailsObj.promoOfferAmount = 0;
                 detailsObj.promoAmountByMerchant = 0;
