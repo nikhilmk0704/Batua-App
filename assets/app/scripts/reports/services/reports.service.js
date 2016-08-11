@@ -39,7 +39,8 @@
                     name: data.name,
                     date: data.date,
                     referenceNumber: data.referenceNumber,
-                    description: data.description
+                    description: data.description,
+                    paymentId: data.paymentId
                 }
             }).then(function(response) {
                 callback(response);

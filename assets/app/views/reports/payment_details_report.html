@@ -48,9 +48,9 @@
                                         <td>{{paymentDetail.feeCharged}}</td>
                                         <td>{{paymentDetail.amountCreditedToBatua}}</td>
                                         <td>{{paymentDetail.settlementAmount}}</td>
-                                        <td><span class="label label-sm label-success center">{{(paymentDetail.settlement != 'null') ? 'Settled' : 'Pending'}}</span></td>
-                                        <td><a type="button" class="btn button-color" ui-sref="paymentSettlement" ng-if="paymentDetail.settlement == null">Add Settlement</a>
-                                            <a type="button" class="btn button-color" ui-sref="paymentSettlement({merchantId:paymentDetail.merchantId, merchantName:paymentDetail.merchantName})" ng-if="paymentDetail.settlement != null">Settlement Details</a>
+                                        <td><span class="label label-sm label-success center">{{((paymentDetail.settlement != null) ? 'Settled' : 'Pending')}}</span></td>
+                                        <td><a type="button" class="btn button-color" ui-sref="paymentSettlement({merchantId:vm.merchantId, merchantName:vm.merchantName, paymentId: paymentDetail.id})" ng-if="paymentDetail.settlement == null">Add Settlement</a>
+                                            <a type="button" class="btn button-color" ui-sref="settlementDetails({merchantId:vm.merchantId, merchantName:vm.merchantName, paymentId: paymentDetail.id})" ng-if="paymentDetail.settlement != null">Settlement Details</a>
                                         </td>
                                     </tr>
                                 </tbody>

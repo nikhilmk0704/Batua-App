@@ -1,4 +1,4 @@
-angular.module('app').controller('paymentDetailsController', ['$scope', '$state', '$stateParams', 'reportsService', 'toastr', function($scope, $state, $stateParams, reportsService, toastr) {
+angular.module('app').controller('settlementDetailsController', ['$scope', '$state', '$stateParams', 'reportsService', 'toastr', function($scope, $state, $stateParams, reportsService, toastr) {
 
     var vm = this;
 
@@ -9,7 +9,10 @@ angular.module('app').controller('paymentDetailsController', ['$scope', '$state'
     reportsService.getPaymentDetailsAgainstMerchant(vm.merchantId, function(response) {
         if (response.status === 200) {
             vm.paymentDetails = response.data;
-            vm.settlementDetails.name = vm.merchantName;
+            vm.settlementData = _.filter(vm.paymentDetails, function(item) {
+                return (item.id == vm.paymentId);
+            });
+            vm.settlementDetails = vm.settlementData[0].settlement;
             return;
         }
         if (response.status === 400) {
@@ -26,38 +29,6 @@ angular.module('app').controller('paymentDetailsController', ['$scope', '$state'
         }
         return toastr.error(response.data);
     });
-
-    /*START of Add Settlement*/
-
-    vm.addSettlement = function(data) {
-
-        var settlementDetails = angular.copy(data);
-        settlementDetails.merchantId = vm.merchantId;
-        settlementDetails.paymentId = vm.paymentId;
-
-        reportsService.addSettlement(settlementDetails, function(response) {
-            if (response.status === 201) {
-                $state.go('payments');
-                return toastr.success('Settlement has been created successfully.');
-            }
-            if (response.status === 400) {
-                return toastr.error(response.data.errors[0].message);
-            }
-            if (response.status === 404) {
-                return toastr.error("No Data Found.");
-            }
-            if (response.status === 502) {
-                return toastr.error("Database Connection Error.");
-            }
-            if (response.status === 500) {
-                return toastr.error("Server Issue.");
-            }
-            return toastr.error(response.data);
-        });
-
-    }
-
-    /*END of Add Settlement*/
 
     /* START ui-bootstrap datepicker */
 
