@@ -69,38 +69,6 @@ angular.module('app').controller('paymentController', ['$scope', '$state', '$sta
             alasql('SELECT * INTO XLSX("download.xlsx",{headers:true}) FROM ?', [vm.filteredData]);
         }
 
-        /*START of Add Settlement*/
-
-        vm.settlementDetails = {};
-        vm.settlementDetails.merchantId = $stateParams.merchantId;
-        vm.settlementDetails.name = $stateParams.merchantName;
-
-        vm.addSettlement = function(settlementDetails) {
-
-            reportsService.addSettlement(settlementDetails, function(response) {
-                if (response.status === 201) {
-                    $state.go('payments');
-                    return toastr.success('Settlement has been created successfully.');
-                }
-                if (response.status === 400) {
-                    return toastr.error(response.data.errors[0].message);
-                }
-                if (response.status === 404) {
-                    return toastr.error("No Data Found.");
-                }
-                if (response.status === 502) {
-                    return toastr.error("Database Connection Error.");
-                }
-                if (response.status === 500) {
-                    return toastr.error("Server Issue.");
-                }
-                return toastr.error(response.data);
-            });
-
-        }
-
-        /*END of Add Settlement*/
-
         /* START ui-bootstrap datepicker */
 
         $scope.today = function() {

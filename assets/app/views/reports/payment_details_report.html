@@ -30,6 +30,8 @@
                                         <th style="width: 220px;"> Fee Charged(Rs) </th>
                                         <th style="width: 220px;"> Gross Settlement(Rs) </th>
                                         <th style="width: 120px;"> Settlement Amount </th>
+                                        <th style="width: 100px;"> Status </th>
+                                        <th style="width: 220px; text-align:center;"> Action </th>
                                     </tr>
                                 </thead>
                                 <tbody class="datatablecustom">
@@ -46,6 +48,10 @@
                                         <td>{{paymentDetail.feeCharged}}</td>
                                         <td>{{paymentDetail.amountCreditedToBatua}}</td>
                                         <td>{{paymentDetail.settlementAmount}}</td>
+                                        <td><span class="label label-sm label-success center">{{((paymentDetail.settlement != null) ? 'Settled' : 'Pending')}}</span></td>
+                                        <td><a type="button" class="btn button-color" ui-sref="paymentSettlement({merchantId:vm.merchantId, merchantName:vm.merchantName, paymentId: paymentDetail.id})" ng-if="paymentDetail.settlement == null">Add Settlement</a>
+                                            <a type="button" class="btn button-color" ui-sref="settlementDetails({merchantId:vm.merchantId, merchantName:vm.merchantName, paymentId: paymentDetail.id})" ng-if="paymentDetail.settlement != null">Settlement Details</a>
+                                        </td>
                                     </tr>
                                 </tbody>
                             </table>

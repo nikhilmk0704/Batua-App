@@ -105,7 +105,9 @@
                                     <td>{{reportData.transactionCancelledBy?reportData.transactionCancelledBy:''}}</td>
                                     <td>{{reportData.transactionCancelledOn?(reportData.transactionCancelledOn |date:shortDate):''}}</td>
                                     <td>{{reportData.cancellationDescription?reportData.cancellationDescription:''}}</td>
-                                    <td><a type="button" class="btn button-color" ui-sref="cancelTransaction({paymentId:reportData.id})">Cancel Transaction</a></td>
+                                    <td><span ng-if="!reportData.transactionCancelledOn"><a type="button" ng-if="reportData.transactionCancelledOn == null" class="btn button-color" ui-sref="cancelTransaction({paymentId:reportData.id})" >Cancel Transaction</a></span>
+                                        <span class="label label-sm label-success center" ng-if="reportData.transactionCancelledOn != null">Cancelled</span>
+                                    </td>
                                 </tr>
                             </tbody>
                         </table>
