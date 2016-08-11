@@ -1452,7 +1452,7 @@ function findPaymentDetail(paymentResponse, callback) {
         if (err) {
             return callback(err, null);
         }
-        var include = [{
+    var include = [{
             model: Merchants,
             as: 'merchant',
             required: false
