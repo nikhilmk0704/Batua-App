@@ -770,7 +770,28 @@ class PaymentService {
 
         var paymentsRepository = new PaymentsRepository();
 
-        paymentsRepository.updateAndFind(updateObject, whereObject, findObject, callback);
+        paymentsRepository.updateAndFind(updateObject, whereObject, findObject, function(err,result){
+            if(err){
+                callback(err,null);
+            }else{
+                var userPayObj = {};
+                userPayObj.userId = result.userId;
+                userPayObj.paymentmodeId = result.paymentModeId;
+                userPayObj.balance = result.paidAmount;
+                UsersPaymentmodes.find({ where: { userId: result.userId } }).then(function(data) {
+                    if (!data) {
+                        UsersPaymentmodes.create(userPayObj);
+                        callback(null, result);
+                    }
+                    if (data) {
+                        UsersPaymentmodes.update({ balance: result.paidAmount + data.balance }, { where: { userId: result.userId } });
+                        callback(null, result);
+                    }
+                });
+
+            }
+
+        });
     }
 
     generateOtp(params, callback) {
