@@ -29,6 +29,27 @@ module.exports = {
         var errorObject = {};
         errorObject.errors = array;
         return errorObject;
+    },
+
+    errorConstructionForYesBankWalletBalance: function(err) {
+        var errorObject = {};
+        errorObject.errors = [];
+        errorObject.errors.push({ message: err.code.toString() });
+        return errorObject;
+    },
+
+    errorConstructionForPayment: function(err) {
+        var errorObject = {};
+        errorObject.errors = [];
+        errorObject.errors.push({
+            message: err.message,
+            initialAmount: err.result.initialAmount,
+            merchant: err.result.merchant,
+            createdAt: err.result.createdAt,
+            transactionDetail: err.result.transactionDetail,
+            promocodeAmount: err.result.promocodeAmount
+        });
+        return errorObject;
     }
 
 }

@@ -3,6 +3,7 @@
 var PaymentsRepository = require('../repositories/PaymentsRepository.js');
 
 var TransactionDetailsRepository = require('../repositories/TransactionDetailsRepository.js');
+var MerchantRepository = require('../repositories/MerchantRepository.js');
 
 var request = require('request');
 var crypto = require('crypto');
@@ -12,6 +13,9 @@ var fs = require('fs');
 class PaymentService {
 
     save(params, callback) {
+
+        var smsService = new SmsService();
+        var customCreatedAt, merchantPhone, customerPhone;
 
         request({
             method: 'POST',
@@ -88,13 +92,40 @@ class PaymentService {
                                             sendObj.balance = detailResult.balance;
                                             sendSuccessPayment(sendObj, 'support@thebatua.com', detailResult.user.email, 'User');
                                             sendSuccessPayment(sendObj, 'support@thebatua.com', detailResult.merchant.email, 'Merchant');
+                                            customCreatedAt = moment(createdAt).format('hh:mm') + ' , ' + moment(createdAt).format('DD/MM/YY');
+                                            var merchantMessage = "You have received Rs." + sendObj.amount + " from " + savePaymentParam.userId + " at " + customCreatedAt + " .Your  Balance is Rs." + sendObj.balance;
+                                            var customerMessage = "You have paid Rs." + sendObj.amount + " to " + sendObj.merchantName + " at " + customCreatedAt;
+                                            getMerchantPhoneDetails(params.merchantId, function(err, result) {
+                                                if (err) {
+                                                    return callback(err);
+                                                }
+
+                                                if (result) {
+                                                    merchantPhone = result;
+                                                    getUserPhoneDetails(params.userId, function(err, result) {
+                                                        if (err) {
+                                                            return callback(err);
+                                                        }
+
+                                                        if (result) {
+                                                            customerPhone = result;
+                                                            var merchantObjForSms = {};
+                                                            var customerObjForSms = {};
+                                                            merchantObjForSms.phone = merchantPhone;
+                                                            customerObjForSms.phone = customerPhone;
+                                                            merchantObjForSms.message = merchantMessage;
+                                                            customerObjForSms.message = customerMessage;
+                                                            smsService.sendForTransaction(merchantObjForSms, function(err, result) {});
+                                                            smsService.sendForTransaction(customerObjForSms, function(err, result) {});
+                                                        }
+                                                    });
+                                                }
+                                            });
                                             return callback(null, detailResult);
                                         });
 
                                     });
                                 });
-
-
                             } else if (params.offer) {
                                 offerOperation(params, merchantFee[0].fees, function(resultArray) {
                                     savePaymentParam.initialAmount = parseFloat(params.amount);
@@ -120,6 +151,35 @@ class PaymentService {
                                             sendObj.balance = detailResult.balance;
                                             sendSuccessPayment(sendObj, 'support@thebatua.com', detailResult.user.email, 'User');
                                             sendSuccessPayment(sendObj, 'support@thebatua.com', detailResult.merchant.email, 'Merchant');
+                                            customCreatedAt = moment(createdAt).format('hh:mm') + ' , ' + moment(createdAt).format('DD/MM/YY');
+                                            var merchantMessage = "You have received Rs." + sendObj.amount + " from " + savePaymentParam.userId + " at " + customCreatedAt + " .Your  Balance is Rs." + sendObj.balance;
+                                            var customerMessage = "You have paid Rs." + sendObj.amount + " to " + sendObj.merchantName + " at " + customCreatedAt;
+                                            getMerchantPhoneDetails(params.merchantId, function(err, result) {
+                                                if (err) {
+                                                    return callback(err);
+                                                }
+
+                                                if (result) {
+                                                    merchantPhone = result;
+                                                    getUserPhoneDetails(params.userId, function(err, result) {
+                                                        if (err) {
+                                                            return callback(err);
+                                                        }
+
+                                                        if (result) {
+                                                            customerPhone = result;
+                                                            var merchantObjForSms = {};
+                                                            var customerObjForSms = {};
+                                                            merchantObjForSms.phone = merchantPhone;
+                                                            customerObjForSms.phone = customerPhone;
+                                                            merchantObjForSms.message = merchantMessage;
+                                                            customerObjForSms.message = customerMessage;
+                                                            smsService.sendForTransaction(merchantObjForSms, function(err, result) {});
+                                                            smsService.sendForTransaction(customerObjForSms, function(err, result) {});
+                                                        }
+                                                    });
+                                                }
+                                            });
                                             return callback(null, detailResult);
                                         });
 
@@ -151,6 +211,35 @@ class PaymentService {
                                         sendObj.balance = detailResult.balance;
                                         sendSuccessPayment(sendObj, 'support@thebatua.com', detailResult.user.email, 'User');
                                         sendSuccessPayment(sendObj, 'support@thebatua.com', detailResult.merchant.email, 'Merchant');
+                                        customCreatedAt = moment(createdAt).format('hh:mm') + ' , ' + moment(createdAt).format('DD/MM/YY');
+                                        var merchantMessage = "You have received Rs." + sendObj.amount + " from " + savePaymentParam.userId + " at " + customCreatedAt + " .Your  Balance is Rs." + sendObj.balance;
+                                        var customerMessage = "You have paid Rs." + sendObj.amount + " to " + sendObj.merchantName + " at " + customCreatedAt;
+                                        getMerchantPhoneDetails(params.merchantId, function(err, result) {
+                                            if (err) {
+                                                return callback(err);
+                                            }
+
+                                            if (result) {
+                                                merchantPhone = result;
+                                                getUserPhoneDetails(params.userId, function(err, result) {
+                                                    if (err) {
+                                                        return callback(err);
+                                                    }
+
+                                                    if (result) {
+                                                        customerPhone = result;
+                                                        var merchantObjForSms = {};
+                                                        var customerObjForSms = {};
+                                                        merchantObjForSms.phone = merchantPhone;
+                                                        customerObjForSms.phone = customerPhone;
+                                                        merchantObjForSms.message = merchantMessage;
+                                                        customerObjForSms.message = customerMessage;
+                                                        smsService.sendForTransaction(merchantObjForSms, function(err, result) {});
+                                                        smsService.sendForTransaction(customerObjForSms, function(err, result) {});
+                                                    }
+                                                });
+                                            }
+                                        });
                                         return callback(null, detailResult);
                                     });
                                 });
@@ -255,6 +344,9 @@ class PaymentService {
 
     batuaWalletPayment(params, callback) {
 
+        var smsService = new SmsService();
+        var customCreatedAt, merchantPhone, customerPhone;
+
         checkWallet(params.userId, params.amount, function(err, walletData) {
 
             if (err)
@@ -325,6 +417,35 @@ class PaymentService {
                                             sendObj.balance = resultObj.balance;
                                             sendSuccessPayment(sendObj, 'support@thebatua.com', detailResult.user.email, 'User');
                                             sendSuccessPayment(sendObj, 'support@thebatua.com', detailResult.merchant.email, 'Merchant');
+                                            customCreatedAt = moment(createdAt).format('hh:mm') + ' , ' + moment(createdAt).format('DD/MM/YY');
+                                            var merchantMessage = "You have received Rs." + sendObj.amount + " from " + savePaymentParam.userId + " at " + customCreatedAt + " .Your  Balance is Rs." + sendObj.balance;
+                                            var customerMessage = "You have paid Rs." + sendObj.amount + " to " + sendObj.merchantName + " at " + customCreatedAt;
+                                            getMerchantPhoneDetails(params.merchantId, function(err, result) {
+                                                if (err) {
+                                                    return callback(err);
+                                                }
+
+                                                if (result) {
+                                                    merchantPhone = result;
+                                                    getUserPhoneDetails(params.userId, function(err, result) {
+                                                        if (err) {
+                                                            return callback(err);
+                                                        }
+
+                                                        if (result) {
+                                                            customerPhone = result;
+                                                            var merchantObjForSms = {};
+                                                            var customerObjForSms = {};
+                                                            merchantObjForSms.phone = merchantPhone;
+                                                            customerObjForSms.phone = customerPhone;
+                                                            merchantObjForSms.message = merchantMessage;
+                                                            customerObjForSms.message = customerMessage;
+                                                            smsService.sendForTransaction(merchantObjForSms, function(err, result) {});
+                                                            smsService.sendForTransaction(customerObjForSms, function(err, result) {});
+                                                        }
+                                                    });
+                                                }
+                                            });
                                             return callback(null, resultObj);
                                         });
                                     });
@@ -361,6 +482,35 @@ class PaymentService {
                                             sendObj.balance = resultObj.balance;
                                             sendSuccessPayment(sendObj, 'support@thebatua.com', detailResult.user.email, 'User');
                                             sendSuccessPayment(sendObj, 'support@thebatua.com', detailResult.merchant.email, 'Merchant');
+                                            customCreatedAt = moment(createdAt).format('hh:mm') + ' , ' + moment(createdAt).format('DD/MM/YY');
+                                            var merchantMessage = "You have received Rs." + sendObj.amount + " from " + savePaymentParam.userId + " at " + customCreatedAt + " .Your  Balance is Rs." + sendObj.balance;
+                                            var customerMessage = "You have paid Rs." + sendObj.amount + " to " + sendObj.merchantName + " at " + customCreatedAt;
+                                            getMerchantPhoneDetails(params.merchantId, function(err, result) {
+                                                if (err) {
+                                                    return callback(err);
+                                                }
+
+                                                if (result) {
+                                                    merchantPhone = result;
+                                                    getUserPhoneDetails(params.userId, function(err, result) {
+                                                        if (err) {
+                                                            return callback(err);
+                                                        }
+
+                                                        if (result) {
+                                                            customerPhone = result;
+                                                            var merchantObjForSms = {};
+                                                            var customerObjForSms = {};
+                                                            merchantObjForSms.phone = merchantPhone;
+                                                            customerObjForSms.phone = customerPhone;
+                                                            merchantObjForSms.message = merchantMessage;
+                                                            customerObjForSms.message = customerMessage;
+                                                            smsService.sendForTransaction(merchantObjForSms, function(err, result) {});
+                                                            smsService.sendForTransaction(customerObjForSms, function(err, result) {});
+                                                        }
+                                                    });
+                                                }
+                                            });
                                             return callback(null, resultObj);
                                         });
                                     });
@@ -396,6 +546,35 @@ class PaymentService {
                                         sendObj.balance = resultObj.balance;
                                         sendSuccessPayment(sendObj, 'support@thebatua.com', detailResult.user.email, 'User');
                                         sendSuccessPayment(sendObj, 'support@thebatua.com', detailResult.merchant.email, 'Merchant');
+                                        customCreatedAt = moment(createdAt).format('hh:mm') + ' , ' + moment(createdAt).format('DD/MM/YY');
+                                        var merchantMessage = "You have received Rs." + sendObj.amount + " from " + savePaymentParam.userId + " at " + customCreatedAt + " .Your  Balance is Rs." + sendObj.balance;
+                                        var customerMessage = "You have paid Rs." + sendObj.amount + " to " + sendObj.merchantName + " at " + customCreatedAt;
+                                        getMerchantPhoneDetails(params.merchantId, function(err, result) {
+                                            if (err) {
+                                                return callback(err);
+                                            }
+
+                                            if (result) {
+                                                merchantPhone = result;
+                                                getUserPhoneDetails(params.userId, function(err, result) {
+                                                    if (err) {
+                                                        return callback(err);
+                                                    }
+
+                                                    if (result) {
+                                                        customerPhone = result;
+                                                        var merchantObjForSms = {};
+                                                        var customerObjForSms = {};
+                                                        merchantObjForSms.phone = merchantPhone;
+                                                        customerObjForSms.phone = customerPhone;
+                                                        merchantObjForSms.message = merchantMessage;
+                                                        customerObjForSms.message = customerMessage;
+                                                        smsService.sendForTransaction(merchantObjForSms, function(err, result) {});
+                                                        smsService.sendForTransaction(customerObjForSms, function(err, result) {});
+                                                    }
+                                                });
+                                            }
+                                        });
                                         return callback(null, resultObj);
                                     });
                                 });
@@ -701,6 +880,9 @@ class PaymentService {
 
     makeYesBankWalletPayment(params, callback) {
 
+        var smsService = new SmsService();
+        var customCreatedAt, merchantPhone, customerPhone;
+
         generateOrderNo(function(sequenceNumber) {
             var transactionDetailParam = {};
             transactionDetailParam.orderNumber = sequenceNumber;
@@ -762,6 +944,35 @@ class PaymentService {
                                     sendObj.balance = detailResult.balance;
                                     sendSuccessPayment(sendObj, 'support@thebatua.com', detailResult.user.email, 'User');
                                     sendSuccessPayment(sendObj, 'support@thebatua.com', detailResult.merchant.email, 'Merchant');
+                                    customCreatedAt = moment(createdAt).format('hh:mm') + ' , ' + moment(createdAt).format('DD/MM/YY');
+                                    var merchantMessage = "You have received Rs." + sendObj.amount + " from " + savePaymentParam.userId + " at " + customCreatedAt + " .Your  Balance is Rs." + sendObj.balance;
+                                    var customerMessage = "You have paid Rs." + sendObj.amount + " to " + sendObj.merchantName + " at " + customCreatedAt;
+                                    getMerchantPhoneDetails(params.merchantId, function(err, result) {
+                                        if (err) {
+                                            return callback(err);
+                                        }
+
+                                        if (result) {
+                                            merchantPhone = result;
+                                            getUserPhoneDetails(params.userId, function(err, result) {
+                                                if (err) {
+                                                    return callback(err);
+                                                }
+
+                                                if (result) {
+                                                    customerPhone = result;
+                                                    var merchantObjForSms = {};
+                                                    var customerObjForSms = {};
+                                                    merchantObjForSms.phone = merchantPhone;
+                                                    customerObjForSms.phone = customerPhone;
+                                                    merchantObjForSms.message = merchantMessage;
+                                                    customerObjForSms.message = customerMessage;
+                                                    smsService.sendForTransaction(merchantObjForSms, function(err, result) {});
+                                                    smsService.sendForTransaction(customerObjForSms, function(err, result) {});
+                                                }
+                                            });
+                                        }
+                                    });
                                     return callback(null, detailResult);
                                 });
 
@@ -794,6 +1005,35 @@ class PaymentService {
                                     sendObj.balance = detailResult.balance;
                                     sendSuccessPayment(sendObj, 'support@thebatua.com', detailResult.user.email, 'User');
                                     sendSuccessPayment(sendObj, 'support@thebatua.com', detailResult.merchant.email, 'Merchant');
+                                    customCreatedAt = moment(createdAt).format('hh:mm') + ' , ' + moment(createdAt).format('DD/MM/YY');
+                                    var merchantMessage = "You have received Rs." + sendObj.amount + " from " + savePaymentParam.userId + " at " + customCreatedAt + " .Your  Balance is Rs." + sendObj.balance;
+                                    var customerMessage = "You have paid Rs." + sendObj.amount + " to " + sendObj.merchantName + " at " + customCreatedAt;
+                                    getMerchantPhoneDetails(params.merchantId, function(err, result) {
+                                        if (err) {
+                                            return callback(err);
+                                        }
+
+                                        if (result) {
+                                            merchantPhone = result;
+                                            getUserPhoneDetails(params.userId, function(err, result) {
+                                                if (err) {
+                                                    return callback(err);
+                                                }
+
+                                                if (result) {
+                                                    customerPhone = result;
+                                                    var merchantObjForSms = {};
+                                                    var customerObjForSms = {};
+                                                    merchantObjForSms.phone = merchantPhone;
+                                                    customerObjForSms.phone = customerPhone;
+                                                    merchantObjForSms.message = merchantMessage;
+                                                    customerObjForSms.message = customerMessage;
+                                                    smsService.sendForTransaction(merchantObjForSms, function(err, result) {});
+                                                    smsService.sendForTransaction(customerObjForSms, function(err, result) {});
+                                                }
+                                            });
+                                        }
+                                    });
                                     return callback(null, detailResult);
                                 });
 
@@ -825,6 +1065,35 @@ class PaymentService {
                                 sendObj.balance = detailResult.balance;
                                 sendSuccessPayment(sendObj, 'support@thebatua.com', detailResult.user.email, 'User');
                                 sendSuccessPayment(sendObj, 'support@thebatua.com', detailResult.merchant.email, 'Merchant');
+                                customCreatedAt = moment(createdAt).format('hh:mm') + ' , ' + moment(createdAt).format('DD/MM/YY');
+                                var merchantMessage = "You have received Rs." + sendObj.amount + " from " + savePaymentParam.userId + " at " + customCreatedAt + " .Your  Balance is Rs." + sendObj.balance;
+                                var customerMessage = "You have paid Rs." + sendObj.amount + " to " + sendObj.merchantName + " at " + customCreatedAt;
+                                getMerchantPhoneDetails(params.merchantId, function(err, result) {
+                                    if (err) {
+                                        return callback(err);
+                                    }
+
+                                    if (result) {
+                                        merchantPhone = result;
+                                        getUserPhoneDetails(params.userId, function(err, result) {
+                                            if (err) {
+                                                return callback(err);
+                                            }
+
+                                            if (result) {
+                                                customerPhone = result;
+                                                var merchantObjForSms = {};
+                                                var customerObjForSms = {};
+                                                merchantObjForSms.phone = merchantPhone;
+                                                customerObjForSms.phone = customerPhone;
+                                                merchantObjForSms.message = merchantMessage;
+                                                customerObjForSms.message = customerMessage;
+                                                smsService.sendForTransaction(merchantObjForSms, function(err, result) {});
+                                                smsService.sendForTransaction(customerObjForSms, function(err, result) {});
+                                            }
+                                        });
+                                    }
+                                });
                                 return callback(null, detailResult);
                             });
                         });
@@ -834,9 +1103,253 @@ class PaymentService {
         });
     }
 
+    errorConstructionForPayment(params, callback) {
+
+        var self = this;
+        self = params;
+
+        async.waterfall([
+            async.apply(getMerchantDetails, self),
+            getTransactionDetails,
+            getCreatedAt,
+            getIntialAmount,
+            getPromoCodeAmount
+        ], function(error, result) {
+            if (error || result) {
+                return callback(null, self);
+            }
+        });
+    }
+
 }
 
 module.exports = PaymentService;
+
+function getMerchantDetails(self, callback) {
+
+    if (self.merchantId) {
+        var merchantRepository = new MerchantRepository();
+        var merchantId = self.merchantId;
+
+        var query = "SELECT *,NOW() as currentDate FROM Merchants where id= :merchantId";
+
+        var queryType = sequelize.QueryTypes.SELECT;
+
+        var replacements = {
+            merchantId: merchantId
+        };
+
+        merchantRepository.exec(query, replacements, queryType, function(err, result) {
+            if (err) {
+                self.merchant = {};
+                self.merchant.id = null;
+                self.merchant.name = null;
+                self.merchant.address = null;
+                self.merchant.fees = null;
+                return callback(null, self);
+            }
+
+            if (result.length > 0) {
+                self.merchant = {};
+                self.merchant.id = result[0].id;
+                self.merchant.name = result[0].name;
+                self.merchant.address = result[0].address;
+                self.merchant.fees = result[0].fees
+                return callback(null, self);
+            }
+
+            if (result.length == 0) {
+                self.merchant = {};
+                self.merchant.id = null;
+                self.merchant.name = null;
+                self.merchant.address = null;
+                self.merchant.fees = null;
+                return callback(null, self);
+            }
+        });
+    }
+
+    if (!self.merchantId) {
+        self.merchant = {};
+        self.merchant.id = null;
+        self.merchant.name = null;
+        self.merchant.address = null;
+        self.merchant.fees = null
+    }
+}
+
+function getTransactionDetails(self, callback) {
+    self.transactionDetail = {};
+    self.transactionDetail.orderNumber = null;
+    self.transactionDetail.transactionId = null;
+    return callback(null, self);
+}
+
+function getIntialAmount(self, callback) {
+    self.initialAmount = self.amount;
+    return callback(null, self);
+}
+
+function getCreatedAt(self, callback) {
+    var merchantRepository = new MerchantRepository();
+
+    var query = "SELECT NOW() as currentDate FROM dual";
+
+    var queryType = sequelize.QueryTypes.SELECT;
+
+    var replacements = {};
+
+    merchantRepository.exec(query, replacements, queryType, function(err, result) {
+        if (err) {
+            self.createdAt = null;
+            return callback(null, self);
+        }
+
+        if (result.length > 0) {
+            self.createdAt = result[0].currentDate;
+            return callback(null, self);
+        }
+
+        if (result.length == 0) {
+            self.createdAt = null;
+            return callback(null, self);
+        }
+
+    });
+}
+
+function getPromoCodeAmount(self, callback) {
+    var savePaymentParam = {};
+
+    if (self.promocode) {
+
+        promoCodeComputation(self, self.merchant.fees, function(resultArray) {
+            savePaymentParam.initialAmount = parseFloat(self.amount);
+            savePaymentParam.reducedAmount = (parseFloat(resultArray.reducedAmount) + parseFloat(resultArray.deductionAmountFromAmountAfterPromocodeApply) + parseFloat(resultArray.fee));
+            savePaymentParam.paidAmount = parseFloat(resultArray.paidAmount);
+            savePaymentParam.promocodeAmount = parseFloat(resultArray.reducedAmount);
+            savePaymentParam.batuaCommission = parseFloat(resultArray.deductionAmountFromAmountAfterPromocodeApply);
+            savePaymentParam.merchantFee = parseFloat(resultArray.fee);
+        });
+
+        self.promocodeAmount = savePaymentParam.promocodeAmount;
+        return callback(null, self);
+    }
+
+    if (self.offer) {
+        offerCodeComputation(self, self.merchant.fees, function(resultArray) {
+            savePaymentParam.initialAmount = parseFloat(self.amount);
+            savePaymentParam.reducedAmount = (parseFloat(resultArray.reducedAmount) + parseFloat(resultArray.fee));
+            savePaymentParam.paidAmount = parseFloat(resultArray.paidAmount);
+            savePaymentParam.promocodeAmount = parseFloat(resultArray.reducedAmount);
+            savePaymentParam.batuaCommission = parseFloat(resultArray.deductionAmountFromAmountAfterPromocodeApply);
+            savePaymentParam.merchantFee = parseFloat(resultArray.fee);
+
+        });
+
+        self.promocodeAmount = savePaymentParam.promocodeAmount;
+        return callback(null, self);
+    }
+
+    if (!self.promocode && !self.offer) {
+        self.promocodeAmount = 0;
+        return callback(null, self);
+    }
+}
+
+function offerCodeComputation(params, fee, callback) {
+
+    var discountPercentage = params.offer.discountPercentage;
+    var amount = params.amount;
+    var maximumAmountLimit = params.offer.maximumAmountLimit;
+
+    /*------------ calculate discount amount -----------*/
+
+    var reducedAmount = amount * (discountPercentage / 100);
+
+    /*------------ /calculate discount amount -----------*/
+
+    /*------------ Check discount amount greater than maximumAmountLimit -----------*/
+
+    if (reducedAmount > maximumAmountLimit) {
+        reducedAmount = maximumAmountLimit;
+    }
+    /*------------ /Check discount amount greater than maximumAmountLimit -----------*/
+
+    /*------------ get amount after offer applied  -----------*/
+
+    var amountAfterOfferApply = amount - reducedAmount;
+
+    /*------------ /get amount after offer applied  -----------*/
+
+
+    /*------------ Paid Amount To Merchants -----------*/
+    var deductionFee = amountAfterOfferApply * (fee / 100);
+    var paidAmount = amountAfterOfferApply - deductionFee;
+
+    var returnObject = {};
+
+    returnObject.reducedAmount = reducedAmount;
+    returnObject.amountAfterOfferApply = amountAfterOfferApply;
+    returnObject.paidAmount = paidAmount;
+    returnObject.fee = deductionFee;
+    returnObject.deductionAmountFromAmountAfterPromocodeApply = 0;
+
+    return callback(returnObject);
+}
+
+function promoCodeComputation(params, fee, callback) {
+    var discountPercentage = params.promocode.discountPercentage;
+    var amount = params.amount;
+    var maximumAmountLimit = params.promocode.maximumAmountLimit;
+
+    /*------------ calculate discount amount -----------*/
+
+    var reducedAmount = amount * (discountPercentage / 100);
+
+    /*------------ /calculate discount amount -----------*/
+
+    /*------------ Check discount amount greater than maximumAmountLimit -----------*/
+
+    if (reducedAmount > maximumAmountLimit) {
+        reducedAmount = maximumAmountLimit;
+    }
+
+    /*------------ /Check discount amount greater than maximumAmountLimit -----------*/
+
+    /*------------ get amount after promocode applied  -----------*/
+
+    var amountAfterPromocodeApply = amount - reducedAmount;
+
+    /*------------ /get amount after promocode applied  -----------*/
+
+
+    /*------------ % cost bourned by merchnats -----------*/
+
+    var merchantBournedPercentage = params.promocode.percentageCostBourneByMerchant;
+
+    var deductionAmountFromAmountAfterPromocodeApply = reducedAmount * (merchantBournedPercentage / 100);
+
+    /*------------ /% cost bourned by merchnats -----------*/
+
+    var payAmountAfterBurned = amount - deductionAmountFromAmountAfterPromocodeApply;
+
+    /*------------ Paid Amount To Merchants -----------*/
+    var deductionFee = payAmountAfterBurned * (fee / 100);
+    var paidAmount = payAmountAfterBurned - deductionFee;
+
+    var returnObject = {};
+
+    returnObject.reducedAmount = reducedAmount;
+    returnObject.amountAfterPromocodeApply = amountAfterPromocodeApply;
+    returnObject.deductionAmountFromAmountAfterPromocodeApply = deductionAmountFromAmountAfterPromocodeApply;
+    returnObject.paidAmount = paidAmount;
+    returnObject.fee = deductionFee;
+
+    return callback(returnObject);
+}
+
+
 
 function getWalletBalance(userId, callback) {
 
@@ -939,7 +1452,7 @@ function findPaymentDetail(paymentResponse, callback) {
         if (err) {
             return callback(err, null);
         }
-        var include = [{
+    var include = [{
             model: Merchants,
             as: 'merchant',
             required: false
@@ -1028,6 +1541,22 @@ function generateOrderNo(callback) {
 }
 
 function getMerchantFee(merchantId, callback) {
+
+    // var query = "SELECT `fees` FROM `Merchants` WHERE 1 AND `id` = :merchantId";
+    // var replacements = {
+    //     merchantId: merchantId
+    // };
+    // var queryType = sequelize.QueryTypes.SELECT;
+
+    // merchantRepository.exec(query, replacements, queryType, function(err, result) {
+    //     if (err || result.length == 0 || result.length < 0) {
+    //         return callback(null, "The given merchant does not exist");
+    //     }
+
+    //     if (result.length > 0) {
+    //         return callback(result);
+    //     }
+    // });
 
     var rawQueryString = "SELECT `fees` FROM `Merchants` WHERE 1 AND `id` = :merchantId";
     sequelize.query(rawQueryString, {
@@ -1190,12 +1719,12 @@ function includeModels() {
     return [{
         model: Merchants,
         as: 'merchant',
-        attributes: ['id', 'name', 'shortcode'],
+        attributes: ['id', 'name', 'shortcode', 'phone'],
         required: false
     }, {
         model: Users,
         as: 'user',
-        attributes: ['id', 'name'],
+        attributes: ['id', 'name', 'phone'],
         required: false
     }, {
         model: Promocodes,
@@ -1238,6 +1767,7 @@ function getBalanceThirdParty(params, callback) {
             "auth_token": authToken
         }
     }, function(error, response, body) {
+        body.yesPhone = phone;
         if (error)
             return callback(error, null);
         if (body.code)
@@ -1323,5 +1853,53 @@ function sendSuccessPayment(sendObj, emailFrom, emailTo, emailToUserType) {
             console.log(err);
         else
             console.log(result);
+    });
+}
+
+function getMerchantPhoneDetails(merchantId, callback) {
+
+    var merchantRepository = new MerchantRepository();
+
+    var query = "SELECT phone FROM Merchants where id= :merchantId";
+
+    var queryType = sequelize.QueryTypes.SELECT;
+
+    var replacements = {
+        merchantId: merchantId
+    };
+
+    merchantRepository.exec(query, replacements, queryType, function(err, result) {
+        if (err) {
+            return callback(err);
+        }
+
+        if (result.length > 0) {
+            return callback(null, result[0].phone);
+        }
+
+    });
+}
+
+function getUserPhoneDetails(userId, callback) {
+
+    var merchantRepository = new MerchantRepository();
+
+    var query = "SELECT phone FROM Users where id= :userId";
+
+    var queryType = sequelize.QueryTypes.SELECT;
+
+    var replacements = {
+        userId: userId
+    };
+
+    merchantRepository.exec(query, replacements, queryType, function(err, result) {
+        if (err) {
+            return callback(err);
+        }
+
+        if (result.length > 0) {
+            return callback(null, result[0].phone);
+        }
+
     });
 }

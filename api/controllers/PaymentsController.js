@@ -14,22 +14,50 @@ module.exports = {
     doPayment: function(req, res) {
 
         var params = req.body;
+        var err1 = {};
 
         var paymentService = new PaymentService();
 
         paymentService.save(params, function(err, result) {
 
+            // if (err) {
+
+            //     if (err.errorCode === 406) {
+            //         return res.notAcceptable(error.send(err.message));
+
+            //     } else {
+            //         return res.badRequest(error.send(err));
+            //     }
+            // }
             if (err) {
-
-                if (err.errorCode === 406) {
-                    return res.notAcceptable(error.send(err.message));
-
-                } else {
-                    return res.badRequest(error.send(err));
+                if (typeof err == "object" && err.name) {
+                    err1.message = err.name
                 }
 
+                if (typeof err == "string") {
+                    err1.message = err;
+                }
+
+                if (typeof err == "object" && err.message) {
+                    err1.message = err.message;
+                }
+
+                paymentService.errorConstructionForPayment(params, function(error1, result1) {
+                    if (error1) {
+                        return res.badRequest(error.send(error1));
+                    }
+
+                    if (result1) {
+                        err1.result = result1;
+                        return res.json(sails.config.globals.paymentRazorPayErrorCode, error.errorConstructionForPayment(err1));
+                    }
+                });
             }
-            return res.json(200, result);
+
+            if (result) {
+                return res.json(200, result);
+            }
+
         });
     },
 
@@ -51,14 +79,35 @@ module.exports = {
     batuaWalletPayment: function(req, res) {
 
         var params = req.body;
-
         var paymentService = new PaymentService();
+        var err1 = {};
 
         paymentService.batuaWalletPayment(params, function(err, result) {
 
-            if (err)
-                return res.badRequest(error.send(err));
-            return res.json(200, result);
+            if (err) {
+                if (typeof err == "object" && err.name) {
+                    err1.message = err.name
+                }
+
+                if (typeof err == "string") {
+                    err1.message = err;
+                }
+
+                paymentService.errorConstructionForPayment(params, function(error1, result1) {
+                    if (error1) {
+                        return res.badRequest(error.send(error1));
+                    }
+
+                    if (result1) {
+                        err1.result = result1;
+                        return res.json(sails.config.globals.paymentRazorPayErrorCode, error.errorConstructionForPayment(err1));
+                    }
+                });
+            }
+
+            if (result) {
+                return res.json(200, result);
+            }
 
         });
     },
@@ -168,7 +217,6 @@ module.exports = {
     yesBankExecuteTxn: function(req, res) {
 
         var params = req.body;
-
         var paymentService = new PaymentService();
 
         paymentService.executeTxnThirdParty(params, function(err, result) {
@@ -177,9 +225,7 @@ module.exports = {
                 return res.badRequest(error.send(err));
 
             return res.json(200, result);
-
         });
-
     },
 
     getYesWalletBalance: function(req, res) {
@@ -190,9 +236,15 @@ module.exports = {
 
         paymentService.getYesWalletBalance(params, function(err, result) {
 
-            if (err)
-                return res.badRequest(error.send(err));
+            if (err) {
+                if (err.code) {
+                    return res.json(sails.config.globals.unAuthorisedUserErrorCode, error.errorConstructionForYesBankWalletBalance(err));
+                }
 
+                if (!err.code) {
+                    return res.badRequest(error.send(err));
+                }
+            }
             return res.json(200, result);
 
         });
@@ -202,17 +254,35 @@ module.exports = {
     makeYesBankWalletPayment: function(req, res) {
 
         var params = req.body;
+        var err1 = {};
 
         var paymentService = new PaymentService();
 
         paymentService.makeYesBankWalletPayment(params, function(err, result) {
+            if (err) {
+                if (typeof err == "object" && err.name) {
+                    err1.message = err.name
+                }
 
-            if (err)
-                return res.badRequest(error.send(err));
+                if (typeof err == "string") {
+                    err1.message = err;
+                }
 
-            return res.json(200, result);
+                paymentService.errorConstructionForPayment(params, function(error1, result1) {
+                    if (error1) {
+                        return res.badRequest(error.send(error1));
+                    }
 
+                    if (result1) {
+                        err1.result = result1;
+                        return res.json(sails.config.globals.paymentRazorPayErrorCode, error.errorConstructionForPayment(err1));
+                    }
+                });
+            }
+
+            if (result) {
+                return res.json(200, result);
+            }
         });
-
     },
 };

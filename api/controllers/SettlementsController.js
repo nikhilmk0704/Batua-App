@@ -19,6 +19,7 @@ module.exports = {
         params.referenceNumber = req.body.referenceNumber;
         params.description = req.body.description;
         params.merchantId = req.body.merchantId;
+        params.paymentId = req.body.paymentId;
         //params.fromDate = req.body.fromDate;
         //params.toDate = req.body.toDate;
         //params.date = req.body.date;
