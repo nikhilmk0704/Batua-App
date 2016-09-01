@@ -92,7 +92,7 @@ class PaymentService {
                                             sendObj.balance = detailResult.balance;
                                             sendSuccessPayment(sendObj, 'support@thebatua.com', detailResult.user.email, 'User');
                                             sendSuccessPayment(sendObj, 'support@thebatua.com', detailResult.merchant.email, 'Merchant');
-                                            customCreatedAt = moment(createdAt).format('hh:mm') + ' , ' + moment(createdAt).format('DD/MM/YY');
+                                            customCreatedAt = moment(detailResult.createdAt).format('hh:mm') + ' , ' + moment(detailResult.createdAt).format('DD/MM/YY');
                                             var merchantMessage = "You have received Rs." + sendObj.amount + " from " + savePaymentParam.userId + " at " + customCreatedAt + " .Your  Balance is Rs." + sendObj.balance;
                                             var customerMessage = "You have paid Rs." + sendObj.amount + " to " + sendObj.merchantName + " at " + customCreatedAt;
                                             getMerchantPhoneDetails(params.merchantId, function(err, result) {
@@ -151,7 +151,7 @@ class PaymentService {
                                             sendObj.balance = detailResult.balance;
                                             sendSuccessPayment(sendObj, 'support@thebatua.com', detailResult.user.email, 'User');
                                             sendSuccessPayment(sendObj, 'support@thebatua.com', detailResult.merchant.email, 'Merchant');
-                                            customCreatedAt = moment(createdAt).format('hh:mm') + ' , ' + moment(createdAt).format('DD/MM/YY');
+                                            customCreatedAt = moment(detailResult.createdAt).format('hh:mm') + ' , ' + moment(detailResult.createdAt).format('DD/MM/YY');
                                             var merchantMessage = "You have received Rs." + sendObj.amount + " from " + savePaymentParam.userId + " at " + customCreatedAt + " .Your  Balance is Rs." + sendObj.balance;
                                             var customerMessage = "You have paid Rs." + sendObj.amount + " to " + sendObj.merchantName + " at " + customCreatedAt;
                                             getMerchantPhoneDetails(params.merchantId, function(err, result) {
@@ -211,7 +211,7 @@ class PaymentService {
                                         sendObj.balance = detailResult.balance;
                                         sendSuccessPayment(sendObj, 'support@thebatua.com', detailResult.user.email, 'User');
                                         sendSuccessPayment(sendObj, 'support@thebatua.com', detailResult.merchant.email, 'Merchant');
-                                        customCreatedAt = moment(createdAt).format('hh:mm') + ' , ' + moment(createdAt).format('DD/MM/YY');
+                                        customCreatedAt = moment(detailResult.createdAt).format('hh:mm') + ' , ' + moment(detailResult.createdAt).format('DD/MM/YY');
                                         var merchantMessage = "You have received Rs." + sendObj.amount + " from " + savePaymentParam.userId + " at " + customCreatedAt + " .Your  Balance is Rs." + sendObj.balance;
                                         var customerMessage = "You have paid Rs." + sendObj.amount + " to " + sendObj.merchantName + " at " + customCreatedAt;
                                         getMerchantPhoneDetails(params.merchantId, function(err, result) {
@@ -417,7 +417,7 @@ class PaymentService {
                                             sendObj.balance = resultObj.balance;
                                             sendSuccessPayment(sendObj, 'support@thebatua.com', detailResult.user.email, 'User');
                                             sendSuccessPayment(sendObj, 'support@thebatua.com', detailResult.merchant.email, 'Merchant');
-                                            customCreatedAt = moment(createdAt).format('hh:mm') + ' , ' + moment(createdAt).format('DD/MM/YY');
+                                            customCreatedAt = moment(detailResult.createdAt).format('hh:mm') + ' , ' + moment(detailResult.createdAt).format('DD/MM/YY');
                                             var merchantMessage = "You have received Rs." + sendObj.amount + " from " + savePaymentParam.userId + " at " + customCreatedAt + " .Your  Balance is Rs." + sendObj.balance;
                                             var customerMessage = "You have paid Rs." + sendObj.amount + " to " + sendObj.merchantName + " at " + customCreatedAt;
                                             getMerchantPhoneDetails(params.merchantId, function(err, result) {
@@ -482,7 +482,7 @@ class PaymentService {
                                             sendObj.balance = resultObj.balance;
                                             sendSuccessPayment(sendObj, 'support@thebatua.com', detailResult.user.email, 'User');
                                             sendSuccessPayment(sendObj, 'support@thebatua.com', detailResult.merchant.email, 'Merchant');
-                                            customCreatedAt = moment(createdAt).format('hh:mm') + ' , ' + moment(createdAt).format('DD/MM/YY');
+                                            customCreatedAt = moment(detailResult.createdAt).format('hh:mm') + ' , ' + moment(detailResult.createdAt).format('DD/MM/YY');
                                             var merchantMessage = "You have received Rs." + sendObj.amount + " from " + savePaymentParam.userId + " at " + customCreatedAt + " .Your  Balance is Rs." + sendObj.balance;
                                             var customerMessage = "You have paid Rs." + sendObj.amount + " to " + sendObj.merchantName + " at " + customCreatedAt;
                                             getMerchantPhoneDetails(params.merchantId, function(err, result) {
@@ -546,7 +546,7 @@ class PaymentService {
                                         sendObj.balance = resultObj.balance;
                                         sendSuccessPayment(sendObj, 'support@thebatua.com', detailResult.user.email, 'User');
                                         sendSuccessPayment(sendObj, 'support@thebatua.com', detailResult.merchant.email, 'Merchant');
-                                        customCreatedAt = moment(createdAt).format('hh:mm') + ' , ' + moment(createdAt).format('DD/MM/YY');
+                                        customCreatedAt = moment(detailResult.createdAt).format('hh:mm') + ' , ' + moment(detailResult.createdAt).format('DD/MM/YY');
                                         var merchantMessage = "You have received Rs." + sendObj.amount + " from " + savePaymentParam.userId + " at " + customCreatedAt + " .Your  Balance is Rs." + sendObj.balance;
                                         var customerMessage = "You have paid Rs." + sendObj.amount + " to " + sendObj.merchantName + " at " + customCreatedAt;
                                         getMerchantPhoneDetails(params.merchantId, function(err, result) {
@@ -965,7 +965,7 @@ class PaymentService {
                                     sendObj.balance = detailResult.balance;
                                     sendSuccessPayment(sendObj, 'support@thebatua.com', detailResult.user.email, 'User');
                                     sendSuccessPayment(sendObj, 'support@thebatua.com', detailResult.merchant.email, 'Merchant');
-                                    customCreatedAt = moment(createdAt).format('hh:mm') + ' , ' + moment(createdAt).format('DD/MM/YY');
+                                    customCreatedAt = moment(detailResult.createdAt).format('hh:mm') + ' , ' + moment(detailResult.createdAt).format('DD/MM/YY');
                                     var merchantMessage = "You have received Rs." + sendObj.amount + " from " + savePaymentParam.userId + " at " + customCreatedAt + " .Your  Balance is Rs." + sendObj.balance;
                                     var customerMessage = "You have paid Rs." + sendObj.amount + " to " + sendObj.merchantName + " at " + customCreatedAt;
                                     getMerchantPhoneDetails(params.merchantId, function(err, result) {
@@ -1026,7 +1026,7 @@ class PaymentService {
                                     sendObj.balance = detailResult.balance;
                                     sendSuccessPayment(sendObj, 'support@thebatua.com', detailResult.user.email, 'User');
                                     sendSuccessPayment(sendObj, 'support@thebatua.com', detailResult.merchant.email, 'Merchant');
-                                    customCreatedAt = moment(createdAt).format('hh:mm') + ' , ' + moment(createdAt).format('DD/MM/YY');
+                                    customCreatedAt = moment(detailResult.createdAt).format('hh:mm') + ' , ' + moment(detailResult.createdAt).format('DD/MM/YY');
                                     var merchantMessage = "You have received Rs." + sendObj.amount + " from " + savePaymentParam.userId + " at " + customCreatedAt + " .Your  Balance is Rs." + sendObj.balance;
                                     var customerMessage = "You have paid Rs." + sendObj.amount + " to " + sendObj.merchantName + " at " + customCreatedAt;
                                     getMerchantPhoneDetails(params.merchantId, function(err, result) {
@@ -1086,7 +1086,7 @@ class PaymentService {
                                 sendObj.balance = detailResult.balance;
                                 sendSuccessPayment(sendObj, 'support@thebatua.com', detailResult.user.email, 'User');
                                 sendSuccessPayment(sendObj, 'support@thebatua.com', detailResult.merchant.email, 'Merchant');
-                                customCreatedAt = moment(createdAt).format('hh:mm') + ' , ' + moment(createdAt).format('DD/MM/YY');
+                                customCreatedAt = moment(detailResult.createdAt).format('hh:mm') + ' , ' + moment(detailResult.createdAt).format('DD/MM/YY');
                                 var merchantMessage = "You have received Rs." + sendObj.amount + " from " + savePaymentParam.userId + " at " + customCreatedAt + " .Your  Balance is Rs." + sendObj.balance;
                                 var customerMessage = "You have paid Rs." + sendObj.amount + " to " + sendObj.merchantName + " at " + customCreatedAt;
                                 getMerchantPhoneDetails(params.merchantId, function(err, result) {
