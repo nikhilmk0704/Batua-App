@@ -80,12 +80,12 @@
                                     <tr class="gradeX odd" role="row" ng-repeat="reportData in vm.reportsData" style="text-align:center;">
                                         <td>{{$index + 1}}</td>
                                         <td>{{reportData.merchantName}}</td>
-                                        <td>{{reportData.netTransactionAmount}}</td>
-                                        <td>{{reportData.netOfferAmount}}</td>
-                                        <td>{{reportData.netPromoOfferAmount}}</td>
-                                        <td>{{reportData.netCashbackByMerchant}}</td>
-                                        <td>{{reportData.netFeeCharged}}</td>
-                                        <td>{{reportData.netSettlementAmount}}</td>
+                                        <td>{{reportData.netTransactionAmount | number:2}}</td>
+                                        <td>{{reportData.netOfferAmount | number:2}}</td>
+                                        <td>{{reportData.netPromoOfferAmount | number:2}}</td>
+                                        <td>{{reportData.netCashbackByMerchant | number:2}}</td>
+                                        <td>{{reportData.netFeeCharged | number:2}}</td>
+                                        <td>{{reportData.netSettlementAmount | number:2}}</td>
                                         <td><span class="label label-sm label-success center">{{reportData.status}}</span></td>
                                         <td>
                                             <a type="button" class="btn default" ui-sref="paymentDetails({merchantId:reportData.merchantId, merchantName:reportData.merchantName})" style="margin-bottom:10%;">Show Detail</a>
