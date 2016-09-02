@@ -193,7 +193,7 @@ class SettlementService {
                 detailsObj.feeCharged = obj.merchantFee;
                 //detailsObj.feeCharged = obj.deductionFee / obj.merchantFee;
                 detailsObj.amountCreditedToBatua = obj.paidAmount;
-                detailsObj.settlementAmount = obj.paidAmount - obj.merchantFee;
+                detailsObj.settlementAmount = obj.initialAmount - obj.merchantFee;
                 detailsArray.push(detailsObj);
                 if (result.length == count)
                     return callback(null, detailsArray);

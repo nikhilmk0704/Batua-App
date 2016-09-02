@@ -39,13 +39,13 @@
                                         <td>{{paymentDetail.orderNumber}}</td>
                                         <td>{{paymentDetail.transactionId}}</td>
                                         <td>{{paymentDetail.transactionDate |date:shortDate}}</td>
-                                        <td>{{paymentDetail.transactionAmount}}</td>
-                                        <td>{{paymentDetail.offerAmount}}</td>
-                                        <td>{{paymentDetail.promoOfferAmount}}</td>
-                                        <td>{{paymentDetail.promoAmountByMerchant}}</td>
-                                        <td>{{paymentDetail.feeCharged}}</td>
-                                        <td>{{paymentDetail.amountCreditedToBatua}}</td>
-                                        <td>{{paymentDetail.settlementAmount}}</td>
+                                        <td>{{paymentDetail.transactionAmount | number}}</td>
+                                        <td>{{paymentDetail.offerAmount | number}}</td>
+                                        <td>{{paymentDetail.promoOfferAmount | number}}</td>
+                                        <td>{{paymentDetail.promoAmountByMerchant | number}}</td>
+                                        <td>{{paymentDetail.feeCharged | number}}</td>
+                                        <td>{{paymentDetail.amountCreditedToBatua | number}}</td>
+                                        <td>{{paymentDetail.settlementAmount | number}}</td>
                                     </tr>
                                 </tbody>
                             </table>
