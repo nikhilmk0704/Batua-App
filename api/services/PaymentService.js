@@ -1843,9 +1843,9 @@ function sendSuccessPayment(sendObj, emailFrom, emailTo, emailToUserType) {
         mapObject.DebitCard = sendObj.type;
         mapObject.MerchantName = sendObj.merchantName;
         mapObject.transid = sendObj.transactionId;
-        mapObject.DateOfCredit = moment(sendObj.createdAt).tz("Asia/Kolkata");
-        mapObject.CreditAmount = sendObj.amount+" INR";
-        mapObject.AcountBalance = sendObj.amount+" INR";
+        mapObject.DateOfCredit = moment(sendObj.createdAt).utcOffset(330);
+        mapObject.CreditAmount = sendObj.amount;
+        mapObject.AcountBalance = sendObj.amount;
         var regExp = new RegExp(Object.keys(mapObject).join("|"), "gi");
         var htmlTemplate = template.replace(regExp, function(matched) {
             return mapObject[matched];
@@ -1860,9 +1860,9 @@ function sendSuccessPayment(sendObj, emailFrom, emailTo, emailToUserType) {
         mapObject.DebitCard = sendObj.type;
         mapObject.MerchantName = sendObj.merchantName;
         mapObject.transid = sendObj.transactionId;
-        mapObject.DateOfDebit = moment(sendObj.createdAt).tz("Asia/Kolkata");
-        mapObject.DebitAmount = sendObj.amount+" INR";
-        mapObject.WalletBalance = sendObj.balance+" INR";
+        mapObject.DateOfDebit = moment(sendObj.createdAt).utcOffset(330);
+        mapObject.DebitAmount = sendObj.amount;
+        mapObject.WalletBalance = sendObj.balance;
         var regExp = new RegExp(Object.keys(mapObject).join("|"), "gi");
         var htmlTemplate = template.replace(regExp, function(matched) {
             return mapObject[matched];
