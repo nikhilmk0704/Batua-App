@@ -7,7 +7,7 @@ var MerchantRepository = require('../repositories/MerchantRepository.js');
 
 var request = require('request');
 var crypto = require('crypto');
-var moment = require('moment');
+var moment = require('moment-timezone');
 var fs = require('fs');
 
 class PaymentService {
@@ -1843,7 +1843,7 @@ function sendSuccessPayment(sendObj, emailFrom, emailTo, emailToUserType) {
         mapObject.DebitCard = sendObj.type;
         mapObject.MerchantName = sendObj.merchantName;
         mapObject.transid = sendObj.transactionId;
-        mapObject.DateOfCredit = moment(moment.utc(sendObj.createdAt).toDate()).format('YYYY-MM-DD HH:mm:ss');
+        mapObject.DateOfCredit = moment(sendObj.createdAt).tz('Asia/Kolkata').format();
         mapObject.CreditAmount = sendObj.amount;
         mapObject.AcountBalance = sendObj.amount;
         var regExp = new RegExp(Object.keys(mapObject).join("|"), "gi");
@@ -1860,7 +1860,7 @@ function sendSuccessPayment(sendObj, emailFrom, emailTo, emailToUserType) {
         mapObject.DebitCard = sendObj.type;
         mapObject.MerchantName = sendObj.merchantName;
         mapObject.transid = sendObj.transactionId;
-        mapObject.DateOfDebit =  moment(moment.utc(sendObj.createdAt).toDate()).format('YYYY-MM-DD HH:mm:ss');
+        mapObject.DateOfDebit = moment(sendObj.createdAt).tz('Asia/Kolkata').format();
         mapObject.DebitAmount = sendObj.amount;
         mapObject.WalletBalance = sendObj.balance;
         var regExp = new RegExp(Object.keys(mapObject).join("|"), "gi");
