@@ -1843,7 +1843,7 @@ function sendSuccessPayment(sendObj, emailFrom, emailTo, emailToUserType) {
         mapObject.DebitCard = sendObj.type;
         mapObject.MerchantName = sendObj.merchantName;
         mapObject.transid = sendObj.transactionId;
-        mapObject.DateOfCredit = moment(sendObj.createdAt).utcOffset(330);
+        mapObject.DateOfCredit = moment(sendObj.createdAt).utcOffset(330).format();
         mapObject.CreditAmount = sendObj.amount;
         mapObject.AcountBalance = sendObj.amount;
         var regExp = new RegExp(Object.keys(mapObject).join("|"), "gi");
@@ -1860,7 +1860,7 @@ function sendSuccessPayment(sendObj, emailFrom, emailTo, emailToUserType) {
         mapObject.DebitCard = sendObj.type;
         mapObject.MerchantName = sendObj.merchantName;
         mapObject.transid = sendObj.transactionId;
-        mapObject.DateOfDebit = moment(sendObj.createdAt).utcOffset(330);
+        mapObject.DateOfDebit = moment(sendObj.createdAt).utcOffset(330).format();
         mapObject.DebitAmount = sendObj.amount;
         mapObject.WalletBalance = sendObj.balance;
         var regExp = new RegExp(Object.keys(mapObject).join("|"), "gi");
