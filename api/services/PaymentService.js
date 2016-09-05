@@ -7,7 +7,7 @@ var MerchantRepository = require('../repositories/MerchantRepository.js');
 
 var request = require('request');
 var crypto = require('crypto');
-var moment = require('moment-timezone');
+var moment = require('moment');
 var fs = require('fs');
 
 class PaymentService {
@@ -1788,9 +1788,10 @@ function getBalanceThirdParty(params, callback) {
             "auth_token": authToken
         }
     }, function(error, response, body) {
-        body.yesPhone = phone;
+        
         if (error)
             return callback(error, null);
+        body.yesPhone = phone;
         if (body.code)
             return callback(body, null);
         return callback(null, body);
@@ -1834,6 +1835,9 @@ function sendSuccessPayment(sendObj, emailFrom, emailTo, emailToUserType) {
     params.receivers = [];
     params.subjectText = 'Successful Payment Done';
     params.receivers.push(emailTo);
+    var gmtDateTime = moment.utc(sendObj.createdAt, "YYYY-MM-DD HH")
+    var local = gmtDateTime.local().format('YYYY-MMM-DD h:mm A');
+    
     if (emailToUserType == 'User') {
         params.bodyText = '';
         var templatPath = './api/templates/success-payments/success-user.ejs';
@@ -1843,7 +1847,7 @@ function sendSuccessPayment(sendObj, emailFrom, emailTo, emailToUserType) {
         mapObject.DebitCard = sendObj.type;
         mapObject.MerchantName = sendObj.merchantName;
         mapObject.transid = sendObj.transactionId;
-        mapObject.DateOfCredit = moment(sendObj.createdAt).tz('Asia/Kolkata').format();
+        mapObject.DateOfCredit = local;
         mapObject.CreditAmount = sendObj.amount;
         mapObject.AcountBalance = sendObj.amount;
         var regExp = new RegExp(Object.keys(mapObject).join("|"), "gi");
@@ -1860,7 +1864,7 @@ function sendSuccessPayment(sendObj, emailFrom, emailTo, emailToUserType) {
         mapObject.DebitCard = sendObj.type;
         mapObject.MerchantName = sendObj.merchantName;
         mapObject.transid = sendObj.transactionId;
-        mapObject.DateOfDebit = moment(sendObj.createdAt).tz('Asia/Kolkata').format();
+        mapObject.DateOfDebit = local;
         mapObject.DebitAmount = sendObj.amount;
         mapObject.WalletBalance = sendObj.balance;
         var regExp = new RegExp(Object.keys(mapObject).join("|"), "gi");
