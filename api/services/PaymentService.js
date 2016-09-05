@@ -1838,7 +1838,7 @@ function sendSuccessPayment(sendObj, emailFrom, emailTo, emailToUserType) {
     var local = moment(sendObj.createdAt).tz("Asia/Kolkata").format('YYYY-MMM-DD h:mm A');
     if (emailToUserType == 'User') {
         params.bodyText = '';
-        var templatPath = './api/templates/success-payments/success-merchant.ejs';
+        var templatPath = './api/templates/success-payments/success-user.ejs';
         var template = fs.readFileSync(templatPath, "utf-8");
         var mapObject = {};
         mapObject.DebitCard = sendObj.type;
@@ -1856,7 +1856,7 @@ function sendSuccessPayment(sendObj, emailFrom, emailTo, emailToUserType) {
     }
     if (emailToUserType == 'Merchant') {
          params.bodyText = '';
-        var templatPath = './api/templates/success-payments/success-user.ejs';
+        var templatPath = './api/templates/success-payments/success-merchant.ejs';
         var template = fs.readFileSync(templatPath, "utf-8");
         var mapObject = {};
         mapObject.ReceivedAmt = sendObj.amount; // Capital case because of template is using the same 
