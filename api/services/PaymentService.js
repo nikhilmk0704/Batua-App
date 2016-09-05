@@ -1346,6 +1346,7 @@ function offerCodeComputation(params, fee, callback) {
 
     /*------------ Paid Amount To Merchants -----------*/
     var deductionFee = amountAfterOfferApply * (fee / 100);
+    
     var paidAmount = amountAfterOfferApply - deductionFee;
 
     var returnObject = {};
@@ -1378,13 +1379,6 @@ function promoCodeComputation(params, fee, callback) {
 
     /*------------ /Check discount amount greater than maximumAmountLimit -----------*/
 
-    /*------------ get amount after promocode applied  -----------*/
-
-    var amountAfterPromocodeApply = amount - reducedAmount;
-
-    /*------------ /get amount after promocode applied  -----------*/
-
-
     /*------------ % cost bourned by merchnats -----------*/
 
     var merchantBournedPercentage = params.promocode.percentageCostBourneByMerchant;
@@ -1393,11 +1387,17 @@ function promoCodeComputation(params, fee, callback) {
 
     /*------------ /% cost bourned by merchnats -----------*/
 
-    var payAmountAfterBurned = amount - deductionAmountFromAmountAfterPromocodeApply;
+    /*------------ get amount after promocode applied  -----------*/
+
+    var amountAfterPromocodeApply = amount - deductionAmountFromAmountAfterPromocodeApply;
+
+    /*------------ /get amount after promocode applied  -----------*/
+
 
     /*------------ Paid Amount To Merchants -----------*/
-    var deductionFee = payAmountAfterBurned * (fee / 100);
-    var paidAmount = payAmountAfterBurned - deductionFee;
+    var deductionFee = amountAfterPromocodeApply * (fee / 100);
+    
+    var paidAmount = amountAfterPromocodeApply - deductionFee;
 
     var returnObject = {};
 
@@ -1651,13 +1651,6 @@ function promocodeOperation(params, fee, callback) {
 
     /*------------ /Check discount amount greater than maximumAmountLimit -----------*/
 
-    /*------------ get amount after promocode applied  -----------*/
-
-    var amountAfterPromocodeApply = amount - reducedAmount;
-
-    /*------------ /get amount after promocode applied  -----------*/
-
-
     /*------------ % cost bourned by merchnats -----------*/
 
     var merchantBournedPercentage = params.promocode.percentageCostBourneByMerchant;
@@ -1666,11 +1659,16 @@ function promocodeOperation(params, fee, callback) {
 
     /*------------ /% cost bourned by merchnats -----------*/
 
-    var payAmountAfterBurned = amount - deductionAmountFromAmountAfterPromocodeApply;
+    /*------------ get amount after promocode applied  -----------*/
+
+    var amountAfterPromocodeApply = amount - deductionAmountFromAmountAfterPromocodeApply;
+
+    /*------------ /get amount after promocode applied  -----------*/
+
 
     /*------------ Paid Amount To Merchants -----------*/
-    var deductionFee = payAmountAfterBurned * (fee / 100);
-    var paidAmount = payAmountAfterBurned - deductionFee;
+    var deductionFee = amountAfterPromocodeApply * (fee / 100);
+    var paidAmount = amountAfterPromocodeApply - deductionFee;
 
     var returnObject = {};
 
