@@ -101,7 +101,7 @@
                                     <td>{{reportData.paymentAmount | number:2}}</td>
                                     <td>{{reportData.cashbackByOffer | number:2}}</td>
                                     <td>{{reportData.cashbackByPromo | number:2}}</td>
-                                    <td>{{reportData.amountCreditedToBatua | number:2}}</td>
+                                    <td>{{reportData.paymentAmount - (reportData.cashbackByOffer + reportData.cashbackByPromo) | number:2}}</td>
                                     <td>{{reportData.transactionCancelledBy?reportData.transactionCancelledBy:''}}</td>
                                     <td>{{reportData.transactionCancelledOn?(reportData.transactionCancelledOn |date:shortDate):''}}</td>
                                     <td>{{reportData.cancellationDescription?reportData.cancellationDescription:''}}</td>
