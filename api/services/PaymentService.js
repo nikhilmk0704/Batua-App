@@ -1835,7 +1835,7 @@ function sendSuccessPayment(sendObj, emailFrom, emailTo, emailToUserType) {
     params.receivers = [];
     params.subjectText = 'Successful Payment Done';
     params.receivers.push(emailTo);
-    var local = moment(detailResult.createdAt).tz("Asia/Kolkata").format('YYYY-MMM-DD h:mm A');
+    var local = moment(sendObj.createdAt).tz("Asia/Kolkata").format('YYYY-MMM-DD h:mm A');
     if (emailToUserType == 'User') {
         params.bodyText = '';
         var templatPath = './api/templates/success-payments/success-user.ejs';
