@@ -83,10 +83,8 @@ class PaymentService {
                                             if (err) {
                                                 return callback(err, null);
                                             }
-                                            getMerchantTotalBalance(params.merchantId,function(err, resultMerchantBalance) {
-                                                 if (err) {
-                                                    return callback(err, null);
-                                                }
+                                            getMerchantTotalBalance(params.merchantId,function(resultMerchantBalance) {
+    
                                                 var sendObj = {};
                                                 sendObj.amount = detailResult.initialAmount;
                                                 sendObj.type = detailResult.transactionDetail.mode;
@@ -150,10 +148,8 @@ class PaymentService {
                                                 return callback(err, null);
                                             }
 
-                                            getMerchantTotalBalance(params.merchantId,function(err, resultMerchantBalance) {
-                                                 if (err) {
-                                                    return callback(err, null);
-                                                }
+                                            getMerchantTotalBalance(params.merchantId,function(resultMerchantBalance) {
+                        
                                                 var sendObj = {};
                                                 sendObj.amount = detailResult.initialAmount;
                                                 sendObj.type = detailResult.transactionDetail.mode;
@@ -216,10 +212,8 @@ class PaymentService {
                                         if (err) {
                                             return callback(err, null);
                                         }
-                                        getMerchantTotalBalance(params.merchantId,function(err, resultMerchantBalance) {
-                                            if (err) {
-                                                return callback(err, null);
-                                            }
+                                        getMerchantTotalBalance(params.merchantId,function(resultMerchantBalance) {
+                                           
                                             console.log(resultMerchantBalance);
                                             var sendObj = {};
                                             sendObj.amount = detailResult.initialAmount;
