@@ -805,14 +805,14 @@ class PaymentService {
                 var userPayObj = {};
                 userPayObj.userId = result.userId;
                 userPayObj.paymentmodeId = result.paymentModeId;
-                userPayObj.balance = result.paidAmount - result.batuaCommission-result.merchantFee;
+                userPayObj.balance = result.paidAmount - (result.batuaCommission-result.merchantFee);
                 UsersPaymentmodes.find({ where: { userId: result.userId } }).then(function(data) {
                     if (!data) {
                         UsersPaymentmodes.create(userPayObj);
                         callback(null, result);
                     }
                     if (data) {
-                        UsersPaymentmodes.update({ balance: result.paidAmount - result.merchantFee-result.batuaCommission + data.balance }, { where: { userId: result.userId } });
+                        UsersPaymentmodes.update({ balance: result.paidAmount - (result.batuaCommission - result.merchantFee) + data.balance }, { where: { userId: result.userId } });
                         callback(null, result);
                     }
                 });
