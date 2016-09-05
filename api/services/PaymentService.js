@@ -220,6 +220,7 @@ class PaymentService {
                                             if (err) {
                                                 return callback(err, null);
                                             }
+                                            console.log(resultMerchantBalance);
                                             var sendObj = {};
                                             sendObj.amount = detailResult.initialAmount;
                                             sendObj.type = detailResult.transactionDetail.mode;
