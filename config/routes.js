@@ -128,6 +128,10 @@ module.exports.routes = {
     'get /api/user/:userId/payment/history': 'PaymentsController.history',
     'get /api/user/:userId/wallet': 'PaymentsController.wallet',
 
+    /***********************crone url*******************************/
+    'get /api/cron': 'OfferPromoStatusUpdateController.updateStatus',
+    
+
 
     /********************* Image Upload API ************************/
 
