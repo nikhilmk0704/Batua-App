@@ -281,7 +281,7 @@ function getTotalSettlements(newMerchantId, fromDate, toDate, callback) {
             }
             
             detailsObj.feeCharged = obj.reducedAmount;
-            detailsObj.settlementAmount = obj.paidAmount - obj.merchantFee;
+            detailsObj.settlementAmount = obj.paidAmount;
             detailsArray.push(detailsObj);
             if (count == result.length) {
                 sumObj.netTransactionAmount = math.sum(_.pluck(detailsArray, 'transactionAmount'));
