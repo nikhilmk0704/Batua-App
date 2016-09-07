@@ -20,7 +20,7 @@
                                         <span class="required"> * </span>
                                     </label>
                                     <div class="col-xs-8">
-                                        <input type="text" class="form-control input-circle" id="promocode" name="promocode" placeholder="Enter the Promocode" style="margin-bottom:15px;" required ng-model="promocodeData.promocode">
+                                        <input type="text" class="form-control input-circle" id="promocode" name="promocode" placeholder="Enter the Promocode" style="margin-bottom:15px;" required ng-model="promocodeData.promocode" maxlength="6">
                                         <span class="help-block text-danger" ng-if="!addPromocodeForm.promocode.$pristine && addPromocodeForm.promocode.$invalid" ng-messages="addPromocodeForm.promocode.$error" role="alert">Please enter a valid promocode</span>
                                     </div>
                                 </section>
