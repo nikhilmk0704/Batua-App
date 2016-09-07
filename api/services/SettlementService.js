@@ -274,10 +274,10 @@ function getTotalSettlements(newMerchantId, fromDate, toDate, callback) {
                 detailsObj.promoAmountByMerchant = obj.promocodeAmount - obj.batuaCommission;
             }
             if(obj.settlementId != null){
-                detailsObj.settledAmount = obj.initialAmount;
+                detailsObj.settledAmount = obj.paidAmount;
             }
             if(obj.settlementId === null){
-                detailsObj.unSettledAmount = obj.initialAmount;
+                detailsObj.unSettledAmount = obj.paidAmount;
             }
             
             detailsObj.feeCharged = obj.reducedAmount;
