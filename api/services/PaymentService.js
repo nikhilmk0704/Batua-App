@@ -1465,7 +1465,7 @@ function getPaymentList(userId, callback) {
     whereObject.where.$and.type = 'payment';
     whereObject.where.$and.merchantId = {};
     whereObject.where.$and.merchantId.$not = null;
-    whereObject.where.$and.paymentmodeId = 3;
+    //whereObject.where.$and.paymentmodeId = 3;
     whereObject.order = [
         ['createdAt', 'DESC']
     ];
@@ -1618,7 +1618,7 @@ function getMerchantFee(merchantId, callback) {
 
 function getMerchantTotalBalance(merchantId, callback) {
 
-    var rawQueryString = "SELECT SUM(initialAmount) as "+
+    var rawQueryString = "SELECT SUM(paidAmount) as "+
             " unsettled FROM batua.Payments where isCancelled='0' AND merchantId =:merchantId "+
             " AND settlementId is null";
     sequelize.query(rawQueryString, {
