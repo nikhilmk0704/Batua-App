@@ -878,10 +878,20 @@ class PaymentService {
     getYesWalletBalance(params, callback) {
         var userId = params.userId;
         Users.find({ where: { id: userId } }).then(function(data) {
-            if (!data)
-                return callback("Incorrect userId !!!");
-            if (data && !data.yesAuthToken)
+            if (!data){
+               return callback("Incorrect userId !!!");
+            }
+                
+            if (data && !data.yesAuthToken && !data.yesPhone){
+                var resultObj = {};
+                resultObj.code = '201';
+                resultObj.status = "New User"
+                return callback(null,resultObj);
+            }
+            if (data && !data.yesAuthToken){
                 return callback("Please Verify YES Wallet !!!");
+            }
+                
             var psk = sails.config.connections.psk;
             var newParams = {};
             newParams.phone = data.yesPhone;
@@ -1827,7 +1837,6 @@ function getBalanceThirdParty(params, callback) {
             "auth_token": authToken
         }
     }, function(error, response, body) {
-        
         if (error)
             return callback(error, null);
         body.yesPhone = phone;
