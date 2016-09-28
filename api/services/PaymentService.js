@@ -197,8 +197,8 @@ class PaymentService {
                                 });
 
                             } else {
-                                var deductionFee = parseFloat(params.amount) * (parseFloat(merchantFee[0].fees) / 100)
-                                savePaymentParam.initialAmount = parseFloat(params.amount);
+                                var deductionFee = Math.round((parseFloat(params.amount) * (parseFloat(merchantFee[0].fees) / 100))*100)/100;
+                                savePaymentParam.initialAmount = Math.round(parseFloat(params.amount)*100)/100;
                                 savePaymentParam.reducedAmount = deductionFee;
                                 savePaymentParam.paidAmount = parseFloat(params.amount) - deductionFee;
                                 savePaymentParam.promocodeAmount = 0;
@@ -214,7 +214,6 @@ class PaymentService {
                                         }
                                         getMerchantTotalBalance(params.merchantId,function(resultMerchantBalance) {
                                            
-                                            console.log(resultMerchantBalance);
                                             var sendObj = {};
                                             sendObj.amount = detailResult.initialAmount;
                                             sendObj.type = detailResult.transactionDetail.mode;
@@ -542,8 +541,8 @@ class PaymentService {
                             });
 
                         } else {
-                            var deductionFee = parseFloat(params.amount) * (parseFloat(merchantFee[0].fees) / 100)
-                            savePaymentParam.initialAmount = parseFloat(params.amount);
+                            var deductionFee = Math.round((parseFloat(params.amount) * (parseFloat(merchantFee[0].fees) / 100))*100)/100;
+                            savePaymentParam.initialAmount = Math.round(parseFloat(params.amount)*100)/100;
                             savePaymentParam.reducedAmount = deductionFee;
                             savePaymentParam.paidAmount = parseFloat(params.amount) - deductionFee;
                             savePaymentParam.promocodeAmount = 0;
@@ -1108,8 +1107,8 @@ class PaymentService {
                         });
 
                     } else {
-                        var deductionFee = parseFloat(params.amount) * (parseFloat(merchantFee[0].fees) / 100)
-                        savePaymentParam.initialAmount = parseFloat(params.amount);
+                        var deductionFee = Math.round((parseFloat(params.amount) * (parseFloat(merchantFee[0].fees) / 100))*100)/100;
+                        savePaymentParam.initialAmount = Math.round(parseFloat(params.amount)*100)/100;
                         savePaymentParam.reducedAmount = deductionFee;
                         savePaymentParam.paidAmount = parseFloat(params.amount) - deductionFee;
                         savePaymentParam.promocodeAmount = 0;
