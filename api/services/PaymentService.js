@@ -1331,12 +1331,12 @@ function getPromoCodeAmount(self, callback) {
 function offerCodeComputation(params, fee, callback) {
 
     var discountPercentage = params.offer.discountPercentage;
-    var amount = params.amount;
+    var amount = Math.round(params.amount * 100) / 100;
     var maximumAmountLimit = params.offer.maximumAmountLimit;
 
     /*------------ calculate discount amount -----------*/
 
-    var reducedAmount = amount * (discountPercentage / 100);
+    var reducedAmount = Math.round(amount * (discountPercentage / 100)*100) / 100;
 
     /*------------ /calculate discount amount -----------*/
 
@@ -1355,7 +1355,7 @@ function offerCodeComputation(params, fee, callback) {
 
 
     /*------------ Paid Amount To Merchants -----------*/
-    var deductionFee = amountAfterOfferApply * (fee / 100);
+    var deductionFee = Math.round((amountAfterOfferApply * (fee / 100))*100)/100;
     
     var paidAmount = amountAfterOfferApply - deductionFee;
 
@@ -1372,12 +1372,12 @@ function offerCodeComputation(params, fee, callback) {
 
 function promoCodeComputation(params, fee, callback) {
     var discountPercentage = params.promocode.discountPercentage;
-    var amount = params.amount;
+    var amount = Math.round(params.amount * 100) / 100;
     var maximumAmountLimit = params.promocode.maximumAmountLimit;
 
     /*------------ calculate discount amount -----------*/
 
-    var reducedAmount = amount * (discountPercentage / 100);
+    var reducedAmount = Math.round((amount * (discountPercentage / 100))*100) / 100;
 
     /*------------ /calculate discount amount -----------*/
 
@@ -1393,7 +1393,7 @@ function promoCodeComputation(params, fee, callback) {
 
     var merchantBournedPercentage = params.promocode.percentageCostBourneByMerchant;
 
-    var deductionAmountFromAmountAfterPromocodeApply = reducedAmount * (merchantBournedPercentage / 100);
+    var deductionAmountFromAmountAfterPromocodeApply = Math.round((reducedAmount * (merchantBournedPercentage / 100))*100) / 100;
 
     /*------------ /% cost bourned by merchnats -----------*/
 
@@ -1405,7 +1405,7 @@ function promoCodeComputation(params, fee, callback) {
 
 
     /*------------ Paid Amount To Merchants -----------*/
-    var deductionFee = amountAfterPromocodeApply * (fee / 100);
+    var deductionFee = Math.round((amountAfterPromocodeApply * (fee / 100))*100)/100;
     
     var paidAmount = amountAfterPromocodeApply - deductionFee;
 
@@ -1644,12 +1644,12 @@ function getMerchantTotalBalance(merchantId, callback) {
 function promocodeOperation(params, fee, callback) {
 
     var discountPercentage = params.promocode.discountPercentage;
-    var amount = params.amount;
+    var amount = Math.round(params.amount * 100) / 100;
     var maximumAmountLimit = params.promocode.maximumAmountLimit;
 
     /*------------ calculate discount amount -----------*/
 
-    var reducedAmount = amount * (discountPercentage / 100);
+    var reducedAmount = Math.round((amount * (discountPercentage / 100))*100) / 100;
 
     /*------------ /calculate discount amount -----------*/
 
@@ -1665,7 +1665,7 @@ function promocodeOperation(params, fee, callback) {
 
     var merchantBournedPercentage = params.promocode.percentageCostBourneByMerchant;
 
-    var deductionAmountFromAmountAfterPromocodeApply = reducedAmount * (merchantBournedPercentage / 100);
+    var deductionAmountFromAmountAfterPromocodeApply = Math.round((reducedAmount * (merchantBournedPercentage / 100))*100) / 100;
 
     /*------------ /% cost bourned by merchnats -----------*/
 
@@ -1677,7 +1677,7 @@ function promocodeOperation(params, fee, callback) {
 
 
     /*------------ Paid Amount To Merchants -----------*/
-    var deductionFee = amountAfterPromocodeApply * (fee / 100);
+    var deductionFee = Math.round((amountAfterPromocodeApply * (fee / 100))*100)/100;
     var paidAmount = amountAfterPromocodeApply - deductionFee;
 
     var returnObject = {};
@@ -1701,12 +1701,12 @@ function promocodeOperation(params, fee, callback) {
 function offerOperation(params, fee, callback) {
 
     var discountPercentage = params.offer.discountPercentage;
-    var amount = params.amount;
+    var amount = Math.round(params.amount * 100) / 100;
     var maximumAmountLimit = params.offer.maximumAmountLimit;
 
     /*------------ calculate discount amount -----------*/
 
-    var reducedAmount = amount * (discountPercentage / 100);
+    var reducedAmount = Math.round(amount * (discountPercentage / 100)*100) / 100;
 
     /*------------ /calculate discount amount -----------*/
 
@@ -1725,7 +1725,7 @@ function offerOperation(params, fee, callback) {
 
 
     /*------------ Paid Amount To Merchants -----------*/
-    var deductionFee = amountAfterOfferApply * (fee / 100);
+    var deductionFee = Math.round((amountAfterOfferApply * (fee / 100))*100)/100;
     var paidAmount = amountAfterOfferApply - deductionFee;
 
     var returnObject = {};
@@ -1893,8 +1893,8 @@ function sendSuccessPayment(sendObj, emailFrom, emailTo, emailToUserType) {
         mapObject.MerchantName = sendObj.merchantName;
         mapObject.transid = sendObj.transactionId;
         mapObject.DateOfDebit = local;
-        mapObject.DebitAmount = sendObj.amount;
-        mapObject.WalletBalance = sendObj.balance;
+        mapObject.DebitAmount = Math.round(sendObj.amount*100)/100;
+        mapObject.WalletBalance = Math.round(sendObj.balance*100)/100;
         var regExp = new RegExp(Object.keys(mapObject).join("|"), "gi");
         var htmlTemplate = template.replace(regExp, function(matched) {
             return mapObject[matched];
@@ -1912,8 +1912,8 @@ function sendSuccessPayment(sendObj, emailFrom, emailTo, emailToUserType) {
         mapObject.MerchantName = sendObj.merchantName;
         mapObject.transid = sendObj.transactionId;
         mapObject.DateOfCredit = local;
-        mapObject.CreditAmount = sendObj.amount;
-        mapObject.AcountBalance = sendObj.merchantBalance;
+        mapObject.CreditAmount = Math.round(sendObj.amount*100)/100;
+        mapObject.AcountBalance = Math.round(sendObj.merchantBalance*100)/100;
         var regExp = new RegExp(Object.keys(mapObject).join("|"), "gi");
         var htmlTemplate = template.replace(regExp, function(matched) {
             return mapObject[matched];
