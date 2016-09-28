@@ -1625,17 +1625,18 @@ class UserService {
         var userService = new UserService();
         var email = params.email;
         var query = params.query;
-        userService.respondContact(email, 'support@thebatua.com', 'User');
-        userService.respondContact('support@thebatua.com', "support@thebatua.com", 'Batua');
+        userService.respondContact(email, 'support@thebatua.com', 'User',query);
+        userService.respondContact('support@thebatua.com', "support@thebatua.com", 'Batua',query);
         callback(null, { message: "Email Sent" });
     }
 
-    respondContact(emailTo, emailFrom, emailToUserType) {
+    respondContact(emailTo, emailFrom, emailToUserType,query) {
         var awsSesService = new AwsSesService();
         var params = {};
         params.sender = emailFrom;
         params.receivers = [];
         params.receivers.push(emailTo);
+        params.query = query;
         if (emailToUserType == 'User') {
             params.subjectText = 'Thank you for contacting us';
             params.bodyText = '';
