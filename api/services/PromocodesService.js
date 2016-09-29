@@ -11,12 +11,12 @@ class PromocodesService {
 
         var promocodesRepository = new PromocodesRepository();
 
-        var oldDate = moment(Sequelize.DATE())._d;
-        var validateDate = moment(params.validFrom)._d;
+        /*var oldDate = moment(Sequelize.DATE())._d;
+        var validateDate = moment(params.validFrom)._d;*/
         
-        if (!(moment(validateDate).isAfter(oldDate))) {
+        /*if (!(moment(validateDate).isAfter(oldDate))) {
             callback('Past From date not allowed',null);
-        }
+        }*/
 
         var validateDateFrom = moment(params.validFrom)._d;
         var validateDateTo = moment(params.validTo)._d;
@@ -56,6 +56,13 @@ class PromocodesService {
         
         if (!(moment(validateDateTo).isAfter(validateDateFrom))) {
             callback('To date should be after From date',null);
+        }
+
+        var oldDate = moment(Sequelize.DATE())._d;
+        var validateDate = moment(params.validTo)._d;
+        
+        if (!(moment(validateDate).isAfter(oldDate))) {
+            params.status = 'Active';
         }
         
         promocodesRepository.updateAndFind(params, options, findObject, function(err,result){
