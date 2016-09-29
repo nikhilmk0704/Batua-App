@@ -7,10 +7,7 @@ class S3upload {
             adapter: require('skipper-s3'),
             key: sails.config.connections.s3Bucket.key,
             secret: sails.config.connections.s3Bucket.secret,
-            bucket: sails.config.connections.s3Bucket.bucket,
-            headers: {
-                    "Content-Length" : 5000000
-            }
+            bucket: sails.config.connections.s3Bucket.bucket
         }, function(err, uploadedFile) {
             if (err)
                 return callback(err);
