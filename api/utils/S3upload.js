@@ -8,6 +8,9 @@ class S3upload {
             key: sails.config.connections.s3Bucket.key,
             secret: sails.config.connections.s3Bucket.secret,
             bucket: sails.config.connections.s3Bucket.bucket,
+            headers: {
+                    "Content-Length" : 5000000
+            }
         }, function(err, uploadedFile) {
             if (err)
                 return callback(err);
