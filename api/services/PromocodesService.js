@@ -61,7 +61,7 @@ class PromocodesService {
         var oldDate = moment(Sequelize.DATE())._d;
         var validateDate = moment(params.validTo)._d;
         
-        if (!(moment(validateDate).isAfter(oldDate))) {
+        if (moment(validateDate).isAfter(oldDate)) {
             params.status = 'Active';
         }
         
