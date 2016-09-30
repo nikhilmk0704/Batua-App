@@ -2,7 +2,7 @@
 
 class S3upload {
 
-    /*imageUpload(params, callback) {
+    imageUpload(params, callback) {
         params.image.upload({
             adapter: require('skipper-s3'),
             key: sails.config.connections.s3Bucket.key,
@@ -14,25 +14,33 @@ class S3upload {
             console.log(uploadedFile[0].extra.Location);
             return callback(null, uploadedFile[0].extra.Location);
         });
-    }*/
-    imageUpload(params, callback) {
+    }
+    /*imageUpload(param, callback) {
+        
         var AWS = require('aws-sdk');
         // For dev purposes only
         AWS.config.update({ accessKeyId: sails.config.connections.s3Bucket.key, 
             secretAccessKey: sails.config.connections.s3Bucket.secret });
+        
         var s3 = new AWS.S3();
-        s3.putObject({
-            Bucket: sails.config.connections.s3Bucket.bucket,
-            Body: params.image
-        }).done(function (err,resp) {
-            if (err)
-                console.log(err);
-                //return callback(err);
-            console.log(resp);
-            //return callback(null, uploadedFile[0].extra.Location);
-            console.log('Successfully uploaded package.');
+        
+        var options = {partSize: 10 * 1024 * 1024, queueSize: 1,maxTimeToBuffer:10000};
+        
+        var params = {
+                Bucket: sails.config.connections.s3Bucket.bucket,
+                Body: param.image,
+                Key: param.image.originalFilename
+            };
+
+            s3.upload(params,options, function (perr, pres) {
+                
+                if (perr) {
+                    return callback(param.image,param.image);
+                } else {
+                    return callback(null,pres);
+                }
         });
-    }
+    }*/
 
 }
 
