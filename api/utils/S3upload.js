@@ -21,7 +21,7 @@ class S3upload {
         AWS.config.update({ accessKeyId: sails.config.connections.s3Bucket.key, 
             secretAccessKey: sails.config.connections.s3Bucket.secret });
         var s3 = new AWS.S3();
-        s3.client.putObject({
+        s3.putObject({
             Bucket: sails.config.connections.s3Bucket.bucket,
             Body: params.image
         }).done(function (err,resp) {
