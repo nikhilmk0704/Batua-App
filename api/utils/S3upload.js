@@ -11,6 +11,7 @@ class S3upload {
         }, function(err, uploadedFile) {
             if (err)
                 return callback(err);
+            console.log(uploadedFile[0].extra.Location);
             return callback(null, uploadedFile[0].extra.Location);
         });
     }
