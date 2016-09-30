@@ -24,7 +24,10 @@ class S3upload {
         s3.client.putObject({
             Bucket: sails.config.connections.s3Bucket.bucket,
             Body: params.image
-        }).done(function (resp) {
+        }).done(function (err,resp) {
+            if (err)
+                console.log(err);
+                //return callback(err);
             console.log(resp);
             //return callback(null, uploadedFile[0].extra.Location);
             console.log('Successfully uploaded package.');
