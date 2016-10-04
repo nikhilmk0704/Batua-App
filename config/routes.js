@@ -24,6 +24,13 @@ module.exports.routes = {
     'put /api/city': 'CitiesController.update',
     'delete /api/city/:id': 'CitiesController.delete',
 
+    /********************* Bank API ************************/
+
+    'post /api/bank': 'BanksController.create',
+    'get /api/bank/:id?': 'BanksController.find',
+    'put /api/bank': 'BanksController.update',
+    'delete /api/bank/:id': 'BanksController.delete',
+
     /********************* Merchants Module API ************************/
 
     'post /api/merchant': 'MerchantsController.create',
@@ -128,7 +135,7 @@ module.exports.routes = {
     'get /api/user/:userId/payment/history': 'PaymentsController.history',
     'get /api/user/:userId/wallet': 'PaymentsController.wallet',
 
-    /***********************crone url*******************************/
+    /***********************cron url*******************************/
     'get /api/cron': 'OfferPromoStatusUpdateController.updateStatus',
     
 
